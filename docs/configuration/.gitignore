@@ -1,0 +1,3 @@
+# Private terminal captures must remain local and never enter Git history.
+/NJ_SCT_R1
+/NJ-SCT-R02

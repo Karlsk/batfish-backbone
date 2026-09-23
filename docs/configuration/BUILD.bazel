@@ -1,8 +1,8 @@
 package(default_visibility = ["//visibility:public"])
 
-# Original captures are intentionally used as bytes, not rewritten as UTF-8 fixtures.
+# Optional private captures are used as bytes, never checked into the public repository.
 filegroup(
     name = "captures",
     testonly = True,
-    srcs = ["NJ_SCT_R1", "NJ-SCT-R02"],
+    srcs = glob(["NJ_SCT_R1", "NJ-SCT-R02"], allow_empty = True),
 )

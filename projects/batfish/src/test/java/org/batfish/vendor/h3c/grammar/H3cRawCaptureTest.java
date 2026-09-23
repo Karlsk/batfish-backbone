@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeTrue;
 
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -27,7 +28,7 @@ public final class H3cRawCaptureTest {
 
   private static byte[] capture(String name) throws Exception {
     try (InputStream stream = H3cRawCaptureTest.class.getResourceAsStream("/" + name)) {
-      assertNotNull(stream);
+      assumeTrue("Private capture not installed; see docs/configuration/README.md", stream != null);
       return stream.readAllBytes();
     }
   }

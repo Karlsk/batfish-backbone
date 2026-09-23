@@ -5,9 +5,10 @@ CR16000、Comware `7.1.075, ESS 8611` 的真实 R1 为回归样本。格式名�
 `H3C_COMWARE`，vendor string 为 `h3c_comware`，设备模型为
 `H3C_COMWARE_UNSPECIFIED`。配置内容没有可靠硬件标识，因此不会从文件名推断型号。
 
-原始样本：[NJ_SCT_R1](../../configuration/NJ_SCT_R1)；Huawei
-[NJ-SCT-R02](../../configuration/NJ-SCT-R02) 只用于格式识别反例，未在本阶段适配。
-两份采集文件按项目所有者明确要求保留原始字节；包含真实环境信息，请控制仓库访问权限。
+原始样本 `docs/configuration/NJ_SCT_R1` 仅本地保存；Huawei 样本
+`docs/configuration/NJ-SCT-R02` 只用于格式识别反例，未在本阶段适配。
+两份采集文件含真实认证材料，已从公开提交历史排除并加入 Git 忽略规则。
+原始字节仍在本地保留；安装与测试方式见[私有样本说明](../../configuration/README.md)。
 
 ## 1. 支持范围
 
@@ -218,6 +219,8 @@ print(bf.q.bgpSessionStatus(nodes="nj-sct-r01").answer().frame())
 真实 R1 回归严格检查六类汇总告警：ISIS 进程选择、IPv6 不转换、EVPN/MPLS/SRv6 不转换、
 RD/IPv6 next-hop 策略 guard、额外 BGP instance、BGP operational 参数限制。
 同时断言不存在伪造的 VNI 和 EVPN address-family。测试日志不复制原始配置值。
+公开仓库不附带真实样本：对应文件缺失时，两个真实配置用例明确显示为 skipped；
+安装本地样本后执行全部断言。合成测试不依赖私有文件，始终运行。
 
 ```bash
 # 原始配置、normalizer、策略、接口转换、双节点 ISIS/eBGP/iBGP
