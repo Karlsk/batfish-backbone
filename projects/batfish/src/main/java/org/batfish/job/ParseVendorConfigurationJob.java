@@ -79,6 +79,8 @@ import org.batfish.vendor.cisco_nxos.grammar.CiscoNxosCombinedParser;
 import org.batfish.vendor.cisco_nxos.grammar.NxosControlPlaneExtractor;
 import org.batfish.vendor.fastpath.grammar.FastpathCombinedParser;
 import org.batfish.vendor.fastpath.grammar.FastpathControlPlaneExtractor;
+import org.batfish.vendor.h3c.grammar.H3cCombinedParser;
+import org.batfish.vendor.h3c.grammar.H3cControlPlaneExtractor;
 import org.batfish.vendor.sonic.grammar.SonicControlPlaneExtractor;
 import org.batfish.vendor.sonic.grammar.SonicControlPlaneExtractor.SonicFileType;
 import org.batfish.vendor.sros.grammar.SrosCombinedParser;
@@ -604,6 +606,22 @@ public class ParseVendorConfigurationJob extends BatfishJob<ParseVendorConfigura
                   _fileResults.get(filename).getWarnings(),
                   _fileResults.get(filename).getSilentSyntax());
           parseFile(filename, srosParser, extractor);
+          vc = extractor.getVendorConfiguration();
+          vc.setFilename(filename);
+          break;
+        }
+
+      case H3C_COMWARE:
+        {
+          Entry<String, String> fileEntry = Iterables.getOnlyElement(_fileTexts.entrySet());
+          String filename = fileEntry.getKey();
+          H3cCombinedParser parser = new H3cCombinedParser(fileEntry.getValue(), _settings);
+          ControlPlaneExtractor extractor =
+              new H3cControlPlaneExtractor(
+                  parser,
+                  _fileResults.get(filename).getWarnings(),
+                  _fileResults.get(filename).getSilentSyntax());
+          parseFile(filename, parser, extractor);
           vc = extractor.getVendorConfiguration();
           vc.setFilename(filename);
           break;

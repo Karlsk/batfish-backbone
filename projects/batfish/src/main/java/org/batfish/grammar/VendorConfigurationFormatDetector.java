@@ -60,6 +60,8 @@ public final class VendorConfigurationFormatDetector {
   private static final Tell MRV_HOSTNAME_PATTERN =
       Tell.of("(?m)^configuration hostname .*$", "configuration hostname ");
   private static final Tell MSS_PATTERN = Tell.of("(?m)^set system name", "set system name");
+  private static final Tell H3C_PATTERN =
+      Tell.of("(?m)^[ \\t]*version 7\\.\\d+\\.\\d+, ESS \\d+", ", ESS ");
 
   private static final Tell FASTPATH_PATTERN =
       Tell.of(
@@ -606,6 +608,9 @@ public final class VendorConfigurationFormatDetector {
     }
 
     format = (format == null) ? checkA10() : format;
+    if (format == null && fileTextMatches(H3C_PATTERN)) {
+      format = ConfigurationFormat.H3C_COMWARE;
+    }
     // SR-OS must run before checkJuniper/checkCisco: an SR-OS brace config contains
     // tokens (e.g. `policy-options {`, `interface ...`) that those heuristics would
     // otherwise claim. checkSros keys on SR-OS-specific tells, so it is safe to run early.

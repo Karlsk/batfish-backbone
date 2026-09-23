@@ -69,6 +69,27 @@ public enum RoutingProtocol {
   }
 
   public int getDefaultAdministrativeCost(ConfigurationFormat vendor) {
+    if (vendor == ConfigurationFormat.H3C_COMWARE) {
+      switch (this) {
+        case CONNECTED:
+        case LOCAL:
+          return 0;
+        case STATIC:
+          return 60;
+        case BGP:
+        case IBGP:
+          return 255;
+        case AGGREGATE:
+          return 130;
+        case ISIS_L1:
+        case ISIS_L2:
+        case ISIS_EL1:
+        case ISIS_EL2:
+          return 15;
+        default:
+          break;
+      }
+    }
     switch (this) {
       case AGGREGATE:
         switch (vendor) {

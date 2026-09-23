@@ -25,6 +25,7 @@ Batfish enables network engineers to validate configuration changes _before_ dep
 - [Getting Started](https://pybatfish.readthedocs.io/en/latest/getting_started.html) - User documentation
 
 **Developing Batfish:**
+- [中文开发指南](development-guide/README.md) - 架构、模块、Python 客户端、部署与新厂商开发
 - [Development Guide](development/README.md) - Setup and contribution guidelines
 - [PR Preparation Guide](development/pr_preparation.md) - Step-by-step PR workflow
 - [Building and Running](building_and_running/README.md) - Build system details
@@ -94,6 +95,13 @@ After processing configurations, Batfish performs analysis:
 - Troubleshooting
 
 ### Development
+
+**[中文开发指南](development-guide/README.md)** - 面向当前代码库的完整开发导航
+- [架构与数据流](development-guide/architecture-and-data-flow.md)
+- [模块介绍](development-guide/modules/README.md)
+- [Python 客户端](development-guide/python-client-guide.md)
+- [构建与部署](development-guide/deployment-guide.md)
+- [新增厂商](development-guide/new-vendor-development.md)
 
 **[Development](development/README.md)** - Getting started as a developer
 - [PR Preparation Guide](development/pr_preparation.md) ⭐ NEW - Complete PR workflow
