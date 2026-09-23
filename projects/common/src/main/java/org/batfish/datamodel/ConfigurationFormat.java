@@ -1,5 +1,7 @@
 package org.batfish.datamodel;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /** Vendor configuration file format. */
 public enum ConfigurationFormat {
   A10_ACOS("a10_acos"),
@@ -26,6 +28,8 @@ public enum ConfigurationFormat {
   FORCE10("force10"),
   FORTIOS("fortios"),
   FOUNDRY("foundry"),
+  @JsonProperty("h3c_comware")
+  H3C_COMWARE("h3c_comware"),
   HOST("host"),
   IBM_BNT("ibmbnt"),
   IGNORED("ignored"),
