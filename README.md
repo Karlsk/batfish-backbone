@@ -115,6 +115,7 @@ Batfish supports configurations for a large and growing set of (physical and vir
 
 Batfish has limited support for the following platforms:
 
+* [H3C Comware 7 / CR16000](docs/development-guide/modules/h3c-comware.md) (IPv4 interfaces, static, IS-IS, BGP, and routing policies; MPLS/SRv6 EVPN configuration extraction only)
 * Aruba
 * Dell Force10
 * Foundry
