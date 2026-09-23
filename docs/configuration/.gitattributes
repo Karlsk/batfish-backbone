@@ -1,0 +1,3 @@
+# Preserve terminal-capture bytes and avoid exposing credentials in textual diffs.
+NJ_SCT_R1 binary
+NJ-SCT-R02 binary
