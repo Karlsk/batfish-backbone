@@ -38,6 +38,16 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class VendorConfigurationFormatDetectorTest {
   @Test
+  public void testH3cComwareCapture() {
+    assertThat(
+        identifyConfigurationFormat(
+                "<r1>display current-configuration\r\r\n#\r\r\n version 7.1.075, ESS 8611\r\r\n"
+                    + "#\r\r\n sysname r1\r\r\ninterface LoopBack0\r\r\n")
+            .getVendorString(),
+        equalTo("h3c_comware"));
+  }
+
+  @Test
   public void testA10() {
     String fileText =
         """
