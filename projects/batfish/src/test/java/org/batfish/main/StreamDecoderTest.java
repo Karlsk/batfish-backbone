@@ -22,6 +22,20 @@ import org.junit.Test;
 public final class StreamDecoderTest {
 
   @Test
+  public void testDecodeHuaweiUtf8AndGb18030() throws IOException {
+    String text =
+        "!Software Version V800R023C00SPC500\r\r\n"
+            + "sysname r2\r\r\n"
+            + "interface GE1/0/0\r\r\n"
+            + " description 南京机房核心路由器连接测试网络设备接口配置\r\r\n";
+    for (var charset : java.util.List.of(UTF_8, java.nio.charset.Charset.forName("GB18030"))) {
+      assertThat(
+          decodeStreamAndAppendNewline(new ByteArrayInputStream(text.getBytes(charset))),
+          equalTo(text + "\n"));
+    }
+  }
+
+  @Test
   public void testDecodeGb18030Comware() throws IOException {
     String text =
         "version 7.1.075, ESS 8611\r\r\nsysname r1\r\r\n"

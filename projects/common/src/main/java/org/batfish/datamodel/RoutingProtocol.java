@@ -69,7 +69,7 @@ public enum RoutingProtocol {
   }
 
   public int getDefaultAdministrativeCost(ConfigurationFormat vendor) {
-    if (vendor == ConfigurationFormat.H3C_COMWARE) {
+    if (vendor == ConfigurationFormat.H3C_COMWARE || vendor == ConfigurationFormat.HUAWEI_VRP) {
       switch (this) {
         case CONNECTED:
         case LOCAL:
@@ -80,7 +80,7 @@ public enum RoutingProtocol {
         case IBGP:
           return 255;
         case AGGREGATE:
-          return 130;
+          return vendor == ConfigurationFormat.HUAWEI_VRP ? 255 : 130;
         case ISIS_L1:
         case ISIS_L2:
         case ISIS_EL1:

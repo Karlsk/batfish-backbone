@@ -38,6 +38,27 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class VendorConfigurationFormatDetectorTest {
   @Test
+  public void testHuaweiVrp() {
+    assertThat(
+        identifyConfigurationFormat(
+                "!Software Version V800R023C00SPC500\n#\nsysname r2\ninterface GE1/0/0\n")
+            .getVendorString(),
+        equalTo("huawei_vrp"));
+    assertThat(
+        identifyConfigurationFormat("!BATFISH_FORMAT: huawei_vrp\nsysname r2\n").getVendorString(),
+        equalTo("huawei_vrp"));
+    assertThat(
+        identifyConfigurationFormat(
+                "sysname r2\nip vpn-instance blue\n ipv4-family\n#\ninterface Eth-Trunk1\n")
+            .getVendorString(),
+        equalTo("huawei_vrp"));
+    assertThat(
+        identifyConfigurationFormat("version 15.2\nhostname cisco\ninterface GigabitEthernet0/0\n")
+            .getVendorString(),
+        not(equalTo("huawei_vrp")));
+  }
+
+  @Test
   public void testH3cComwareCapture() {
     assertThat(
         identifyConfigurationFormat(

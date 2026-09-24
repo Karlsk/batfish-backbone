@@ -30,6 +30,8 @@ public enum ConfigurationFormat {
   FOUNDRY("foundry"),
   @JsonProperty("h3c_comware")
   H3C_COMWARE("h3c_comware"),
+  @JsonProperty("huawei_vrp")
+  HUAWEI_VRP("huawei_vrp"),
   HOST("host"),
   IBM_BNT("ibmbnt"),
   IGNORED("ignored"),

@@ -62,6 +62,12 @@ public final class VendorConfigurationFormatDetector {
   private static final Tell MSS_PATTERN = Tell.of("(?m)^set system name", "set system name");
   private static final Tell H3C_PATTERN =
       Tell.of("(?m)^[ \\t]*version 7\\.\\d+\\.\\d+, ESS \\d+", ", ESS ");
+  private static final Tell HUAWEI_PATTERN =
+      Tell.of(
+          "(?m)^!?Software Version V[0-9]+R[0-9]+|^[ \\t]*ipv[46]-family(?:[ \\t]|$)",
+          "Software Version V",
+          "ipv4-family",
+          "ipv6-family");
 
   private static final Tell FASTPATH_PATTERN =
       Tell.of(
@@ -610,6 +616,9 @@ public final class VendorConfigurationFormatDetector {
     format = (format == null) ? checkA10() : format;
     if (format == null && fileTextMatches(H3C_PATTERN)) {
       format = ConfigurationFormat.H3C_COMWARE;
+    }
+    if (format == null && fileTextMatches(HUAWEI_PATTERN)) {
+      format = ConfigurationFormat.HUAWEI_VRP;
     }
     // SR-OS must run before checkJuniper/checkCisco: an SR-OS brace config contains
     // tokens (e.g. `policy-options {`, `interface ...`) that those heuristics would
