@@ -1,6 +1,6 @@
 # Pybatfish / 引擎能力覆盖表
 
-日期：2026-09-24。本文是计划覆盖表，所有 Web 功能尚未实现。来源是当前仓库的问题模板与公共 SDK 文档，不声称是在线 SDK 全部方法的实时清单。MVP-01 将固定版本 SDK 的公共能力与运行时模板核验结果写入兼容性报告。
+日期：2026-09-25。Web 功能尚未实现；MVP-01 的真实 SDK 基线已通过。固定 Pybatfish 2026.9.17.3748，与当前分支引擎的 75 个模板已核验，核心查询已实测；结论、参数与公开方法清单见 [兼容性报告](sdk-compatibility.md) 和 [证据](evidence/mvp-01-sdk-baseline.json)。后续 Web 适配范围仍按下表推进。
 
 ## 适配原则
 
@@ -23,7 +23,8 @@
 | 问题和答案 | q.<已登记问题>、answer、结构化答案 | MVP-12 起逐项实现 |
 | 参考库 | get/put/delete_reference_book 等 | 当前三阶段范围外 |
 | 角色/高级输入/云建模等其他公共操作 | 以固定 SDK 版本公开接口核验 | 目录记录但不自动开放 |
-| 运行中取消/远端任务接管 | 未从当前公共命令文档确认稳定接口 | 首版不承诺；MVP-01记录证据 |
+| 后台分析/状态/已有答案 | answer(background=True)、get_work_status、get_answer 已实测；初始化仍同步 | MVP-01 记录基线；MVP-09 不因此启用自动接管 |
+| 运行中取消/引擎重启后恢复 | 没有公开取消方法；引擎重启后的句柄持久性未验证 | 首版不承诺 |
 | SDK 私有方法 | 下划线方法、内部 HTTP helper | 不对外适配 |
 
 公共方法参考：[Batfish Commands](https://pybatfish.readthedocs.io/en/latest/batfish_commands.html)。首次调用与结果语义以当前版本实测为准；快照 SDK 支持 extra_args 不代表 Web 允许任意引擎参数。

@@ -2,6 +2,8 @@
 
 本文定义将来部署行为，当前尚无可运行的 Web 命令或镜像。
 
+MVP-01 已验证 SDK 基线：Python 3.12.12、Pybatfish 2026.9.17.3748、引擎 revision `7d0deeeac4a09973b3876327f6aef721ee12f955`。JAR 摘要、隔离引擎启动及复现命令见 [兼容性报告](sdk-compatibility.md)。MVP-02 应据此生成应用锁文件；文档/引擎字符串 0.36.0 不能用作 PyPI 安装版本。
+
 ## 部署单元
 
 同一内网入口通过反向代理提供前端静态资源和 `/api/v1`，HTTPS 用于团队部署。API 和 worker 使用相同应用包、分开启动，共享 PostgreSQL 与受控文件卷。Batfish 的 9996 端口只向接入服务开放；浏览器不获得 SDK API key。PostgreSQL 不暴露给普通用户网络。
@@ -23,7 +25,7 @@
 | UPLOAD_MAX_BYTES | 100 MiB；以实际接收字节计数 |
 | UPLOAD_MAX_EXPANDED_BYTES / FILES | 500 MiB / 5000 个条目 |
 | RESULT_MAX_BYTES / TABLE_ROWS | 100 MiB / 100000 行持久化输出上限 |
-| SDK_REQUEST_TIMEOUT | 初始 120 秒，按 SDK 语义核实；不是引擎运行时限 |
+| SDK_REQUEST_TIMEOUT | Web 设计初始 120 秒，须显式传入；MVP-01 确认 SDK 默认 30 秒，单次请求超时且 GET 可重试，不是引擎运行时限 |
 | JOB_WAIT_BUDGET | 初始 30 分钟；到期若不能证明引擎停止则进入未知占用 |
 | SESSION_TTL | 8 小时绝对过期 |
 | LOGIN_RATE_LIMIT | 同账号/IP 组合 5 次失败/分钟，短暂退避；不永久锁死账号 |
@@ -53,6 +55,8 @@ live 只报告进程；ready 检查数据库、worker 最近心跳和引擎最�
 worker 失联或 SDK 调用超时后，不自动重放初始化/删除。相关任务置 interrupted，引擎置 unknown；管理员检查 Batfish 日志/状态，必要时受控重启引擎并确认可用，在管理接口记录处理依据后释放调度。界面说明“停止等待不等于引擎停止”。MVP-01 必须验证公开 SDK 对已存在答案/快照的检查方法；若无法证明完成就保持未知，不猜测。
 
 日志字段为 request_id、job_id、actor_id、resource_id、kind、duration、error_code；不记录明文密码、token、SDK key、完整配置、全量原始结果。服务端堆栈仅记录到受控日志，不回传用户。
+
+MVP-01 实测后台分析可取得 work ID，并在新 Session 中查询状态/读取命名答案；`list_snapshots(verbose=True)` 可读取初始化状态。初始化公开方法仍同步，`get_snapshot()` 仅返回会话选中名称，不是执行完成证明。这些观测不覆盖 worker 崩溃窗口和引擎重启持久性，当前 unknown/管理员对账流程保持不变。SDK HTTP 重试可能使等待超过单次 timeout，不能将 SDK_REQUEST_TIMEOUT 直接当作 JOB_WAIT_BUDGET。
 
 ## 升级与回退
 

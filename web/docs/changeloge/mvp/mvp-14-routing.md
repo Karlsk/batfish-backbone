@@ -14,6 +14,8 @@
 
 ## 设计与接口
 
+- [MVP-01](../../sdk-compatibility.md) 实测 `lpmRoutes` 仅返回 Node/VRF/Ip/Network/Num_Routes；不得假定含 Next_Hop。下一跳明细来自 routes；若界面需要从 LPM 查看明细，使用命中前缀与明确 Node/VRF 查询 routes。
+
 - POST S/analyses/routes：nodes 可选，options.vrfs/network/protocols/prefix_match_type/rib。
 - POST S/analyses/lpm-routes：ip 必填；nodes/options.vrfs 可选。
 - 首版 IPv4、rib 为 main/bgp；前缀匹配枚举按模板，不能把 exact 默认为 longest match。

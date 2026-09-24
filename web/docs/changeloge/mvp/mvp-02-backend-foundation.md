@@ -15,6 +15,8 @@
 
 ## 设计与接口
 
+- 版本输入以 [MVP-01 实测报告](../../sdk-compatibility.md) 为准：Python 3.12、Pybatfish 2026.9.17.3748；不可安装文档版本号 `pybatfish==0.36.0`。本篇生成应用锁文件。
+
 - GET /health/live 返回存活；GET /health/ready 仅在依赖就绪后 ready。
 - 错误对象统一 code/message/field_errors/request_id/retryable。
 - 公共契约遵循 api-contracts.md；不在 api/service 导入 pybatfish。

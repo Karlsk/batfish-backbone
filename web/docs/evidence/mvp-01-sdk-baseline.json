@@ -1,0 +1,3869 @@
+{
+  "answers": {
+    "001/mvp01-baseline-37c1a13bcec7-a/snapshot-a/nodeProperties": {
+      "cell_types": {
+        "Configuration_Format": [
+          "str"
+        ],
+        "Node": [
+          "str"
+        ]
+      },
+      "column_schema": [
+        {
+          "description": "Node",
+          "isKey": true,
+          "isValue": false,
+          "name": "Node",
+          "schema": "Node"
+        },
+        {
+          "description": "Configuration format of the node",
+          "isKey": false,
+          "isValue": true,
+          "name": "Configuration_Format",
+          "schema": "String"
+        }
+      ],
+      "explicit_snapshot": true,
+      "network": "mvp01-baseline-37c1a13bcec7-a",
+      "parameters": {
+        "nodes": {
+          "description": "Include nodes matching this name or regex.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec"
+        },
+        "properties": {
+          "description": "Include properties matching this regex.",
+          "displayName": "Properties",
+          "optional": true,
+          "type": "nodePropertySpec",
+          "value": "Configuration_Format"
+        }
+      },
+      "question": "nodeProperties",
+      "row_count": 2,
+      "rows": [
+        {
+          "Configuration_Format": "H3C_COMWARE",
+          "Node": {
+            "id": "node-r2",
+            "name": "r2"
+          }
+        },
+        {
+          "Configuration_Format": "HUAWEI_VRP",
+          "Node": {
+            "id": "node-r1",
+            "name": "r1"
+          }
+        }
+      ],
+      "seconds": 0.1879,
+      "snapshot": "snapshot-a"
+    },
+    "002/mvp01-baseline-37c1a13bcec7-a/snapshot-a/interfaceProperties": {
+      "cell_types": {
+        "Interface": [
+          "Interface"
+        ],
+        "Primary_Address": [
+          "str"
+        ]
+      },
+      "column_schema": [
+        {
+          "description": "Interface",
+          "isKey": true,
+          "isValue": false,
+          "name": "Interface",
+          "schema": "Interface"
+        },
+        {
+          "description": "Primary IPv4 address along with the prefix length",
+          "isKey": false,
+          "isValue": true,
+          "name": "Primary_Address",
+          "schema": "String"
+        }
+      ],
+      "explicit_snapshot": true,
+      "network": "mvp01-baseline-37c1a13bcec7-a",
+      "parameters": {
+        "excludeShutInterfaces": {
+          "description": "Exclude interfaces that are shutdown.",
+          "displayName": "Exclude Shut Interfaces",
+          "optional": true,
+          "type": "boolean"
+        },
+        "interfaces": {
+          "description": "Include interfaces matching this specifier.",
+          "displayName": "Interfaces",
+          "optional": true,
+          "type": "interfacesSpec"
+        },
+        "nodes": {
+          "description": "Include nodes matching this specifier.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec"
+        },
+        "properties": {
+          "description": "Include properties matching this specifier.",
+          "displayName": "Properties",
+          "optional": true,
+          "type": "interfacePropertySpec",
+          "value": "Primary_Address"
+        }
+      },
+      "question": "interfaceProperties",
+      "row_count": 4,
+      "rows": [
+        {
+          "Interface": {
+            "hostname": "r1",
+            "interface": "GigabitEthernet0/0/1"
+          },
+          "Primary_Address": "192.0.2.1/30"
+        },
+        {
+          "Interface": {
+            "hostname": "r1",
+            "interface": "LoopBack0"
+          },
+          "Primary_Address": "10.0.0.1/32"
+        },
+        {
+          "Interface": {
+            "hostname": "r2",
+            "interface": "GigabitEthernet1/0/1"
+          },
+          "Primary_Address": "192.0.2.2/30"
+        },
+        {
+          "Interface": {
+            "hostname": "r2",
+            "interface": "LoopBack0"
+          },
+          "Primary_Address": "10.0.0.2/32"
+        }
+      ],
+      "seconds": 0.1208,
+      "snapshot": "snapshot-a"
+    },
+    "003/mvp01-baseline-37c1a13bcec7-a/snapshot-a/routes": {
+      "cell_types": {
+        "Admin_Distance": [
+          "int"
+        ],
+        "Metric": [
+          "int"
+        ],
+        "Network": [
+          "str"
+        ],
+        "Next_Hop": [
+          "NextHopIp"
+        ],
+        "Node": [
+          "str"
+        ],
+        "Protocol": [
+          "str"
+        ],
+        "Tag": [
+          "int"
+        ],
+        "VRF": [
+          "str"
+        ]
+      },
+      "column_schema": [
+        {
+          "description": "Node",
+          "isKey": true,
+          "isValue": false,
+          "name": "Node",
+          "schema": "Node"
+        },
+        {
+          "description": "VRF name",
+          "isKey": true,
+          "isValue": false,
+          "name": "VRF",
+          "schema": "String"
+        },
+        {
+          "description": "Network for this route",
+          "isKey": true,
+          "isValue": true,
+          "name": "Network",
+          "schema": "Prefix"
+        },
+        {
+          "description": "Route's Next Hop",
+          "isKey": false,
+          "isValue": true,
+          "name": "Next_Hop",
+          "schema": "NextHop"
+        },
+        {
+          "description": "Route's Protocol",
+          "isKey": false,
+          "isValue": true,
+          "name": "Protocol",
+          "schema": "String"
+        },
+        {
+          "description": "Route's Metric",
+          "isKey": false,
+          "isValue": true,
+          "name": "Metric",
+          "schema": "Long"
+        },
+        {
+          "description": "Route's Admin distance",
+          "isKey": false,
+          "isValue": true,
+          "name": "Admin_Distance",
+          "schema": "Long"
+        },
+        {
+          "description": "Tag for this route",
+          "isKey": false,
+          "isValue": true,
+          "name": "Tag",
+          "schema": "Long"
+        }
+      ],
+      "explicit_snapshot": true,
+      "network": "mvp01-baseline-37c1a13bcec7-a",
+      "parameters": {
+        "network": {
+          "description": "Return routes for networks matching this prefix.",
+          "displayName": "Network",
+          "optional": true,
+          "type": "prefix",
+          "value": "10.0.0.2/32"
+        },
+        "nodes": {
+          "description": "Return routes on nodes matching this specifier.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec",
+          "value": "r1"
+        },
+        "prefixMatchType": {
+          "description": "Use this prefix matching criterion: EXACT, LONGEST_PREFIX_MATCH, LONGER_PREFIXES, SHORTER_PREFIXES.",
+          "displayName": "Prefix match type",
+          "optional": true,
+          "type": "string",
+          "value": "EXACT",
+          "values": [
+            {
+              "name": "EXACT"
+            },
+            {
+              "name": "LONGEST_PREFIX_MATCH"
+            },
+            {
+              "name": "LONGER_PREFIXES"
+            },
+            {
+              "name": "SHORTER_PREFIXES"
+            }
+          ]
+        },
+        "protocols": {
+          "description": "Return routes for protocols matching this specifier.",
+          "displayName": "Protocols",
+          "optional": true,
+          "type": "routingProtocolSpec"
+        },
+        "rib": {
+          "description": "Only return routes from a given protocol RIB.",
+          "displayName": "RIB",
+          "optional": true,
+          "type": "string",
+          "values": [
+            {
+              "name": "main"
+            },
+            {
+              "name": "bgp"
+            },
+            {
+              "name": "evpn"
+            }
+          ]
+        },
+        "vrfs": {
+          "description": "Return routes on VRFs matching this name or regex.",
+          "displayName": "VRFs",
+          "optional": true,
+          "type": "vrf"
+        }
+      },
+      "question": "routes",
+      "row_count": 1,
+      "rows": [
+        {
+          "Admin_Distance": 60,
+          "Metric": 0,
+          "Network": "10.0.0.2/32",
+          "Next_Hop": {
+            "ip": "192.0.2.2",
+            "type": "ip"
+          },
+          "Node": {
+            "id": "node-r1",
+            "name": "r1"
+          },
+          "Protocol": "static",
+          "Tag": 0,
+          "VRF": "default"
+        }
+      ],
+      "seconds": 0.2882,
+      "snapshot": "snapshot-a"
+    },
+    "004/mvp01-baseline-37c1a13bcec7-a/snapshot-a/lpmRoutes": {
+      "cell_types": {
+        "Ip": [
+          "str"
+        ],
+        "Network": [
+          "str"
+        ],
+        "Node": [
+          "str"
+        ],
+        "Num_Routes": [
+          "int"
+        ],
+        "VRF": [
+          "str"
+        ]
+      },
+      "column_schema": [
+        {
+          "description": "Node where the route is present",
+          "isKey": true,
+          "isValue": false,
+          "name": "Node",
+          "schema": "Node"
+        },
+        {
+          "description": "VRF where the route is present",
+          "isKey": true,
+          "isValue": false,
+          "name": "VRF",
+          "schema": "String"
+        },
+        {
+          "description": "IP that was being matched on",
+          "isKey": true,
+          "isValue": false,
+          "name": "Ip",
+          "schema": "Ip"
+        },
+        {
+          "description": "The longest-prefix network that matched",
+          "isKey": false,
+          "isValue": true,
+          "name": "Network",
+          "schema": "Prefix"
+        },
+        {
+          "description": "Number of routes that matched (in case of ECMP)",
+          "isKey": false,
+          "isValue": true,
+          "name": "Num_Routes",
+          "schema": "Integer"
+        }
+      ],
+      "explicit_snapshot": true,
+      "network": "mvp01-baseline-37c1a13bcec7-a",
+      "parameters": {
+        "ip": {
+          "description": "IP address to run LPM on.",
+          "displayName": "IP Address",
+          "optional": false,
+          "type": "ip",
+          "value": "10.0.0.2"
+        },
+        "nodes": {
+          "description": "Examine routes on nodes matching this specifier.",
+          "displayName": "Nodes",
+          "type": "nodeSpec",
+          "value": "r1"
+        },
+        "vrfs": {
+          "description": "Examine routes on VRFs matching this name or regex.",
+          "displayName": "VRFs",
+          "type": "vrf",
+          "value": ".*"
+        }
+      },
+      "question": "lpmRoutes",
+      "row_count": 1,
+      "rows": [
+        {
+          "Ip": "10.0.0.2",
+          "Network": "10.0.0.2/32",
+          "Node": {
+            "id": "node-r1",
+            "name": "r1"
+          },
+          "Num_Routes": 1,
+          "VRF": "default"
+        }
+      ],
+      "seconds": 0.1294,
+      "snapshot": "snapshot-a"
+    },
+    "005/mvp01-baseline-37c1a13bcec7-a/snapshot-a/traceroute": {
+      "cell_types": {
+        "Flow": [
+          "Flow"
+        ],
+        "TraceCount": [
+          "int"
+        ],
+        "Traces": [
+          "ListWrapper"
+        ]
+      },
+      "column_schema": [
+        {
+          "description": "The flow",
+          "isKey": true,
+          "isValue": false,
+          "name": "Flow",
+          "schema": "Flow"
+        },
+        {
+          "description": "The traces for this flow",
+          "isKey": false,
+          "isValue": true,
+          "name": "Traces",
+          "schema": "Set<Trace>"
+        },
+        {
+          "description": "The total number traces for this flow",
+          "isKey": false,
+          "isValue": true,
+          "name": "TraceCount",
+          "schema": "Integer"
+        }
+      ],
+      "explicit_snapshot": true,
+      "network": "mvp01-baseline-37c1a13bcec7-a",
+      "parameters": {
+        "headers": {
+          "description": "Packet header constraints.",
+          "displayName": "Headers",
+          "fields": {
+            "applications": {
+              "optional": true,
+              "type": "applicationSpec"
+            },
+            "dscps": {
+              "optional": true
+            },
+            "dstIps": {
+              "optional": false,
+              "type": "ipSpaceSpec"
+            },
+            "dstPorts": {
+              "optional": true
+            },
+            "ecns": {
+              "optional": true
+            },
+            "flowStates": {
+              "optional": true
+            },
+            "fragmentOffsets": {
+              "optional": true
+            },
+            "icmpCodes": {
+              "optional": true
+            },
+            "icmpTypes": {
+              "optional": true
+            },
+            "ipProtocols": {
+              "optional": true,
+              "type": "ipProtocolSpec"
+            },
+            "packetLengths": {
+              "optional": true
+            },
+            "srcIps": {
+              "optional": true,
+              "type": "ipSpaceSpec"
+            },
+            "srcPorts": {
+              "optional": true
+            },
+            "tcpFlags": {
+              "optional": true
+            }
+          },
+          "optional": false,
+          "type": "headerConstraint",
+          "value": {
+            "applications": null,
+            "dscps": null,
+            "dstIps": "10.0.0.2",
+            "dstPorts": null,
+            "ecns": null,
+            "fragmentOffsets": null,
+            "icmpCodes": null,
+            "icmpTypes": null,
+            "ipProtocols": [
+              "ICMP"
+            ],
+            "packetLengths": null,
+            "srcIps": "10.0.0.1",
+            "srcPorts": null,
+            "tcpFlags": null
+          }
+        },
+        "ignoreFilters": {
+          "description": "If set, filters/ACLs encountered along the path are ignored.",
+          "displayName": "Ignore Filters",
+          "optional": true,
+          "type": "boolean"
+        },
+        "maxTraces": {
+          "description": "Limit the number of traces returned.",
+          "displayName": "Max Traces",
+          "optional": true,
+          "type": "integer"
+        },
+        "startLocation": {
+          "description": "Location (node and interface combination) to start tracing from.",
+          "displayName": "Start Location",
+          "minLength": 1,
+          "type": "locationSpec",
+          "value": "r1"
+        }
+      },
+      "question": "traceroute",
+      "row_count": 1,
+      "rows": [
+        {
+          "Flow": {
+            "dscp": 0,
+            "dstIp": "10.0.0.2",
+            "ecn": 0,
+            "fragmentOffset": 0,
+            "icmpCode": 0,
+            "icmpVar": 8,
+            "ingressNode": "r1",
+            "ingressVrf": "default",
+            "ipProtocol": "ICMP",
+            "packetLength": 512,
+            "srcIp": "10.0.0.1",
+            "state": "NEW",
+            "tag": "tag",
+            "tcpFlagsAck": 0,
+            "tcpFlagsCwr": 0,
+            "tcpFlagsEce": 0,
+            "tcpFlagsFin": 0,
+            "tcpFlagsPsh": 0,
+            "tcpFlagsRst": 0,
+            "tcpFlagsSyn": 0,
+            "tcpFlagsUrg": 0
+          },
+          "TraceCount": 1,
+          "Traces": [
+            {
+              "disposition": "ACCEPTED",
+              "hops": [
+                {
+                  "node": {
+                    "id": "node-r1",
+                    "name": "r1"
+                  },
+                  "steps": [
+                    {
+                      "action": "ORIGINATED",
+                      "detail": {
+                        "originatingVrf": "default"
+                      },
+                      "type": "Originate"
+                    },
+                    {
+                      "action": "FORWARDED",
+                      "detail": {
+                        "arpIp": "192.0.2.2",
+                        "forwardingDetail": {
+                          "outputInterface": "GigabitEthernet0/0/1",
+                          "resolvedNextHopIp": "192.0.2.2",
+                          "type": "ForwardedOutInterface"
+                        },
+                        "outputInterface": "GigabitEthernet0/0/1",
+                        "routes": [
+                          {
+                            "admin": 60,
+                            "metric": 0,
+                            "network": "10.0.0.2/32",
+                            "nextHop": {
+                              "ip": "192.0.2.2",
+                              "type": "ip"
+                            },
+                            "nextHopIp": "192.0.2.2",
+                            "protocol": "static"
+                          }
+                        ],
+                        "vrf": "default"
+                      },
+                      "type": "Routing"
+                    },
+                    {
+                      "action": "TRANSMITTED",
+                      "detail": {
+                        "outputInterface": {
+                          "hostname": "r1",
+                          "interface": "GigabitEthernet0/0/1"
+                        }
+                      },
+                      "type": "ExitOutputInterface"
+                    }
+                  ]
+                },
+                {
+                  "node": {
+                    "id": "node-r2",
+                    "name": "r2"
+                  },
+                  "steps": [
+                    {
+                      "action": "RECEIVED",
+                      "detail": {
+                        "inputInterface": {
+                          "hostname": "r2",
+                          "interface": "GigabitEthernet1/0/1"
+                        },
+                        "inputVrf": "default"
+                      },
+                      "type": "EnterInputInterface"
+                    },
+                    {
+                      "action": "ACCEPTED",
+                      "detail": {
+                        "interface": "LoopBack0"
+                      },
+                      "type": "Inbound"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "seconds": 0.1152,
+      "snapshot": "snapshot-a"
+    },
+    "006/mvp01-baseline-37c1a13bcec7-a/snapshot-a/interfaceProperties": {
+      "cell_types": {
+        "Interface": [
+          "Interface"
+        ],
+        "Primary_Address": [
+          "str"
+        ]
+      },
+      "column_schema": [
+        {
+          "description": "Interface",
+          "isKey": true,
+          "isValue": false,
+          "name": "Interface",
+          "schema": "Interface"
+        },
+        {
+          "description": "Primary IPv4 address along with the prefix length",
+          "isKey": false,
+          "isValue": true,
+          "name": "Primary_Address",
+          "schema": "String"
+        }
+      ],
+      "explicit_snapshot": false,
+      "network": "mvp01-baseline-37c1a13bcec7-a",
+      "parameters": {
+        "excludeShutInterfaces": {
+          "description": "Exclude interfaces that are shutdown.",
+          "displayName": "Exclude Shut Interfaces",
+          "optional": true,
+          "type": "boolean"
+        },
+        "interfaces": {
+          "description": "Include interfaces matching this specifier.",
+          "displayName": "Interfaces",
+          "optional": true,
+          "type": "interfacesSpec"
+        },
+        "nodes": {
+          "description": "Include nodes matching this specifier.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec",
+          "value": "r2"
+        },
+        "properties": {
+          "description": "Include properties matching this specifier.",
+          "displayName": "Properties",
+          "optional": true,
+          "type": "interfacePropertySpec",
+          "value": "Primary_Address"
+        }
+      },
+      "question": "interfaceProperties",
+      "row_count": 2,
+      "rows": [
+        {
+          "Interface": {
+            "hostname": "r2",
+            "interface": "GigabitEthernet1/0/1"
+          },
+          "Primary_Address": "192.0.2.2/30"
+        },
+        {
+          "Interface": {
+            "hostname": "r2",
+            "interface": "LoopBack0"
+          },
+          "Primary_Address": "10.0.0.2/32"
+        }
+      ],
+      "seconds": 0.1217,
+      "snapshot": "snapshot-a"
+    },
+    "007/mvp01-baseline-37c1a13bcec7-b/snapshot-b/interfaceProperties": {
+      "cell_types": {
+        "Interface": [
+          "Interface"
+        ],
+        "Primary_Address": [
+          "str"
+        ]
+      },
+      "column_schema": [
+        {
+          "description": "Interface",
+          "isKey": true,
+          "isValue": false,
+          "name": "Interface",
+          "schema": "Interface"
+        },
+        {
+          "description": "Primary IPv4 address along with the prefix length",
+          "isKey": false,
+          "isValue": true,
+          "name": "Primary_Address",
+          "schema": "String"
+        }
+      ],
+      "explicit_snapshot": false,
+      "network": "mvp01-baseline-37c1a13bcec7-b",
+      "parameters": {
+        "excludeShutInterfaces": {
+          "description": "Exclude interfaces that are shutdown.",
+          "displayName": "Exclude Shut Interfaces",
+          "optional": true,
+          "type": "boolean"
+        },
+        "interfaces": {
+          "description": "Include interfaces matching this specifier.",
+          "displayName": "Interfaces",
+          "optional": true,
+          "type": "interfacesSpec"
+        },
+        "nodes": {
+          "description": "Include nodes matching this specifier.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec",
+          "value": "r2"
+        },
+        "properties": {
+          "description": "Include properties matching this specifier.",
+          "displayName": "Properties",
+          "optional": true,
+          "type": "interfacePropertySpec",
+          "value": "Primary_Address"
+        }
+      },
+      "question": "interfaceProperties",
+      "row_count": 2,
+      "rows": [
+        {
+          "Interface": {
+            "hostname": "r2",
+            "interface": "GigabitEthernet1/0/1"
+          },
+          "Primary_Address": "192.0.2.2/30"
+        },
+        {
+          "Interface": {
+            "hostname": "r2",
+            "interface": "LoopBack0"
+          },
+          "Primary_Address": "10.0.0.22/32"
+        }
+      ],
+      "seconds": 0.1257,
+      "snapshot": "snapshot-b"
+    },
+    "008/mvp01-baseline-37c1a13bcec7-a/snapshot-a/interfaceProperties": {
+      "cell_types": {
+        "Interface": [
+          "Interface"
+        ],
+        "Primary_Address": [
+          "str"
+        ]
+      },
+      "column_schema": [
+        {
+          "description": "Interface",
+          "isKey": true,
+          "isValue": false,
+          "name": "Interface",
+          "schema": "Interface"
+        },
+        {
+          "description": "Primary IPv4 address along with the prefix length",
+          "isKey": false,
+          "isValue": true,
+          "name": "Primary_Address",
+          "schema": "String"
+        }
+      ],
+      "explicit_snapshot": false,
+      "network": "mvp01-baseline-37c1a13bcec7-a",
+      "parameters": {
+        "excludeShutInterfaces": {
+          "description": "Exclude interfaces that are shutdown.",
+          "displayName": "Exclude Shut Interfaces",
+          "optional": true,
+          "type": "boolean"
+        },
+        "interfaces": {
+          "description": "Include interfaces matching this specifier.",
+          "displayName": "Interfaces",
+          "optional": true,
+          "type": "interfacesSpec"
+        },
+        "nodes": {
+          "description": "Include nodes matching this specifier.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec",
+          "value": "r2"
+        },
+        "properties": {
+          "description": "Include properties matching this specifier.",
+          "displayName": "Properties",
+          "optional": true,
+          "type": "interfacePropertySpec",
+          "value": "Primary_Address"
+        }
+      },
+      "question": "interfaceProperties",
+      "row_count": 2,
+      "rows": [
+        {
+          "Interface": {
+            "hostname": "r2",
+            "interface": "GigabitEthernet1/0/1"
+          },
+          "Primary_Address": "192.0.2.2/30"
+        },
+        {
+          "Interface": {
+            "hostname": "r2",
+            "interface": "LoopBack0"
+          },
+          "Primary_Address": "10.0.0.2/32"
+        }
+      ],
+      "seconds": 0.1295,
+      "snapshot": "snapshot-a"
+    },
+    "009/mvp01-baseline-37c1a13bcec7-b/snapshot-b/interfaceProperties": {
+      "cell_types": {
+        "Interface": [
+          "Interface"
+        ],
+        "Primary_Address": [
+          "str"
+        ]
+      },
+      "column_schema": [
+        {
+          "description": "Interface",
+          "isKey": true,
+          "isValue": false,
+          "name": "Interface",
+          "schema": "Interface"
+        },
+        {
+          "description": "Primary IPv4 address along with the prefix length",
+          "isKey": false,
+          "isValue": true,
+          "name": "Primary_Address",
+          "schema": "String"
+        }
+      ],
+      "explicit_snapshot": false,
+      "network": "mvp01-baseline-37c1a13bcec7-b",
+      "parameters": {
+        "excludeShutInterfaces": {
+          "description": "Exclude interfaces that are shutdown.",
+          "displayName": "Exclude Shut Interfaces",
+          "optional": true,
+          "type": "boolean"
+        },
+        "interfaces": {
+          "description": "Include interfaces matching this specifier.",
+          "displayName": "Interfaces",
+          "optional": true,
+          "type": "interfacesSpec"
+        },
+        "nodes": {
+          "description": "Include nodes matching this specifier.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec",
+          "value": "r2"
+        },
+        "properties": {
+          "description": "Include properties matching this specifier.",
+          "displayName": "Properties",
+          "optional": true,
+          "type": "interfacePropertySpec",
+          "value": "Primary_Address"
+        }
+      },
+      "question": "interfaceProperties",
+      "row_count": 2,
+      "rows": [
+        {
+          "Interface": {
+            "hostname": "r2",
+            "interface": "GigabitEthernet1/0/1"
+          },
+          "Primary_Address": "192.0.2.2/30"
+        },
+        {
+          "Interface": {
+            "hostname": "r2",
+            "interface": "LoopBack0"
+          },
+          "Primary_Address": "10.0.0.22/32"
+        }
+      ],
+      "seconds": 0.1276,
+      "snapshot": "snapshot-b"
+    },
+    "010/mvp01-baseline-37c1a13bcec7-a/snapshot-a/fileParseStatus": {
+      "cell_types": {
+        "File_Format": [
+          "str"
+        ],
+        "File_Name": [
+          "str"
+        ],
+        "Nodes": [
+          "ListWrapper"
+        ],
+        "Status": [
+          "str"
+        ]
+      },
+      "column_schema": [
+        {
+          "description": "The file that was parsed",
+          "isKey": true,
+          "isValue": false,
+          "name": "File_Name",
+          "schema": "String"
+        },
+        {
+          "description": "The status of the parsing operation",
+          "isKey": false,
+          "isValue": true,
+          "name": "Status",
+          "schema": "String"
+        },
+        {
+          "description": "The detected format of the file",
+          "isKey": false,
+          "isValue": true,
+          "name": "File_Format",
+          "schema": "String"
+        },
+        {
+          "description": "Names of nodes produced from this file",
+          "isKey": false,
+          "isValue": true,
+          "name": "Nodes",
+          "schema": "List<Node>"
+        }
+      ],
+      "explicit_snapshot": true,
+      "network": "mvp01-baseline-37c1a13bcec7-a",
+      "parameters": {},
+      "question": "fileParseStatus",
+      "row_count": 2,
+      "rows": [
+        {
+          "File_Format": "HUAWEI_VRP",
+          "File_Name": "configs/r1.cfg",
+          "Nodes": [
+            {
+              "id": "node-r1",
+              "name": "r1"
+            }
+          ],
+          "Status": "PASSED"
+        },
+        {
+          "File_Format": "H3C_COMWARE",
+          "File_Name": "configs/r2.cfg",
+          "Nodes": [
+            {
+              "id": "node-r2",
+              "name": "r2"
+            }
+          ],
+          "Status": "PASSED"
+        }
+      ],
+      "seconds": 0.1254,
+      "snapshot": "snapshot-a"
+    },
+    "011/mvp01-baseline-37c1a13bcec7-a/snapshot-a/parseWarning": {
+      "cell_types": {
+        "Comment": [],
+        "Filename": [],
+        "Line": [],
+        "Parser_Context": [],
+        "Text": []
+      },
+      "column_schema": [
+        {
+          "description": "The file that was parsed",
+          "isKey": true,
+          "isValue": false,
+          "name": "Filename",
+          "schema": "String"
+        },
+        {
+          "description": "The line number in the input file that caused the warning",
+          "isKey": true,
+          "isValue": false,
+          "name": "Line",
+          "schema": "Integer"
+        },
+        {
+          "description": "The text of the input that caused the warning",
+          "isKey": true,
+          "isValue": false,
+          "name": "Text",
+          "schema": "String"
+        },
+        {
+          "description": "The context of the Batfish parser when the warning occurred",
+          "isKey": false,
+          "isValue": false,
+          "name": "Parser_Context",
+          "schema": "String"
+        },
+        {
+          "description": "An optional comment explaining more information about the warning",
+          "isKey": false,
+          "isValue": false,
+          "name": "Comment",
+          "schema": "String"
+        }
+      ],
+      "explicit_snapshot": true,
+      "network": "mvp01-baseline-37c1a13bcec7-a",
+      "parameters": {
+        "aggregateDuplicates": {
+          "description": "Whether to aggregate duplicate results.",
+          "displayName": "Aggregate duplicates",
+          "optional": true,
+          "type": "boolean"
+        }
+      },
+      "question": "parseWarning",
+      "row_count": 0,
+      "rows": [],
+      "seconds": 0.1298,
+      "snapshot": "snapshot-a"
+    },
+    "012/mvp01-baseline-37c1a13bcec7-a/snapshot-a/viConversionWarning": {
+      "cell_types": {
+        "Comment": [],
+        "Node": [],
+        "Type": []
+      },
+      "column_schema": [
+        {
+          "description": "The node that caused the warning",
+          "isKey": true,
+          "isValue": false,
+          "name": "Node",
+          "schema": "Node"
+        },
+        {
+          "description": "The type of the warning",
+          "isKey": true,
+          "isValue": false,
+          "name": "Type",
+          "schema": "List<String>"
+        },
+        {
+          "description": "The description of the warning",
+          "isKey": true,
+          "isValue": false,
+          "name": "Comment",
+          "schema": "String"
+        }
+      ],
+      "explicit_snapshot": true,
+      "network": "mvp01-baseline-37c1a13bcec7-a",
+      "parameters": {},
+      "question": "viConversionWarning",
+      "row_count": 0,
+      "rows": [],
+      "seconds": 0.1218,
+      "snapshot": "snapshot-a"
+    },
+    "013/mvp01-baseline-37c1a13bcec7-a/snapshot-a/initIssues": {
+      "cell_types": {
+        "Details": [],
+        "Line_Text": [],
+        "Nodes": [],
+        "Parser_Context": [],
+        "Source_Lines": [],
+        "Type": []
+      },
+      "column_schema": [
+        {
+          "description": "The nodes that were converted (if applicable)",
+          "isKey": true,
+          "isValue": false,
+          "name": "Nodes",
+          "schema": "List<String>"
+        },
+        {
+          "description": "The files and lines that caused the issues (if applicable)",
+          "isKey": true,
+          "isValue": false,
+          "name": "Source_Lines",
+          "schema": "List<FileLines>"
+        },
+        {
+          "description": "The type of issues identified",
+          "isKey": true,
+          "isValue": false,
+          "name": "Type",
+          "schema": "String"
+        },
+        {
+          "description": "Details about the issues identified",
+          "isKey": false,
+          "isValue": true,
+          "name": "Details",
+          "schema": "String"
+        },
+        {
+          "description": "The text of the input files that caused the issues (if applicable)",
+          "isKey": false,
+          "isValue": true,
+          "name": "Line_Text",
+          "schema": "String"
+        },
+        {
+          "description": "Batfish parser state when issues were encountered (if applicable)",
+          "isKey": false,
+          "isValue": true,
+          "name": "Parser_Context",
+          "schema": "String"
+        }
+      ],
+      "explicit_snapshot": true,
+      "network": "mvp01-baseline-37c1a13bcec7-a",
+      "parameters": {},
+      "question": "initIssues",
+      "row_count": 0,
+      "rows": [],
+      "seconds": 0.1213,
+      "snapshot": "snapshot-a"
+    },
+    "014/mvp01-baseline-37c1a13bcec7-a/warning/parseWarning": {
+      "cell_types": {
+        "Comment": [
+          "str"
+        ],
+        "Filename": [
+          "str"
+        ],
+        "Line": [
+          "int"
+        ],
+        "Parser_Context": [
+          "str"
+        ],
+        "Text": [
+          "str"
+        ]
+      },
+      "column_schema": [
+        {
+          "description": "The file that was parsed",
+          "isKey": true,
+          "isValue": false,
+          "name": "Filename",
+          "schema": "String"
+        },
+        {
+          "description": "The line number in the input file that caused the warning",
+          "isKey": true,
+          "isValue": false,
+          "name": "Line",
+          "schema": "Integer"
+        },
+        {
+          "description": "The text of the input that caused the warning",
+          "isKey": true,
+          "isValue": false,
+          "name": "Text",
+          "schema": "String"
+        },
+        {
+          "description": "The context of the Batfish parser when the warning occurred",
+          "isKey": false,
+          "isValue": false,
+          "name": "Parser_Context",
+          "schema": "String"
+        },
+        {
+          "description": "An optional comment explaining more information about the warning",
+          "isKey": false,
+          "isValue": false,
+          "name": "Comment",
+          "schema": "String"
+        }
+      ],
+      "explicit_snapshot": true,
+      "network": "mvp01-baseline-37c1a13bcec7-a",
+      "parameters": {
+        "aggregateDuplicates": {
+          "description": "Whether to aggregate duplicate results.",
+          "displayName": "Aggregate duplicates",
+          "optional": true,
+          "type": "boolean"
+        }
+      },
+      "question": "parseWarning",
+      "row_count": 1,
+      "rows": [
+        {
+          "Comment": "Unrecognized Huawei VRP top-level command",
+          "Filename": "configs/r1.cfg",
+          "Line": 12,
+          "Parser_Context": "huawei",
+          "Text": "mvp01-unsupported-command"
+        }
+      ],
+      "seconds": 0.1159,
+      "snapshot": "warning"
+    },
+    "015/mvp01-baseline-37c1a13bcec7-a/warning/initIssues": {
+      "cell_types": {
+        "Details": [
+          "str"
+        ],
+        "Line_Text": [
+          "str"
+        ],
+        "Nodes": [
+          "NoneType"
+        ],
+        "Parser_Context": [
+          "str"
+        ],
+        "Source_Lines": [
+          "ListWrapper"
+        ],
+        "Type": [
+          "str"
+        ]
+      },
+      "column_schema": [
+        {
+          "description": "The nodes that were converted (if applicable)",
+          "isKey": true,
+          "isValue": false,
+          "name": "Nodes",
+          "schema": "List<String>"
+        },
+        {
+          "description": "The files and lines that caused the issues (if applicable)",
+          "isKey": true,
+          "isValue": false,
+          "name": "Source_Lines",
+          "schema": "List<FileLines>"
+        },
+        {
+          "description": "The type of issues identified",
+          "isKey": true,
+          "isValue": false,
+          "name": "Type",
+          "schema": "String"
+        },
+        {
+          "description": "Details about the issues identified",
+          "isKey": false,
+          "isValue": true,
+          "name": "Details",
+          "schema": "String"
+        },
+        {
+          "description": "The text of the input files that caused the issues (if applicable)",
+          "isKey": false,
+          "isValue": true,
+          "name": "Line_Text",
+          "schema": "String"
+        },
+        {
+          "description": "Batfish parser state when issues were encountered (if applicable)",
+          "isKey": false,
+          "isValue": true,
+          "name": "Parser_Context",
+          "schema": "String"
+        }
+      ],
+      "explicit_snapshot": true,
+      "network": "mvp01-baseline-37c1a13bcec7-a",
+      "parameters": {},
+      "question": "initIssues",
+      "row_count": 1,
+      "rows": [
+        {
+          "Details": "Unrecognized Huawei VRP top-level command",
+          "Line_Text": "mvp01-unsupported-command",
+          "Nodes": null,
+          "Parser_Context": "huawei",
+          "Source_Lines": [
+            {
+              "filename": "configs/r1.cfg",
+              "lines": [
+                12
+              ]
+            }
+          ],
+          "Type": "Parse warning"
+        }
+      ],
+      "seconds": 0.1183,
+      "snapshot": "warning"
+    },
+    "016/mvp01-baseline-37c1a13bcec7-a/warning/fileParseStatus": {
+      "cell_types": {
+        "File_Format": [
+          "str"
+        ],
+        "File_Name": [
+          "str"
+        ],
+        "Nodes": [
+          "ListWrapper"
+        ],
+        "Status": [
+          "str"
+        ]
+      },
+      "column_schema": [
+        {
+          "description": "The file that was parsed",
+          "isKey": true,
+          "isValue": false,
+          "name": "File_Name",
+          "schema": "String"
+        },
+        {
+          "description": "The status of the parsing operation",
+          "isKey": false,
+          "isValue": true,
+          "name": "Status",
+          "schema": "String"
+        },
+        {
+          "description": "The detected format of the file",
+          "isKey": false,
+          "isValue": true,
+          "name": "File_Format",
+          "schema": "String"
+        },
+        {
+          "description": "Names of nodes produced from this file",
+          "isKey": false,
+          "isValue": true,
+          "name": "Nodes",
+          "schema": "List<Node>"
+        }
+      ],
+      "explicit_snapshot": true,
+      "network": "mvp01-baseline-37c1a13bcec7-a",
+      "parameters": {},
+      "question": "fileParseStatus",
+      "row_count": 2,
+      "rows": [
+        {
+          "File_Format": "HUAWEI_VRP",
+          "File_Name": "configs/r1.cfg",
+          "Nodes": [
+            {
+              "id": "node-r1",
+              "name": "r1"
+            }
+          ],
+          "Status": "PARTIALLY_UNRECOGNIZED"
+        },
+        {
+          "File_Format": "H3C_COMWARE",
+          "File_Name": "configs/r2.cfg",
+          "Nodes": [
+            {
+              "id": "node-r2",
+              "name": "r2"
+            }
+          ],
+          "Status": "PASSED"
+        }
+      ],
+      "seconds": 0.1155,
+      "snapshot": "warning"
+    }
+  },
+  "build": {
+    "bazel": "9.2.0",
+    "command": "bazel build //projects/allinone:allinone_main_deploy.jar --jobs=6 --noshow_progress --distdir=/private/tmp/h3c-bazel.l0kCKY",
+    "engine_host": "127.0.0.1",
+    "engine_port": 19996,
+    "exit_code": 0,
+    "heap_max": "4g"
+  },
+  "engine_revision": "7d0deeeac4a09973b3876327f6aef721ee12f955",
+  "engine_versions": {
+    "Batfish": "0.36.0",
+    "api_version": "0.0.0"
+  },
+  "fixture_sha256": {
+    "r1.cfg": "90a95f41726139e8998461daf01acdba643fbbf53a0a22c2dc95613d62df17eb",
+    "r2.cfg": "fc19dcd4522b92ba2a262c617d1fdccede8da706d5173230a7e8f69eb1a4c1d0"
+  },
+  "jar_sha256": "0927de7c740bc72f999870e842605baad9a7cb6ea66e4b01fb9a6037bea00193",
+  "observations": {
+    "background": {
+      "incomplete_works": {
+        "worklist": "[]"
+      },
+      "observed_statuses": [
+        "ASSIGNED",
+        "TERMINATEDNORMALLY"
+      ],
+      "recovered_question": "mvp01-background",
+      "submission_seconds": 0.0044,
+      "work_id_type": "str"
+    },
+    "identities": [
+      {
+        "display_label": "baseline",
+        "init_seconds": 0.1459,
+        "network": "mvp01-baseline-37c1a13bcec7-a",
+        "snapshot": "snapshot-a"
+      },
+      {
+        "display_label": "baseline",
+        "init_seconds": 0.4299,
+        "network": "mvp01-baseline-37c1a13bcec7-b",
+        "snapshot": "snapshot-b"
+      }
+    ],
+    "initialization": {
+      "duplicate_overwrite_false": "ValueError",
+      "return_type": "str",
+      "snapshot_metadata": [
+        {
+          "metadata": {
+            "creationTimestamp": "2026-09-24T16:55:08.271090Z",
+            "initializationMetadata": {
+              "currentStatus": "PARSED",
+              "errMessage": null,
+              "statusHistory": [
+                "Status changed to PARSING at 2026-09-24T16:55:08.280446Z",
+                "Status changed to PARSED at 2026-09-24T16:55:08.332570Z"
+              ]
+            },
+            "parentSnapshotId": null
+          },
+          "name": "warning"
+        },
+        {
+          "metadata": {
+            "creationTimestamp": "2026-09-24T16:55:05.649892Z",
+            "initializationMetadata": {
+              "currentStatus": "DATAPLANED",
+              "errMessage": null,
+              "statusHistory": [
+                "Status changed to PARSING at 2026-09-24T16:55:05.659677Z",
+                "Status changed to PARSED at 2026-09-24T16:55:05.728573Z",
+                "Status changed to DATAPLANING at 2026-09-24T16:55:06.725600Z",
+                "Status changed to DATAPLANED at 2026-09-24T16:55:06.828712Z"
+              ]
+            },
+            "parentSnapshotId": null
+          },
+          "name": "snapshot-a"
+        }
+      ],
+      "warning_logged": false,
+      "warning_snapshot_return": "warning"
+    },
+    "session_isolation": "A/B/A/B: addresses stay in their network/snapshot",
+    "timeout": {
+      "configured_transport_seconds": 0.03,
+      "http_requests": 3,
+      "read_timeout_retried": true,
+      "scope": "controlled local HTTP only; not an engine work cancellation test",
+      "sdk_default_seconds": 30,
+      "server_request_continued": true,
+      "total_seconds": 1.6691
+    },
+    "unsupported": {
+      "missing_question": "AttributeError",
+      "missing_snapshot": "HTTPError",
+      "unknown_option": "QuestionValidationException"
+    }
+  },
+  "packages": {
+    "PyYAML": "6.0.3",
+    "Pygments": "2.21.0",
+    "attrs": "26.1.0",
+    "cachebox": "5.2.3",
+    "certifi": "2026.7.22",
+    "charset-normalizer": "3.5.1",
+    "deepdiff": "9.1.0",
+    "idna": "3.20",
+    "iniconfig": "2.3.0",
+    "numpy": "2.5.3",
+    "orderly-set": "5.5.0",
+    "packaging": "26.3",
+    "pandas": "3.0.6",
+    "pip": "26.0",
+    "pluggy": "1.6.0",
+    "pybatfish": "2026.9.17.3748",
+    "pytest": "8.4.2",
+    "python-dateutil": "2.9.0.post0",
+    "requests": "2.34.2",
+    "requests-toolbelt": "1.0.0",
+    "setuptools": "84.0.0",
+    "simplejson": "4.1.2",
+    "six": "1.17.0",
+    "urllib3": "2.8.0"
+  },
+  "public_session_signatures": {
+    "answer_question": "(self, question_str: 'str', question_name: 'str', background: 'bool', snapshot: 'str', reference_snapshot: 'str | None', extra_args: 'dict[str, Any] | None') -> 'Answer | str'",
+    "auto_complete": "(self, completion_type: 'VariableType', query: 'str', max_suggestions: 'int | None' = None) -> 'list[AutoCompleteSuggestion]'",
+    "delete_network": "(self, name: 'str') -> 'None'",
+    "delete_network_object": "(self, key: 'str') -> 'None'",
+    "delete_node_role_dimension": "(self, dimension: 'str') -> 'None'",
+    "delete_reference_book": "(self, name: 'str') -> 'None'",
+    "delete_snapshot": "(self, name: 'str') -> 'None'",
+    "delete_snapshot_object": "(self, key: 'str', snapshot: 'str | None' = None) -> 'None'",
+    "extract_facts": "(self, nodes: 'str' = '/.*/', output_directory: 'str | None' = None, snapshot: 'str | None' = None) -> 'dict[str, Any]'",
+    "fork_snapshot": "(self, base_name: 'str', name: 'str | None' = None, overwrite: 'bool' = False, deactivate_interfaces: 'list[Interface] | None' = None, deactivate_nodes: 'list[str] | None' = None, restore_interfaces: 'list[Interface] | None' = None, restore_nodes: 'list[str] | None' = None, add_files: 'str | None' = None, extra_args: 'dict[str, Any] | None' = None) -> 'str | None'",
+    "generate_dataplane": "(self, snapshot: 'str | None' = None, extra_args: 'dict[str, Any] | None' = None) -> 'str'",
+    "get": "(type_: 'str' = 'bf', **params: 'Any') -> 'Session'",
+    "get_answer": "(self, question: 'str', snapshot: 'str', reference_snapshot: 'str | None' = None) -> 'Answer'",
+    "get_base_url2": "(self) -> 'str'",
+    "get_component_versions": "(self) -> 'dict[str, Any]'",
+    "get_network_object_stream": "(self, key: 'str') -> 'Any'",
+    "get_network_object_text": "(self, key: 'str', encoding: 'str' = 'utf-8') -> 'str'",
+    "get_node_roles": "(self, inferred: 'bool' = False) -> 'NodeRolesData'",
+    "get_reference_book": "(self, name: 'str') -> 'ReferenceBook'",
+    "get_reference_library": "(self) -> 'ReferenceLibrary'",
+    "get_session_types": "() -> 'dict[str, Callable]'",
+    "get_snapshot": "(self, snapshot: 'str | None' = None) -> 'str'",
+    "get_snapshot_input_object_stream": "(self, key: 'str', snapshot: 'str | None' = None) -> 'Any'",
+    "get_snapshot_input_object_text": "(self, key: 'str', encoding: 'str' = 'utf-8', snapshot: 'str | None' = None) -> 'str'",
+    "get_snapshot_object_stream": "(self, key: 'str', snapshot: 'str | None' = None) -> 'Any'",
+    "get_snapshot_object_text": "(self, key: 'str', encoding: 'str' = 'utf-8', snapshot: 'str | None' = None) -> 'str'",
+    "get_work_status": "(self, work_item)",
+    "init_snapshot": "(self, upload: 'str', name: 'str | None' = None, overwrite: 'bool' = False, extra_args: 'dict[str, Any] | None' = None) -> 'str'",
+    "init_snapshot_from_text": "(self, text: 'str', filename: 'str | None' = None, snapshot_name: 'str | None' = None, platform: 'str | None' = None, overwrite: 'bool' = False, extra_args: 'dict[str, Any] | None' = None) -> 'str'",
+    "list_incomplete_works": "(self) -> 'dict[str, Any]'",
+    "list_networks": "(self) -> 'list[str]'",
+    "list_snapshots": "(self, verbose: 'bool' = False) -> 'list[str] | list[dict[str, Any]]'",
+    "put_network_object": "(self, key: 'str', data: 'Any') -> 'None'",
+    "put_node_roles": "(self, node_roles_data: 'NodeRolesData') -> 'None'",
+    "put_reference_book": "(self, book: 'ReferenceBook') -> 'None'",
+    "put_snapshot_object": "(self, key: 'str', data: 'Any') -> 'None'",
+    "set_network": "(self, name: 'str | None' = None, prefix: 'str' = 'pcp') -> 'str'",
+    "set_snapshot": "(self, name: 'str | None' = None, index: 'int | None' = None) -> 'str'",
+    "validate_facts": "(self, expected_facts: 'str', snapshot: 'str | None' = None) -> 'dict[str, Any]'"
+  },
+  "python": "3.12.12",
+  "templates": {
+    "a10VirtualServerConfiguration": {
+      "source": "experimental",
+      "variables": {
+        "nodes": {
+          "description": "Include nodes matching this name or regex.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec"
+        },
+        "virtualServerIps": {
+          "description": "Include virtual servers whose IP match this specifier.",
+          "displayName": "Virtual Server IPs",
+          "optional": true,
+          "type": "ipSpaceSpec"
+        }
+      }
+    },
+    "aaaAuthenticationLogin": {
+      "source": "stable",
+      "variables": {
+        "nodes": {
+          "description": "Examine AAA Authentication on nodes matching this name or regex.",
+          "displayName": "Nodes",
+          "type": "nodeSpec",
+          "value": ".*"
+        }
+      }
+    },
+    "bgpEdges": {
+      "source": "stable",
+      "variables": {
+        "nodes": {
+          "description": "Include adjacencies whose first node matches this name or regex.",
+          "displayName": "Nodes",
+          "type": "nodeSpec",
+          "value": ".*"
+        },
+        "remoteNodes": {
+          "description": "Include adjacencies whose second node matches this name or regex.",
+          "displayName": "Remote Nodes",
+          "type": "nodeSpec",
+          "value": ".*"
+        }
+      }
+    },
+    "bgpPeerConfiguration": {
+      "source": "experimental",
+      "variables": {
+        "nodes": {
+          "description": "Include nodes matching this name or regex.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec"
+        },
+        "properties": {
+          "description": "Include properties matching this regex.",
+          "displayName": "Properties",
+          "optional": true,
+          "type": "bgpPeerPropertySpec"
+        }
+      }
+    },
+    "bgpProcessConfiguration": {
+      "source": "experimental",
+      "variables": {
+        "nodes": {
+          "description": "Include nodes matching this name or regex.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec"
+        },
+        "properties": {
+          "description": "Include properties matching this regex.",
+          "displayName": "Properties",
+          "optional": true,
+          "type": "bgpProcessPropertySpec"
+        }
+      }
+    },
+    "bgpRib": {
+      "source": "stable",
+      "variables": {
+        "network": {
+          "description": "Examine routes for networks matching this prefix.",
+          "displayName": "Network",
+          "optional": true,
+          "type": "prefix"
+        },
+        "nodes": {
+          "description": "Examine routes on nodes matching this specifier.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec"
+        },
+        "prefixMatchType": {
+          "description": "Use this prefix matching criterion: EXACT, LONGEST_PREFIX_MATCH, LONGER_PREFIXES, SHORTER_PREFIXES.",
+          "displayName": "Prefix match type",
+          "optional": true,
+          "type": "string",
+          "value": "EXACT",
+          "values": [
+            {
+              "name": "EXACT"
+            },
+            {
+              "name": "LONGEST_PREFIX_MATCH"
+            },
+            {
+              "name": "LONGER_PREFIXES"
+            },
+            {
+              "name": "SHORTER_PREFIXES"
+            }
+          ]
+        },
+        "status": {
+          "description": "Examine routes whose status matches this specifier.",
+          "displayName": "Status",
+          "optional": true,
+          "type": "bgpRouteStatusSpec"
+        },
+        "vrfs": {
+          "description": "Examine routes on VRFs matching this name or regex.",
+          "displayName": "VRFs",
+          "optional": true,
+          "type": "vrf"
+        }
+      }
+    },
+    "bgpSessionCompatibility": {
+      "source": "experimental",
+      "variables": {
+        "nodes": {
+          "description": "Include sessions whose first node matches this specifier.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec"
+        },
+        "remoteNodes": {
+          "description": "Include sessions whose second node matches this specifier.",
+          "displayName": "Remote Nodes",
+          "optional": true,
+          "type": "nodeSpec"
+        },
+        "status": {
+          "description": "Only include sessions for which compatibility status matches this specifier.",
+          "displayName": "Compatibility Status",
+          "optional": true,
+          "type": "bgpSessionCompatStatusSpec"
+        },
+        "type": {
+          "description": "Only include sessions that match this specifier.",
+          "displayName": "Type",
+          "optional": true,
+          "type": "bgpSessionTypeSpec"
+        }
+      }
+    },
+    "bgpSessionStatus": {
+      "source": "experimental",
+      "variables": {
+        "nodes": {
+          "description": "Include sessions whose first node matches this specifier.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec"
+        },
+        "remoteNodes": {
+          "description": "Include sessions whose second node matches this specifier.",
+          "displayName": "Remote Nodes",
+          "optional": true,
+          "type": "nodeSpec"
+        },
+        "status": {
+          "description": "Only include sessions for which status matches this specifier.",
+          "displayName": "Status",
+          "optional": true,
+          "type": "bgpSessionStatusSpec"
+        },
+        "type": {
+          "description": "Only include sessions that match this specifier.",
+          "displayName": "Type",
+          "optional": true,
+          "type": "bgpSessionTypeSpec"
+        }
+      }
+    },
+    "bidirectionalReachability": {
+      "source": "experimental",
+      "variables": {
+        "headers": {
+          "description": "Packet header constraints.",
+          "displayName": "Headers",
+          "fields": {
+            "applications": {
+              "optional": true,
+              "type": "applicationSpec"
+            },
+            "dscps": {
+              "optional": true
+            },
+            "dstIps": {
+              "optional": true,
+              "type": "ipSpaceSpec"
+            },
+            "dstPorts": {
+              "optional": true
+            },
+            "ecns": {
+              "optional": true
+            },
+            "flowStates": {
+              "optional": true
+            },
+            "fragmentOffsets": {
+              "optional": true
+            },
+            "icmpCodes": {
+              "optional": true
+            },
+            "icmpTypes": {
+              "optional": true
+            },
+            "ipProtocols": {
+              "optional": true,
+              "type": "ipProtocolSpec"
+            },
+            "packetLengths": {
+              "optional": true
+            },
+            "srcIps": {
+              "optional": true,
+              "type": "ipSpaceSpec"
+            },
+            "srcPorts": {
+              "optional": true
+            },
+            "tcpFlags": {
+              "optional": true
+            }
+          },
+          "optional": false,
+          "type": "headerConstraint"
+        },
+        "pathConstraints": {
+          "description": "Constraint the path a flow can take (start/end/transit locations).",
+          "displayName": "Path Constraints",
+          "fields": {
+            "endLocation": {
+              "optional": true,
+              "type": "nodeSpec"
+            },
+            "forbiddenLocations": {
+              "optional": true,
+              "type": "nodeSpec"
+            },
+            "startLocation": {
+              "optional": true,
+              "type": "locationSpec"
+            },
+            "transitLocations": {
+              "optional": true,
+              "type": "nodeSpec"
+            }
+          },
+          "optional": true,
+          "type": "pathConstraint"
+        },
+        "returnFlowType": {
+          "description": "Specifies the type of return flows to search.",
+          "displayName": "Return Flow Type",
+          "optional": true,
+          "type": "string",
+          "value": "SUCCESS",
+          "values": [
+            {
+              "description": "Flows that are successful",
+              "name": "SUCCESS"
+            },
+            {
+              "description": "Flows that fail",
+              "name": "FAILURE"
+            },
+            {
+              "description": "Flows that succeed or fail depending on the path",
+              "name": "MULTIPATH_INCONSISTENT"
+            }
+          ]
+        }
+      }
+    },
+    "bidirectionalTraceroute": {
+      "source": "experimental",
+      "variables": {
+        "headers": {
+          "description": "Packet header constraints.",
+          "displayName": "Headers",
+          "fields": {
+            "applications": {
+              "optional": true,
+              "type": "applicationSpec"
+            },
+            "dscps": {
+              "optional": true
+            },
+            "dstIps": {
+              "optional": false,
+              "type": "ipSpaceSpec"
+            },
+            "dstPorts": {
+              "optional": true
+            },
+            "ecns": {
+              "optional": true
+            },
+            "flowStates": {
+              "optional": true
+            },
+            "fragmentOffsets": {
+              "optional": true
+            },
+            "icmpCodes": {
+              "optional": true
+            },
+            "icmpTypes": {
+              "optional": true
+            },
+            "ipProtocols": {
+              "optional": true,
+              "type": "ipProtocolSpec"
+            },
+            "packetLengths": {
+              "optional": true
+            },
+            "srcIps": {
+              "optional": true,
+              "type": "ipSpaceSpec"
+            },
+            "srcPorts": {
+              "optional": true
+            },
+            "tcpFlags": {
+              "optional": true
+            }
+          },
+          "optional": false,
+          "type": "headerConstraint"
+        },
+        "ignoreFilters": {
+          "description": "If set, filters/ACLs encountered along the path are ignored.",
+          "displayName": "Ignore Filters",
+          "optional": true,
+          "type": "boolean"
+        },
+        "maxTraces": {
+          "description": "Limit the number of traces returned.",
+          "displayName": "Max Traces",
+          "optional": true,
+          "type": "integer"
+        },
+        "startLocation": {
+          "description": "Location (node and interface combination) to start tracing from.",
+          "displayName": "Start Location",
+          "minLength": 1,
+          "type": "locationSpec"
+        }
+      }
+    },
+    "compareFilters": {
+      "source": "experimental",
+      "variables": {
+        "filters": {
+          "description": "Only evaluate filters that match this filter specifier.",
+          "displayName": "Filters",
+          "optional": true,
+          "type": "filterSpec"
+        },
+        "ignoreComposites": {
+          "description": "Whether to ignore filters that are composed of multiple filters defined in the configs.",
+          "displayName": "Ignore composite filters",
+          "optional": true,
+          "type": "boolean",
+          "value": false
+        },
+        "nodes": {
+          "description": "Only evaluate filters present on nodes matching this node specifier.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec"
+        }
+      }
+    },
+    "comparePeerGroupPolicies": {
+      "source": "experimental",
+      "variables": {
+        "nodes": {
+          "description": "Only examine policies on nodes matching this specifier.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec"
+        }
+      }
+    },
+    "compareRoutePolicies": {
+      "source": "experimental",
+      "variables": {
+        "nodes": {
+          "description": "Only examine policies on nodes matching this specifier.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec"
+        },
+        "policy": {
+          "description": "Only consider policies that match this specifier.",
+          "displayName": "Policy",
+          "optional": false,
+          "type": "routingPolicySpec"
+        },
+        "referencePolicy": {
+          "description": "Only consider policies that match this specifier - if not provided, policies matched by policy are used.",
+          "displayName": "Reference Policy",
+          "optional": true,
+          "type": "routingPolicySpec"
+        }
+      }
+    },
+    "definedStructures": {
+      "source": "stable",
+      "variables": {
+        "filename": {
+          "description": "Include structures defined in the given file.",
+          "displayName": "Filename",
+          "optional": true,
+          "type": "string"
+        },
+        "names": {
+          "description": "Include structures whose name matches this string or regex.",
+          "displayName": "Names",
+          "optional": true,
+          "type": "structureName",
+          "value": ".*"
+        },
+        "nodes": {
+          "description": "Include files used to generate nodes whose name matches this specifier.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec",
+          "value": ".*"
+        },
+        "types": {
+          "description": "Include structures whose vendor-specific type matches this string or regex.",
+          "displayName": "Types",
+          "optional": true,
+          "type": "javaRegex",
+          "value": ".*"
+        }
+      }
+    },
+    "detectLoops": {
+      "source": "experimental",
+      "variables": {
+        "maxTraces": {
+          "description": "Limit the number of traces returned.",
+          "displayName": "Max Traces",
+          "optional": true,
+          "type": "integer"
+        }
+      }
+    },
+    "differentialReachability": {
+      "source": "experimental",
+      "variables": {
+        "actions": {
+          "description": "Only return flows for which the disposition is from this set.",
+          "displayName": "Actions",
+          "optional": true,
+          "type": "dispositionSpec",
+          "value": "success"
+        },
+        "headers": {
+          "description": "Packet header constraints.",
+          "displayName": "Headers",
+          "fields": {
+            "applications": {
+              "optional": true,
+              "type": "applicationSpec"
+            },
+            "dscps": {
+              "optional": true
+            },
+            "dstIps": {
+              "optional": true,
+              "type": "ipSpaceSpec"
+            },
+            "dstPorts": {
+              "optional": true
+            },
+            "ecns": {
+              "optional": true
+            },
+            "flowStates": {
+              "optional": true
+            },
+            "fragmentOffsets": {
+              "optional": true
+            },
+            "icmpCodes": {
+              "optional": true
+            },
+            "icmpTypes": {
+              "optional": true
+            },
+            "ipProtocols": {
+              "optional": true,
+              "type": "ipProtocolSpec"
+            },
+            "packetLengths": {
+              "optional": true
+            },
+            "srcIps": {
+              "optional": true,
+              "type": "ipSpaceSpec"
+            },
+            "srcPorts": {
+              "optional": true
+            },
+            "tcpFlags": {
+              "optional": true
+            }
+          },
+          "optional": true,
+          "type": "headerConstraint"
+        },
+        "ignoreFilters": {
+          "description": "Do not apply filters/ACLs during analysis.",
+          "displayName": "Ignore Filters",
+          "optional": true,
+          "type": "boolean",
+          "value": false
+        },
+        "invertSearch": {
+          "description": "Search for packet headers outside the specified headerspace, rather than inside the space.",
+          "displayName": "Invert Search",
+          "optional": true,
+          "type": "boolean"
+        },
+        "maxTraces": {
+          "description": "Limit the number of traces returned.",
+          "displayName": "Max Traces",
+          "optional": true,
+          "type": "integer"
+        },
+        "pathConstraints": {
+          "description": "Constraint the path a flow can take (start/end/transit locations).",
+          "displayName": "Path Constraints",
+          "fields": {
+            "endLocation": {
+              "optional": true,
+              "type": "nodeSpec"
+            },
+            "forbiddenLocations": {
+              "optional": true,
+              "type": "nodeSpec"
+            },
+            "startLocation": {
+              "optional": true,
+              "type": "locationSpec"
+            },
+            "transitLocations": {
+              "optional": true,
+              "type": "nodeSpec"
+            }
+          },
+          "optional": true,
+          "type": "pathConstraint"
+        }
+      }
+    },
+    "edges": {
+      "source": "stable",
+      "variables": {
+        "edgeType": {
+          "description": "Types of edges to include. Default is layer3.",
+          "displayName": "Edge Type",
+          "type": "string",
+          "value": "layer3",
+          "values": [
+            {
+              "name": "bgp"
+            },
+            {
+              "name": "eigrp"
+            },
+            {
+              "name": "ipsec"
+            },
+            {
+              "name": "isis"
+            },
+            {
+              "name": "layer1"
+            },
+            {
+              "name": "layer3"
+            },
+            {
+              "name": "ospf"
+            },
+            {
+              "name": "user_provided_layer1"
+            },
+            {
+              "name": "vxlan"
+            }
+          ]
+        },
+        "initial": {
+          "description": "Use the initial topology (pre-dataplane computation).",
+          "displayName": "Use Initial Topology",
+          "type": "boolean",
+          "value": false
+        },
+        "nodes": {
+          "description": "Include edges whose first node matches this name or regex.",
+          "displayName": "Nodes",
+          "type": "nodeSpec",
+          "value": ".*"
+        },
+        "remoteNodes": {
+          "description": "Include edges whose second node matches this name or regex.",
+          "displayName": "Remote Nodes",
+          "type": "nodeSpec",
+          "value": ".*"
+        }
+      }
+    },
+    "eigrpEdges": {
+      "source": "stable",
+      "variables": {
+        "nodes": {
+          "description": "Include adjacencies whose first node matches this name or regex.",
+          "displayName": "Nodes",
+          "type": "nodeSpec",
+          "value": ".*"
+        },
+        "remoteNodes": {
+          "description": "Include adjacencies whose second node matches this name or regex.",
+          "displayName": "Remote Nodes",
+          "type": "nodeSpec",
+          "value": ".*"
+        }
+      }
+    },
+    "evpnL3VniProperties": {
+      "source": "experimental",
+      "variables": {
+        "nodes": {
+          "description": "Include nodes matching this specifier.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec"
+        }
+      }
+    },
+    "evpnRib": {
+      "source": "stable",
+      "variables": {
+        "network": {
+          "description": "Examine routes for networks matching this prefix.",
+          "displayName": "Network",
+          "optional": true,
+          "type": "prefix"
+        },
+        "nodes": {
+          "description": "Examine routes on nodes matching this specifier.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec"
+        },
+        "prefixMatchType": {
+          "description": "Use this prefix matching criterion: EXACT, LONGEST_PREFIX_MATCH, LONGER_PREFIXES, SHORTER_PREFIXES.",
+          "displayName": "Prefix match type",
+          "optional": true,
+          "type": "string",
+          "value": "EXACT",
+          "values": [
+            {
+              "name": "EXACT"
+            },
+            {
+              "name": "LONGEST_PREFIX_MATCH"
+            },
+            {
+              "name": "LONGER_PREFIXES"
+            },
+            {
+              "name": "SHORTER_PREFIXES"
+            }
+          ]
+        },
+        "vrfs": {
+          "description": "Examine routes on VRFs matching this name or regex.",
+          "displayName": "VRFs",
+          "optional": true,
+          "type": "vrf"
+        }
+      }
+    },
+    "f5BigipVipConfiguration": {
+      "source": "experimental",
+      "variables": {
+        "nodes": {
+          "description": "Include nodes matching this name or regex.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec"
+        }
+      }
+    },
+    "fileParseStatus": {
+      "source": "stable",
+      "variables": {}
+    },
+    "filterLineReachability": {
+      "source": "experimental",
+      "variables": {
+        "filters": {
+          "description": "Specifier for filters to test.",
+          "displayName": "Filters",
+          "optional": true,
+          "type": "filterSpec"
+        },
+        "ignoreComposites": {
+          "description": "Whether to ignore filters that are composed of multiple filters defined in the configs.",
+          "displayName": "Ignore composite filters",
+          "optional": true,
+          "type": "boolean",
+          "value": false
+        },
+        "nodes": {
+          "description": "Examine filters on nodes matching this specifier.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec"
+        }
+      }
+    },
+    "filterTable": {
+      "source": "experimental",
+      "variables": {
+        "columns": {
+          "description": "The set of columns to fetch.",
+          "displayName": "Columns",
+          "minElements": 1,
+          "optional": true,
+          "type": "string"
+        },
+        "filter": {
+          "description": "The filter to use.",
+          "displayName": "Filter",
+          "optional": true,
+          "type": "string"
+        },
+        "innerQuestion": {
+          "description": "The inner question whose answer should be filtered.",
+          "displayName": "Inner Question",
+          "type": "question"
+        }
+      }
+    },
+    "findMatchingFilterLines": {
+      "source": "experimental",
+      "variables": {
+        "action": {
+          "description": "Show filter lines with this action. By default returns lines with either action.",
+          "displayName": "Action",
+          "optional": true,
+          "type": "string",
+          "values": [
+            {
+              "description": "Return only lines that permit packets",
+              "name": "permit"
+            },
+            {
+              "description": "Return only lines that deny packets",
+              "name": "deny"
+            }
+          ]
+        },
+        "filters": {
+          "description": "Specifier for filters to check.",
+          "displayName": "Filters",
+          "optional": true,
+          "type": "filterSpec"
+        },
+        "headers": {
+          "description": "Packet header constraints for which to find matching filter lines.",
+          "displayName": "Headers",
+          "fields": {
+            "applications": {
+              "optional": true,
+              "type": "applicationSpec"
+            },
+            "dscps": {
+              "optional": true
+            },
+            "dstIps": {
+              "optional": true,
+              "type": "ipSpaceSpec"
+            },
+            "dstPorts": {
+              "optional": true
+            },
+            "ecns": {
+              "optional": true
+            },
+            "flowStates": {
+              "optional": true
+            },
+            "fragmentOffsets": {
+              "optional": true
+            },
+            "icmpCodes": {
+              "optional": true
+            },
+            "icmpTypes": {
+              "optional": true
+            },
+            "ipProtocols": {
+              "optional": true,
+              "type": "ipProtocolSpec"
+            },
+            "packetLengths": {
+              "optional": true
+            },
+            "srcIps": {
+              "optional": true,
+              "type": "ipSpaceSpec"
+            },
+            "srcPorts": {
+              "optional": true
+            },
+            "tcpFlags": {
+              "optional": true
+            }
+          },
+          "optional": true,
+          "type": "headerConstraint"
+        },
+        "ignoreComposites": {
+          "description": "Whether to ignore filters that are composed of multiple filters defined in the configs.",
+          "displayName": "Ignore composite filters",
+          "optional": true,
+          "type": "boolean",
+          "value": false
+        },
+        "nodes": {
+          "description": "Examine filters on nodes matching this specifier.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec"
+        }
+      }
+    },
+    "hsrpProperties": {
+      "source": "experimental",
+      "variables": {
+        "excludeShutInterfaces": {
+          "description": "Exclude interfaces that are shutdown.",
+          "displayName": "Exclude Shut Interfaces",
+          "optional": true,
+          "type": "boolean"
+        },
+        "interfaces": {
+          "description": "Include interfaces matching this specifier.",
+          "displayName": "Interfaces",
+          "optional": true,
+          "type": "interfacesSpec"
+        },
+        "nodes": {
+          "description": "Include nodes matching this specifier.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec"
+        },
+        "virtualAddresses": {
+          "description": "Include only groups with at least one virtual address matching this specifier.",
+          "displayName": "Virtual Addresses",
+          "optional": true,
+          "type": "ipSpaceSpec"
+        }
+      }
+    },
+    "initIssues": {
+      "source": "stable",
+      "variables": {}
+    },
+    "interfaceMtu": {
+      "source": "experimental",
+      "variables": {
+        "comparator": {
+          "description": "Returned devices will satisfy <comparator> <mtuBytes>. Use '<' to find devices that do not have MTU smaller than the specified <mtuBytes> MTU.",
+          "displayName": "Comparator",
+          "optional": true,
+          "type": "comparator",
+          "value": "<"
+        },
+        "interfaces": {
+          "description": "Evaluate interfaces matching this specifier.",
+          "displayName": "Interfaces",
+          "type": "interfacesSpec",
+          "value": ".*"
+        },
+        "mtuBytes": {
+          "description": "The reference MTU in bytes against which to check the configured MTU.",
+          "displayName": "MTU Bytes",
+          "type": "integer",
+          "value": 1500
+        },
+        "nodes": {
+          "description": "Include nodes matching this specifier.",
+          "displayName": "Nodes",
+          "type": "nodeSpec",
+          "value": ".*"
+        }
+      }
+    },
+    "interfaceProperties": {
+      "source": "experimental",
+      "variables": {
+        "excludeShutInterfaces": {
+          "description": "Exclude interfaces that are shutdown.",
+          "displayName": "Exclude Shut Interfaces",
+          "optional": true,
+          "type": "boolean"
+        },
+        "interfaces": {
+          "description": "Include interfaces matching this specifier.",
+          "displayName": "Interfaces",
+          "optional": true,
+          "type": "interfacesSpec"
+        },
+        "nodes": {
+          "description": "Include nodes matching this specifier.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec"
+        },
+        "properties": {
+          "description": "Include properties matching this specifier.",
+          "displayName": "Properties",
+          "optional": true,
+          "type": "interfacePropertySpec"
+        }
+      }
+    },
+    "ipOwners": {
+      "source": "stable",
+      "variables": {
+        "duplicatesOnly": {
+          "description": "Restrict output to only IP addresses that are duplicated (configured on a different node or VRF) in the snapshot.",
+          "displayName": "Duplicates Only",
+          "type": "boolean",
+          "value": false
+        },
+        "ips": {
+          "description": "Restrict output to only specified IP addresses.",
+          "displayName": "IP specifier",
+          "optional": true,
+          "type": "ipSpaceSpec"
+        }
+      }
+    },
+    "ipsecEdges": {
+      "source": "stable",
+      "variables": {
+        "nodes": {
+          "description": "Include tunnels whose first node matches this name or regex.",
+          "displayName": "Nodes",
+          "type": "nodeSpec",
+          "value": ".*"
+        },
+        "remoteNodes": {
+          "description": "Include tunnels whose second node matches this name or regex.",
+          "displayName": "Remote Nodes",
+          "type": "nodeSpec",
+          "value": ".*"
+        }
+      }
+    },
+    "ipsecSessionStatus": {
+      "source": "stable",
+      "variables": {
+        "nodes": {
+          "description": "Include sessions whose first node matches this specifier.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec"
+        },
+        "remoteNodes": {
+          "description": "Include sessions whose second node matches this specifier.",
+          "displayName": "Remote Nodes",
+          "optional": true,
+          "type": "nodeSpec"
+        },
+        "status": {
+          "description": "Only include IPSec sessions for which status matches this specifier.",
+          "displayName": "Status",
+          "optional": true,
+          "type": "ipsecSessionStatusSpec"
+        }
+      }
+    },
+    "isisEdges": {
+      "source": "stable",
+      "variables": {
+        "nodes": {
+          "description": "Include adjacencies whose first node matches this name or regex.",
+          "displayName": "Nodes",
+          "type": "nodeSpec",
+          "value": ".*"
+        },
+        "remoteNodes": {
+          "description": "Include adjacencies whose second node matches this name or regex.",
+          "displayName": "Remote Nodes",
+          "type": "nodeSpec",
+          "value": ".*"
+        }
+      }
+    },
+    "layer1Edges": {
+      "source": "stable",
+      "variables": {
+        "nodes": {
+          "description": "Include links whose first node matches this name or regex.",
+          "displayName": "Nodes",
+          "type": "nodeSpec",
+          "value": ".*"
+        },
+        "remoteNodes": {
+          "description": "Include links whose second node matches this name or regex.",
+          "displayName": "Remote Nodes",
+          "type": "nodeSpec",
+          "value": ".*"
+        }
+      }
+    },
+    "layer3Edges": {
+      "source": "stable",
+      "variables": {
+        "nodes": {
+          "description": "Include edges whose first node matches this name or regex.",
+          "displayName": "Nodes",
+          "type": "nodeSpec",
+          "value": ".*"
+        },
+        "remoteNodes": {
+          "description": "Include edges whose second node matches this name or regex.",
+          "displayName": "Remote Nodes",
+          "type": "nodeSpec",
+          "value": ".*"
+        }
+      }
+    },
+    "loopbackMultipathConsistency": {
+      "source": "experimental",
+      "variables": {
+        "maxTraces": {
+          "description": "Limit the number of traces returned.",
+          "displayName": "Max Traces",
+          "optional": true,
+          "type": "integer"
+        }
+      }
+    },
+    "lpmRoutes": {
+      "source": "stable",
+      "variables": {
+        "ip": {
+          "description": "IP address to run LPM on.",
+          "displayName": "IP Address",
+          "optional": false,
+          "type": "ip"
+        },
+        "nodes": {
+          "description": "Examine routes on nodes matching this specifier.",
+          "displayName": "Nodes",
+          "type": "nodeSpec",
+          "value": ".*"
+        },
+        "vrfs": {
+          "description": "Examine routes on VRFs matching this name or regex.",
+          "displayName": "VRFs",
+          "type": "vrf",
+          "value": ".*"
+        }
+      }
+    },
+    "mlagProperties": {
+      "source": "experimental",
+      "variables": {
+        "mlagIds": {
+          "description": "Include MLAG IDs matching this specifier.",
+          "displayName": "MLAG IDs",
+          "optional": true,
+          "type": "mlagIdSpec"
+        },
+        "nodes": {
+          "description": "Include nodes matching this specifier.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec"
+        }
+      }
+    },
+    "multipathConsistency": {
+      "source": "experimental",
+      "variables": {
+        "headers": {
+          "description": "Packet header constraints.",
+          "displayName": "Headers",
+          "fields": {
+            "applications": {
+              "optional": true
+            },
+            "dscps": {
+              "optional": true
+            },
+            "dstIps": {
+              "optional": true
+            },
+            "dstPorts": {
+              "optional": true
+            },
+            "ecns": {
+              "optional": true
+            },
+            "flowStates": {
+              "optional": true
+            },
+            "fragmentOffsets": {
+              "optional": true
+            },
+            "icmpCodes": {
+              "optional": true
+            },
+            "icmpTypes": {
+              "optional": true
+            },
+            "ipProtocols": {
+              "optional": true
+            },
+            "packetLengths": {
+              "optional": true
+            },
+            "srcIps": {
+              "optional": true
+            },
+            "srcPorts": {
+              "optional": true
+            },
+            "tcpFlags": {
+              "optional": true
+            }
+          },
+          "optional": true,
+          "type": "headerConstraint"
+        },
+        "maxTraces": {
+          "description": "Limit the number of traces returned.",
+          "displayName": "Max Traces",
+          "optional": true,
+          "type": "integer"
+        },
+        "pathConstraints": {
+          "description": "Constraint the path a flow can take (start/end/transit locations).",
+          "displayName": "Path Constraints",
+          "fields": {
+            "endLocation": {
+              "optional": true
+            },
+            "forbiddenLocations": {
+              "optional": true
+            },
+            "startLocation": {
+              "optional": true
+            },
+            "transitLocations": {
+              "optional": true
+            }
+          },
+          "optional": true,
+          "type": "pathConstraint"
+        }
+      }
+    },
+    "namedStructures": {
+      "source": "experimental",
+      "variables": {
+        "ignoreGenerated": {
+          "description": "Whether to ignore auto-generated structures.",
+          "displayName": "Ignore auto-generated structures",
+          "optional": true,
+          "type": "boolean",
+          "value": true
+        },
+        "indicatePresence": {
+          "description": "Output if the structure is present or absent.",
+          "displayName": "Indicate presence",
+          "optional": true,
+          "type": "boolean"
+        },
+        "nodes": {
+          "description": "Include nodes matching this specifier.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec"
+        },
+        "structureNames": {
+          "description": "Include structures matching this name or regex.",
+          "displayName": "Structure names",
+          "optional": true,
+          "type": "structureName"
+        },
+        "structureTypes": {
+          "description": "Include structures of this type.",
+          "displayName": "Structure types",
+          "optional": true,
+          "type": "namedStructureSpec"
+        }
+      }
+    },
+    "nodeProperties": {
+      "source": "experimental",
+      "variables": {
+        "nodes": {
+          "description": "Include nodes matching this name or regex.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec"
+        },
+        "properties": {
+          "description": "Include properties matching this regex.",
+          "displayName": "Properties",
+          "optional": true,
+          "type": "nodePropertySpec"
+        }
+      }
+    },
+    "ospfAreaConfiguration": {
+      "source": "experimental",
+      "variables": {
+        "nodes": {
+          "description": "Include nodes matching this name or regex.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec"
+        }
+      }
+    },
+    "ospfEdges": {
+      "source": "stable",
+      "variables": {
+        "nodes": {
+          "description": "Include adjacencies whose first node matches this name or regex.",
+          "displayName": "Nodes",
+          "type": "nodeSpec",
+          "value": ".*"
+        },
+        "remoteNodes": {
+          "description": "Include edges whose second node matches this name or regex.",
+          "displayName": "Remote Nodes",
+          "type": "nodeSpec",
+          "value": ".*"
+        }
+      }
+    },
+    "ospfInterfaceConfiguration": {
+      "source": "experimental",
+      "variables": {
+        "nodes": {
+          "description": "Include nodes matching this specifier.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec"
+        },
+        "properties": {
+          "description": "Include properties matching this specifier.",
+          "displayName": "Properties",
+          "optional": true,
+          "type": "ospfInterfacePropertySpec"
+        }
+      }
+    },
+    "ospfProcessConfiguration": {
+      "source": "experimental",
+      "variables": {
+        "nodes": {
+          "description": "Include nodes matching this name or regex.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec"
+        },
+        "properties": {
+          "description": "Include properties matching this specifier.",
+          "displayName": "Properties",
+          "optional": true,
+          "type": "ospfProcessPropertySpec"
+        }
+      }
+    },
+    "ospfSessionCompatibility": {
+      "source": "experimental",
+      "variables": {
+        "nodes": {
+          "description": "Include nodes matching this name or regex.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec"
+        },
+        "remoteNodes": {
+          "description": "Include remote nodes matching this name or regex.",
+          "displayName": "Remote Nodes",
+          "optional": true,
+          "type": "nodeSpec"
+        },
+        "statuses": {
+          "description": "Only include sessions matching this status specifier.",
+          "displayName": "Session Statuses",
+          "optional": true,
+          "type": "ospfSessionStatusSpec"
+        }
+      }
+    },
+    "parseWarning": {
+      "source": "stable",
+      "variables": {
+        "aggregateDuplicates": {
+          "description": "Whether to aggregate duplicate results.",
+          "displayName": "Aggregate duplicates",
+          "optional": true,
+          "type": "boolean"
+        }
+      }
+    },
+    "prefixTracer": {
+      "source": "experimental",
+      "variables": {
+        "nodes": {
+          "description": "Include prefix tracing information for nodes matching this name or regex.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec"
+        },
+        "prefix": {
+          "description": "The prefix to trace. Expected format is A.B.C.D/Y.",
+          "displayName": "Prefix",
+          "optional": true,
+          "type": "prefix"
+        }
+      }
+    },
+    "reachability": {
+      "source": "experimental",
+      "variables": {
+        "actions": {
+          "description": "Only return flows for which the disposition is from this set.",
+          "displayName": "Actions",
+          "optional": true,
+          "type": "dispositionSpec",
+          "value": "success"
+        },
+        "headers": {
+          "description": "Packet header constraints.",
+          "displayName": "Headers",
+          "fields": {
+            "applications": {
+              "optional": true,
+              "type": "applicationSpec"
+            },
+            "dscps": {
+              "optional": true
+            },
+            "dstIps": {
+              "optional": true,
+              "type": "ipSpaceSpec"
+            },
+            "dstPorts": {
+              "optional": true
+            },
+            "ecns": {
+              "optional": true
+            },
+            "flowStates": {
+              "optional": true
+            },
+            "fragmentOffsets": {
+              "optional": true
+            },
+            "icmpCodes": {
+              "optional": true
+            },
+            "icmpTypes": {
+              "optional": true
+            },
+            "ipProtocols": {
+              "optional": true,
+              "type": "ipProtocolSpec"
+            },
+            "packetLengths": {
+              "optional": true
+            },
+            "srcIps": {
+              "optional": true,
+              "type": "ipSpaceSpec"
+            },
+            "srcPorts": {
+              "optional": true
+            },
+            "tcpFlags": {
+              "optional": true
+            }
+          },
+          "optional": true,
+          "type": "headerConstraint"
+        },
+        "ignoreFilters": {
+          "description": "Do not apply filters/ACLs during analysis.",
+          "displayName": "Ignore Filters",
+          "optional": true,
+          "type": "boolean"
+        },
+        "invertSearch": {
+          "description": "Search for packet headers outside the specified headerspace, rather than inside the space.",
+          "displayName": "Invert Search",
+          "optional": true,
+          "type": "boolean"
+        },
+        "maxTraces": {
+          "description": "Limit the number of traces returned.",
+          "displayName": "Max Traces",
+          "optional": true,
+          "type": "integer"
+        },
+        "pathConstraints": {
+          "description": "Constraint the path a flow can take (start/end/transit locations).",
+          "displayName": "Path Constraints",
+          "fields": {
+            "endLocation": {
+              "optional": true,
+              "type": "nodeSpec"
+            },
+            "forbiddenLocations": {
+              "optional": true,
+              "type": "nodeSpec"
+            },
+            "startLocation": {
+              "optional": true,
+              "type": "locationSpec"
+            },
+            "transitLocations": {
+              "optional": true,
+              "type": "nodeSpec"
+            }
+          },
+          "optional": true,
+          "type": "pathConstraint"
+        }
+      }
+    },
+    "referencedStructures": {
+      "source": "stable",
+      "variables": {
+        "names": {
+          "description": "Include structures whose name matches this string or regex.",
+          "displayName": "Names",
+          "optional": true,
+          "type": "structureName"
+        },
+        "nodes": {
+          "description": "Include files used to generate nodes whose name matches this specifier.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec"
+        },
+        "types": {
+          "description": "Include structures whose vendor-specific type matches this string or regex.",
+          "displayName": "Types",
+          "optional": true,
+          "type": "javaRegex"
+        }
+      }
+    },
+    "resolveFilterSpecifier": {
+      "source": "experimental",
+      "variables": {
+        "filters": {
+          "description": "Input to the FilterSpecifier.",
+          "displayName": "Filters",
+          "type": "filterSpec"
+        },
+        "grammarVersion": {
+          "description": "Version of grammar to use for resolution.",
+          "displayName": "Grammar version",
+          "optional": true,
+          "type": "string"
+        },
+        "nodes": {
+          "description": "Input to the NodeSpecifier that specifies the set of nodes that should be considered.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec",
+          "value": "/.*/"
+        }
+      }
+    },
+    "resolveInterfaceSpecifier": {
+      "source": "experimental",
+      "variables": {
+        "grammarVersion": {
+          "description": "Version of grammar to use for resolution.",
+          "displayName": "Grammar version",
+          "optional": true,
+          "type": "string"
+        },
+        "interfaces": {
+          "description": "Input to the interfaceSpecifier.",
+          "displayName": "Interfaces",
+          "type": "interfacesSpec"
+        },
+        "nodes": {
+          "description": "Input to the NodeSpecifier that specifies the set of nodes that should be considered.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec",
+          "value": "/.*/"
+        }
+      }
+    },
+    "resolveIpSpecifier": {
+      "source": "experimental",
+      "variables": {
+        "grammarVersion": {
+          "description": "Version of grammar to use for resolution.",
+          "displayName": "Grammar version",
+          "optional": true,
+          "type": "string"
+        },
+        "ips": {
+          "description": "Input to the IP space specifier.",
+          "displayName": "IP specifier input",
+          "type": "ipSpaceSpec"
+        }
+      }
+    },
+    "resolveIpsOfLocationSpecifier": {
+      "source": "experimental",
+      "variables": {
+        "grammarVersion": {
+          "description": "Version of grammar to use for resolution.",
+          "displayName": "Grammar version",
+          "optional": true,
+          "type": "string"
+        },
+        "locations": {
+          "description": "Input to the LocationSpecifier.",
+          "displayName": "Locations",
+          "type": "locationSpec"
+        }
+      }
+    },
+    "resolveLocationSpecifier": {
+      "source": "experimental",
+      "variables": {
+        "grammarVersion": {
+          "description": "Version of grammar to use for resolution.",
+          "displayName": "Grammar version",
+          "optional": true,
+          "type": "string"
+        },
+        "locations": {
+          "description": "Input to the LocationSpecifier.",
+          "displayName": "Locations",
+          "type": "locationSpec"
+        }
+      }
+    },
+    "resolveNodeSpecifier": {
+      "source": "experimental",
+      "variables": {
+        "grammarVersion": {
+          "description": "Version of grammar to use for resolution.",
+          "displayName": "Grammar version",
+          "optional": true,
+          "type": "string"
+        },
+        "nodes": {
+          "description": "Input to the NodeSpecifier.",
+          "displayName": "Nodes",
+          "type": "nodeSpec"
+        }
+      }
+    },
+    "routes": {
+      "source": "stable",
+      "variables": {
+        "network": {
+          "description": "Return routes for networks matching this prefix.",
+          "displayName": "Network",
+          "optional": true,
+          "type": "prefix"
+        },
+        "nodes": {
+          "description": "Return routes on nodes matching this specifier.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec"
+        },
+        "prefixMatchType": {
+          "description": "Use this prefix matching criterion: EXACT, LONGEST_PREFIX_MATCH, LONGER_PREFIXES, SHORTER_PREFIXES.",
+          "displayName": "Prefix match type",
+          "optional": true,
+          "type": "string",
+          "value": "EXACT",
+          "values": [
+            {
+              "name": "EXACT"
+            },
+            {
+              "name": "LONGEST_PREFIX_MATCH"
+            },
+            {
+              "name": "LONGER_PREFIXES"
+            },
+            {
+              "name": "SHORTER_PREFIXES"
+            }
+          ]
+        },
+        "protocols": {
+          "description": "Return routes for protocols matching this specifier.",
+          "displayName": "Protocols",
+          "optional": true,
+          "type": "routingProtocolSpec"
+        },
+        "rib": {
+          "description": "Only return routes from a given protocol RIB.",
+          "displayName": "RIB",
+          "optional": true,
+          "type": "string",
+          "values": [
+            {
+              "name": "main"
+            },
+            {
+              "name": "bgp"
+            },
+            {
+              "name": "evpn"
+            }
+          ]
+        },
+        "vrfs": {
+          "description": "Return routes on VRFs matching this name or regex.",
+          "displayName": "VRFs",
+          "optional": true,
+          "type": "vrf"
+        }
+      }
+    },
+    "searchFilters": {
+      "source": "experimental",
+      "variables": {
+        "action": {
+          "description": "The behavior that you want evaluated. Specify exactly one of `permit`, `deny`, or `matchLine <line number>`.",
+          "displayName": "Action",
+          "optional": true,
+          "type": "string"
+        },
+        "filters": {
+          "description": "Only evaluate filters that match this specifier.",
+          "displayName": "Filters",
+          "optional": true,
+          "type": "filterSpec"
+        },
+        "headers": {
+          "description": "Packet header constraints on the flows being searched.",
+          "displayName": "Headers",
+          "fields": {
+            "applications": {
+              "optional": true,
+              "type": "applicationSpec"
+            },
+            "dscps": {
+              "optional": true
+            },
+            "dstIps": {
+              "optional": true,
+              "type": "ipSpaceSpec"
+            },
+            "dstPorts": {
+              "optional": true
+            },
+            "ecns": {
+              "optional": true
+            },
+            "flowStates": {
+              "optional": true
+            },
+            "fragmentOffsets": {
+              "optional": true
+            },
+            "icmpCodes": {
+              "optional": true
+            },
+            "icmpTypes": {
+              "optional": true
+            },
+            "ipProtocols": {
+              "optional": true,
+              "type": "ipProtocolSpec"
+            },
+            "packetLengths": {
+              "optional": true
+            },
+            "srcIps": {
+              "optional": true,
+              "type": "ipSpaceSpec"
+            },
+            "srcPorts": {
+              "optional": true
+            },
+            "tcpFlags": {
+              "optional": true
+            }
+          },
+          "optional": true,
+          "type": "headerConstraint"
+        },
+        "invertSearch": {
+          "description": "Search for packet headers outside the specified headerspace, rather than inside the space.",
+          "displayName": "Invert Search",
+          "optional": true,
+          "type": "boolean"
+        },
+        "nodes": {
+          "description": "Only evaluate filters present on nodes matching this specifier.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec"
+        },
+        "startLocation": {
+          "description": "Only consider specified locations as possible sources.",
+          "displayName": "Start Location",
+          "optional": true,
+          "type": "locationSpec"
+        }
+      }
+    },
+    "searchRoutePolicies": {
+      "source": "experimental",
+      "variables": {
+        "action": {
+          "description": "The behavior to be evaluated. Specify exactly one of `permit` or `deny`.",
+          "displayName": "Action",
+          "optional": true,
+          "type": "string"
+        },
+        "inputConstraints": {
+          "description": "Constraints on the set of input BGP route announcements to consider.",
+          "displayName": "Input Constraints",
+          "optional": true,
+          "type": "bgpRouteConstraints"
+        },
+        "nodes": {
+          "description": "Only examine policies on nodes matching this specifier.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec"
+        },
+        "outputConstraints": {
+          "description": "Constraints on the set of output BGP route announcements to consider.",
+          "displayName": "Output Constraints",
+          "optional": true,
+          "type": "bgpRouteConstraints"
+        },
+        "pathOption": {
+          "description": "If set to 'per_path' run the analysis separately for each execution path. If set to `non_overlap` run the analysis separately for each execution path but greedily attempt to produce a different prefix for each advertisement to cover each path. This analysis may not produce results for all paths. If set to `single` (or null) the analysis will produce a single advertisement that meets the input and output constraints along one path through the route map.",
+          "displayName": "Path Options",
+          "optional": true,
+          "type": "string"
+        },
+        "perPath": {
+          "description": "(deprecated) Run the analysis separately for each execution path of a route map. This option is deprecated in favor of 'pathOption'.",
+          "displayName": "Per-Path",
+          "optional": true,
+          "type": "boolean"
+        },
+        "policies": {
+          "description": "Only consider policies that match this specifier.",
+          "displayName": "Policies",
+          "optional": true,
+          "type": "routingPolicySpec"
+        }
+      }
+    },
+    "snmpCommunityClients": {
+      "source": "experimental",
+      "variables": {
+        "clients": {
+          "description": "Client IPs expected to be permitted.",
+          "displayName": "Clients",
+          "optional": true,
+          "type": "ipSpaceSpec"
+        },
+        "community": {
+          "description": "The SNMP community to consider.",
+          "displayName": "Community",
+          "optional": false,
+          "type": "string"
+        },
+        "nodes": {
+          "description": "Only evaluate nodes matching this specifier.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec"
+        }
+      }
+    },
+    "subnetMultipathConsistency": {
+      "source": "experimental",
+      "variables": {
+        "maxTraces": {
+          "description": "Limit the number of traces returned.",
+          "displayName": "Max Traces",
+          "optional": true,
+          "type": "integer"
+        }
+      }
+    },
+    "switchedVlanProperties": {
+      "source": "experimental",
+      "variables": {
+        "excludeShutInterfaces": {
+          "description": "Exclude interfaces that are shutdown.",
+          "displayName": "Exclude Shut Interfaces",
+          "optional": true,
+          "type": "boolean"
+        },
+        "interfaces": {
+          "description": "Include interfaces matching this specifier.",
+          "displayName": "Interfaces",
+          "optional": true,
+          "type": "interfacesSpec"
+        },
+        "nodes": {
+          "description": "Include nodes matching this specifier.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec"
+        },
+        "vlans": {
+          "description": "Include VLANs in this space.",
+          "displayName": "VLANs",
+          "optional": true,
+          "type": "integerSpace"
+        }
+      }
+    },
+    "testFilters": {
+      "source": "stable",
+      "variables": {
+        "filters": {
+          "description": "Only consider filters that match this specifier.",
+          "displayName": "Filters",
+          "optional": true,
+          "type": "filterSpec"
+        },
+        "headers": {
+          "description": "Packet header constraints.",
+          "displayName": "Headers",
+          "fields": {
+            "applications": {
+              "optional": true,
+              "type": "applicationSpec"
+            },
+            "dscps": {
+              "optional": true
+            },
+            "dstIps": {
+              "optional": false,
+              "type": "ipSpaceSpec"
+            },
+            "dstPorts": {
+              "optional": true
+            },
+            "ecns": {
+              "optional": true
+            },
+            "flowStates": {
+              "optional": true
+            },
+            "fragmentOffsets": {
+              "optional": true
+            },
+            "icmpCodes": {
+              "optional": true
+            },
+            "icmpTypes": {
+              "optional": true
+            },
+            "ipProtocols": {
+              "optional": true,
+              "type": "ipProtocolSpec"
+            },
+            "packetLengths": {
+              "optional": true
+            },
+            "srcIps": {
+              "optional": true,
+              "type": "ipSpaceSpec"
+            },
+            "srcPorts": {
+              "optional": true
+            },
+            "tcpFlags": {
+              "optional": true
+            }
+          },
+          "optional": false,
+          "type": "headerConstraint"
+        },
+        "nodes": {
+          "description": "Only examine filters on nodes matching this specifier.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec"
+        },
+        "startLocation": {
+          "description": "Location to start tracing from.",
+          "displayName": "Start Location",
+          "minLength": 1,
+          "optional": true,
+          "type": "locationSpec"
+        }
+      }
+    },
+    "testRoutePolicies": {
+      "source": "experimental",
+      "variables": {
+        "bgpSessionProperties": {
+          "description": "The BGP session properties to use when testing routes.",
+          "displayName": "BGP Session Properties",
+          "optional": true,
+          "type": "bgpSessionProperties"
+        },
+        "direction": {
+          "description": "The direction of the route, with respect to the device (IN/OUT).",
+          "displayName": "Direction",
+          "type": "string",
+          "values": [
+            {
+              "description": "The route is inbound to the device",
+              "name": "in"
+            },
+            {
+              "description": "The route is outbound from the device",
+              "name": "out"
+            }
+          ]
+        },
+        "inputRoutes": {
+          "description": "The BGP route announcements to test the policy on.",
+          "displayName": "Input Routes",
+          "type": "bgpRoutes"
+        },
+        "nodes": {
+          "description": "Only examine filters on nodes matching this specifier.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec"
+        },
+        "policies": {
+          "description": "Only consider policies that match this specifier.",
+          "displayName": "Policies",
+          "optional": true,
+          "type": "routingPolicySpec"
+        }
+      }
+    },
+    "traceroute": {
+      "source": "experimental",
+      "variables": {
+        "headers": {
+          "description": "Packet header constraints.",
+          "displayName": "Headers",
+          "fields": {
+            "applications": {
+              "optional": true,
+              "type": "applicationSpec"
+            },
+            "dscps": {
+              "optional": true
+            },
+            "dstIps": {
+              "optional": false,
+              "type": "ipSpaceSpec"
+            },
+            "dstPorts": {
+              "optional": true
+            },
+            "ecns": {
+              "optional": true
+            },
+            "flowStates": {
+              "optional": true
+            },
+            "fragmentOffsets": {
+              "optional": true
+            },
+            "icmpCodes": {
+              "optional": true
+            },
+            "icmpTypes": {
+              "optional": true
+            },
+            "ipProtocols": {
+              "optional": true,
+              "type": "ipProtocolSpec"
+            },
+            "packetLengths": {
+              "optional": true
+            },
+            "srcIps": {
+              "optional": true,
+              "type": "ipSpaceSpec"
+            },
+            "srcPorts": {
+              "optional": true
+            },
+            "tcpFlags": {
+              "optional": true
+            }
+          },
+          "optional": false,
+          "type": "headerConstraint"
+        },
+        "ignoreFilters": {
+          "description": "If set, filters/ACLs encountered along the path are ignored.",
+          "displayName": "Ignore Filters",
+          "optional": true,
+          "type": "boolean"
+        },
+        "maxTraces": {
+          "description": "Limit the number of traces returned.",
+          "displayName": "Max Traces",
+          "optional": true,
+          "type": "integer"
+        },
+        "startLocation": {
+          "description": "Location (node and interface combination) to start tracing from.",
+          "displayName": "Start Location",
+          "minLength": 1,
+          "type": "locationSpec"
+        }
+      }
+    },
+    "transferBDDValidation": {
+      "source": "experimental",
+      "variables": {
+        "nodes": {
+          "description": "Only examine policies on nodes matching this specifier.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec"
+        },
+        "policies": {
+          "description": "Only consider policies that match this specifier.",
+          "displayName": "Policies",
+          "optional": true,
+          "type": "routingPolicySpec"
+        },
+        "retainAllPaths": {
+          "description": "Generate one test per path through each route policy, instead of coalescing compatible paths (default value is false).",
+          "displayName": "Policies",
+          "optional": true,
+          "type": "boolean"
+        },
+        "seed": {
+          "description": "A seed for generating random input routes.",
+          "displayName": "Seed",
+          "optional": true,
+          "type": "long"
+        }
+      }
+    },
+    "undefinedReferences": {
+      "source": "stable",
+      "variables": {
+        "nodes": {
+          "description": "Look for undefined references on nodes matching this name or regex.",
+          "displayName": "Nodes",
+          "type": "nodeSpec",
+          "value": ".*"
+        }
+      }
+    },
+    "unusedStructures": {
+      "source": "stable",
+      "variables": {
+        "nodes": {
+          "description": "Look for unused structures on nodes matching this name or regex.",
+          "displayName": "Nodes",
+          "type": "nodeSpec",
+          "value": ".*"
+        }
+      }
+    },
+    "userProvidedLayer1Edges": {
+      "source": "stable",
+      "variables": {
+        "nodes": {
+          "description": "Include edges whose first node matches this name or regex.",
+          "displayName": "Nodes",
+          "type": "nodeSpec",
+          "value": ".*"
+        },
+        "remoteNodes": {
+          "description": "Include edges whose second node matches this name or regex.",
+          "displayName": "Remote Nodes",
+          "type": "nodeSpec",
+          "value": ".*"
+        }
+      }
+    },
+    "viConversionStatus": {
+      "source": "stable",
+      "variables": {}
+    },
+    "viConversionWarning": {
+      "source": "stable",
+      "variables": {}
+    },
+    "viModel": {
+      "source": "experimental",
+      "variables": {
+        "nodes": {
+          "description": "Include nodes matching this name or regex.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec"
+        }
+      }
+    },
+    "vrrpProperties": {
+      "source": "experimental",
+      "variables": {
+        "excludeShutInterfaces": {
+          "description": "Exclude interfaces that are shutdown.",
+          "displayName": "Exclude Shut Interfaces",
+          "optional": true,
+          "type": "boolean"
+        },
+        "interfaces": {
+          "description": "Include interfaces matching this specifier.",
+          "displayName": "Interfaces",
+          "optional": true,
+          "type": "interfacesSpec"
+        },
+        "nodes": {
+          "description": "Include nodes matching this specifier.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec"
+        },
+        "virtualAddresses": {
+          "description": "Include only groups with at least one virtual address matching this specifier.",
+          "displayName": "Virtual Addresses",
+          "optional": true,
+          "type": "ipSpaceSpec"
+        }
+      }
+    },
+    "vxlanEdges": {
+      "source": "stable",
+      "variables": {
+        "nodes": {
+          "description": "Include edges whose first node matches this name or regex.",
+          "displayName": "Nodes",
+          "type": "nodeSpec",
+          "value": ".*"
+        },
+        "remoteNodes": {
+          "description": "Include edges whose second node matches this name or regex.",
+          "displayName": "Remote Nodes",
+          "type": "nodeSpec",
+          "value": ".*"
+        }
+      }
+    },
+    "vxlanVniProperties": {
+      "source": "experimental",
+      "variables": {
+        "nodes": {
+          "description": "Include nodes matching this specifier.",
+          "displayName": "Nodes",
+          "optional": true,
+          "type": "nodeSpec"
+        },
+        "properties": {
+          "description": "Include properties matching this specifier.",
+          "displayName": "Properties",
+          "optional": true,
+          "type": "vxlanVniPropertySpec"
+        }
+      }
+    }
+  },
+  "verification": {
+    "cases": [
+      "test_versions_templates_and_public_methods",
+      "test_minimal_questions_match_expected",
+      "test_session_context_isolation",
+      "test_initialization_diagnostics_and_no_overwrite",
+      "test_unsupported_or_missing_question",
+      "test_public_work_handle_and_answer_recovery",
+      "test_request_timeout_is_not_a_total_work_budget"
+    ],
+    "command": "uv run --no-project --python 3.12 --with pybatfish==2026.9.17.3748 --with pytest==8.4.2 pytest tests/integration/test_sdk_baseline.py -q --junitxml=<run>/pytest-final.xml",
+    "date": "2026-09-25",
+    "errors": 0,
+    "failures": 0,
+    "seconds": 6.141,
+    "skipped": 0,
+    "tests": 7,
+    "working_directory": "web/backend"
+  }
+}

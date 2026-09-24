@@ -14,6 +14,8 @@
 
 ## 设计与接口
 
+- [MVP-01](../../sdk-compatibility.md) 已确认后台分析 work ID/状态/答案读取，但初始化仍同步，HTTP timeout 含重试影响且不是作业期限；本篇不因此扩大为自动接管或运行中取消。
+
 - JobsService.claim(worker_id) → JobDTO | None；dispatcher 只调用登记的业务 service.execute。
 - POST /jobs/{id}/retry 创建新任务并重新校验；GET /admin/engine 和 POST /admin/engine/reconcile。
 - retry/cancel 通过装配层登记的业务 service handler 调用，jobs.service 不反向导入业务模块。初始化重试需新建快照和内部名称；analysis 重试保留原快照；删除任务使用对账而非通用重试。
