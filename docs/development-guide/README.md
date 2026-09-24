@@ -107,6 +107,9 @@ Pybatfish 连接 coordinator 的 REST v2 API。更详细的阶段与缓存边界
 
 - H3C Comware 7 / CR16000：IPv4 接口、static、ISIS、BGP、策略；EVPN/SRv6 配置保留。
   详见[H3C 模块、数据流与验证](modules/h3c-comware.md)。
+- Huawei VRP：以 `V800R023C00SPC500` 的 R2 采集为验证样本，IPv4 接口、static、ISIS、
+  BGP、策略；IPv6/EVPN/SRv6 只保留配置，OSPF 不做数据面仿真，不推断硬件型号。
+  详见[Huawei 模块、数据流与手动验收](modules/huawei-vrp.md)。
 - ArubaOS
 - Dell Force10
 - Foundry

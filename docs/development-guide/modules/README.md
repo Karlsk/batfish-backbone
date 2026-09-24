@@ -36,6 +36,7 @@
 | symbolic | 网络处理位置 | `StateExpr` 状态机节点 | [symbolic.md](symbolic.md) |
 | minesweeper | VI routing policy | 符号 route/反例 | [minesweeper.md](minesweeper.md) |
 | H3C Comware（batfish 厂商子模块） | CR16000 原始采集配置 | 厂商对象、IPv4 VI/路由、能力告警 | [h3c-comware.md](h3c-comware.md) |
+| Huawei VRP（batfish 厂商子模块） | V800R023 原始采集配置 | 厂商对象、IPv4 VI/路由、能力告警 | [huawei-vrp.md](huawei-vrp.md) |
 
 ## 何时修改哪个模块
 
