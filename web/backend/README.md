@@ -89,3 +89,13 @@ ORM 归各业务模块，composition 统一注册 metadata。repository 返回�
 UsersService 每次查询实时身份与 session_version。改密增加版本并撤销会话；后续用户管理可以通过版本失效机制实现停用/重置撤销，避免 users 与 auth 相互依赖。会话和失败计数位于迁移 `0002`。数据库不可用不能认证成功；无 DATABASE_URL 的健康骨架不注册业务认证路由。
 
 测试环境 `serve` 自动创建随机临时管理员，凭证仅保存在本次运行目录的 `auth.json`（0600）。真实 HTTP 冒烟会登录两个独立客户端、改密、检查旧会话失效、重新登录并退出，同时更新该受保护文件；可重复运行累计验收。
+
+## 账号管理与审计
+
+完成首次改密的管理员可通过 `GET/POST /api/v1/users`、`PATCH /api/v1/users/{id}` 和 `POST /api/v1/users/{id}/reset-password` 管理团队。列表默认 50、最大 200 项，返回 items/offset/limit/total；创建默认 member，要求 username 与 temporary_password，返回 201 用户；PATCH 只允许非空 enabled/role，返回用户；重置传 temporary_password，返回 204。用户响应不含密码哈希或会话版本。写请求沿用 Origin/CSRF。
+
+管理 service 重新核对数据库实时身份，不信任请求声明的角色。停用/重置会使所有设备上的旧 Cookie 失效，重新启用也不会恢复旧 Cookie；角色变化在下一请求生效。重置后重新登录必须更换临时密码。
+
+用户变更共用 PostgreSQL 事务锁，检查最后一个 enabled admin，禁止停用或降级该管理员（409）。自己停用/降级遵循相同规则：有其他有效管理员时允许，随后即时失去相应权限。并发操作不会使有效管理员数变成零。
+
+创建、更新、重置和初始化记录 actor、action、resource、outcome、请求 ID 与时间。审计与成功变更在同一事务；审计失败时不提交业务变更。进入管理 service 的权限/业务拒绝记录 failed，HTTP 参数/CSRF 拒绝发生在调用 service 前。审计不存临时密码、会话或完整请求体；当前无审计查询页面。

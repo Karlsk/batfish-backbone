@@ -1,6 +1,6 @@
 # 分阶段研发规格索引
 
-日期：2026-09-25。MVP-01～04 已完成，其余39份待开发。以下为分阶段 RDP spec；“RDP”沿用用户称呼，不额外假定某种公司模板。每份规格包含需求、设计/接口、改动位置、实施步骤、测试与验收、非目标和完成记录。
+日期：2026-09-25。MVP-01～05 已完成，其余38份待开发。以下为分阶段 RDP spec；“RDP”沿用用户称呼，不额外假定某种公司模板。每份规格包含需求、设计/接口、改动位置、实施步骤、测试与验收、非目标和完成记录。
 
 ## 阶段门槛与顺序
 
@@ -29,7 +29,7 @@ MVP 只包含阶段1，不能因为 advance spec 已写好就提前实现其功�
 | [MVP-02 后端骨架与分层约束](mvp/mvp-02-backend-foundation.md) | MVP-01 | 1.0 | 已完成 |
 | [MVP-03 业务持久化与迁移基础](mvp/mvp-03-persistence.md) | MVP-02 | 1.5 | 已完成 |
 | [MVP-04 登录、改密与可撤销会话](mvp/mvp-04-authentication.md) | MVP-03 | 2.0 | 已完成 |
-| [MVP-05 账号管理与基础审计](mvp/mvp-05-user-administration.md) | MVP-04 | 1.5 | 待开发 |
+| [MVP-05 账号管理与基础审计](mvp/mvp-05-user-administration.md) | MVP-04 | 1.5 | 已完成 |
 | [MVP-06 网络创建与共享查询](mvp/mvp-06-network-management.md) | MVP-05 | 1.0 | 待开发 |
 | [MVP-07 配置上传与输入校验](mvp/mvp-07-configuration-upload.md) | MVP-06 | 2.0 | 待开发 |
 | [MVP-08 任务记录、幂等与排队取消](mvp/mvp-08-job-records.md) | MVP-07 | 1.5 | 待开发 |

@@ -15,6 +15,7 @@ def _record(user: User) -> UserRecord:
         user.enabled,
         user.must_change_password,
         user.password_hash,
+        user.created_at,
         user.session_version,
     )
 
@@ -42,14 +43,35 @@ class UsersRepository:
     def lock_administration(self) -> None:
         self._transaction.execute(text("SELECT pg_advisory_xact_lock(4281042026)"))
 
-    def administrator_count(self) -> int:
-        return self._transaction.scalar(
-            select(func.count()).select_from(User).where(User.role == "admin")
-        )
+    def administrator_count(self, *, enabled_only: bool = False) -> int:
+        query = select(func.count()).select_from(User).where(User.role == "admin")
+        if enabled_only:
+            query = query.where(User.enabled.is_(True))
+        return self._transaction.scalar(query)
 
-    def change_password(self, user_id: UUID, password_hash: str) -> None:
+    def change_password(
+        self, user_id: UUID, password_hash: str, *, temporary: bool = False
+    ) -> None:
         user = self._transaction.get(User, user_id)
         user.password_hash = password_hash
-        user.must_change_password = False
+        user.must_change_password = temporary
         user.session_version += 1
         self._transaction.flush()
+
+    def list(self, *, offset: int, limit: int) -> tuple[list[UserRecord], int]:
+        rows = self._transaction.scalars(
+            select(User).order_by(User.created_at, User.id).offset(offset).limit(limit)
+        )
+        total = self._transaction.scalar(select(func.count()).select_from(User))
+        return [_record(user) for user in rows], total
+
+    def update(self, user_id: UUID, *, enabled: bool | None, role: str | None) -> UserRecord:
+        user = self._transaction.get(User, user_id)
+        if enabled is not None:
+            if user.enabled and not enabled:
+                user.session_version += 1
+            user.enabled = enabled
+        if role is not None:
+            user.role = role
+        self._transaction.flush()
+        return _record(user)

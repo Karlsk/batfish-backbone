@@ -1,6 +1,6 @@
 # 第一阶段：基础排障闭环
 
-状态：MVP-01～04 已完成，其余21份待开发。总计25份，预计40.0人天，单份≤2人天。
+状态：MVP-01～05 已完成，其余20份待开发。总计25份，预计40.0人天，单份≤2人天。
 
 阶段目标：内置账号、共享网络/快照、上传与解析诊断、设备/接口、路由/LPM、单向IPv4 traceroute、任务、导出及对应前端。不包含拓扑/BGP/ACL专页和变更验证。
 
@@ -10,7 +10,7 @@
 | [MVP-02 后端骨架与分层约束](mvp-02-backend-foundation.md) | MVP-01 | 1.0 | 已完成 |
 | [MVP-03 业务持久化与迁移基础](mvp-03-persistence.md) | MVP-02 | 1.5 | 已完成 |
 | [MVP-04 登录、改密与可撤销会话](mvp-04-authentication.md) | MVP-03 | 2.0 | 已完成 |
-| [MVP-05 账号管理与基础审计](mvp-05-user-administration.md) | MVP-04 | 1.5 | 待开发 |
+| [MVP-05 账号管理与基础审计](mvp-05-user-administration.md) | MVP-04 | 1.5 | 已完成 |
 | [MVP-06 网络创建与共享查询](mvp-06-network-management.md) | MVP-05 | 1.0 | 待开发 |
 | [MVP-07 配置上传与输入校验](mvp-07-configuration-upload.md) | MVP-06 | 2.0 | 待开发 |
 | [MVP-08 任务记录、幂等与排队取消](mvp-08-job-records.md) | MVP-07 | 1.5 | 待开发 |

@@ -6,8 +6,8 @@
 
 ## 当前进度
 
-- 当前阶段：MVP-04 validated，累计 98 passed、0 skipped；待本篇提交。
-- 下一动作：提交 MVP-04 后实施 MVP-05 账号管理。
+- 当前阶段：MVP-05 validated，累计 107 passed、0 skipped；待本篇提交。
+- 下一动作：提交 MVP-05 后实施 MVP-06 网络管理。
 - 环境观察：旧 API/JVM 已停止，保留了上一轮临时 PostgreSQL 容器；核对运行清单/标签后只停止该容器，重建测试环境。没有把历史证据当作本轮通过。
 - 当前无需求决策阻碍。所有新证据记录实际源码身份，运行凭证和完整日志留在忽略提交的 `.runtime/`。
 
@@ -16,8 +16,9 @@
 | MVP-01 | committed（本轮复验通过） | c8d826dcf1 | [基线证据](../evidence/mvp-prefix-recheck.json) | SDK 基线、两套配置 | [基线证据](../evidence/mvp-prefix-recheck.json) | a255fc3759 |
 | MVP-02 | committed（本轮复验通过） | c8d826dcf1 | [基线证据](../evidence/mvp-prefix-recheck.json) | 健康/错误/DTO/分层、HTTP、SDK 回归 | [基线证据](../evidence/mvp-prefix-recheck.json) | fcfbbc04f0 |
 | MVP-03 | committed | c8d826dcf1 | 7bb3e8545628972002d041f26f1553d445a066bb9520eaeb53c6dceacfea5b4d | 累计 87 passed；Ruff/锁文件/文档通过 | [验收](../evidence/mvp-03-verification.json) | 28ee717b90 |
-| MVP-04 | validated | 28ee717b90 | 627a4000e80ed11ddf2171a66db2e296fc66e8bd05b661a6b761249ab099fbb6 | 累计 98 passed；Ruff/锁文件/文档通过 | [验收](../evidence/mvp-04-verification.json) | 提交后见 checkpoint |
-| MVP-05～25 | pending | 各篇开工时记录 | 尚未生成 | 逐篇加入验收矩阵 | 尚未运行 | 尚未提交 |
+| MVP-04 | committed | 28ee717b90 | 627a4000e80ed11ddf2171a66db2e296fc66e8bd05b661a6b761249ab099fbb6 | 累计 98 passed；Ruff/锁文件/文档通过 | [验收](../evidence/mvp-04-verification.json) | 6047cae771 |
+| MVP-05 | validated | 6047cae771 | f105a36b8d4f67411235fd6e433961633487fc0b0c374b8c0a9a53f0979e3554 | 累计 107 passed；Ruff/锁文件/文档通过 | [验收](../evidence/mvp-05-verification.json) | 提交后见 checkpoint |
+| MVP-06～25 | pending | 各篇开工时记录 | 尚未生成 | 逐篇加入验收矩阵 | 尚未运行 | 尚未提交 |
 
 可恢复状态：`web/.runtime/mvp-runner/checkpoint.json`。提交后的实际哈希先写 checkpoint，下一篇带入本文件；不为记录自己的哈希重复提交。
 

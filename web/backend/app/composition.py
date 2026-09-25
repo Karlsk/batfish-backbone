@@ -1,6 +1,6 @@
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 
 from app.contracts.errors import ErrorEnvelope
 from app.infrastructure.database import Database
@@ -10,6 +10,7 @@ from app.modules.auth.api import create_router as create_auth_router
 from app.modules.auth.service import AuthService
 from app.modules.health.api import create_router
 from app.modules.health.service import HealthService
+from app.modules.users.api import create_router as create_users_router
 from app.modules.users.service import UsersService
 
 
@@ -69,8 +70,23 @@ def create_app(
         auth = AuthService(db, users, settings)
         app.state.auth_service = auth
         app.state.users_service = users
+
+        def read_actor(request: Request):
+            return auth.require_actor(request.cookies.get("batfish_session"))
+
+        def write_actor(request: Request):
+            return auth.require_write(
+                request.cookies.get("batfish_session"),
+                origin=request.headers.get("origin"),
+                csrf_token=request.headers.get("x-csrf-token"),
+            )
+
         app.include_router(
             create_auth_router(auth, secure_cookie=settings.auth_cookie_secure), prefix="/api/v1"
+        )
+        app.include_router(
+            create_users_router(users, read_actor=read_actor, write_actor=write_actor),
+            prefix="/api/v1",
         )
     return app
 

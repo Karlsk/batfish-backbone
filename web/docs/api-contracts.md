@@ -50,6 +50,8 @@ MVP-04 实现细节：Cookie 名为 `batfish_session`，CSRF 头为 `X-CSRF-Toke
 | PATCH /users/{id} | enabled、role；不允许改密码字段混入 | 管理员 |
 | POST /users/{id}/reset-password | temporary_password；强制下次改密 | 管理员 |
 
+MVP-05 用户管理响应：创建 201/PATCH 200 返回 `{id, username, role, enabled, must_change_password, created_at}`；列表返回 `{items, offset, limit, total}`，默认 limit=50、最大 200；重置返回 204。重复 username 和最后有效管理员停用/降级返回 409；空 PATCH、null 或未知字段返回 422。用户不可由请求体传入 actor_id。自己停用或降级在仍有其他有效管理员时允许，下一请求权限立即变化。所有管理变更以数据库事务锁串行校验最后管理员，并与脱敏审计同事务；停用/重置递增会话版本，重新启用不恢复旧会话。
+
 ## 首版业务接口
 
 `N=/networks/{network_id}`，`S=N/snapshots/{snapshot_id}`，仅用于下表缩写。

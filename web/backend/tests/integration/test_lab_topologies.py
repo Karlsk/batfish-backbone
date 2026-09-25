@@ -169,3 +169,105 @@ def test_real_authentication_smoke(lab):
         )
         first.cookies.set("batfish_session", old_cookie)
         assert first.get("/api/v1/auth/me").status_code == 401
+
+
+@pytest.mark.smoke
+def test_real_user_administration_smoke(lab):
+    import secrets
+    from uuid import uuid4
+
+    credentials_path = Path(lab["run_directory"]) / "auth.json"
+    credentials = json.loads(credentials_path.read_text())
+    origin = {"Origin": lab["api_url"]}
+    with (
+        httpx.Client(base_url=lab["api_url"], timeout=10) as admin,
+        httpx.Client(base_url=lab["api_url"], timeout=10) as member,
+    ):
+        response = admin.post("/api/v1/auth/login", json=credentials, headers=origin)
+        assert response.status_code == 200
+        if response.json()["must_change_password"]:
+            new_password = secrets.token_urlsafe(24)
+            changed = admin.post(
+                "/api/v1/auth/password",
+                json={"current_password": credentials["password"], "new_password": new_password},
+                headers=origin | {"X-CSRF-Token": response.json()["csrf_token"]},
+            )
+            assert changed.status_code == 204
+            credentials["password"] = new_password
+            credentials_path.write_text(json.dumps(credentials))
+            response = admin.post("/api/v1/auth/login", json=credentials, headers=origin)
+            assert response.status_code == 200
+        admin_headers = origin | {"X-CSRF-Token": response.json()["csrf_token"]}
+        username = "smoke-" + uuid4().hex[:12]
+        temporary = secrets.token_urlsafe(24)
+        created = admin.post(
+            "/api/v1/users",
+            json={"username": username, "temporary_password": temporary},
+            headers=admin_headers,
+        )
+        assert created.status_code == 201 and created.json()["role"] == "member"
+        user_id = created.json()["id"]
+        assert admin.get("/api/v1/users").json()["total"] >= 2
+        response = member.post(
+            "/api/v1/auth/login", json={"username": username, "password": temporary}, headers=origin
+        )
+        assert response.status_code == 200
+        changed_password = secrets.token_urlsafe(24)
+        assert (
+            member.post(
+                "/api/v1/auth/password",
+                json={"current_password": temporary, "new_password": changed_password},
+                headers=origin | {"X-CSRF-Token": response.json()["csrf_token"]},
+            ).status_code
+            == 204
+        )
+        assert (
+            member.post(
+                "/api/v1/auth/login",
+                json={"username": username, "password": changed_password},
+                headers=origin,
+            ).status_code
+            == 200
+        )
+        assert member.get("/api/v1/users").status_code == 403
+        assert (
+            admin.patch(
+                "/api/v1/users/" + user_id, json={"enabled": False}, headers=admin_headers
+            ).status_code
+            == 200
+        )
+        assert member.get("/api/v1/auth/me").status_code == 401
+        assert (
+            admin.patch(
+                "/api/v1/users/" + user_id, json={"enabled": True}, headers=admin_headers
+            ).status_code
+            == 200
+        )
+        assert member.get("/api/v1/auth/me").status_code == 401
+        assert (
+            member.post(
+                "/api/v1/auth/login",
+                json={"username": username, "password": changed_password},
+                headers=origin,
+            ).status_code
+            == 200
+        )
+        assert (
+            admin.post(
+                "/api/v1/users/" + user_id + "/reset-password",
+                json={"temporary_password": temporary},
+                headers=admin_headers,
+            ).status_code
+            == 204
+        )
+        assert member.get("/api/v1/auth/me").status_code == 401
+        response = member.post(
+            "/api/v1/auth/login", json={"username": username, "password": temporary}, headers=origin
+        )
+        assert response.status_code == 200 and response.json()["must_change_password"] is True
+        assert (
+            admin.patch(
+                "/api/v1/users/" + user_id, json={"enabled": False}, headers=admin_headers
+            ).status_code
+            == 200
+        )
