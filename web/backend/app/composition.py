@@ -11,6 +11,7 @@ from app.modules.auth.api import create_router as create_auth_router
 from app.modules.auth.service import AuthService
 from app.modules.execution.api import create_router as create_execution_router
 from app.modules.execution.controller import ExecutionController
+from app.modules.execution.schemas import Handler
 from app.modules.execution.service import ExecutionService
 from app.modules.health.api import create_router
 from app.modules.health.schemas import DependencyStatus
@@ -20,6 +21,9 @@ from app.modules.jobs.service import JobsService
 from app.modules.networks.api import create_router as create_networks_router
 from app.modules.networks.controller import NetworkController
 from app.modules.networks.service import NetworksService
+from app.modules.snapshots.api import create_router as create_snapshots_router
+from app.modules.snapshots.controller import SnapshotController
+from app.modules.snapshots.service import SnapshotsService
 from app.modules.uploads.api import create_router as create_uploads_router
 from app.modules.uploads.service import UploadsService
 from app.modules.users.api import create_router as create_users_router
@@ -108,18 +112,6 @@ def create_app(
             create_jobs_router(jobs, read_actor=read_actor, write_actor=write_actor),
             prefix="/api/v1",
         )
-        execution = ExecutionService(
-            db, auth, jobs, controller=ExecutionController(db, settings), settings=settings
-        )
-        app.state.execution_service = execution
-        app.include_router(
-            create_execution_router(execution, read_actor=read_actor, write_actor=write_actor),
-            prefix="/api/v1",
-        )
-        if health_service is None:
-            health.read_statuses = lambda: {
-                name: DependencyStatus(**value) for name, value in execution.observations().items()
-            }
         networks = NetworksService(db, auth, jobs, NetworkController(db, settings))
         app.state.networks_service = networks
         app.include_router(
@@ -131,6 +123,31 @@ def create_app(
         app.include_router(
             create_uploads_router(uploads, write_actor=write_actor), prefix="/api/v1"
         )
+        snapshots = SnapshotsService(
+            db, auth, networks, uploads, jobs, SnapshotController(db, settings)
+        )
+        app.state.snapshots_service = snapshots
+        app.include_router(
+            create_snapshots_router(snapshots, read_actor=read_actor, write_actor=write_actor),
+            prefix="/api/v1",
+        )
+        execution = ExecutionService(
+            db,
+            auth,
+            jobs,
+            handlers={"initialization": Handler(snapshots.execute, snapshots.retry)},
+            controller=ExecutionController(db, settings),
+            settings=settings,
+        )
+        app.state.execution_service = execution
+        app.include_router(
+            create_execution_router(execution, read_actor=read_actor, write_actor=write_actor),
+            prefix="/api/v1",
+        )
+        if health_service is None:
+            health.read_statuses = lambda: {
+                name: DependencyStatus(**value) for name, value in execution.observations().items()
+            }
     return app
 
 
@@ -162,11 +179,18 @@ def create_worker(settings: Settings, *, database=None, handlers=None):
     db = database if database is not None else Database(settings.database_url)
     auth = AuthService(db, UsersService(db), settings)
     jobs = JobsService(db, auth, settings)
+    networks = NetworksService(db, auth, jobs, NetworkController(db, settings))
+    uploads = UploadsService(db, auth, networks, settings)
+    snapshots = SnapshotsService(
+        db, auth, networks, uploads, jobs, SnapshotController(db, settings)
+    )
+    registered = {"initialization": Handler(snapshots.execute, snapshots.retry)}
+    registered.update(handlers or {})
     execution = ExecutionService(
         db,
         auth,
         jobs,
-        handlers=handlers,
+        handlers=registered,
         controller=ExecutionController(db, settings),
         settings=settings,
     )

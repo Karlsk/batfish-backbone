@@ -1,3 +1,4 @@
+from contextlib import nullcontext
 from datetime import UTC, datetime, timedelta
 from uuid import UUID, uuid4
 
@@ -46,6 +47,7 @@ class UploadsService:
                     network_id=network_id,
                     storage_key=str(identifier),
                     files=files,
+                    content_hash=digest,
                 ),
             )
             with self._database.transaction() as transaction:
@@ -53,10 +55,14 @@ class UploadsService:
                 publish()
         return dto
 
-    def consume(self, actor: Actor, network_id: UUID, upload_id: UUID) -> UploadManifest:
+    def consume(
+        self, actor: Actor, network_id: UUID, upload_id: UUID, *, transaction=None
+    ) -> UploadManifest:
         actor = self._auth.revalidate_actor(actor)
         self._networks.require_ready(actor, network_id)
-        with self._database.transaction() as transaction:
+        with (
+            nullcontext(transaction) if transaction is not None else self._database.transaction()
+        ) as transaction:
             repository = UploadsRepository(transaction)
             row = repository.locked(upload_id)
             if row is None or row.network_id != network_id:
@@ -67,7 +73,11 @@ class UploadsService:
             if row.consumed_at is not None or row.expires_at <= now:
                 raise ServiceError(ErrorCode.CONFLICT)
             repository.mark_consumed(upload_id, now)
-            return row.manifest
+            return row.manifest.model_copy(update={"content_hash": row.content_hash})
+
+    def materialize(self, manifest: UploadManifest):
+        """Internal service capability: recreate verified logical paths for an SDK upload."""
+        return self._store.materialize(manifest)
 
     def cleanup_expired(self) -> int:
         now = datetime.now(UTC)

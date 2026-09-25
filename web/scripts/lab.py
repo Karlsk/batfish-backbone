@@ -330,7 +330,7 @@ def serve(args):
                 check=True,
                 timeout=60,
             )
-        state["database_migration"] = "0005"
+        state["database_migration"] = "0006"
         auth_password = secrets.token_urlsafe(24)
         auth_file = run / "auth.json"
         with open(

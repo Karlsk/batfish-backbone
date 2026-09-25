@@ -1,6 +1,6 @@
 # 分阶段研发规格索引
 
-日期：2026-09-25。MVP-01～09 已完成，其余34份待开发。以下为分阶段 RDP spec；“RDP”沿用用户称呼，不额外假定某种公司模板。每份规格包含需求、设计/接口、改动位置、实施步骤、测试与验收、非目标和完成记录。
+日期：2026-09-25。MVP-01～10 已完成，其余33份待开发。以下为分阶段 RDP spec；“RDP”沿用用户称呼，不额外假定某种公司模板。每份规格包含需求、设计/接口、改动位置、实施步骤、测试与验收、非目标和完成记录。
 
 ## 阶段门槛与顺序
 
@@ -34,7 +34,7 @@ MVP 只包含阶段1，不能因为 advance spec 已写好就提前实现其功�
 | [MVP-07 配置上传与输入校验](mvp/mvp-07-configuration-upload.md) | MVP-06 | 2.0 | 已完成 |
 | [MVP-08 任务记录、幂等与排队取消](mvp/mvp-08-job-records.md) | MVP-07 | 1.5 | 已完成 |
 | [MVP-09 独立执行进程与中断恢复](mvp/mvp-09-worker-recovery.md) | MVP-08 | 2.0 | 已完成 |
-| [MVP-10 快照初始化与不可变生命周期](mvp/mvp-10-snapshot-initialization.md) | MVP-09 | 2.0 | 待开发 |
+| [MVP-10 快照初始化与不可变生命周期](mvp/mvp-10-snapshot-initialization.md) | MVP-09 | 2.0 | 已完成 |
 | [MVP-11 解析质量与原始文件查看](mvp/mvp-11-initialization-diagnostics.md) | MVP-10 | 1.5 | 待开发 |
 | [MVP-12 分析目录与结果标准化](mvp/mvp-12-analysis-results.md) | MVP-11 | 2.0 | 待开发 |
 | [MVP-13 设备与接口分析接口](mvp/mvp-13-inventory.md) | MVP-12 | 1.5 | 待开发 |

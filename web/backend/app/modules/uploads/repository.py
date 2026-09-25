@@ -125,3 +125,51 @@ class UploadStore:
             info = path.lstat()
             if stat.S_ISDIR(info.st_mode) and info.st_mtime < threshold:
                 shutil.rmtree(path)
+
+    @contextmanager
+    def materialize(self, manifest):
+        import hashlib
+        from pathlib import PurePosixPath
+
+        self.ensure_root()
+        temporary = Path(tempfile.mkdtemp(prefix=".tmp-sdk-", dir=self.root))
+        root_fd = os.open(self.root, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+        source_fd = None
+        try:
+            source_fd = os.open(
+                str(UUID(manifest.storage_key)),
+                os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW,
+                dir_fd=root_fd,
+            )
+            for item in manifest.files:
+                logical = PurePosixPath(item.path)
+                if (
+                    logical.is_absolute()
+                    or ".." in logical.parts
+                    or not logical.parts
+                    or logical.parts[0] != "configs"
+                    or "\\" in item.path
+                ):
+                    raise ValueError("Invalid stored manifest")
+                destination = temporary.joinpath(*logical.parts)
+                destination.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
+                fd = os.open(str(item.id), os.O_RDONLY | os.O_NOFOLLOW, dir_fd=source_fd)
+                with os.fdopen(fd, "rb") as source, destination.open("xb") as output:
+                    os.chmod(destination, 0o600)
+                    if not stat.S_ISREG(os.fstat(source.fileno()).st_mode):
+                        raise ValueError("Invalid stored file")
+                    digest, size = hashlib.sha256(), 0
+                    while chunk := source.read(65536):
+                        size += len(chunk)
+                        if size > item.size_bytes:
+                            raise ValueError("Stored file changed")
+                        digest.update(chunk)
+                        output.write(chunk)
+                    if size != item.size_bytes or digest.hexdigest() != item.sha256:
+                        raise ValueError("Stored file changed")
+            yield temporary
+        finally:
+            if source_fd is not None:
+                os.close(source_fd)
+            os.close(root_fd)
+            shutil.rmtree(temporary)

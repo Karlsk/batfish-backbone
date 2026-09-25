@@ -1,6 +1,6 @@
 # API 与数据契约
 
-所有路径以 `/api/v1` 为前缀。MVP-02 已实现健康路由、统一错误及 Actor/AnalysisContext/JobDTO/ResultEnvelope，MVP-04/05 已实现认证与账号管理路由，MVP-06 已实现网络创建/列表/详情；其余业务接口仍为拟实现契约，不是现有 Batfish REST 的重命名。网络/快照采用 UUID，SDK 内部名称由 service 维护。日期使用 UTC ISO 8601，前端转换为本地时间。
+所有路径以 `/api/v1` 为前缀。MVP-02 已实现健康路由、统一错误及 Actor/AnalysisContext/JobDTO/ResultEnvelope，MVP-04/05 已实现认证与账号管理路由，MVP-06 已实现网络创建/列表/详情；MVP-07～10 已实现上传、任务、独立 worker 与快照初始化；其余业务接口仍为拟实现契约，不是现有 Batfish REST 的重命名。网络/快照采用 UUID，SDK 内部名称由 service 维护。日期使用 UTC ISO 8601，前端转换为本地时间。
 
 ## 最小参数与专家扩展
 
@@ -107,7 +107,7 @@ Idempotency-Key 用于上传之外的任务提交和网络创建：服务端按�
 | TraceFlow | flow_id、headers、start_location、trace_count、returned_trace_count、truncated；每条 Trace 带 disposition、hops、steps |
 | AuditEvent | actor_id、action、resource_id、outcome、request_id、timestamp；不记录密码、会话或完整配置 |
 
-数据库保存 UUID 外键与已删除资源的来源摘要。除结果发布需要共享事务句柄外，业务模块不共享 ORM 实体；事务由基础设施提供，service 仍通过其他模块的公共方法协作。
+数据库保存 UUID 外键与已删除资源的来源摘要。上传消费、快照及任务创建和结果发布可共享基础设施事务句柄，业务模块不共享 ORM 实体；事务由基础设施提供，service 仍通过其他模块的公共方法协作。
 
 MVP-02 DTO 位于 `backend/app/contracts/dto.py`：所有字段拒绝未知项；模型及嵌套 JSON 参数不可变，序列化后仍是标准对象/数组。AnalysisContext 的内部名称字段为 engine_network、engine_snapshot、engine_reference_snapshot；引用快照 ID 和内部名必须同时有值或同时为空。JobDTO.kind 为 upload/initialization/analysis/deletion；status 为 queued/running/succeeded/failed/cancelled/interrupted；engine_state 为 idle/busy/unknown。nullable 字段默认空，created_at 必填，所有日期必须有时区并归一为 UTC。ResultEnvelope 的 truncated=true 必须同时提供非空 truncation_reason。DTO 结构校验不替代 service 的可信身份、任务状态迁移和权限判断。
 
@@ -115,7 +115,7 @@ MVP-02 DTO 位于 `backend/app/contracts/dto.py`：所有字段拒绝未知项�
 
 SDK 边界方法：`SessionFactory.for_job(context)` 返回任务独占上下文；`AnalysisController.run(context, question_id, sdk_parameters) → StructuredAnswer`；`SnapshotController.initialize(context, upload_manifest, options) → InitializationAnswer`；`NetworkController.create/delete(engine_name)`；`SnapshotController.delete(context)`。StructuredAnswer/InitializationAnswer 只含普通类型、列 schema、警告及诊断，不含 requests.Response 或 SDK 实例。
 
-快照初始化状态以 initialization_job_id 对应的任务为运行状态来源，快照 service 通过 JobsService.get_status(job_id) 读取。初始化 queued/running 对应快照 queued/initializing；cancelled/interrupted/failed 对应快照 failed 并保留具体原因，不能永久显示 queued。重试初始化必须新建快照和任务，复用经校验的原始输入但使用新内部 SDK 名称；返回值同时包含新的 snapshot_id。禁止用通用重试直接覆盖旧快照。分析重试仍使用原快照，重新校验其可用性。
+快照初始化状态以 initialization_job_id 对应的任务为运行状态来源，快照 service 通过 JobsService.get(actor, job_id) 读取。初始化 queued/running 对应快照 queued/initializing；cancelled/interrupted/failed 对应快照 failed 并保留具体原因，不能永久显示 queued。重试初始化必须新建快照和任务，复用经校验的原始输入但使用新内部 SDK 名称；返回值同时包含新的 snapshot_id。禁止用通用重试直接覆盖旧快照。分析重试仍使用原快照，重新校验其可用性。
 
 ## 第二、三阶段接口增量
 
@@ -166,3 +166,11 @@ MVP-08 已实现任务分页、详情及排队取消：列表支持status/networ
 JobsService.submit 接纳既有 AnalysisContext 和 ExecutionContext，均规范化并重新验证为不可变ExecutionContext，保持SnapshotsService.require_analyzable的返回契约可直接提交。
 
 MVP-09：POST /jobs/{id}/retry → 202 JobDTO，仅所有者/管理员、failed/interrupted/cancelled、非deletion且已登记handler；同键重放返回同新任务，retry_of保留旧任务ID。未登记/不可重试409，unknown503 ENGINE_STATE_UNKNOWN。GET /admin/engine 返回state/owner/updated_at/interrupted_jobs（最多200个最近未知中断任务ID）；POST /admin/engine/reconcile 接收resolution（confirmed_idle/restarted）、note（5～1000字符），成功200同状态结构。必须先停止旧worker并确认引擎空闲；服务端同时检查worker与SDK执行锁，处理记录/审计/解除占用同事务。处理依据只存管理员对账表，不输出原始配置或异常。
+
+## MVP-10 初始化契约补充
+
+快照创建的 options 可省略；仅接受严格布尔 ignore_management_interfaces（默认 true）和 parse_reuse（默认 false），分别映射 extra_args.ignoremanagementinterfaces / parsereuse，固定 overwrite=false。创建与重试支持 Idempotency-Key；首次创建原子消费上传、保存 manifest/内容摘要/初始化 options、创建快照与 job。失败事务不会消费上传。初始化 task 的版本暂为 pending，成功后快照保存实际版本，require_analyzable 返回实际版本上下文。
+
+SnapshotDTO 列表/详情包含 engine_version、sdk_version、quality_summary；原始 manifest、内部文件位置和诊断不直接进入列表。诊断/文件详情由 MVP-11 提供。ready 表示解析门通过，不是对真实设备行为一致性的证明；无可用节点、没有解析记录或 FAILED 为 failed，PARTIALLY_UNRECOGNIZED/其他非 PASSED 或初始化问题为 ready_with_warnings。初始化取消、中断、失败优先按关联 job 派生 failed。
+
+重试返回新 JobDTO，id 是新 job_id，resource_ids.snapshot_id 是新 snapshot_id，retry_of 关联旧任务。复用已消费且不可变的输入 manifest，建立私有临时目录副本交给控制器，不再次消费上传，也不复用旧内部 snapshot 名称。未知引擎占用先停旧 worker 并完成管理员对账；历史 interrupted job 保留原状态。上传公共 DTO 移至 contracts/uploads.py 并保留原模块导出；UploadsService.consume 可使用共享 transaction，materialize 只接受服务端已存 manifest 并验证文件类型、大小和摘要。

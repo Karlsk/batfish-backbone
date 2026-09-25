@@ -493,3 +493,94 @@ def test_real_worker_lifecycle_and_readiness(lab):
             worker.terminate()
             worker.wait(timeout=15)
         assert httpx.get(lab["api_url"] + "/api/v1/health/ready").status_code == 503
+
+
+@pytest.mark.smoke
+@pytest.mark.parametrize("fixture_name,expected_nodes", [("small_network", 2), ("cisco_four", 4)])
+def test_real_snapshot_worker_smoke(lab, fixture_name, expected_nodes):
+    import sys
+    import time
+
+    from tests.test_upload_archives import zipped
+
+    run = Path(lab["run_directory"])
+    assert (run / "worker-paused.ack").exists()
+    with httpx.Client(base_url=lab["api_url"], timeout=20) as client:
+        headers = _ready_lab_admin(client, lab)
+        network_response = client.post(
+            "/api/v1/networks", json={"display_name": "Snapshot worker smoke"}, headers=headers
+        )
+        assert network_response.status_code == 201
+        network = network_response.json()["id"]
+        fixture = Path(__file__).resolve().parents[1] / "fixtures" / fixture_name / "configs"
+        uploaded = client.post(
+            f"/api/v1/networks/{network}/uploads",
+            headers=headers,
+            files=[
+                (
+                    "archive",
+                    (
+                        "snapshot.zip",
+                        zipped(
+                            [
+                                ("configs/" + p.name, p.read_bytes())
+                                for p in sorted(fixture.iterdir())
+                            ]
+                        ),
+                        "application/zip",
+                    ),
+                )
+            ],
+        )
+        assert uploaded.status_code == 201
+        body = {
+            "display_name": fixture_name,
+            "upload_id": uploaded.json()["id"],
+            "options": {"parse_reuse": True},
+        }
+        response = client.post(f"/api/v1/networks/{network}/snapshots", json=body, headers=headers)
+        assert response.status_code == 202
+        created = response.json()
+        assert client.get("/api/v1/jobs/" + created["job_id"]).json()["status"] == "queued"
+        env = os.environ | {
+            "DATABASE_URL": (run / "database.env")
+            .read_text()
+            .strip()
+            .removeprefix("DATABASE_URL="),
+            "BATFISH_HOST": lab["host"],
+            "BATFISH_PORT": str(lab["engine_port"]),
+            "BATFISH_API_KEY": "",
+            "BATFISH_TLS": "false",
+            "DATA_DIR": str(run / "data"),
+            "WORKER_HEARTBEAT_SECONDS": "0.2",
+            "WORKER_POLL_SECONDS": "0.1",
+            "ENGINE_PROBE_SECONDS": "30",
+        }
+        with (run / "snapshot-worker-smoke.log").open("a") as log:
+            worker = subprocess.Popen(
+                [sys.executable, "-m", "app.worker"],
+                cwd=Path(__file__).resolve().parents[2],
+                env=env,
+                stdout=log,
+                stderr=subprocess.STDOUT,
+            )
+            try:
+                deadline = time.monotonic() + 45
+                while True:
+                    job = client.get("/api/v1/jobs/" + created["job_id"]).json()
+                    if job["status"] not in {"queued", "running"}:
+                        break
+                    assert worker.poll() is None and time.monotonic() < deadline
+                    time.sleep(0.1)
+                assert job["status"] == "succeeded", job
+                detail = client.get(
+                    f"/api/v1/networks/{network}/snapshots/{created['snapshot_id']}"
+                ).json()
+                assert detail["status"] == "ready"
+                assert detail["quality_summary"]["node_count"] == expected_nodes
+                assert detail["engine_version"] == "0.36.0"
+                assert detail["sdk_version"] == "2026.9.17.3748"
+                assert "manifest" not in detail and "diagnostics" not in detail
+            finally:
+                worker.terminate()
+                worker.wait(timeout=15)
