@@ -6,9 +6,14 @@ from app.contracts.errors import ErrorEnvelope
 from app.infrastructure.database import Database
 from app.infrastructure.http import RequestContextMiddleware, install_error_handlers
 from app.infrastructure.settings import Settings
+from app.infrastructure.worker import WorkerRunner
 from app.modules.auth.api import create_router as create_auth_router
 from app.modules.auth.service import AuthService
+from app.modules.execution.api import create_router as create_execution_router
+from app.modules.execution.controller import ExecutionController
+from app.modules.execution.service import ExecutionService
 from app.modules.health.api import create_router
+from app.modules.health.schemas import DependencyStatus
 from app.modules.health.service import HealthService
 from app.modules.jobs.api import create_router as create_jobs_router
 from app.modules.jobs.service import JobsService
@@ -27,6 +32,7 @@ def database_metadata():
     from app.infrastructure.engine import EngineSlot  # noqa: F401
     from app.modules.audit import models as audit_models  # noqa: F401
     from app.modules.auth import models as auth_models  # noqa: F401
+    from app.modules.execution import models as execution_models  # noqa: F401
     from app.modules.jobs import models as jobs_models  # noqa: F401
     from app.modules.networks import models as networks_models  # noqa: F401
     from app.modules.results import models as results_models  # noqa: F401
@@ -102,6 +108,18 @@ def create_app(
             create_jobs_router(jobs, read_actor=read_actor, write_actor=write_actor),
             prefix="/api/v1",
         )
+        execution = ExecutionService(
+            db, auth, jobs, controller=ExecutionController(db, settings), settings=settings
+        )
+        app.state.execution_service = execution
+        app.include_router(
+            create_execution_router(execution, read_actor=read_actor, write_actor=write_actor),
+            prefix="/api/v1",
+        )
+        if health_service is None:
+            health.read_statuses = lambda: {
+                name: DependencyStatus(**value) for name, value in execution.observations().items()
+            }
         networks = NetworksService(db, auth, jobs, NetworkController(db, settings))
         app.state.networks_service = networks
         app.include_router(
@@ -137,3 +155,19 @@ def cleanup_uploads(settings: Settings) -> int:
         return UploadsService(database, auth, networks, settings).cleanup_expired()
     finally:
         database.close()
+
+
+def create_worker(settings: Settings, *, database=None, handlers=None):
+    database_metadata()
+    db = database if database is not None else Database(settings.database_url)
+    auth = AuthService(db, UsersService(db), settings)
+    jobs = JobsService(db, auth, settings)
+    execution = ExecutionService(
+        db,
+        auth,
+        jobs,
+        handlers=handlers,
+        controller=ExecutionController(db, settings),
+        settings=settings,
+    )
+    return WorkerRunner(db, execution, settings)

@@ -104,3 +104,5 @@ SDK 客户端超时不等于引擎停止；未知状态必须保留占用。work
 外部文档用于确认 SDK 与框架机制；本文中的 Web 接口和任务状态是本项目设计，不是 Batfish 已存在的 API。
 
 MVP-07 的 uploads.archive 是本模块 repository 使用的纯文件解析辅助，仅允许 repository→archive→schemas，不扩大跨模块入口。HTTP multipart流限制位于 infrastructure，api只校验字段组合并传递文件流，service处理身份、网络绑定和消费规则，repository处理受控文件与ORM。原始文件按服务端UUID保存，ZIP路径只进入经过验证的逻辑manifest。
+
+MVP-09以execution.service编排jobs/auth/audit和composition登记的handler；jobs不反向依赖snapshots/analysis。infrastructure.WorkerRunner只持有装配回调，不导入业务模块。app.worker仅通过composition启动，API与worker为独立进程。数据库记录worker观测，health通过装配回调读取；SDK版本探测在execution.controller，所有会话共用EngineGate。worker进程锁、领取状态条件、SDK锁与unknown持久状态分别约束进程、任务和远端调用，不把租约到期当作远端停止证明。

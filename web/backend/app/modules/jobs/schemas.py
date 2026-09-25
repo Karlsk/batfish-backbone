@@ -3,7 +3,7 @@ from typing import Literal
 
 from pydantic import JsonValue, field_validator
 
-from app.contracts.base import Contract
+from app.contracts.base import Contract, thaw
 from app.contracts.dto import AnalysisContext, ExecutionContext, JobDTO
 
 JobStatus = Literal["queued", "running", "succeeded", "failed", "cancelled", "interrupted"]
@@ -27,6 +27,11 @@ class JobInput(Contract):
     @classmethod
     def accept_analysis_context(cls, value):
         return value.model_dump() if isinstance(value, AnalysisContext) else value
+
+    @field_validator("requested_parameters", "effective_parameters", mode="before")
+    @classmethod
+    def accept_saved_parameters(cls, value):
+        return thaw(value)
 
 
 class JobPage(Contract):

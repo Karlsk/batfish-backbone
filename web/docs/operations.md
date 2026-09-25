@@ -1,6 +1,6 @@
 # 运行与部署设计
 
-本文定义目标部署行为。MVP-02 已提供可运行的 API 骨架，安装/启动/测试见 [后端 README](../backend/README.md)；完整团队部署、worker 和镜像仍属后续规格。
+本文定义目标部署行为。MVP-02提供API骨架、MVP-09接入独立worker，安装/启动/测试见 [后端 README](../backend/README.md)；完整团队部署和镜像仍属后续规格。
 
 MVP-01 已验证 SDK 基线：Python 3.12.12、Pybatfish 2026.9.17.3748、引擎 revision `7d0deeeac4a09973b3876327f6aef721ee12f955`。JAR 摘要、隔离引擎启动及复现命令见 [兼容性报告](sdk-compatibility.md)。MVP-02 已生成 `backend/uv.lock` 并使用该锁文件复验真实 SDK 基线；文档/引擎字符串 0.36.0 不能用作 PyPI 安装版本。
 
@@ -53,9 +53,9 @@ MVP-01 已验证 SDK 基线：Python 3.12.12、Pybatfish 2026.9.17.3748、引擎
 
 live 只报告进程；ready 检查数据库、worker 最近心跳和引擎最近健康检查。空闲时定期做轻量版本/能力检查，不通过创建快照作为心跳。
 
-当前健康路由带 `/api/v1` 前缀。MVP-02 的 ready 读取注入的状态快照，不主动探测依赖；默认状态源为空，返回 503 NOT_READY。数据库/worker/引擎健康观测分别由后续持久化及 worker 实现接入，不能通过固定健康状态让部署误判可用。
+当前健康路由带 `/api/v1` 前缀。MVP-09的ready读取真实数据库及worker/引擎最近观测，全部新鲜健康才返回200；缺失/过期/unknown返回503 NOT_READY。健康请求不调用SDK，空闲worker通过controller探测并记录观测，不能通过固定健康状态让部署误判可用。
 
-worker 失联或 SDK 调用超时后，不自动重放初始化/删除。相关任务置 interrupted，引擎置 unknown；管理员检查 Batfish 日志/状态，必要时受控重启引擎并确认可用，在管理接口记录处理依据后释放调度。界面说明“停止等待不等于引擎停止”。MVP-01 必须验证公开 SDK 对已存在答案/快照的检查方法；若无法证明完成就保持未知，不猜测。
+worker失联或SDK超时后，不自动重放初始化/删除。相关任务置interrupted、引擎置unknown。管理员先停止旧worker，再检查Batfish诊断、必要时受控重启并确认空闲；对账接口同事务取得worker和SDK锁、记录依据和审计后解除阻塞，再重启worker。界面说明“停止等待不等于引擎停止”。公开SDK观测不能证明完成时保持未知，不猜测。
 
 日志字段为 request_id、job_id、actor_id、resource_id、kind、duration、error_code；不记录明文密码、token、SDK key、完整配置、全量原始结果。服务端堆栈仅记录到受控日志，不回传用户。
 

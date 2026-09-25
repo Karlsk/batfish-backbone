@@ -2,7 +2,7 @@
 
 目标：实际运行 Batfish、FastAPI 和 PostgreSQL，使用两套配置快照验证 Web 功能链路。设备均为配置文件输入，无需真实设备、虚拟路由器或厂商镜像；不做设备实测与仿真结果的一致性验证，后者属于 Java 核心范围。
 
-当前已接入 MVP-03 数据库迁移、MVP-04 认证、MVP-05 账号管理及 MVP-06 网络创建/查询，尚无上传页面、worker 或分析 API。通过公开 Pybatfish 导入配置并验证测试输入，后续再让同一 ZIP 经过上传 API/页面完成应用闭环。不得将当前结果标为 MVP-25 验收完成。
+当前已接入MVP-03～09的数据库、认证、账号、网络、上传、任务与独立worker，尚无上传页面或分析API。两套配置已经过真实上传接口，SDK基线仍用于兼容性回归；后续接入快照初始化与页面。不得将当前结果标为MVP-25验收完成。
 
 ## 服务和隔离
 
@@ -67,11 +67,11 @@ uv run --locked ruff check app tests ../scripts/lab.py
 
 当前检查覆盖：合法配置解析/诊断、节点与接口查询、routes/LPM 查询、结构化 traceroute、上下文隔离、原始输入打包和配置身份、并发测试入口排他。这些是已知合成输入下的功能断言，不采集真实设备路由或对照实际报文转发。
 
-当前 ready=503 是预期：MVP-02 尚无数据库/worker/引擎观测生产者。服务端口可用不等于完整应用就绪。生产者接入时，应按新契约更新真实环境的 ready 验收，同时保留“依赖缺失不能假绿”的单元测试。
+MVP-09已接入真实观测：正常运行且观测新鲜时ready=200；累计测试暂停worker期间ready=503。独立worker生命周期冒烟覆盖启停后的200/503，仍保留MVP-02依赖缺失或过期不能假绿的测试。
 
 | 后续阶段 | 两套配置如何进入验收 |
 | --- | --- |
-| MVP-03～09 | 已加入真实 PostgreSQL 迁移/事务、认证、账号管理与真实 SDK 网络创建；MVP-07 已加入两套配置真实 HTTP 上传与字节/摘要核对；MVP-08已加入真实HTTP任务历史/取消、数据库限额与并发；worker和恢复随后续 spec 加入 |
+| MVP-03～09 | 已加入真实 PostgreSQL 迁移/事务、认证、账号管理与真实 SDK 网络创建；MVP-07 已加入两套配置真实 HTTP 上传与字节/摘要核对；MVP-08已加入真实HTTP任务历史/取消、数据库限额与并发；MVP-09已加入独立worker、真实SDK探测/进程终止恢复和unknown对账 |
 | MVP-10～15 | 通过 Web API 上传同一 ZIP，初始化、查询诊断、节点/接口、routes/LPM、traceroute；对应用字段与来源做检查 |
 | MVP-16～21 | 页面可运行后添加浏览器测试，执行上传、快照选择、基础/高级参数、详情和刷新；页面变更补视觉检查 |
 | MVP-22～25 | 加入导出、删除互斥、本机完整部署与双用户闭环；两套配置均纳入累计回归 |
@@ -89,3 +89,9 @@ uv run --locked ruff check app tests ../scripts/lab.py
 - `uv lock --check --offline`、Ruff、格式检查、`git diff --check` 和变更 Markdown 本地链接检查通过。测试有 1 条现有 Starlette/httpx 弃用提示。
 - live=200、ready=503、OpenAPI=200；数据库确认仅映射到 127.0.0.1:15439。本轮留下环境运行，API 地址为 http://127.0.0.1:18000。
 - 未运行浏览器、未接入尚未实现的应用业务入口、未采集/对照真实设备，未修改 Java 引擎或推进 MVP 完成状态。
+
+## MVP-09 worker 协调
+
+serve现在启动独立worker并迁移0005，manifest记录worker_pid。seed/smoke/verify先向本轮manager请求优雅停止其worker并等待确认，防止SDK基线直接调用与后台探测重叠；超时则拒绝并发运行。命令结束后manager重新启动worker。这个控制只管理本轮测试进程，不作用于其他环境。
+
+真实worker冒烟在暂停期间启动独立子进程，验证心跳/真实SDK版本探测、ready=200、第二worker被拒绝、优雅退出后ready=503。进程恢复测试使用独立schema、真实SDK GET后在持久完成前SIGKILL，确认interrupted/unknown及阻止领取；它证明Web恢复约束，不宣称完成了尚未实现的快照/分析业务。MVP-08任务元数据冒烟在worker暂停时验证queued/cancel语义，保留原验收覆盖。

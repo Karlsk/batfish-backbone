@@ -11,12 +11,12 @@ uv sync --locked
 uv run --locked uvicorn app.main:create_app --factory --host 127.0.0.1 --port 8000 --no-access-log --no-proxy-headers
 ```
 
-访问 `/docs` 查看 OpenAPI 文档。配置数据库后提供认证与健康接口，尚无 worker 或分析入口。日志关闭默认访问记录，避免含敏感参数的 URL 被记录。默认禁用代理头，客户端不能自行声明限流来源地址；反向代理部署须另行明确可信代理边界。
+访问 `/docs` 查看 OpenAPI 文档。配置数据库后提供认证、账号、网络、上传、任务与健康接口；独立worker另行启动，分析业务待后续实现。日志关闭默认访问记录，避免含敏感参数的 URL 被记录。默认禁用代理头，客户端不能自行声明限流来源地址；反向代理部署须另行明确可信代理边界。
 
 | 接口 | 当前行为 |
 | --- | --- |
 | `GET /api/v1/health/live` | 200 `{"status":"alive"}`，不连接数据库或 Batfish |
-| `GET /api/v1/health/ready` | 默认 503 `NOT_READY`；后续注入 database/worker/engine 状态生产者后，全部健康且未过期才返回 200 `{"status":"ready"}` |
+| `GET /api/v1/health/ready` | database/worker/engine观测全部健康且未过期返回200；缺依赖、停止worker或观测过期返回503 `NOT_READY` |
 
 每个 HTTP 响应都有服务端生成的 `X-Request-ID`；不采用客户端传入值。错误格式见 [API 契约](../docs/api-contracts.md)。
 
@@ -28,8 +28,8 @@ uv run --locked uvicorn app.main:create_app --factory --host 127.0.0.1 --port 80
 | --- | --- |
 | `DATABASE_URL` | 创建持久化资源、运行迁移时必需，格式 `postgresql://…`；仅启动 live 健康接口允许不配置，不代表 ready |
 | `BATFISH_HOST` / `BATFISH_PORT` | `localhost` / `9996`；端口 1～65535 |
-| `BATFISH_API_KEY` / `BATFISH_TLS` | 空 / `false`；尚不创建 SDK Session |
-| `SDK_REQUEST_TIMEOUT` | 120 秒，必须大于 0；后续 controller 显式传入 SDK |
+| `BATFISH_API_KEY` / `BATFISH_TLS` | 空 / `false`；空key使用SDK默认值，会话仅由controller/factory创建 |
+| `SDK_REQUEST_TIMEOUT` | 120 秒，必须大于 0；controller/factory显式传入SDK |
 | `SDK_CONCURRENCY` | 固定 1 |
 | `READINESS_MAX_AGE_SECONDS` | 60 秒，必须大于 0；状态缺失、过期或时间在未来均不 ready |
 | `AUTH_ALLOWED_ORIGINS` | JSON 数组，如 `["https://batfish.example"]`；默认空，所有登录/写请求拒绝；只允许精确 HTTP(S) Origin，不允许通配符、路径或 null |
@@ -133,3 +133,15 @@ ZIP压缩算法支持 STORED/DEFLATED；其他算法及损坏压缩流受控返�
 业务模块经JobsService.submit持久化任务；本篇不提供任意任务/SDK方法提交HTTP接口。requested/effective参数与ExecutionContext冻结保存，后者包含服务器资源映射及版本；JobDTO新增context和retry_of（兼容旧记录可空）。迁移0004添加上下文与重试父任务引用；实际重试由MVP-09接入，旧任务不复活。
 
 幂等作用域为用户、kind与网络/快照/引用快照，同键同规范化请求返回同任务，不同内容409。新任务和幂等记录同事务；默认`MAX_QUEUED_JOBS_PER_USER=10`、`MAX_QUEUED_JOBS_GLOBAL=100`，达到上限429且不留下半条记录。并发提交通过短事务锁核对限额，已存在的幂等重放不消耗新名额；不把排队限额当作引擎执行并发。MVP-08仅任务元数据，尚无worker，不能宣称后台计算完成。
+
+## 独立 worker 与未知占用恢复
+
+迁移0005后在独立进程运行 `uv run --locked python -m app.worker`，使用与API相同的DATABASE_URL、DATA_DIR和Batfish连接配置。单worker进程锁和任务原子领取共同防止重复执行；误启动第二worker会退出。dispatcher只使用composition登记的业务service handler，未登记操作明确失败；快照/分析业务handler由后续MVP接入，MVP-09没有把虚拟handler当作分析结果。
+
+默认心跳10秒、失联阈值60秒、轮询1秒、空闲SDK版本探测30秒、任务等待预算1800秒；对应 `WORKER_HEARTBEAT_SECONDS`、`WORKER_STALE_SECONDS`、`WORKER_POLL_SECONDS`、`ENGINE_PROBE_SECONDS`、`JOB_WAIT_BUDGET_SECONDS`。worker在执行前重新读取发起人身份；停用或必须改密时不调用handler。SIGTERM/SIGINT停止领取，当前任务收敛前继续心跳；外部强制终止会在后续扫描中形成interrupted/unknown。
+
+超预算、失联及SDK结果未知不等于引擎已经停止。unknown阻止后续调度；状态进入SDK及完成时使用条件更新，迟到完成不能自行解除unknown。处理方式：停止旧worker，检查Batfish诊断/必要时受控重启并确认空闲，然后管理员调用 `GET /api/v1/admin/engine` 和 `POST /api/v1/admin/engine/reconcile`（resolution为confirmed_idle/restarted，note为5～1000字处理依据，需Origin/CSRF）。对账同事务取得worker和引擎锁、写处理记录与审计，再解除unknown；有活跃worker/SDK或审计失败时不解除。随后重新启动worker、由用户决定重试，不自动重放。
+
+`POST /api/v1/jobs/{id}/retry` 返回202新JobDTO，支持Idempotency-Key；仅发起人/管理员可重试failed/interrupted/cancelled且有登记重试handler的任务，删除/成功/运行中任务拒绝。新记录通过retry_of关联旧记录，旧记录不改写；业务handler重新校验资源，初始化新建快照由MVP-10负责。引擎未知时禁止重试；尚未登记的未来业务明确409。
+
+ready现读取真实数据库和最近worker/引擎观测；停止worker、观测过期或引擎unknown时503。健康请求本身不调用SDK。引擎忙碌期间复用上次探测，过期时保守不ready。

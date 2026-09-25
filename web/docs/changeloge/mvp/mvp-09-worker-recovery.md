@@ -1,6 +1,6 @@
 # MVP-09 独立执行进程与中断恢复
 
-- 状态：待开发
+- 状态：已完成
 - 阶段：1
 - 依赖：[MVP-08](../mvp/mvp-08-job-records.md)
 - 预计工作量：2.0 人天（实现/验证 1.25 + 测试 0.5 + 文档/自检 0.25），依赖就绪后计；超过 2 人天先拆分。
@@ -35,11 +35,11 @@
 
 ## 实施步骤
 
-- [ ] 用虚拟 handler 先验证原子领取、心跳和终态写入，不依赖真实 SDK。
-- [ ] 实现 SDK 占用和 unknown 阻塞；启动时扫描失联任务而不自动重放。
-- [ ] 加入手动重试/管理员对账接口，限制成功/运行中任务错误重试。
-- [ ] 绑定独占 Session 生命周期，优雅关闭停止领取。
-- [ ] 运行下述验证，记录实际命令与结果，更新本文及索引状态。
+- [x] 用虚拟 handler 先验证原子领取、心跳和终态写入，不依赖真实 SDK。
+- [x] 实现 SDK 占用和 unknown 阻塞；启动时扫描失联任务而不自动重放。
+- [x] 加入手动重试/管理员对账接口，限制成功/运行中任务错误重试。
+- [x] 绑定独占 Session 生命周期，优雅关闭停止领取。
+- [x] 运行下述验证，记录实际命令与结果，更新本文及索引状态。
 
 ## 测试与验收
 
@@ -58,4 +58,10 @@
 
 ## 完成记录
 
-当前尚未开发或运行本 spec 的产品测试。实施者完成后在本节记录实际文件、验证命令、结果、引擎/SDK版本（如涉及）和剩余限制；存在验收失败时保持未通过状态。
+2026-09-25 完成独立app.worker、数据库进程锁、JobsService原子领取/心跳/终态/失联恢复、execution.service dispatcher与管理员API、ExecutionController真实SDK版本探测、迁移0005及ready观测。执行前复核账号；重试经登记业务handler，保留旧任务并关联retry_of。SDK factory提供独占for_job上下文，reference由后续问题调用显式传入。
+
+仓库根执行 `web/backend/.venv/bin/python web/scripts/lab.py seed` → `smoke` → `verify`：真实服务冒烟 **10 passed**，MVP-01～09 累计 **189 passed、0 skipped**。17项worker检查包含真实PostgreSQL双领取/审计回滚/预算/并发unknown保护、真实SDK会话隔离及子进程SDK GET后SIGKILL。真实HTTP冒烟另验证worker启动ready200、第二worker拒绝、优雅停止ready503。backend Ruff、`uv lock --check`、本地文档链接及Git空白检查通过。版本/源码/逐项结果见 [证据](../../evidence/mvp-09-verification.json)。
+
+独立审查发现的idle→busy覆盖unknown竞态和两个心跳间超预算成功均先复现再修复、复审通过；旧worker未停止时不能对账解除unknown，迟到SDK完成也不能清除栅栏。重试实测还修复MVP-08冻结参数再次提交的兼容性，新增契约回归。引擎未知保持阻塞，管理员先停worker、外部确认空闲、记录依据和审计后再解除，不自动重放或强杀引擎。
+
+lab管理独立worker；SDK基线命令先优雅暂停其worker，进程集成测试自行启动受控子进程，结束恢复。两套配置及此前接口完整回归。虚拟handler验证执行协议，真实SDK GET/进程测试验证环境与生命周期，不宣称已实现快照/分析业务；这些handler在MVP-10及后续登记。MVP-10依赖就绪，未修改Java引擎。

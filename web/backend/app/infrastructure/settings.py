@@ -27,6 +27,11 @@ class Settings(BaseSettings):
     upload_ttl_seconds: int = Field(default=86400, ge=1)
     max_queued_jobs_per_user: int = Field(default=10, ge=1)
     max_queued_jobs_global: int = Field(default=100, ge=1)
+    worker_heartbeat_seconds: float = Field(default=10, gt=0)
+    worker_stale_seconds: float = Field(default=60, gt=0)
+    worker_poll_seconds: float = Field(default=1, gt=0)
+    engine_probe_seconds: float = Field(default=30, gt=0)
+    job_wait_budget_seconds: float = Field(default=1800, gt=0)
     auth_allowed_origins: tuple[str, ...] = ()
     auth_cookie_secure: bool = True
     auth_failure_limit: int = Field(default=5, ge=1, le=100)

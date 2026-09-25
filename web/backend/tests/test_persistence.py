@@ -40,6 +40,8 @@ def test_migration_from_empty(database):
         "idempotency_records",
         "login_attempts",
         "engine_slot",
+        "worker_status",
+        "engine_reconciliations",
     }
     with database.engine.connect() as conn:
         context = MigrationContext.configure(conn)

@@ -39,6 +39,50 @@ class EngineGate:
     def __init__(self, database: Database):
         self._database = database
 
+    def state(self, *, transaction=None):
+        if transaction is not None:
+            return transaction.scalar(select(EngineSlot.state).where(EngineSlot.id == 1)) or "idle"
+        with self._database.transaction() as session:
+            return self.state(transaction=session)
+
+    def view(self):
+        with self._database.transaction() as session:
+            row = session.get(EngineSlot, 1)
+            return {
+                "state": row.state if row else "idle",
+                "owner": row.owner if row else None,
+                "updated_at": row.updated_at if row else None,
+            }
+
+    def mark_unknown(self, *, transaction):
+        transaction.execute(
+            insert(EngineSlot)
+            .values(id=1, state="unknown")
+            .on_conflict_do_update(
+                index_elements=[EngineSlot.id], set_={"state": "unknown", "updated_at": func.now()}
+            )
+        )
+
+    def detect_abandoned(self):
+        with self._database.transaction() as transaction:
+            if transaction.scalar(
+                text("SELECT pg_try_advisory_xact_lock(:key)"), {"key": ENGINE_LOCK_ID}
+            ):
+                if self.state(transaction=transaction) == "busy":
+                    self.mark_unknown(transaction=transaction)
+
+    def reconcile(self, *, transaction):
+        acquired = transaction.scalar(
+            text("SELECT pg_try_advisory_xact_lock(:key)"), {"key": ENGINE_LOCK_ID}
+        )
+        if not acquired or self.state(transaction=transaction) != "unknown":
+            raise EngineBusy()
+        transaction.execute(
+            update(EngineSlot)
+            .where(EngineSlot.id == 1)
+            .values(state="idle", owner=None, updated_at=func.now())
+        )
+
     @contextmanager
     def exclusive(self, *, owner: str):
         with self._database.engine.connect() as connection:
@@ -66,12 +110,14 @@ class EngineGate:
                     )
                     connection.commit()
                     raise EngineBusy(unknown=True)
-                connection.execute(
+                admission = connection.execute(
                     update(EngineSlot)
-                    .where(EngineSlot.id == 1)
+                    .where(EngineSlot.id == 1, EngineSlot.state == "idle")
                     .values(state="busy", owner=owner, updated_at=func.now())
                 )
                 connection.commit()
+                if admission.rowcount != 1:
+                    raise EngineBusy(unknown=True)
                 try:
                     yield
                 except BaseException as failure:
@@ -90,12 +136,18 @@ class EngineGate:
                     raise
                 else:
                     try:
-                        connection.execute(
+                        completed = connection.execute(
                             update(EngineSlot)
-                            .where(EngineSlot.id == 1)
+                            .where(
+                                EngineSlot.id == 1,
+                                EngineSlot.state == "busy",
+                                EngineSlot.owner == owner,
+                            )
                             .values(state="idle", owner=None, updated_at=func.now())
                         )
                         connection.commit()
+                        if completed.rowcount != 1:
+                            raise EngineOutcomeUnknown("Engine was fenced while work was running")
                     except Exception:
                         raise EngineOutcomeUnknown(
                             "Engine slot completion requires reconciliation"

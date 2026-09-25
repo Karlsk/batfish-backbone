@@ -2,15 +2,16 @@ import hashlib
 import json
 import re
 from contextlib import nullcontext
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from uuid import UUID, uuid4
 
 from pydantic import ValidationError
 from sqlalchemy.orm import Session
 
 from app.contracts.dto import Actor, AnalysisContext, JobDTO
-from app.contracts.errors import ErrorCode, ServiceError
+from app.contracts.errors import ErrorCode, ErrorDetail, ServiceError
 from app.contracts.idempotency import ResourceReservation
+from app.infrastructure.engine import EngineGate
 from app.infrastructure.settings import Settings
 from app.modules.auth.service import AuthService
 from app.modules.jobs.repository import IdempotencyRepository, JobsRepository
@@ -46,6 +47,7 @@ class JobsService:
         idempotency_key: str | None = None,
         *,
         effective_parameters=None,
+        retry_of: UUID | None = None,
         transaction: Session | None = None,
     ) -> JobDTO:
         actor = self._actor(actor)
@@ -72,7 +74,10 @@ class JobsService:
         )
         digest = hashlib.sha256(
             json.dumps(
-                request.model_dump(mode="json"),
+                {
+                    **request.model_dump(mode="json"),
+                    **({"retry_of": str(retry_of)} if retry_of else {}),
+                },
                 sort_keys=True,
                 separators=(",", ":"),
                 allow_nan=False,
@@ -83,6 +88,17 @@ class JobsService:
         ) as session:
             repository = JobsRepository(session)
             repository.lock_queue()
+            if retry_of is not None:
+                parent = repository.get(retry_of)
+                if (
+                    parent is None
+                    or parent.kind != request.kind
+                    or parent.status not in {"failed", "interrupted", "cancelled"}
+                    or parent.kind == "deletion"
+                ):
+                    raise ServiceError(ErrorCode.CONFLICT)
+                if parent.created_by != actor.user_id and actor.role != "admin":
+                    raise ServiceError(ErrorCode.FORBIDDEN)
             reservation = self.reserve_resource(
                 actor,
                 route="/jobs/" + request.kind,
@@ -104,7 +120,10 @@ class JobsService:
             ):
                 raise ServiceError(ErrorCode.RATE_LIMITED, retryable=True)
             job = repository.add(
-                identifier=reservation.resource_id, actor_id=actor.user_id, request=request
+                identifier=reservation.resource_id,
+                actor_id=actor.user_id,
+                request=request,
+                retry_of=retry_of,
             )
             repository.bind_idempotency(job.id)
             return self._present(job)
@@ -185,3 +204,105 @@ class JobsService:
         if stored_hash != request_hash or stored_id is None:
             raise ServiceError(ErrorCode.CONFLICT)
         return ResourceReservation(stored_id, created)
+
+    def claim(self, worker_id: str) -> JobDTO | None:
+        if not worker_id or len(worker_id) > 128:
+            raise ServiceError(ErrorCode.VALIDATION_ERROR)
+        with self._database.transaction() as transaction:
+            repository = JobsRepository(transaction)
+            repository.lock_queue()
+            if EngineGate(self._database).state(transaction=transaction) != "idle":
+                return None
+            job = repository.claim_candidate()
+            if job is None:
+                return None
+            now = datetime.now(UTC)
+            return repository.transition(
+                job.id,
+                expected="queued",
+                status="running",
+                phase="starting",
+                lease_owner=worker_id,
+                heartbeat_at=now,
+                started_at=now,
+                attempt=job.attempt + 1,
+                cancel_allowed=False,
+            )
+
+    def heartbeat(self, job_id, worker_id):
+        with self._database.transaction() as transaction:
+            JobsRepository(transaction).heartbeat(job_id, worker_id)
+
+    def finish(self, job_id, worker_id, *, status, result_id=None, error=None):
+        if status not in TRANSITIONS["running"]:
+            raise ServiceError(ErrorCode.CONFLICT)
+        with self._database.transaction() as transaction:
+            repository = JobsRepository(transaction)
+            job = repository.get(job_id, lock=True)
+            if job is None or job.status != "running" or job.lease_owner != worker_id:
+                return None
+            return repository.transition(
+                job_id,
+                expected="running",
+                status=status,
+                phase=status,
+                finished_at=datetime.now(UTC),
+                lease_owner=None,
+                result_id=result_id,
+                error=error.model_dump(mode="json") if error else None,
+                engine_state="unknown" if status == "interrupted" else "idle",
+                cancel_allowed=False,
+            )
+
+    def interrupt(self, job_id, worker_id):
+        with self._database.transaction() as transaction:
+            repository = JobsRepository(transaction)
+            job = repository.get(job_id, lock=True)
+            if job is None or job.status != "running" or job.lease_owner != worker_id:
+                return None
+            EngineGate(self._database).mark_unknown(transaction=transaction)
+            return repository.transition(
+                job_id,
+                expected="running",
+                status="interrupted",
+                phase="interrupted",
+                finished_at=datetime.now(UTC),
+                lease_owner=None,
+                engine_state="unknown",
+                cancel_allowed=False,
+                error=ErrorDetail(
+                    code=ErrorCode.ENGINE_STATE_UNKNOWN,
+                    message="Engine state unknown; administrator reconciliation required",
+                    request_id=str(uuid4()),
+                ).model_dump(mode="json"),
+            )
+
+    def recover_stale(self):
+        with self._database.transaction() as transaction:
+            repository = JobsRepository(transaction)
+            repository.lock_queue()
+            stale = repository.stale(
+                datetime.now(UTC) - timedelta(seconds=self._settings.worker_stale_seconds)
+            )
+            for job in stale:
+                EngineGate(self._database).mark_unknown(transaction=transaction)
+                repository.transition(
+                    job.id,
+                    expected="running",
+                    status="interrupted",
+                    phase="interrupted",
+                    finished_at=datetime.now(UTC),
+                    lease_owner=None,
+                    engine_state="unknown",
+                    cancel_allowed=False,
+                    error=ErrorDetail(
+                        code=ErrorCode.ENGINE_STATE_UNKNOWN,
+                        message="Worker lost; engine outcome requires reconciliation",
+                        request_id=str(uuid4()),
+                    ).model_dump(mode="json"),
+                )
+            return len(stale)
+
+    def interrupted_ids(self):
+        with self._database.transaction() as transaction:
+            return JobsRepository(transaction).interrupted_ids()

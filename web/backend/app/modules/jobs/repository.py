@@ -142,3 +142,48 @@ class JobsRepository:
             .returning(Job)
         )
         return self.dto(row)
+
+    def claim_candidate(self):
+        if self._transaction.scalar(
+            select(func.count()).select_from(Job).where(Job.status == "running")
+        ):
+            return None
+        return self.dto(
+            self._transaction.scalar(
+                select(Job)
+                .where(Job.status == "queued")
+                .order_by(Job.created_at, Job.id)
+                .with_for_update(skip_locked=True)
+                .limit(1)
+            )
+        )
+
+    def heartbeat(self, job_id, worker_id):
+        self._transaction.execute(
+            update(Job)
+            .where(Job.id == job_id, Job.status == "running", Job.lease_owner == worker_id)
+            .values(heartbeat_at=datetime.now(UTC))
+        )
+
+    def stale(self, cutoff):
+        return tuple(
+            self.dto(row)
+            for row in self._transaction.scalars(
+                select(Job)
+                .where(
+                    Job.status == "running",
+                    (Job.heartbeat_at.is_(None) | (Job.heartbeat_at < cutoff)),
+                )
+                .with_for_update()
+            )
+        )
+
+    def interrupted_ids(self):
+        return tuple(
+            self._transaction.scalars(
+                select(Job.id)
+                .where(Job.status == "interrupted", Job.engine_state == "unknown")
+                .order_by(Job.created_at.desc())
+                .limit(200)
+            )
+        )

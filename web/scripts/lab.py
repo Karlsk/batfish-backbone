@@ -196,6 +196,7 @@ def serve(args):
     )
     processes, logs = [], []
     container_id = None
+    worker = None
 
     def shutdown(_signal, _frame):
         raise KeyboardInterrupt
@@ -329,7 +330,7 @@ def serve(args):
                 check=True,
                 timeout=60,
             )
-        state["database_migration"] = "0004"
+        state["database_migration"] = "0005"
         auth_password = secrets.token_urlsafe(24)
         auth_file = run / "auth.json"
         with open(
@@ -350,6 +351,20 @@ def serve(args):
                 check=True,
                 timeout=30,
             )
+        worker_log = (run / "worker.log").open("a")
+        logs.append(worker_log)
+
+        def start_worker():
+            return subprocess.Popen(
+                [sys.executable, "-m", "app.worker"],
+                cwd=BACKEND,
+                env=env,
+                stdout=worker_log,
+                stderr=subprocess.STDOUT,
+            )
+
+        worker = start_worker()
+        state["worker_pid"] = worker.pid
         write_json(CURRENT, state)
         write_json(run / "manifest.json", state)
         print(
@@ -369,12 +384,35 @@ def serve(args):
             "Use seed, smoke, verify in a second terminal. Ctrl-C stops this lab only.",
             flush=True,
         )
+        pause_request, pause_ack = (
+            run / "worker-pause.request",
+            run / "worker-paused.ack",
+        )
         while all(p.poll() is None for p in processes):
-            time.sleep(1)
+            if pause_request.exists():
+                if worker is not None:
+                    worker.terminate()
+                    worker.wait(timeout=45)
+                    worker = None
+                pause_ack.touch(mode=0o600, exist_ok=True)
+            else:
+                if worker is None:
+                    worker = start_worker()
+                    state = read_current() | {"worker_pid": worker.pid}
+                    write_json(CURRENT, state)
+                    write_json(run / "manifest.json", state)
+                pause_ack.unlink(missing_ok=True)
+                if worker.poll() is not None:
+                    raise RuntimeError(
+                        "Lab worker exited unexpectedly; inspect worker log"
+                    )
+            time.sleep(0.2)
         raise RuntimeError("A lab process exited; inspect run logs")
     except KeyboardInterrupt:
         print("Stopping test lab", flush=True)
     finally:
+        if worker is not None:
+            processes.append(worker)
         for process in reversed(processes):
             if process.poll() is None:
                 process.terminate()
@@ -399,6 +437,25 @@ def serve(args):
             }
             write_json(CURRENT, state)
         write_json(run / "manifest.json", state)
+
+
+@contextmanager
+def paused_lab_worker():
+    state = read_current()
+    run = Path(state["run_directory"])
+    request, acknowledgment = run / "worker-pause.request", run / "worker-paused.ack"
+    request.touch(mode=0o600, exist_ok=True)
+    try:
+        deadline = time.monotonic() + 50
+        while not acknowledgment.exists():
+            if time.monotonic() > deadline:
+                raise RuntimeError(
+                    "Lab worker did not stop safely; no concurrent SDK tests will run"
+                )
+            time.sleep(0.1)
+        yield
+    finally:
+        request.unlink(missing_ok=True)
 
 
 def seed():
@@ -504,7 +561,7 @@ def main():
         with exclusive_run(RUNTIME / "serve.lock"):
             serve(args)
     elif args.command == "seed":
-        with exclusive_run(RUNTIME / "operations.lock"):
+        with exclusive_run(RUNTIME / "operations.lock"), paused_lab_worker():
             seed()
     elif args.command == "status":
         state = read_current()
@@ -525,7 +582,7 @@ def main():
             )
         )
     else:
-        with exclusive_run(RUNTIME / "operations.lock"):
+        with exclusive_run(RUNTIME / "operations.lock"), paused_lab_worker():
             return verify(smoke=args.command == "smoke")
     return 0
 

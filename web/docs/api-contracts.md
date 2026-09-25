@@ -164,3 +164,5 @@ ZIP压缩算法支持 STORED/DEFLATED；其他算法及损坏压缩流受控返�
 MVP-08 已实现任务分页、详情及排队取消：列表支持status/network_id/created_by，默认50最大200；取消成功200 JobDTO，running/终态/deletion返回409，非发起人且非管理员403。cancel_allowed按kind+当前状态派生。JobDTO新增context（ExecutionContext或null）及retry_of（UUID或null）；ExecutionContext沿用AnalysisContext的资源名/版本字段，允许network级任务的snapshot_id/engine_snapshot同时为空，身份与名称仍成对出现。新任务context必填，旧记录兼容null；requested/effective参数独立冻结。JobsService.submit无通用HTTP入口，由各业务service校验资源后调用；可共享事务保证业务资源与排队原子提交。重试执行与worker仍在MVP-09。
 
 JobsService.submit 接纳既有 AnalysisContext 和 ExecutionContext，均规范化并重新验证为不可变ExecutionContext，保持SnapshotsService.require_analyzable的返回契约可直接提交。
+
+MVP-09：POST /jobs/{id}/retry → 202 JobDTO，仅所有者/管理员、failed/interrupted/cancelled、非deletion且已登记handler；同键重放返回同新任务，retry_of保留旧任务ID。未登记/不可重试409，unknown503 ENGINE_STATE_UNKNOWN。GET /admin/engine 返回state/owner/updated_at/interrupted_jobs（最多200个最近未知中断任务ID）；POST /admin/engine/reconcile 接收resolution（confirmed_idle/restarted）、note（5～1000字符），成功200同状态结构。必须先停止旧worker并确认引擎空闲；服务端同时检查worker与SDK执行锁，处理记录/审计/解除占用同事务。处理依据只存管理员对账表，不输出原始配置或异常。

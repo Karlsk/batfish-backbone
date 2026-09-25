@@ -12,6 +12,17 @@ class SessionFactory:
         self._gate, self._settings = EngineGate(database), settings
 
     @contextmanager
+    def for_job(self, context, *, select_snapshot=True, load_questions=True):
+        with self.exclusive(
+            owner=str(context.snapshot_id or context.network_id), load_questions=load_questions
+        ) as session:
+            session.set_network(context.engine_network)
+            if select_snapshot and context.engine_snapshot is not None:
+                session.set_snapshot(context.engine_snapshot)
+            # Reference snapshots are passed explicitly to question.answer, not session state.
+            yield session
+
+    @contextmanager
     def exclusive(self, *, owner: str, load_questions: bool = False):
         with self._gate.exclusive(owner=owner):
             options = {

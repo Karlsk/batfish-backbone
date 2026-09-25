@@ -433,3 +433,63 @@ def test_real_job_metadata_smoke(lab):
             )
         finally:
             db.close()
+
+
+@pytest.mark.smoke
+def test_real_worker_lifecycle_and_readiness(lab):
+    import sys
+    import time
+
+    run = Path(lab["run_directory"])
+    assert (run / "worker-paused.ack").exists(), (
+        "Lab manager must pause its worker before serial SDK tests"
+    )
+    env = os.environ | {
+        "DATABASE_URL": (run / "database.env").read_text().strip().removeprefix("DATABASE_URL="),
+        "BATFISH_HOST": lab["host"],
+        "BATFISH_PORT": str(lab["engine_port"]),
+        "BATFISH_API_KEY": "",
+        "BATFISH_TLS": "false",
+        "DATA_DIR": str(run / "data"),
+        "WORKER_HEARTBEAT_SECONDS": "0.2",
+        "WORKER_POLL_SECONDS": "0.1",
+        "ENGINE_PROBE_SECONDS": "1",
+    }
+    with (run / "worker-smoke.log").open("a") as log:
+        worker = subprocess.Popen(
+            [sys.executable, "-m", "app.worker"],
+            cwd=Path(__file__).resolve().parents[2],
+            env=env,
+            stdout=log,
+            stderr=subprocess.STDOUT,
+        )
+        try:
+            deadline = time.monotonic() + 15
+            while httpx.get(lab["api_url"] + "/api/v1/health/ready").status_code != 200:
+                assert worker.poll() is None and time.monotonic() < deadline
+                time.sleep(0.1)
+            with httpx.Client(base_url=lab["api_url"], timeout=10) as client:
+                headers = _ready_lab_admin(client, lab)
+                assert client.get("/api/v1/admin/engine").json()["state"] in {"idle", "busy"}
+                # A healthy idle engine has nothing to reconcile.
+                assert (
+                    client.post(
+                        "/api/v1/admin/engine/reconcile",
+                        json={"resolution": "confirmed_idle", "note": "No unknown work"},
+                        headers=headers,
+                    ).status_code
+                    == 409
+                )
+            second = subprocess.run(
+                [sys.executable, "-m", "app.worker"],
+                cwd=Path(__file__).resolve().parents[2],
+                env=env,
+                stdout=log,
+                stderr=subprocess.STDOUT,
+                timeout=10,
+            )
+            assert second.returncode != 0
+        finally:
+            worker.terminate()
+            worker.wait(timeout=15)
+        assert httpx.get(lab["api_url"] + "/api/v1/health/ready").status_code == 503
