@@ -2,6 +2,7 @@ import openapiFetch from "openapi-fetch";
 import type { paths, components } from "./schema";
 import { getSession, setSession, sessionGeneration } from "../app/session";
 const messages: Record<string, string> = {
+  LOGIN_FAILED: "用户名或密码不正确，请重新输入。",
   UNAUTHORIZED: "会话已过期，请重新登录。",
   FORBIDDEN: "当前账号没有操作权限。",
   VALIDATION_ERROR: "请检查填写的参数。",

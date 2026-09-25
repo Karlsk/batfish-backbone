@@ -276,7 +276,7 @@ def serve(args):
                 "BATFISH_API_KEY": "",
                 "BATFISH_TLS": "false",
                 "DATABASE_URL": connection_file.read_text().strip().split("=", 1)[1],
-                "AUTH_ALLOWED_ORIGINS": json.dumps([state["api_url"]]),
+                "AUTH_ALLOWED_ORIGINS": json.dumps([state["api_url"], "http://127.0.0.1:15173"]),
                 "AUTH_COOKIE_SECURE": "false",
                 "DATA_DIR": str(run / "data"),
             }

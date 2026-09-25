@@ -1,6 +1,6 @@
 # 第一阶段：基础排障闭环
 
-状态：MVP-01～16 已完成，其余9份待开发。总计25份，预计40.0人天，单份≤2人天。
+状态：MVP-01～17 已完成，其余8份待开发。总计25份，预计40.0人天，单份≤2人天。
 
 阶段目标：内置账号、共享网络/快照、上传与解析诊断、设备/接口、路由/LPM、单向IPv4 traceroute、任务、导出及对应前端。不包含拓扑/BGP/ACL专页和变更验证。
 
@@ -22,7 +22,7 @@
 | [MVP-14 路由与最长前缀匹配接口](mvp-14-routing.md) | MVP-13 | 1.5 | 已完成 |
 | [MVP-15 IPv4 单向虚拟 traceroute 接口](mvp-15-traceroute.md) | MVP-14 | 2.0 | 已完成 |
 | [MVP-16 前端骨架与渐进展示组件](mvp-16-frontend-foundation.md) | MVP-12 | 1.5 | 已完成 |
-| [MVP-17 登录与用户管理界面](mvp-17-frontend-auth-users.md) | MVP-05、MVP-16 | 1.5 | 待开发 |
+| [MVP-17 登录与用户管理界面](mvp-17-frontend-auth-users.md) | MVP-05、MVP-16 | 1.5 | 已完成 |
 | [MVP-18 网络、快照与上传向导界面](mvp-18-frontend-networks-snapshots.md) | MVP-10、MVP-17 | 2.0 | 待开发 |
 | [MVP-19 任务记录与解析诊断界面](mvp-19-frontend-jobs-diagnostics.md) | MVP-11、MVP-18 | 1.5 | 待开发 |
 | [MVP-20 设备、接口与路由界面](mvp-20-frontend-inventory-routing.md) | MVP-13、MVP-14、MVP-19 | 2.0 | 待开发 |

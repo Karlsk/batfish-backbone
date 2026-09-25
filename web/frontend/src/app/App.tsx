@@ -1,4 +1,10 @@
-import { useEffect, useState, type PropsWithChildren } from "react";
+import {
+  useEffect,
+  useState,
+  Suspense,
+  lazy,
+  type PropsWithChildren,
+} from "react";
 import {
   ConfigProvider,
   Layout,
@@ -37,6 +43,19 @@ import { ContextProvider, useResourceContext, resourceKey } from "./context";
 import { onIdentityChange, useSession } from "./session";
 import { api, unwrap } from "../api/client";
 import { EmptyState } from "../components/States";
+import {
+  SessionBootstrap,
+  AuthGuard,
+  LogoutButton,
+  PasswordPage,
+} from "../features/auth/Auth";
+import { AdminOnly } from "../features/users/Access";
+import { LoadingState } from "../components/States";
+const UsersPage = lazy(() =>
+  import("../features/users/Users").then((module) => ({
+    default: module.UsersPage,
+  })),
+);
 import "./style.css";
 export const theme = {
   token: {
@@ -66,7 +85,11 @@ export function Providers({ children }: PropsWithChildren) {
   useEffect(() => onIdentityChange(() => client.clear()), [client]);
   const session = useSession();
   return (
-    <ConfigProvider locale={zhCN} theme={theme}>
+    <ConfigProvider
+      locale={zhCN}
+      theme={theme}
+      button={{ autoInsertSpace: false }}
+    >
       <QueryClientProvider client={client}>
         <ContextProvider key={session?.user_id ?? "anonymous"}>
           {children}
@@ -107,6 +130,7 @@ function ServiceStatus() {
 export function Shell({ children }: PropsWithChildren) {
   const { network, snapshot } = useResourceContext();
   const location = useLocation();
+  const session = useSession();
   return (
     <Layout className="workbench">
       <Layout.Sider width={224} className="sidebar">
@@ -122,6 +146,15 @@ export function Shell({ children }: PropsWithChildren) {
         <Menu
           selectedKeys={[location.pathname]}
           items={[
+            ...(session?.role === "admin"
+              ? [
+                  {
+                    key: "/users",
+                    icon: <ApartmentOutlined />,
+                    label: <Link to="/users">用户管理</Link>,
+                  },
+                ]
+              : []),
             {
               key: "/",
               icon: <DashboardOutlined />,
@@ -184,7 +217,21 @@ export function Shell({ children }: PropsWithChildren) {
               />
             </label>
           </div>
-          <ServiceStatus />
+          <Space>
+            <ServiceStatus />
+            {session && (
+              <>
+                <Link
+                  to="/password"
+                  className="account-link"
+                  title={`${session.username} · 改密`}
+                >
+                  {session.username} · 改密
+                </Link>
+                <LogoutButton />
+              </>
+            )}
+          </Space>
         </Layout.Header>
         <Layout.Content className="page-content">{children}</Layout.Content>
       </Layout>
@@ -255,24 +302,39 @@ export function App() {
   return (
     <Providers>
       <BrowserRouter>
-        <Shell>
-          <Routes>
-            <Route path="/" element={<Overview />} />
-            <Route
-              path="*"
-              element={
-                <EmptyState
-                  title="页面暂未开放"
-                  action={
-                    <Link to="/">
-                      <Button>返回概览</Button>
-                    </Link>
-                  }
-                />
-              }
-            />
-          </Routes>
-        </Shell>
+        <SessionBootstrap>
+          <AuthGuard>
+            <Shell>
+              <Suspense fallback={<LoadingState />}>
+                <Routes>
+                  <Route
+                    path="/users"
+                    element={
+                      <AdminOnly>
+                        <UsersPage />
+                      </AdminOnly>
+                    }
+                  />
+                  <Route path="/password" element={<PasswordPage />} />
+                  <Route path="/" element={<Overview />} />
+                  <Route
+                    path="*"
+                    element={
+                      <EmptyState
+                        title="页面暂未开放"
+                        action={
+                          <Link to="/">
+                            <Button>返回概览</Button>
+                          </Link>
+                        }
+                      />
+                    }
+                  />
+                </Routes>
+              </Suspense>
+            </Shell>
+          </AuthGuard>
+        </SessionBootstrap>
       </BrowserRouter>
     </Providers>
   );

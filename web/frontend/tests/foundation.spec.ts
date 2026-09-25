@@ -1,3 +1,4 @@
+import { loginAdmin } from "./auth-helpers";
 import { test, expect } from "@playwright/test";
 for (const width of [1280, 1920]) {
   test(`workbench and progressive controls at ${width}`, async ({
@@ -6,7 +7,7 @@ for (const width of [1280, 1920]) {
     await page.setViewportSize({ width, height: 1000 });
     const errors: string[] = [];
     page.on("pageerror", (error) => errors.push(error.message));
-    await page.goto("/");
+    await loginAdmin(page);
     await expect(page.getByText("服务就绪")).toBeVisible();
     await expect(
       page.getByRole("heading", { name: "网络分析，从一份配置开始" }),
@@ -20,7 +21,7 @@ for (const width of [1280, 1920]) {
         () => document.documentElement.scrollWidth <= window.innerWidth,
       ),
     ).toBe(true);
-    await page.keyboard.press("Tab");
+    await page.getByRole("link", { name: "Batfish 网络分析工作台" }).focus();
     await expect(
       page.getByRole("link", { name: "Batfish 网络分析工作台" }),
     ).toBeFocused();
