@@ -13,6 +13,7 @@ from pathlib import Path
 from uuid import uuid4
 
 from app.contracts.errors import ErrorCode, ServiceError
+from app.infrastructure.source_lines import LineScanner
 from app.modules.uploads.schemas import FileEntry, UploadInput, UploadLimits
 
 CHUNK = 64 * 1024
@@ -40,8 +41,8 @@ def safe_path(name: str) -> str:
 
 def copy_bounded(source, destination, budget):
     digest = hashlib.sha256()
-    size = lines = 0
-    last = b""
+    size = 0
+    scanner = LineScanner(max_bytes=0)
     decoders = {
         encoding: codecs.getincrementaldecoder(encoding)() for encoding in ("utf-8", "gb18030")
     }
@@ -55,8 +56,8 @@ def copy_bounded(source, destination, budget):
         if budget[0] < 0:
             raise ServiceError(ErrorCode.UPLOAD_TOO_LARGE)
         digest.update(data)
-        lines += data.count(b"\n")
-        last = data[-1:]
+        for _ in scanner.feed(data):
+            pass
         for encoding in tuple(decoders):
             try:
                 decoders[encoding].decode(data)
@@ -68,12 +69,14 @@ def copy_bounded(source, destination, budget):
             decoders[encoding].decode(b"", final=True)
         except UnicodeDecodeError:
             del decoders[encoding]
+    for _ in scanner.finish():
+        pass
     encoding = next(iter(decoders), "binary")
     return (
         size,
         digest.hexdigest(),
         encoding,
-        (lines + int(bool(last) and last != b"\n") if encoding != "binary" else None),
+        (scanner.number if encoding != "binary" else None),
     )
 
 
@@ -95,6 +98,7 @@ def write_file(root, path, source, budget):
         size_bytes=size,
         encoding=encoding,
         line_count=lines,
+        line_policy="crlf-v1",
     )
 
 

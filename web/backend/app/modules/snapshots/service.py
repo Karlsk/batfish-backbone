@@ -1,6 +1,7 @@
 import hashlib
 from uuid import UUID, uuid4
 
+from app.contracts.base import thaw
 from app.contracts.dto import Actor, AnalysisContext, ExecutionContext
 from app.contracts.errors import ErrorCode, ServiceError
 from app.infrastructure.engine import EngineGate
@@ -11,9 +12,14 @@ from app.modules.snapshots.controller import SnapshotController
 from app.modules.snapshots.repository import SnapshotsRepository
 from app.modules.snapshots.schemas import (
     CreateSnapshotRequest,
+    Diagnostic,
+    DiagnosticPage,
+    InitializationAnswer,
     SnapshotCreated,
     SnapshotDTO,
+    SnapshotFiles,
     SnapshotPage,
+    SourceLocation,
 )
 from app.modules.uploads.service import UploadsService
 
@@ -42,6 +48,13 @@ class SnapshotsService:
 
     def _present(self, actor, row):
         status = row.status
+        quality = thaw(row.quality_summary)
+        if row.diagnostics:
+            quality_status, quality = self.quality(
+                InitializationAnswer.model_validate(thaw(row.diagnostics))
+            )
+            if status in {"ready", "ready_with_warnings"}:
+                status = quality_status
         if status not in {"deleted", "deleting"} and row.initialization_job_id:
             job = self._jobs.get(actor, row.initialization_job_id)
             if job.status in {"failed", "cancelled", "interrupted"}:
@@ -53,7 +66,10 @@ class SnapshotsService:
             elif status not in {"ready", "ready_with_warnings"}:
                 status = "failed"
         return SnapshotDTO(
-            **(row.model_dump(include=set(SnapshotDTO.model_fields)) | {"status": status})
+            **(
+                row.model_dump(include=set(SnapshotDTO.model_fields))
+                | {"status": status, "quality_summary": quality}
+            )
         )
 
     def get(self, actor, network_id, snapshot_id):
@@ -162,15 +178,41 @@ class SnapshotsService:
     def quality(answer):
         statuses = [str(item.get("Status", "UNKNOWN")) for item in answer.parse_status]
         nodes = {str(node) for item in answer.parse_status for node in (item.get("Nodes") or ())}
-        fatal = not nodes or not statuses or any(status == "FAILED" for status in statuses)
-        warnings = any(status != "PASSED" for status in statuses) or bool(answer.issues)
+        fatal = (
+            not nodes
+            or not statuses
+            or any(status in {"FAILED", "UNKNOWN", "UNSUPPORTED"} for status in statuses)
+            or any(item.get("Type") in {"Parse error", "Convert error"} for item in answer.issues)
+        )
+        warnings = any(status != "PASSED" for status in statuses) or bool(
+            answer.issues or answer.parse_warnings or answer.conversion_warnings
+        )
         status = "failed" if fatal else "ready_with_warnings" if warnings else "ready"
+        formats = sorted({str(item.get("File_Format", "UNKNOWN")) for item in answer.parse_status})
+        limits = []
+        for vendor in ("HUAWEI_VRP", "H3C_COMWARE"):
+            if vendor in formats:
+                for capability in ("ipv6", "srv6", "evpn", "acl"):
+                    limits.append(
+                        {
+                            "vendor": vendor,
+                            "capability": capability,
+                            "status": "unknown" if capability == "acl" else "unsupported",
+                            "description": "当前模型不能据此证明IPv6、SRv6、EVPN转发或ACL策略正确；解析PASSED不表示完整模拟。",
+                        }
+                    )
         return status, {
             "file_count": len(statuses),
             "node_count": len(nodes),
             "issue_count": len(answer.issues),
             "parse_statuses": sorted(set(statuses)),
-            "coverage": "unknown" if fatal else "limited" if warnings else "complete",
+            "file_formats": formats,
+            "model_limits": limits,
+            "coverage": "unknown"
+            if fatal or "UNKNOWN" in formats
+            else "limited"
+            if warnings or limits
+            else "unknown",
         }
 
     def execute(self, job):
@@ -198,3 +240,97 @@ class SnapshotsService:
         if snapshot.status not in {"ready", "ready_with_warnings"}:
             raise ServiceError(ErrorCode.NOT_READY)
         return AnalysisContext(**self._context(network, snapshot).model_dump())
+
+    def files(self, actor, network_id, snapshot_id):
+        row = self._stored(actor, network_id, snapshot_id)
+        return SnapshotFiles(
+            items=self._uploads.describe_files(row.manifest) if row.manifest else ()
+        )
+
+    def read_file(self, actor, network_id, snapshot_id, file_id, *, offset=0, limit=50):
+        row = self._stored(actor, network_id, snapshot_id)
+        if row.manifest is None:
+            raise ServiceError(ErrorCode.NOT_FOUND)
+        return self._uploads.read_file(row.manifest, file_id, offset=offset, limit=limit)
+
+    def diagnostics(self, actor, network_id, snapshot_id, *, offset=0, limit=50, severity=None):
+        row = self._stored(actor, network_id, snapshot_id)
+        if (
+            offset < 0
+            or not 1 <= limit <= 200
+            or severity not in {None, "info", "warning", "error"}
+        ):
+            raise ServiceError(ErrorCode.VALIDATION_ERROR)
+        if self._present(actor, row).status in {"queued", "initializing"}:
+            raise ServiceError(ErrorCode.CONFLICT)
+        entries = {entry.path: entry for entry in row.manifest.files} if row.manifest else {}
+        diagnostics = []
+        for key, source in [
+            ("parse_status", "fileParseStatus"),
+            ("issues", "initIssues"),
+            ("parse_warnings", "parseWarning"),
+            ("conversion_warnings", "viConversionWarning"),
+        ]:
+            for raw in row.diagnostics.get(key, ()):
+                status = raw.get("Status") if source == "fileParseStatus" else raw.get("Type")
+                level = (
+                    "error"
+                    if status
+                    in {"FAILED", "UNKNOWN", "UNSUPPORTED", "Parse error", "Convert error"}
+                    else "info"
+                    if source == "fileParseStatus" and status == "PASSED"
+                    else "warning"
+                )
+                if severity is not None and severity != level:
+                    continue
+                locations = []
+                positions = raw.get("Source_Lines") or ()
+                filename = raw.get("File_Name") or raw.get("Filename")
+                if filename:
+                    line = raw.get("Line")
+                    positions = (
+                        *positions,
+                        {
+                            "filename": filename,
+                            "lines": [line]
+                            if isinstance(line, int) and not isinstance(line, bool) and line > 0
+                            else [],
+                        },
+                    )
+                for location in positions:
+                    if not isinstance(location, dict) and not hasattr(location, "get"):
+                        continue
+                    path = location.get("filename")
+                    entry = entries.get(path)
+                    # Preserve only actual source positions, never infer file IDs or line 1.
+                    if entry is not None:
+                        lines = tuple(
+                            value
+                            for value in (location.get("lines") or ())
+                            if isinstance(value, int) and not isinstance(value, bool) and value > 0
+                        )
+                        locations.append(
+                            SourceLocation(file_id=entry.id, path=entry.path, lines=lines)
+                        )
+                diagnostics.append(
+                    Diagnostic(
+                        source=source,
+                        severity=level,
+                        status=status,
+                        description=str(
+                            raw.get("Details")
+                            or raw.get("Comment")
+                            or raw.get("Warning")
+                            or status
+                            or source
+                        ),
+                        locations=tuple(locations),
+                        raw=thaw(raw),
+                    )
+                )
+        return DiagnosticPage(
+            items=tuple(diagnostics[offset : offset + limit]),
+            total=len(diagnostics),
+            offset=offset,
+            limit=limit,
+        )

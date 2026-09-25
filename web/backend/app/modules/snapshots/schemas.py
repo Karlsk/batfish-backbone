@@ -5,7 +5,7 @@ from uuid import UUID
 from pydantic import AwareDatetime, Field, JsonValue, StrictBool
 
 from app.contracts.base import Contract
-from app.contracts.uploads import UploadManifest
+from app.contracts.uploads import FileEntry, UploadManifest
 
 
 class InitializationOptions(Contract):
@@ -29,6 +29,8 @@ class InitializationAnswer(Contract):
     issues: tuple[Mapping[str, JsonValue], ...]
     engine_version: str
     sdk_version: str
+    parse_warnings: tuple[Mapping[str, JsonValue], ...] = ()
+    conversion_warnings: tuple[Mapping[str, JsonValue], ...] = ()
 
 
 class SnapshotDTO(Contract):
@@ -59,3 +61,29 @@ class SnapshotPage(Contract):
     total: int
     offset: int
     limit: int
+
+
+class SourceLocation(Contract):
+    file_id: UUID | None
+    path: str
+    lines: tuple[int, ...] = ()
+
+
+class Diagnostic(Contract):
+    source: Literal["fileParseStatus", "initIssues", "parseWarning", "viConversionWarning"]
+    severity: Literal["info", "warning", "error"]
+    status: str | None = None
+    description: str
+    locations: tuple[SourceLocation, ...] = ()
+    raw: Mapping[str, JsonValue]
+
+
+class DiagnosticPage(Contract):
+    items: tuple[Diagnostic, ...]
+    offset: int
+    limit: int
+    total: int
+
+
+class SnapshotFiles(Contract):
+    items: tuple[FileEntry, ...]

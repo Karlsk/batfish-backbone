@@ -173,3 +173,30 @@ class UploadStore:
                 os.close(source_fd)
             os.close(root_fd)
             shutil.rmtree(temporary)
+
+    @contextmanager
+    def open_verified(self, manifest, entry):
+        import hashlib
+
+        self.ensure_root()
+        root_fd = os.open(self.root, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+        directory_fd = None
+        try:
+            directory_fd = os.open(
+                str(UUID(manifest.storage_key)),
+                os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW,
+                dir_fd=root_fd,
+            )
+            fd = os.open(str(entry.id), os.O_RDONLY | os.O_NOFOLLOW, dir_fd=directory_fd)
+            with os.fdopen(fd, "rb") as source:
+                info = os.fstat(source.fileno())
+                if not stat.S_ISREG(info.st_mode) or info.st_size != entry.size_bytes:
+                    raise ValueError("Stored file changed")
+                if hashlib.file_digest(source, "sha256").hexdigest() != entry.sha256:
+                    raise ValueError("Stored file changed")
+                source.seek(0)
+                yield source
+        finally:
+            if directory_fd is not None:
+                os.close(directory_fd)
+            os.close(root_fd)

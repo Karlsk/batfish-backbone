@@ -581,6 +581,22 @@ def test_real_snapshot_worker_smoke(lab, fixture_name, expected_nodes):
                 assert detail["engine_version"] == "0.36.0"
                 assert detail["sdk_version"] == "2026.9.17.3748"
                 assert "manifest" not in detail and "diagnostics" not in detail
+                base = f"/api/v1/networks/{network}/snapshots/{created['snapshot_id']}"
+                diagnostics = client.get(base + "/diagnostics").json()
+                assert diagnostics["total"] == expected_nodes
+                entries = client.get(base + "/files").json()["items"]
+                assert len(entries) == expected_nodes
+                originals = {p.name: p.read_bytes() for p in fixture.iterdir()}
+                for entry in entries:
+                    page = client.get(base + "/files/" + entry["id"], params={"limit": 200}).json()
+                    expected = originals[entry["path"].split("/")[-1]].decode("utf-8").splitlines()
+                    assert [line["text"] for line in page["lines"]] == expected
+                    assert [line["number"] for line in page["lines"]] == list(
+                        range(1, len(expected) + 1)
+                    )
+                if fixture_name == "small_network":
+                    assert detail["quality_summary"]["coverage"] == "limited"
+                    assert detail["quality_summary"]["model_limits"]
             finally:
                 worker.terminate()
                 worker.wait(timeout=15)

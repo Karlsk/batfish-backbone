@@ -145,3 +145,9 @@ ZIP压缩算法支持 STORED/DEFLATED；其他算法及损坏压缩流受控返�
 `POST /api/v1/jobs/{id}/retry` 返回202新JobDTO，支持Idempotency-Key；仅发起人/管理员可重试failed/interrupted/cancelled且有登记重试handler的任务，删除/成功/运行中任务拒绝。新记录通过retry_of关联旧记录，旧记录不改写；业务handler重新校验资源，初始化新建快照由MVP-10负责。引擎未知时禁止重试；尚未登记的未来业务明确409。
 
 ready现读取真实数据库和最近worker/引擎观测；停止worker、观测过期或引擎unknown时503。健康请求本身不调用SDK。引擎忙碌期间复用上次探测，过期时保守不ready。
+
+## 快照初始化、诊断与文件（MVP-10/11）
+
+迁移至head（0006）后，上传得到upload_id，再调用 `POST /api/v1/networks/{id}/snapshots`，提交display_name、upload_id和可选options，返回202的snapshot_id/job_id。options仅支持布尔ignore_management_interfaces（默认true）和parse_reuse（默认false）。独立worker已注册初始化handler；每次新建不可变SDK快照，质量门通过才可分析。任务取消/失败/中断对应快照failed；通过任务retry入口创建新快照及任务。
+
+`GET /api/v1/networks/{id}/snapshots/{snapshot_id}/diagnostics` 提供四类诊断分页；`/files` 列出原始文件；`/files/{file_id}` 按行分页（offset从0计、默认50、最大200）。只返回原始逻辑路径，不暴露磁盘目录。支持UTF-8/GB18030及LF/CR/CRLF换行，缺失源行不推断；超长行与二进制有明确说明。H3C/Huawei模型限制独立于解析PASSED展示；UNKNOWN/UNSUPPORTED等状态禁止分析。具体业务分析handler从MVP-13起加入。

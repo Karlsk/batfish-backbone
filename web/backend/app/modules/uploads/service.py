@@ -4,6 +4,7 @@ from uuid import UUID, uuid4
 
 from app.contracts.dto import Actor
 from app.contracts.errors import ErrorCode, ServiceError
+from app.infrastructure.source_lines import source_lines
 from app.modules.auth.service import AuthService
 from app.modules.networks.service import NetworksService
 from app.modules.uploads.repository import UploadsRepository, UploadStore
@@ -92,3 +93,52 @@ class UploadsService:
             referenced = UploadsRepository(transaction).storage_keys()
         self._store.cleanup_orphans(referenced, now=now, ttl_seconds=self._ttl)
         return count
+
+    def read_file(self, manifest: UploadManifest, file_id: UUID, *, offset=0, limit=50):
+        # Called only with a server-stored snapshot manifest after resource authorization.
+        from app.contracts.uploads import FilePage, SourceLine
+
+        if offset < 0 or not 1 <= limit <= 200:
+            raise ServiceError(ErrorCode.VALIDATION_ERROR)
+        entry = next((entry for entry in manifest.files if entry.id == file_id), None)
+        if entry is None:
+            raise ServiceError(ErrorCode.NOT_FOUND)
+        entry = self._file_metadata(manifest, entry)
+        lines, warnings = [], set()
+        with self._store.open_verified(manifest, entry) as source:
+            if entry.encoding == "binary":
+                warnings.add("BINARY_CONTENT_NOT_DISPLAYABLE")
+            else:
+                for number, data, truncated in source_lines(source):
+                    if number <= offset:
+                        continue
+                    if number > offset + limit:
+                        break
+                    try:
+                        value = data.decode(entry.encoding)
+                    except UnicodeDecodeError:
+                        value = data.decode(entry.encoding, errors="replace")
+                        warnings.add("DECODING_REPLACEMENT")
+                    if truncated:
+                        warnings.add("LONG_LINE_TRUNCATED")
+                    lines.append(SourceLine(number=number, text=value, truncated=truncated))
+        return FilePage(
+            file_id=entry.id,
+            path=entry.path,
+            encoding=entry.encoding,
+            lines=tuple(lines),
+            offset=offset,
+            limit=limit,
+            total=entry.line_count,
+            warnings=tuple(sorted(warnings)),
+        )
+
+    def _file_metadata(self, manifest, entry):
+        if entry.line_policy == "lf-v0" and entry.encoding != "binary":
+            with self._store.open_verified(manifest, entry) as source:
+                count = sum(1 for _ in source_lines(source, max_bytes=0))
+            return entry.model_copy(update={"line_count": count, "line_policy": "crlf-v1"})
+        return entry
+
+    def describe_files(self, manifest):
+        return tuple(self._file_metadata(manifest, entry) for entry in manifest.files)

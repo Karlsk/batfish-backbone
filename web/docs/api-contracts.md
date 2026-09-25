@@ -174,3 +174,13 @@ MVP-09：POST /jobs/{id}/retry → 202 JobDTO，仅所有者/管理员、failed/
 SnapshotDTO 列表/详情包含 engine_version、sdk_version、quality_summary；原始 manifest、内部文件位置和诊断不直接进入列表。诊断/文件详情由 MVP-11 提供。ready 表示解析门通过，不是对真实设备行为一致性的证明；无可用节点、没有解析记录或 FAILED 为 failed，PARTIALLY_UNRECOGNIZED/其他非 PASSED 或初始化问题为 ready_with_warnings。初始化取消、中断、失败优先按关联 job 派生 failed。
 
 重试返回新 JobDTO，id 是新 job_id，resource_ids.snapshot_id 是新 snapshot_id，retry_of 关联旧任务。复用已消费且不可变的输入 manifest，建立私有临时目录副本交给控制器，不再次消费上传，也不复用旧内部 snapshot 名称。未知引擎占用先停旧 worker 并完成管理员对账；历史 interrupted job 保留原状态。上传公共 DTO 移至 contracts/uploads.py 并保留原模块导出；UploadsService.consume 可使用共享 transaction，materialize 只接受服务端已存 manifest 并验证文件类型、大小和摘要。
+
+## MVP-11 诊断及文件契约补充
+
+GET S/diagnostics 返回 `{items, offset, limit, total}`，默认50/最大200，severity限info/warning/error。每项包含source（四种公开问题之一）、severity、status（保留原枚举）、description、locations及raw。locations只关联manifest中的真实文件ID、路径及SDK明确给出的正整数行；无源行时为空，不推断第1行。queued/initializing返回409；失败/取消/中断后仍可读取已有诊断及输入，诊断为空不代表初始化成功。
+
+GET S/files 返回 `{items: FileEntry[]}`，不包含存储目录；GET S/files/{file_id} 返回file_id/path/encoding/lines/offset/limit/total/warnings，offset从0计，lines.number从1计。默认50/最大200行，负数及超限422，跨快照ID404，超出末尾返回空页。支持原始UTF-8/GB18030，LF、CR-run及CRLF按引擎相同换行规则保持真实行号；二进制返回空文本和BINARY_CONTENT_NOT_DISPLAYABLE，单行展示最多64KiB并标注LONG_LINE_TRUNCATED，截断多字节字符时另标DECODING_REPLACEMENT。不更改原始字节；每次读取核对原始文件摘要。
+
+质量规则应用于新初始化及既有快照读取：FAILED/UNKNOWN/UNSUPPORTED、Parse error/Convert error阻止分析，部分识别可分析但警告可见。quality_summary包含file_formats、model_limits及coverage。HUAWEI_VRP/H3C_COMWARE即使PASSED也标limited，明确IPv6/SRv6/EVPN转发未模拟、ACL正确性未确认；其他厂商未判定细粒度覆盖时标unknown，不能把PASSED翻译成全部能力完整模拟。后续analysis service还需按具体能力范围拒绝不支持的请求。
+
+FileEntry.line_policy区分lf-v0旧清单及crlf-v1新清单。旧清单读取时从原始文件重新统计以修正历史仅计LF的行数；源行以SDK明确给出的正整数为准，不按旧清单计数裁剪。原始文件字节和内容摘要不变。
