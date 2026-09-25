@@ -10,4 +10,4 @@
 
 恢复演练将worker在SDK请求等待时终止；unknown不可自动释放，重启worker后按60秒阈值扫描interrupted，停worker/重启受控引擎/管理员记录对账后才继续执行。
 
-最终实例：`bfw-1fc2d1f6cf81`，运行证据保存在`web/.runtime/deploy-mvp24-release`。原实例备份后停止，恢复实例入口https://localhost:18444。完整脱敏结果、镜像ID/版本、源码指纹与检查计数见 [MVP-24证据](evidence/mvp-24-verification.json)。
+最终实例：`bfw-1fc2d1f6cf81`，运行证据保存在`web/.runtime/deploy-mvp24-release`。原实例备份后停止，该轮恢复实例已在MVP-25开始时停止；当前入口由新一轮恢复实例提供，见[首版验收](mvp-acceptance.md)。完整脱敏结果、镜像ID/版本、源码指纹与检查计数见 [MVP-24证据](evidence/mvp-24-verification.json)。

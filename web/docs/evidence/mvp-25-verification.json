@@ -1,0 +1,2255 @@
+{
+  "date": "2026-09-26",
+  "scope": "MVP-01 through MVP-25 cumulative verification",
+  "base_commit": "9cbc17335482b6c3ab4cf37f5459e1d3076f63e4",
+  "source_sha256": "d5441784ef129d015d19c067df19804df488e4e31892d7dbbab6cd64cb3a746b",
+  "files": {
+    "web/backend/Dockerfile": "1a2827e1f3db1a81bf4cb4344c3373f16534da6e7cd9b3901542dbcec33b86d6",
+    "web/backend/alembic.ini": "4be35c86b24192bde1327811488c4fcbc1f446b8c1e688fbbcba8f27640a252b",
+    "web/backend/app/__init__.py": "87c0efc145b6b7e07a8fc8eef2038ad50e1c94ba3e453f20a0efb626e1a2b7f3",
+    "web/backend/app/bootstrap_admin.py": "94b1774983e845c5cf57a56c5c611d9197b130f8f88aba8e464e18291c7016e2",
+    "web/backend/app/cleanup_uploads.py": "ca0d41a98b40d865d6af1a52835761f5e920ef3ec992aeb2ebbecd7d36b02799",
+    "web/backend/app/composition.py": "26dba450375932ea36b2eb3a1031c6b0c5b8c1117572e46e437b7dada245e07a",
+    "web/backend/app/contracts/__init__.py": "f9587471eb4826092c7d01a3cb9bfcda621095b5666065123f0938db0be2772a",
+    "web/backend/app/contracts/base.py": "e25fd53fd717784a27f4644e8c05b570e6f35e887afb708f048345d840593bce",
+    "web/backend/app/contracts/dto.py": "5fe750c22a315b51c04a6344f783f4a9365fd040156c7cdab90f65c22fa7f351",
+    "web/backend/app/contracts/errors.py": "cffc0cb5b36684ab4d88db7126c3fe9f00573b87eeda27584869b019afe358af",
+    "web/backend/app/contracts/idempotency.py": "838d628c709f8283cae13ecbbbc48126d2edf0fe01c13f580edc8f41d6af7711",
+    "web/backend/app/contracts/results.py": "b45b67f00ba043360a6c7c600b578f3e6f54ad4773d756d6ebc81c6c1114e841",
+    "web/backend/app/contracts/uploads.py": "7ace3f3984962f464cfe147b7a9633e041bedc62aba69ef662ebb916cc058257",
+    "web/backend/app/infrastructure/__init__.py": "b057c11ae887931d02517d9d38545736a9d358c21aaea8b6569ef626de348b0e",
+    "web/backend/app/infrastructure/database.py": "51276ac77620db2d736c1fb71ee364ff9c9ea903c8426f4e091975f7d9c002b0",
+    "web/backend/app/infrastructure/engine.py": "c7628dd483f70c1b590a06dcb28f0a109349f4deb194ab82b2b85d445ca5bac2",
+    "web/backend/app/infrastructure/http.py": "a3ed9548ea6140a1388958f355ae444051d77b3f4e7e163d7123e2e798b2c261",
+    "web/backend/app/infrastructure/multipart.py": "e1e9481ceb2f68949bcc35242853140d84812dca0b3298e2ceb403aa59d7485c",
+    "web/backend/app/infrastructure/passwords.py": "0bb3659c43730aa76d59b47b0a628461167d7f53d0bb08bba425ba3600b71502",
+    "web/backend/app/infrastructure/sdk.py": "6e553e977b08d3eb25507305074e8c3340604ff58b05318100217b6cbdcbe1be",
+    "web/backend/app/infrastructure/settings.py": "e247603c30978409c5ed479842fa8112059a9f7a7da38b87e7de069ab1b894e3",
+    "web/backend/app/infrastructure/source_lines.py": "2f80ea8e8ab4e038b7dff720b0ee6e0e3a7209ea62480b376d01e25ad88a5163",
+    "web/backend/app/infrastructure/storage.py": "e58223b48e346a6e188f9376578972bde2d3cf60898c5489e20e268f8fafa532",
+    "web/backend/app/infrastructure/worker.py": "41290dc6a269b7c1f9d1a2ad65b8bff402086aaa44fed89b00ba3cf8ee917225",
+    "web/backend/app/main.py": "6d77be8a6356281b7ffd53506887a7416581fe976e15b00e450e30ea458de9be",
+    "web/backend/app/modules/__init__.py": "7fdfdb193a24cf257b387b01c55100074c12057bdf571d3ac4ac1d3114a65d20",
+    "web/backend/app/modules/analysis/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "web/backend/app/modules/analysis/api.py": "3b629c748a7d336031360beee02d2e370b2c1f2102d673bc685b06649310d91e",
+    "web/backend/app/modules/analysis/controller.py": "f924146252740dc1837e5cc30511bc6bf2d161a50b955f8832197b4d56a6f341",
+    "web/backend/app/modules/analysis/controllers/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "web/backend/app/modules/analysis/controllers/inventory.py": "c445dd1313d5fd9ec3db31b469839c4bf4122a5d287d2dfc143db630936c2d0a",
+    "web/backend/app/modules/analysis/controllers/routing.py": "9c2a6fdb003ac267c5c19d74b344bb929f914dceff64c070109c42db3670091d",
+    "web/backend/app/modules/analysis/controllers/traceroute.py": "e1fe0a5218129f013d3e5d49c3e3e455c0ee95c607ee63948f37862f8d9e5849",
+    "web/backend/app/modules/analysis/registry.py": "7a1fcfc8a8d345240cecda2841bedf6f4e29eaee94cc555a6c8293e81489ff2b",
+    "web/backend/app/modules/analysis/schemas/__init__.py": "245d380c88eae64d9c8efde889ce2d73628658eabfc7859c6812fe6763bde066",
+    "web/backend/app/modules/analysis/schemas/inventory.py": "c4779634485887bd1a38e63ef39ee8aa86545b7878f57ef0abcfe371659cac48",
+    "web/backend/app/modules/analysis/schemas/routing.py": "b53e6b57c0f8088fde023f6ccf923bbd2d410366f66be377cf7391b19166bccc",
+    "web/backend/app/modules/analysis/schemas/traceroute.py": "f6f50371cb3412c3bb7b9b93f3d9b73bc6607472b134b77f4f18cd02ef38dafb",
+    "web/backend/app/modules/analysis/service.py": "8c7ccc900e66f49a83119ab8f841995b0f7d2cc8a11b0f092068e7eb9b10453c",
+    "web/backend/app/modules/audit/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "web/backend/app/modules/audit/models.py": "5658d23a3d428dba1653eb28f89b60fb4ac29b29f1ec25852bdd5c1c8fc18084",
+    "web/backend/app/modules/audit/repository.py": "58d1fcabdce84369cdc6994080ce1b0ad3a5ef7d4acb68d2fd96c43814c5da43",
+    "web/backend/app/modules/audit/service.py": "5ac3a2fee83ff8df8581f63a9f00c03bde508b5945e52c304d60d2a8bf844ca7",
+    "web/backend/app/modules/auth/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "web/backend/app/modules/auth/api.py": "14cdc93277efb22dfbb5b4de2dfd07aa29579c80623d88fdf7bd48dcbd5c3d72",
+    "web/backend/app/modules/auth/models.py": "b694e4a4f82e3103f426c2ecaced2e1b65e1ea7be853caca334e8b11c0a67c15",
+    "web/backend/app/modules/auth/repository.py": "3fe272657abe2fd701ef19b79b8e5e03364da3d96431a6251fbe907411bf810a",
+    "web/backend/app/modules/auth/schemas.py": "2a63bb1f19f3a00046b5c1e5d574290f3a47937898ee2acf5378b89a7a48e888",
+    "web/backend/app/modules/auth/service.py": "874a1e37ad711f83537a2cf00eb0db6aad618ab2e473593b1993f1dadfa1e71c",
+    "web/backend/app/modules/execution/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "web/backend/app/modules/execution/api.py": "93dbec4e99b84311d0facb1da47a53ed1a27f91686ccb7d003e4ed25dc974ae1",
+    "web/backend/app/modules/execution/controller.py": "2040cf60a24f2dde58fd44d883127307f96c6730afdfa0527c7bddc269e3ecd4",
+    "web/backend/app/modules/execution/models.py": "df97c1aa3be6152a47f14fd3eb15a2aea195c34f4959ccc04615472c42df3a60",
+    "web/backend/app/modules/execution/repository.py": "aedf71bb14cfe42767354e34cf1f58889e49439c663dea88b4089df79dcf8430",
+    "web/backend/app/modules/execution/schemas.py": "8b047193dd6cf907575e0977ab1c33da91ac5a5885b9f008c0181afd110be759",
+    "web/backend/app/modules/execution/service.py": "ec16e852274a2c72bffe2b56a4049f070ff43b0a0b9c93f74cc5732605cd1f49",
+    "web/backend/app/modules/health/__init__.py": "300221287f6ca1788ba612d29aa88a6309acdb049c69ce9d998701e6c0fbad77",
+    "web/backend/app/modules/health/api.py": "7c2982d16e8138d4c5e6e890bb4619c112bbe0d0b8c71acd8fa5705192665565",
+    "web/backend/app/modules/health/schemas.py": "1fd03e7aa0af0972007d32818ed293e3dc55311278cdb041a42a378eeaf17475",
+    "web/backend/app/modules/health/service.py": "68771f50ec1eb947549a2665d07ca3f91623d124fe660b364e15ab1549f83529",
+    "web/backend/app/modules/jobs/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "web/backend/app/modules/jobs/api.py": "c530ec13b262cfa8d4b29d3ab16e3549acbacd97c107e6e75278e45851952407",
+    "web/backend/app/modules/jobs/models.py": "323a684b92340ac780e7444a4b8e605c70fd1d1c8dab125623928ce8bcb15f84",
+    "web/backend/app/modules/jobs/repository.py": "a41b7b1f5fc806b8b4560e8868dcd3ed9e906e7297eaaff8b08c0c89006f8acf",
+    "web/backend/app/modules/jobs/schemas.py": "af35dedbacf26629d796ca523a19c928374d31d4092bd84fd6e544c9f322cc53",
+    "web/backend/app/modules/jobs/service.py": "e197126ad7493ec0965daf122e4510ba4bdc9e262b007ceb0f60eed54a42d458",
+    "web/backend/app/modules/lifecycle/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "web/backend/app/modules/lifecycle/api.py": "13686190249bd0a72ca5cec1b3ec3eb2106b4ee7c2bdadce6fcfad04bf6bd6bd",
+    "web/backend/app/modules/lifecycle/schemas.py": "5a9b3e8c116aa64279a8d74b566d656e33567cac6d003a01879cfe3fc67e1e52",
+    "web/backend/app/modules/lifecycle/service.py": "bc4db6102b985387f8203e570b0fc81c97bc3ead389555d3bcd57b03f2b6d003",
+    "web/backend/app/modules/networks/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "web/backend/app/modules/networks/api.py": "7e8cb8cc24f8ac01c45491404efd45537aec0e83f4bf0ce7d6ff6d6c30cf8c8e",
+    "web/backend/app/modules/networks/controller.py": "c40784f32ac28ccf29897ea8268bf110ec34f9ecc7c7a51e35e029a505886b5f",
+    "web/backend/app/modules/networks/models.py": "17aef839b2fda2e5391f302e73ef5f0711dee263406466d5d7dc1bb9440ffca5",
+    "web/backend/app/modules/networks/repository.py": "d1844cd6455e886680830322f68aece3a90c7c8ce7acb8add7dbe1f1b5bd79ec",
+    "web/backend/app/modules/networks/schemas.py": "1d11175c965d95203726c50e95581490c32a51662cfe5a874e30ddcaa4d16b60",
+    "web/backend/app/modules/networks/service.py": "5d4b944f7bfbee0b89a19cb1265d1d4c8d3f9d39f7f452b26f3803e8b12bece1",
+    "web/backend/app/modules/results/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "web/backend/app/modules/results/api.py": "85afa4d27f2ed37e7f4b5bd3cd7a84dbec0e7f3cad406867e1b1970f1c9c4df1",
+    "web/backend/app/modules/results/export.py": "1f2f67b0a68126c0c21378564f0c5d42e3b87d2094c9b739f906226611997e05",
+    "web/backend/app/modules/results/models.py": "e65cdd6dff0a27c0d172b861f6ff9faaefc70758c065db39bab4375d02101f44",
+    "web/backend/app/modules/results/repository.py": "f3ae72c0565a2d935b7fe54123e46792b37ab9539422ac0e028e99870f376f3d",
+    "web/backend/app/modules/results/service.py": "d6579e1f0335cfd38d4e96de80dd4ec226eaf892ad92c8f0f738d355d471a70d",
+    "web/backend/app/modules/snapshots/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "web/backend/app/modules/snapshots/api.py": "edb0c74b538b0d2c211596336e05f2337cbbf36a8744c56adadb446d8c2380e1",
+    "web/backend/app/modules/snapshots/controller.py": "cb31f537a18a0e0a69c21977e75f7e82be78af468bbe13f7724569954780fd29",
+    "web/backend/app/modules/snapshots/models.py": "9d0fa077d99049402a1db6a1afc4559900b337f70a4c084e13b88c72936ee8c4",
+    "web/backend/app/modules/snapshots/repository.py": "fd7a9da8957d49493d159c4eae7b20496a4a44fef4f53bd5f7c40ebb18b9f7d9",
+    "web/backend/app/modules/snapshots/schemas.py": "4856a7068821a0b5e3bb6416d448b41e783b628a68bedd9dc42915d680a52f6d",
+    "web/backend/app/modules/snapshots/service.py": "d5a8c684d9bde741d7f1f5452b2641d4e9c102610e9059547d1a456565c96aeb",
+    "web/backend/app/modules/uploads/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "web/backend/app/modules/uploads/api.py": "a52add00bac7084bac4f244cbc1f24d2316d26f371b3b0580516687f8f8c30e4",
+    "web/backend/app/modules/uploads/archive.py": "58e4d8cd33632fa45b8a5d1c7022ba4cb6ee2eb77486d152ba2eb7c80d052cdc",
+    "web/backend/app/modules/uploads/models.py": "2a98bba85e38d007443f7ce8929ebddd5a68e512b2840fe1c7e4ed6b819819ca",
+    "web/backend/app/modules/uploads/repository.py": "e449b4f68d3c55822e1bb75307d14d87f93d3db4b465c83f2cfecc4644115159",
+    "web/backend/app/modules/uploads/schemas.py": "68f5ed73fb258c45a72868e4592fc81e0d29db3f0e994d2d6ab28d8c9ce277b6",
+    "web/backend/app/modules/uploads/service.py": "ec9da94f1df17a409ef3fa931352c1a419f532ed6777aa57ba30e0182761ed6d",
+    "web/backend/app/modules/users/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "web/backend/app/modules/users/api.py": "4e4adcf11930bd675ee04ac7c4c8b9abd697cc63cd7ee216fb7fd17505560dad",
+    "web/backend/app/modules/users/models.py": "78cb7efbed24c1f4e7f2757b957da00384e7aaa1a678d4ff5cfa35e52ceae251",
+    "web/backend/app/modules/users/repository.py": "2b422d9109ae8b7072bc5889df6d57679c248cdc408a43b2eabd2fc713a054af",
+    "web/backend/app/modules/users/schemas.py": "fe12062dec3df0ccd76370f9e2559c710b97f548c818e658784a63e3728d273f",
+    "web/backend/app/modules/users/service.py": "a00f91bcb53c5aec804db867ec2f5f10c0724a52ca7be160485e849b5ef594a0",
+    "web/backend/app/worker.py": "587408dae213be218272db310c4e323bf02b6dc12bbe5b6ee824ed2cb6e89870",
+    "web/backend/migrations/env.py": "5c70ca5c7742cb34cca37b4fd3b2bb3f66ca8cafdb2ee8a210940c88ca54633f",
+    "web/backend/migrations/script.py.mako": "d7558dcb7ce01d3e44830898336d3027de66e5ffdb1491c0cd27f6159b021902",
+    "web/backend/migrations/versions/0001_initial_business_persistence.py": "45b2ad6a1ca3aa6377ebb72f7cb2e5676ac09de677d9dd32b52fe959809d1502",
+    "web/backend/migrations/versions/0002_authentication.py": "b591629823b421f5e2a2d4eaddeac07d611a215bae7ad4bee05d37a2efcc8b66",
+    "web/backend/migrations/versions/0003_network_coordination.py": "04c46a59bfc251721f9476b423c88467b32d55360875e99e8d6cc93cf54054c8",
+    "web/backend/migrations/versions/0004_job_context.py": "7e208701237f991a508fe1fdb113859de308991a2846f7322d9710cc735bdd1d",
+    "web/backend/migrations/versions/0005_worker_runtime.py": "9ec62386bcb317f6d498468cb8b0a8e3671a51637c66faed613211de985cd8e0",
+    "web/backend/migrations/versions/0006_snapshot_initialization.py": "dc11c10fb7788f56a2aa9cd7dae16c312a1818ac713f6ebcaaa383ecbd3f476e",
+    "web/backend/migrations/versions/0007_result_cache.py": "7bade664e4b55fccab591168dab541c7bb4914d8bf3b95e1bbd7b3920ea4ed61",
+    "web/backend/migrations/versions/0008_deletion_jobs.py": "7087d8698a3790a46826dc84eacd9e106c815c1f81e0e69e890d0347212fed8d",
+    "web/backend/pyproject.toml": "04232ee990e2d50b339cec20620cb5e692af3040bf31dfcf3c7b948244d5cc88",
+    "web/backend/tests/__init__.py": "c11cb39a80c0c0be01e1de68bb53a7644c026a91312f665d6a39f1596509490f",
+    "web/backend/tests/architecture_rules.py": "d869c76ab5010944ded7087193df00ba7ae47df89bfe9218f703b0cd490bb08e",
+    "web/backend/tests/conftest.py": "455cc544d81c632ece5a5a076f8bad3cdb107e5e7c3f51b40916877c0cd1fe5a",
+    "web/backend/tests/fixtures/cisco_four/configs/c1.cfg": "e36c9202889bf7338d5548a16287d4c4b1b0cc8467d9fac351c45901bd096f53",
+    "web/backend/tests/fixtures/cisco_four/configs/c2.cfg": "543eb93c9250476c03ca93d49b9616647aa5978217298b9fc0eef5072ab9ab2e",
+    "web/backend/tests/fixtures/cisco_four/configs/c3.cfg": "6e5ee12d4058ba38a7da3189cc2006925782b68fd0a9f43714cbe8d0e05b6956",
+    "web/backend/tests/fixtures/cisco_four/configs/c4.cfg": "0b740a8f61e49018f74f8d1d676c4e52449079d43b6865aa8abdd3ed612604b3",
+    "web/backend/tests/fixtures/small_network/configs/r1.cfg": "90a95f41726139e8998461daf01acdba643fbbf53a0a22c2dc95613d62df17eb",
+    "web/backend/tests/fixtures/small_network/configs/r2.cfg": "fc19dcd4522b92ba2a262c617d1fdccede8da706d5173230a7e8f69eb1a4c1d0",
+    "web/backend/tests/integration/test_lab_topologies.py": "1bc45f7429f353f60cdffd149f6e27d27ee88cb1f6b3d684892d98a3c898741a",
+    "web/backend/tests/integration/test_mvp_acceptance.py": "001dd9ac0dc1639021057d5864e43ddfab1859e24456379235d20dd62ea88664",
+    "web/backend/tests/integration/test_sdk_baseline.py": "abfda6d3e8a143a5bd7987b2151fb825a374f976493927e5dad06a3cef6b91ba",
+    "web/backend/tests/test_architecture.py": "e06705ff7bc514b8364e06815d4ef095703c91e306f15083ebd3240e29ed3226",
+    "web/backend/tests/test_auth.py": "70573d5dabb6d517313c89c7190572959e9aefb3379f12d75e00526722701e3f",
+    "web/backend/tests/test_deletion.py": "9da255ae4b08446fb161dd3bf25030623d719e3686f47da1747f3af219da068e",
+    "web/backend/tests/test_diagnostics.py": "5e38608da6a2bb7aef9dca29051f2b80fd39cbaf07187487ba1ca40d71140a90",
+    "web/backend/tests/test_exports.py": "c89e6ee30e66d170b435f6259a51cd9c49c25d98c48953eb5115aa406b3fdc9d",
+    "web/backend/tests/test_foundation.py": "faf9d5cccd4c9908ff65e7bc0be604e0288e487a07118504c732c321fbde70b6",
+    "web/backend/tests/test_inventory.py": "88ffbf6f2950139c9c49c6bf8bd2225a616fc1ac79fc4188742a8137d08cc2eb",
+    "web/backend/tests/test_job_contracts.py": "a233a253828c86dc2cab51b9d5ee8f5ac07a3de7e7028edd1f1007604a182e82",
+    "web/backend/tests/test_jobs.py": "41d114c7be1ed7d430047706eedf1248e495c52b1133505bf5ffe31ef8e35c8d",
+    "web/backend/tests/test_lab_inputs.py": "f414ba731498e9c723516558512d567c648c9ae905e5cacc2fb6a90907c863c9",
+    "web/backend/tests/test_multipart.py": "e6ea343ca124b0bd4c7837b99e7b3746aa0d96d090ed8da4a7cbd1e38ce68502",
+    "web/backend/tests/test_networks.py": "20c202ae4f43711cf95b18025e6a788724cecbb1839388a1ab3441186bfe53f0",
+    "web/backend/tests/test_persistence.py": "b34c19db5d95806d599076fbaef3f928da5800b3044d133d9dbc16efc99f9c13",
+    "web/backend/tests/test_results.py": "a265952d8f16d8134a44308a8b6deac7d05bb6974620840cca2b1f7af040a663",
+    "web/backend/tests/test_routing.py": "a135dd178cdbfdd3e41d5e023ce188f1142bc50290f33cfe627bf9caf29f0965",
+    "web/backend/tests/test_snapshots.py": "9e7c41bb1be27b75351b267cf88459b49ac81c241633bff63d7997c742b2a535",
+    "web/backend/tests/test_source_lines.py": "8f8bb3a45614cfbcdddb70fc4725f43b2749dae0f0c401d30a870cae67cc54b5",
+    "web/backend/tests/test_storage.py": "624883775b2313ec0d7308bbc86a3ea6c62743507a8b821e00396a448e1d7f6f",
+    "web/backend/tests/test_traceroute.py": "5a10af1dc0cfb5499eac9b948ebb86d658b92c554cc0ee0760d6b5f683eeb754",
+    "web/backend/tests/test_upload_archives.py": "bfd1ee87e6080e793a34aba9d7fc5f571633655dcb9e522277d62a160688719d",
+    "web/backend/tests/test_uploads.py": "fdb47f29bacc4689da6ad92005e368cc4c484db2b63b6b7e00af00233ea31531",
+    "web/backend/tests/test_users.py": "c76f9116abba7ac61d92efc9dfad5028500b637474302d9b471c71b336a21425",
+    "web/backend/tests/test_worker.py": "1e67ea0769440b44c5f18c77bdab62e379199dd9b33be0878b63ef85a4ccdc5c",
+    "web/backend/uv.lock": "b4be5f58dcb72ac90bed229fa296a69b7d4c0f53457e48a388dd2a8cd53532b0",
+    "web/scripts/lab.py": "b88a6dc83ef2cc38339b1df0afbdcf47fd45c2da95674e9e61157335aafd8816",
+    "web/frontend/.gitignore": "88fee3aa21a55676b0dcdb289fba4dc540a57b0bd84bf969e41718c4414ed1e9",
+    "web/frontend/Dockerfile": "f98562012c0c9f1e32c2b5454cc726b9cbfb97f64cede0692fad9678030b752a",
+    "web/frontend/e2e/deployment.spec.ts": "8542bf23131ae048cabd5330daec461a1f8181815ca8a2758f46d5ec0fdce2a5",
+    "web/frontend/e2e/mvp.spec.ts": "eee79d893c26aaa23b32adae6c269cec78293b8af7a28058302bc98de93888cb",
+    "web/frontend/index.html": "6f3b2f37f101cc65e9f813a95bf7d52e9570f82523a0e31ac55ba36ed645fade",
+    "web/frontend/package.json": "33e1986f981c2877b0674c0156b0447d5817f805be20f11ea2443104900c5e1e",
+    "web/frontend/playwright.acceptance.config.ts": "92756a6f7845f4d1b343fef0a8e7b5922d1c0c4bdf919de5fe24dee87af06f75",
+    "web/frontend/playwright.config.ts": "a7e9436882ea6dd584748eab927d6f274221cb18585938e51c5fdeaa9b9d7106",
+    "web/frontend/playwright.deployment.config.ts": "1ff3de8ba62c258a0eca979b49aafe9915644fe12f977430dad94e35a682b7d4",
+    "web/frontend/pnpm-lock.yaml": "a6fd9f50eae4aeb70572a7e3b4b86be3f218b022675f0817cf147da8cabeae42",
+    "web/frontend/pnpm-workspace.yaml": "8fb4f47aba48636d3c7e28d1a532b2b2c140d7baad551d854e53c0bb7185a8e9",
+    "web/frontend/scripts/export_openapi.py": "4cbff60400405881e84d0dea229ca210006e452e2cd57ab540d3455382e567a0",
+    "web/frontend/scripts/generate-api.mjs": "76a9825bbe1b9775a38a74767e7cd86b71d46d97ede841874d87e2d156eec9d9",
+    "web/frontend/src/api/client.test.ts": "950efb141f82df7385dbbd4f3a271342c8461d6b91353f9cfd8619810af40892",
+    "web/frontend/src/api/client.ts": "00951e11c58db8d5b046c6ce0076f5cc204d6374425cde2b849b004f1c7c43dc",
+    "web/frontend/src/api/schema.d.ts": "884b110269571418f48cef0f70c894a59a58745a8020e33ff9101b77da16e05c",
+    "web/frontend/src/app/App.tsx": "fe76e6cfb04ecb681386ac28f6ade89bde45fe66e29d67a6795e02c0d4d5e434",
+    "web/frontend/src/app/context.test.tsx": "175e349144f486e4f562ccddbb70b8b0180117e1b627ed48d8fd3a06b5f2ae76",
+    "web/frontend/src/app/context.tsx": "8a6325d61ed8362a04e70ec42bfb7aa71517d2294fe2ca13ccccb661746d67e2",
+    "web/frontend/src/app/session.ts": "ffab21f0c9699a763122d7a3450651b37069c191c1d4ecaa3b4855270d330fd9",
+    "web/frontend/src/app/style.css": "002223d08323a0e0a54568390e1ec2f222a7584c23ec7802c1edb4b2aa476148",
+    "web/frontend/src/components/AdvancedOptions.tsx": "d1438499a1f670ea1895a6840ed803ddaa076b7adac94306de0bf2a40a1c02cc",
+    "web/frontend/src/components/DetailsDrawer.tsx": "a3276f39fee58841e45c4cbab0a430997cae87207a7583aeb02a6a1d97dfec4a",
+    "web/frontend/src/components/ResultExport.test.tsx": "613fd9e21178ed1c7bf81deb2ffe1b9e172f9494bf0c8e26d70436965106f5ce",
+    "web/frontend/src/components/ResultExport.tsx": "8fb18294f4437cbc975bfc15647216e337885f0b5e799d4df350b44cae8679e2",
+    "web/frontend/src/components/ResultSummary.tsx": "5640f1770bd54aa513de867773c5833daddd95f4f4452c06d69bf4dbbda407c6",
+    "web/frontend/src/components/States.tsx": "fcd754cd1fbeff6e8e7e52f039722c67a4b3151f953da942524d5c898c88e657",
+    "web/frontend/src/components/TraceSteps.tsx": "8fe94770fb6d16002bfc0d25dadec8f629d850d778b01849b76d8b6bac867dcf",
+    "web/frontend/src/components/advanced-options.test.tsx": "52ad4f695f392fe2eff2c76dab466eeed9ceb76d26130704b9e38b63843606f3",
+    "web/frontend/src/components/progressive.test.tsx": "4336e750f6329a11ac58185578d2080cc7e4f58e0321dfdbf996983caef56993",
+    "web/frontend/src/components/useDraftGuard.tsx": "80d5a5ddbee1c73c7592f40b3ebb4f8c5a8f299e7d0977435c9136fe3e35b2c5",
+    "web/frontend/src/features/auth/Auth.tsx": "afa9127bcc7577d331f8dc97d933c3e1a6320a4535d4d6d07db3d5d0f4a5789a",
+    "web/frontend/src/features/auth/auth.test.tsx": "2823a5c297143652fded63ca16be4820faea8fcf3c37828de7a5a78bda50ccdc",
+    "web/frontend/src/features/inventory/Analysis.tsx": "bedeaddf94d66feac211f5f8c0403eaa652a0d2d5d58a911d56f4005a87343c6",
+    "web/frontend/src/features/inventory/SelectorInput.tsx": "ceafb66394c1d1cbb287dd2200626f157da17b7a96244ae1aaf4bafd508f509b",
+    "web/frontend/src/features/inventory/catalog.ts": "bc07c9772d5565c4d353d3eab871aa9178fa0ef07456377597a16c9af4617a6d",
+    "web/frontend/src/features/inventory/useCandidates.tsx": "95362059165ba5b158b290e5949acb868f168d998603490e2ddad8cc46fd16c0",
+    "web/frontend/src/features/jobs/Jobs.tsx": "3d0f74f777d1bbfba43f3a6e318691fb15c1daa4edffd9bb158af4280f3e296f",
+    "web/frontend/src/features/jobs/jobs.test.tsx": "f7f2a812aceb54b69ecd55e4e616362abebdd6fe71dcae6700aee1c9a735ccb0",
+    "web/frontend/src/features/jobs/model.ts": "31f8c3d20ea7fb9032c7eaeeb505bc36ca2927baab3399d68715e259927aed46",
+    "web/frontend/src/features/networks/ContextPicker.tsx": "8358ed9eb551e0d70b33bf60baf2a4d1b1f6e4ab939dee29a723f34093903f35",
+    "web/frontend/src/features/networks/Networks.tsx": "9c54c53d08509ffa083dfd9978ae45aee7a025d46fabc6e1d127833407c9054d",
+    "web/frontend/src/features/networks/queries.ts": "6f2d6d9eef1109305d832359f7e3956d09740a9558472ed590e2bbcc21dcef78",
+    "web/frontend/src/features/results/Results.tsx": "262c5870af61d75df7d0d28b85a19643f636dc630bb21973c8026229ec210107",
+    "web/frontend/src/features/results/cells.ts": "59de0661873467b64b717bd924e2f767bf2f75b22479ca1378531d404380ab49",
+    "web/frontend/src/features/results/results.test.tsx": "a10b310d778cb56ded2fae8f6c55da946811e1893857167b57be218152f374db",
+    "web/frontend/src/features/routing/requests.ts": "d796eafbb6694239952135d57a41a3cf254cc5594998a2dc8828d7fa4bb0c7be",
+    "web/frontend/src/features/routing/routing.test.tsx": "26c410bec0617973a4d486f5a307a8ea80bf0a962a3cb7d680abf596c3ef901b",
+    "web/frontend/src/features/snapshots/DeleteResource.test.tsx": "9729e9e97b4e3d0f8bcdb5734b679a3a43ab5e257a3832925c50a1e693a873dd",
+    "web/frontend/src/features/snapshots/DeleteResource.tsx": "7f67e268e1a4ea2894f312bbe72dda3b9d45a3266e59069a4a6c0a7bbb6a6040",
+    "web/frontend/src/features/snapshots/ReconcileDeletion.test.tsx": "90611cd92916ea57bee6d313751674b0928c7d9d384b38406653f464201ecd38",
+    "web/frontend/src/features/snapshots/ReconcileDeletion.tsx": "e82c4444ecf5a24caaa8c8037fc998284994100fcc1d17bbd2b5ef88a2a7b6f8",
+    "web/frontend/src/features/snapshots/Snapshots.tsx": "5d5e135277a74a557c37190088cb420ca6ed01ead15b5e8fcdcb3a47bfd5097e",
+    "web/frontend/src/features/snapshots/UploadWizard.tsx": "5af52b16aaaabb0c0d1dcc45113e8aa5d61faf93d1509bc8b0fba8bfa04f293f",
+    "web/frontend/src/features/snapshots/api.ts": "e8a1de8521f2ba348dcb3d2285e2ed053edf98d2284e1c1a820357bad7db091f",
+    "web/frontend/src/features/snapshots/diagnostics/Diagnostics.tsx": "2987446b7c66be67b43637f6afc82c5d3cc35ab229cc5a6b557fa7dad2e74d13",
+    "web/frontend/src/features/snapshots/diagnostics/Source.tsx": "c4f76d38d69027dc104ef130efefd892e2802d05e818fcff9e6399ecacd12e67",
+    "web/frontend/src/features/snapshots/diagnostics/diagnostics.test.tsx": "bb8735c0934e15cee4ab72598d71787c04bb3335f83b37a95e3270b6501d3cf7",
+    "web/frontend/src/features/snapshots/model.ts": "596c47cac07732685acc093ba83d87f5aff1134ebf5848cd6940e1c606311236",
+    "web/frontend/src/features/snapshots/upload.test.tsx": "f0c9eb11028054d4e063373a084cf7239d9d99073154f1c063ad4e6e8b68d6f9",
+    "web/frontend/src/features/snapshots/workflow.ts": "781825c68b4c67839911fc91c2fdc887c265674503c9986cd0a60bfc8404a1ad",
+    "web/frontend/src/features/traceroute/TraceForm.tsx": "50f33ebc771f1fc75381aa736c4260366a645e9156f6b78ca0be32b516682b7c",
+    "web/frontend/src/features/traceroute/TraceResults.tsx": "20311d4919903eeab67fc17f7f8c51c423721979b680bd18cf343bf87210c44f",
+    "web/frontend/src/features/traceroute/requests.ts": "2f5f0feb1940f5a7d50795a9bbe6b90f3951a812ae2c63ba22e0a3892c49d235",
+    "web/frontend/src/features/traceroute/traceroute.test.tsx": "7c45775e71f5004e22562da35750698ded1403b0fc4e7f48971ed7f4e6980c01",
+    "web/frontend/src/features/users/Access.tsx": "ad3d01d2775a3944a50b4b75c2d235dca2c365b73a881b8dba6d04bfb420fd31",
+    "web/frontend/src/features/users/Users.tsx": "667f0e6e7c7630a8caf90a4862b479e0030ffbf9bf98c7bd063fca6bd9dcd7ab",
+    "web/frontend/src/features/users/users.test.tsx": "8cb53b051dea5f70409045efe5f79db024821852f6bdeafe07b4fa080e9b9608",
+    "web/frontend/src/main.tsx": "2cab13358e692111ccc12a49d135377fc09045a6208802e3f5349a06fd6680f9",
+    "web/frontend/tests/analysis.spec.ts": "3c28025efaf92703b7aedd855e20988978b51cadba59a7dfdfd4856b20ac5c42",
+    "web/frontend/tests/auth-helpers.ts": "d753c529a14bb15e69036f7d07e5467e3f1e6204ed65c9339bd63134ab90188d",
+    "web/frontend/tests/auth-users.spec.ts": "c053f5a2371f1983bdebddbc22de08f61e727b42a648468fe2e2df6e69de8a58",
+    "web/frontend/tests/deletion-helpers.ts": "f2c09afb44e99ac417521bc1d552d7ae92ed9e845660c5a3026f01c99583c7d6",
+    "web/frontend/tests/export-helpers.ts": "7e36189a1765e768e07550e186bae3f2ff5bcc0eafb566630760e5e76c4b3f96",
+    "web/frontend/tests/foundation.spec.ts": "969b89930e9b72c17ef4348d6751be4a77ba46af70f7cce1ff177535ba03de4b",
+    "web/frontend/tests/harness.html": "c86aa69983e4de4278ea556d5dbcd32f0f9c1e2a452e69e26bc843048a4c3101",
+    "web/frontend/tests/harness.tsx": "4d94fee05e26f662687dd312e63155f4706f9267f8b9bff0ff67904e8c0cb04e",
+    "web/frontend/tests/jobs.spec.ts": "d1a6aa6172be602a7edd52269f1f379647eced0286bfcd6c9e22fe6624d006d3",
+    "web/frontend/tests/networks-snapshots.spec.ts": "c58f2b07506d7188fde740427ce53367fd54040008f72562ed1d420b02912b73",
+    "web/frontend/tests/pause-worker.py": "60232227c48b3357aca1c0513b62192ef12cbbd59259e12cc06ed4cff7072611",
+    "web/frontend/tests/setup.ts": "d349d5374cc3cfe2d37e9ddabe4ecc9f7008fccf7981150b429c74bf5369a485",
+    "web/frontend/tests/traceroute.spec.ts": "d360e53f76340418a92f4d8ed2db868af19a51bea91077397c2d1a55296177f7",
+    "web/frontend/tsconfig.json": "539edad29b5fba135699135914a65c3ab7e8948bb28035037062b98d30cd14f0",
+    "web/frontend/vite.config.ts": "62b5713d80d70762fcd862a8502667441f7e21b3300a912eeaaad72714211d41",
+    "web/deploy/compose.yaml": "041097f5657ded3a8a4d703aed2654533bf79d2adf52523917f3ea0128c4a74f",
+    "web/deploy/engine-health.sh": "a27edb65653d7c5beb4da7b22308f13ea1cbc58b57c366233ea4cab1d24b3a63",
+    "web/deploy/engine.Dockerfile": "ea5e227952986f0d6e24a856cbd1517906b3bd6c1c53dad8ba92f0c4da157420",
+    "web/deploy/proxy.conf": "bc1c33b360730cb6ee8ed57e194d735a8c2d8b36121120614319b1a53885d7a6",
+    "web/deploy/volume_archive.py": "6fa2915a895143e5fccad8e574925361645dc5155090528a2187ac191df5b640",
+    "web/scripts/deploy.py": "31794735e69c8543a5671bc263867fdd4ef83d06e583b6b033c27a56cdaa22d6",
+    "web/scripts/verify_deployment.py": "d507dfbce74cdba8336406c994380871a3ad8dee90b3d733f8e9a0b6067befb6",
+    "web/.dockerignore": "966e38e981d7c2ba0a800a62b9f91af259ddec94182e8682dd963addd78b68f4"
+  },
+  "suite": {
+    "name": "pytest",
+    "errors": "0",
+    "failures": "0",
+    "skipped": "0",
+    "tests": "289",
+    "time": "168.134",
+    "timestamp": "2026-09-26T03:40:51.593445+08:00",
+    "hostname": "gaorenjiedeMacBook-Air.local"
+  },
+  "tests": [
+    {
+      "classname": "tests.integration.test_lab_topologies",
+      "name": "test_real_api_and_database_smoke",
+      "time": "0.117"
+    },
+    {
+      "classname": "tests.integration.test_lab_topologies",
+      "name": "test_seeded_inventory[r1-r2]",
+      "time": "0.151"
+    },
+    {
+      "classname": "tests.integration.test_lab_topologies",
+      "name": "test_seeded_inventory[cisco-four]",
+      "time": "0.145"
+    },
+    {
+      "classname": "tests.integration.test_lab_topologies",
+      "name": "test_configuration_initialization_and_diagnostics[r1-r2]",
+      "time": "0.376"
+    },
+    {
+      "classname": "tests.integration.test_lab_topologies",
+      "name": "test_configuration_initialization_and_diagnostics[cisco-four]",
+      "time": "0.406"
+    },
+    {
+      "classname": "tests.integration.test_lab_topologies",
+      "name": "test_interface_route_and_lpm_queries[r1-r2]",
+      "time": "0.383"
+    },
+    {
+      "classname": "tests.integration.test_lab_topologies",
+      "name": "test_interface_route_and_lpm_queries[cisco-four]",
+      "time": "0.397"
+    },
+    {
+      "classname": "tests.integration.test_lab_topologies",
+      "name": "test_traceroute_query_returns_structured_paths[r1-r2]",
+      "time": "0.149"
+    },
+    {
+      "classname": "tests.integration.test_lab_topologies",
+      "name": "test_traceroute_query_returns_structured_paths[cisco-four]",
+      "time": "0.149"
+    },
+    {
+      "classname": "tests.integration.test_lab_topologies",
+      "name": "test_two_profiles_remain_isolated_when_interleaved",
+      "time": "0.559"
+    },
+    {
+      "classname": "tests.integration.test_lab_topologies",
+      "name": "test_real_authentication_smoke",
+      "time": "0.297"
+    },
+    {
+      "classname": "tests.integration.test_lab_topologies",
+      "name": "test_real_user_administration_smoke",
+      "time": "0.499"
+    },
+    {
+      "classname": "tests.integration.test_lab_topologies",
+      "name": "test_real_network_management_smoke",
+      "time": "0.234"
+    },
+    {
+      "classname": "tests.integration.test_lab_topologies",
+      "name": "test_real_configuration_upload_smoke[small_network-files]",
+      "time": "0.102"
+    },
+    {
+      "classname": "tests.integration.test_lab_topologies",
+      "name": "test_real_configuration_upload_smoke[cisco_four-archive]",
+      "time": "0.104"
+    },
+    {
+      "classname": "tests.integration.test_lab_topologies",
+      "name": "test_real_job_metadata_smoke",
+      "time": "0.270"
+    },
+    {
+      "classname": "tests.integration.test_lab_topologies",
+      "name": "test_real_worker_lifecycle_and_readiness",
+      "time": "2.169"
+    },
+    {
+      "classname": "tests.integration.test_lab_topologies",
+      "name": "test_real_snapshot_worker_smoke[small_network-2]",
+      "time": "4.253"
+    },
+    {
+      "classname": "tests.integration.test_lab_topologies",
+      "name": "test_real_snapshot_worker_smoke[cisco_four-4]",
+      "time": "4.450"
+    },
+    {
+      "classname": "tests.integration.test_mvp_acceptance",
+      "name": "test_mvp_full_sdk_equivalence_and_measured_scale[small_network]",
+      "time": "4.709"
+    },
+    {
+      "classname": "tests.integration.test_mvp_acceptance",
+      "name": "test_mvp_full_sdk_equivalence_and_measured_scale[cisco_four]",
+      "time": "4.853"
+    },
+    {
+      "classname": "tests.integration.test_sdk_baseline",
+      "name": "test_versions_templates_and_public_methods",
+      "time": "0.135"
+    },
+    {
+      "classname": "tests.integration.test_sdk_baseline",
+      "name": "test_minimal_questions_match_expected",
+      "time": "1.383"
+    },
+    {
+      "classname": "tests.integration.test_sdk_baseline",
+      "name": "test_session_context_isolation",
+      "time": "0.659"
+    },
+    {
+      "classname": "tests.integration.test_sdk_baseline",
+      "name": "test_initialization_diagnostics_and_no_overwrite",
+      "time": "1.208"
+    },
+    {
+      "classname": "tests.integration.test_sdk_baseline",
+      "name": "test_unsupported_or_missing_question",
+      "time": "0.012"
+    },
+    {
+      "classname": "tests.integration.test_sdk_baseline",
+      "name": "test_public_work_handle_and_answer_recovery",
+      "time": "0.049"
+    },
+    {
+      "classname": "tests.integration.test_sdk_baseline",
+      "name": "test_request_timeout_is_not_a_total_work_budget",
+      "time": "2.198"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/api.py-import pybatfish.client.session]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/service.py-from pybatfish.client.session import Session as S]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/service.py-from app.infrastructure.sdk import factory]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/service.py-from app.modules.b.repository import Repository]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/service.py-from ..b import controller as adapter]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/service.py-from app.modules import b]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/api.py-from .controller import run]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/api.py-from . import repository]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/controller.py-from .service import Service]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/repository.py-from .controller import query]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/service.py-from fastapi import Request]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/archive.py-from .service import Service]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/export.py-from .service import Service]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/export.py-from pybatfish.client.session import Session]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/api.py-from .export import download]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/registry.py-from .controller import execute]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/api.py-from .registry import Registry]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/api.py-from .archive import prepare]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/archive.py-from app.modules.b.repository import Repository]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/service.py-from app.composition import create_app]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/api.py-from app.modules.b.service import Service]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/contracts/models.py-from app.modules.a.service import Service]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/infrastructure/settings.py-from app.modules.a.repository import Repository]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/service.py-import importlib\\nsdk = importlib.import_module('pybatfish')]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/service.py-sdk = __import__('pybatfish')]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_allow_expected_dependencies[app/modules/a/api.py-from .service import Service]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_allow_expected_dependencies[app/modules/a/repository.py-from .archive import prepare]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_allow_expected_dependencies[app/modules/a/archive.py-from .schemas import UploadInput]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_allow_expected_dependencies[app/modules/a/service.py-from .registry import Registry]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_allow_expected_dependencies[app/modules/a/service.py-from .export import download]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_allow_expected_dependencies[app/modules/a/registry.py-from .schemas import Request]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_allow_expected_dependencies[app/modules/a/service.py-from app.modules.b.service import Service]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_allow_expected_dependencies[app/modules/a/service.py-from ..b import service as b_service]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_allow_expected_dependencies[app/modules/a/service.py-from . import controller, repository]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_allow_expected_dependencies[app/modules/a/controllers/routing.py-from pybatfish.client.session import Session]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_allow_expected_dependencies[app/modules/a/controller.py-from app.infrastructure.sdk.factory import SessionFactory]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_allow_expected_dependencies[app/infrastructure/sdk/factory.py-from pybatfish.client.session import Session]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_allow_expected_dependencies[app/composition.py-from app.modules.a.api import router\\nfrom app.modules.a.service import Service]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_allow_expected_dependencies[app/modules/a/schemas.py-from app.contracts.dto import Actor]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_allow_expected_dependencies[app/modules/a/service.py-# import pybatfish\\ntext = 'from .api import router']",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_cross_module_service_cycles_are_rejected",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_in_application",
+      "time": "0.082"
+    },
+    {
+      "classname": "tests.test_auth",
+      "name": "test_login_cookie_and_csrf",
+      "time": "0.323"
+    },
+    {
+      "classname": "tests.test_auth",
+      "name": "test_logout_and_password_revoke",
+      "time": "0.478"
+    },
+    {
+      "classname": "tests.test_auth",
+      "name": "test_initial_password_restriction",
+      "time": "0.373"
+    },
+    {
+      "classname": "tests.test_auth",
+      "name": "test_no_user_enumeration",
+      "time": "0.338"
+    },
+    {
+      "classname": "tests.test_auth",
+      "name": "test_failure_limit_shared_and_expiration",
+      "time": "0.517"
+    },
+    {
+      "classname": "tests.test_auth",
+      "name": "test_bootstrap_once_and_redaction",
+      "time": "0.267"
+    },
+    {
+      "classname": "tests.test_auth",
+      "name": "test_disabled_and_generation_revoked_sessions",
+      "time": "0.335"
+    },
+    {
+      "classname": "tests.test_auth",
+      "name": "test_concurrent_bootstrap_creates_one_admin",
+      "time": "0.178"
+    },
+    {
+      "classname": "tests.test_auth",
+      "name": "test_concurrent_failures_cannot_bypass_limit",
+      "time": "0.445"
+    },
+    {
+      "classname": "tests.test_auth",
+      "name": "test_cookie_from_logged_out_session_is_rejected",
+      "time": "0.242"
+    },
+    {
+      "classname": "tests.test_auth",
+      "name": "test_failure_limit_scoped_to_account_and_address_pair",
+      "time": "0.665"
+    },
+    {
+      "classname": "tests.test_deletion",
+      "name": "test_nonempty_network_delete",
+      "time": "0.611"
+    },
+    {
+      "classname": "tests.test_deletion",
+      "name": "test_real_delete_preserves_result_and_tombstone[small_network]",
+      "time": "2.473"
+    },
+    {
+      "classname": "tests.test_deletion",
+      "name": "test_real_delete_preserves_result_and_tombstone[cisco_four]",
+      "time": "2.043"
+    },
+    {
+      "classname": "tests.test_deletion",
+      "name": "test_delete_submit_race",
+      "time": "1.532"
+    },
+    {
+      "classname": "tests.test_deletion",
+      "name": "test_delete_sdk_writeback_failure",
+      "time": "1.854"
+    },
+    {
+      "classname": "tests.test_deletion",
+      "name": "test_member_cannot_delete_or_reconcile",
+      "time": "1.304"
+    },
+    {
+      "classname": "tests.test_deletion",
+      "name": "test_unknown_and_existing_remote_recovery",
+      "time": "2.143"
+    },
+    {
+      "classname": "tests.test_deletion",
+      "name": "test_delete_initialization_submit_race",
+      "time": "0.475"
+    },
+    {
+      "classname": "tests.test_deletion",
+      "name": "test_delete_keeps_shared_retry_input_until_last_snapshot",
+      "time": "1.453"
+    },
+    {
+      "classname": "tests.test_deletion",
+      "name": "test_late_network_creation_retry_cannot_resurrect_deleted_network",
+      "time": "0.689"
+    },
+    {
+      "classname": "tests.test_deletion",
+      "name": "test_reference_snapshot_is_protected_by_active_job",
+      "time": "2.265"
+    },
+    {
+      "classname": "tests.test_diagnostics",
+      "name": "test_file_access_bounds_and_original_lines",
+      "time": "0.947"
+    },
+    {
+      "classname": "tests.test_diagnostics",
+      "name": "test_missing_source_line_and_diagnostic_pagination",
+      "time": "0.535"
+    },
+    {
+      "classname": "tests.test_diagnostics",
+      "name": "test_unsupported_parse_blocks_analysis[FAILED]",
+      "time": "0.535"
+    },
+    {
+      "classname": "tests.test_diagnostics",
+      "name": "test_unsupported_parse_blocks_analysis[UNKNOWN]",
+      "time": "0.473"
+    },
+    {
+      "classname": "tests.test_diagnostics",
+      "name": "test_unsupported_parse_blocks_analysis[UNSUPPORTED]",
+      "time": "0.535"
+    },
+    {
+      "classname": "tests.test_diagnostics",
+      "name": "test_vendor_limits_visible_when_passed",
+      "time": "0.697"
+    },
+    {
+      "classname": "tests.test_diagnostics",
+      "name": "test_binary_and_long_line_are_explicit",
+      "time": "0.492"
+    },
+    {
+      "classname": "tests.test_diagnostics",
+      "name": "test_real_diagnostics_preserve_source_locations",
+      "time": "1.232"
+    },
+    {
+      "classname": "tests.test_diagnostics",
+      "name": "test_existing_snapshot_applies_new_quality_policy",
+      "time": "0.519"
+    },
+    {
+      "classname": "tests.test_diagnostics",
+      "name": "test_real_cr_source_lines_and_legacy_manifest[\\r]",
+      "time": "1.449"
+    },
+    {
+      "classname": "tests.test_diagnostics",
+      "name": "test_real_cr_source_lines_and_legacy_manifest[\\r\\r\\n]",
+      "time": "1.291"
+    },
+    {
+      "classname": "tests.test_diagnostics",
+      "name": "test_real_cr_source_lines_and_legacy_manifest[\\r\\n]",
+      "time": "1.532"
+    },
+    {
+      "classname": "tests.test_exports",
+      "name": "test_csv_formula_and_unicode[=1+1]",
+      "time": "0.008"
+    },
+    {
+      "classname": "tests.test_exports",
+      "name": "test_csv_formula_and_unicode[+SUM(A1)]",
+      "time": "0.005"
+    },
+    {
+      "classname": "tests.test_exports",
+      "name": "test_csv_formula_and_unicode[-1]",
+      "time": "0.005"
+    },
+    {
+      "classname": "tests.test_exports",
+      "name": "test_csv_formula_and_unicode[@x]",
+      "time": "0.005"
+    },
+    {
+      "classname": "tests.test_exports",
+      "name": "test_csv_formula_and_unicode[\\t =1]",
+      "time": "0.005"
+    },
+    {
+      "classname": "tests.test_exports",
+      "name": "test_csv_formula_and_unicode[\\r\\n@x]",
+      "time": "0.005"
+    },
+    {
+      "classname": "tests.test_exports",
+      "name": "test_csv_formula_and_unicode[\\ufeff+1]",
+      "time": "0.005"
+    },
+    {
+      "classname": "tests.test_exports",
+      "name": "test_csv_formula_and_unicode[\\x00-1]",
+      "time": "0.005"
+    },
+    {
+      "classname": "tests.test_exports",
+      "name": "test_export_preserves_context",
+      "time": "0.580"
+    },
+    {
+      "classname": "tests.test_exports",
+      "name": "test_trace_csv_rejected",
+      "time": "0.443"
+    },
+    {
+      "classname": "tests.test_exports",
+      "name": "test_streaming_json_batches_small_tokens_without_losing_unicode",
+      "time": "0.039"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_live_without_batfish",
+      "time": "0.005"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_readiness_requires_every_fresh_dependency[healthy-200]",
+      "time": "0.003"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_readiness_requires_every_fresh_dependency[missing-503]",
+      "time": "0.003"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_readiness_requires_every_fresh_dependency[stale-503]",
+      "time": "0.003"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_readiness_requires_every_fresh_dependency[failed-503]",
+      "time": "0.003"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_readiness_requires_every_fresh_dependency[future-503]",
+      "time": "0.003"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_readiness_requires_every_fresh_dependency[exception-503]",
+      "time": "0.003"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_error_shape[payload0]",
+      "time": "0.004"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_error_shape[payload1]",
+      "time": "0.004"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_error_shape[payload2]",
+      "time": "0.004"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_all_errors_are_sanitized_and_correlated[/missing-404-NOT_FOUND]",
+      "time": "0.004"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_all_errors_are_sanitized_and_correlated[/test-unhandled-500-INTERNAL_ERROR]",
+      "time": "0.004"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_all_errors_are_sanitized_and_correlated[/test-http-403-FORBIDDEN]",
+      "time": "0.004"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_all_errors_are_sanitized_and_correlated[/test-service-409-CONFLICT]",
+      "time": "0.004"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_request_ids_are_unique_and_openapi_declares_errors",
+      "time": "0.011"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_settings_are_validated_without_disclosing_secrets",
+      "time": "0.002"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_contracts_are_json_serializable_and_jobs_are_deeply_immutable",
+      "time": "0.002"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_contracts_reject_unknown_fields_invalid_json_and_naive_time",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_empty_sdk_key_uses_default_and_rate_window_matches_operations",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_inventory",
+      "name": "test_inventory_options_are_typed",
+      "time": "0.007"
+    },
+    {
+      "classname": "tests.test_inventory",
+      "name": "test_inventory_matches_sdk[small_network]",
+      "time": "2.679"
+    },
+    {
+      "classname": "tests.test_inventory",
+      "name": "test_inventory_matches_sdk[cisco_four]",
+      "time": "2.620"
+    },
+    {
+      "classname": "tests.test_inventory",
+      "name": "test_literal_node_names",
+      "time": "3.064"
+    },
+    {
+      "classname": "tests.test_inventory",
+      "name": "test_no_matching_nodes",
+      "time": "1.931"
+    },
+    {
+      "classname": "tests.test_inventory",
+      "name": "test_inventory_api_rejects_unsafe_options_and_preserves_identity",
+      "time": "1.623"
+    },
+    {
+      "classname": "tests.test_inventory",
+      "name": "test_invalid_expression_does_not_fence_engine[[-nodes]",
+      "time": "2.361"
+    },
+    {
+      "classname": "tests.test_inventory",
+      "name": "test_invalid_expression_does_not_fence_engine[[-interfaces]",
+      "time": "1.750"
+    },
+    {
+      "classname": "tests.test_inventory",
+      "name": "test_invalid_expression_does_not_fence_engine[/[/-nodes]",
+      "time": "1.921"
+    },
+    {
+      "classname": "tests.test_inventory",
+      "name": "test_invalid_expression_does_not_fence_engine[/[/-interfaces]",
+      "time": "2.315"
+    },
+    {
+      "classname": "tests.test_inventory",
+      "name": "test_uncertain_analysis_submission_still_fences_engine[transport]",
+      "time": "1.578"
+    },
+    {
+      "classname": "tests.test_inventory",
+      "name": "test_uncertain_analysis_submission_still_fences_engine[work_post_rejected]",
+      "time": "1.769"
+    },
+    {
+      "classname": "tests.test_inventory",
+      "name": "test_analysis_terminal_status_and_unknown_wait[TERMINATEDABNORMALLY]",
+      "time": "0.005"
+    },
+    {
+      "classname": "tests.test_inventory",
+      "name": "test_analysis_terminal_status_and_unknown_wait[TERMINATEDBYUSER]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_inventory",
+      "name": "test_analysis_terminal_status_and_unknown_wait[ASSIGNED]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_job_contracts",
+      "name": "test_analysis_context_can_enter_job_submission",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_job_contracts",
+      "name": "test_saved_frozen_parameters_can_be_resubmitted",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_jobs",
+      "name": "test_idempotent_submission_and_immutable_inputs",
+      "time": "0.576"
+    },
+    {
+      "classname": "tests.test_jobs",
+      "name": "test_idempotency_payload_conflict_and_user_scope",
+      "time": "0.649"
+    },
+    {
+      "classname": "tests.test_jobs",
+      "name": "test_queue_limit_concurrent_and_idempotent_replay",
+      "time": "0.443"
+    },
+    {
+      "classname": "tests.test_jobs",
+      "name": "test_cancel_race",
+      "time": "0.427"
+    },
+    {
+      "classname": "tests.test_jobs",
+      "name": "test_cancel_permissions_deletion_and_shared_history",
+      "time": "1.132"
+    },
+    {
+      "classname": "tests.test_jobs",
+      "name": "test_disabled_creator_cannot_submit_or_cancel",
+      "time": "0.652"
+    },
+    {
+      "classname": "tests.test_jobs",
+      "name": "test_global_queue_limit_across_users",
+      "time": "0.662"
+    },
+    {
+      "classname": "tests.test_jobs",
+      "name": "test_simultaneous_same_key_does_not_duplicate",
+      "time": "0.620"
+    },
+    {
+      "classname": "tests.test_jobs",
+      "name": "test_job_submission_rejects_invalid_inputs_and_member_delete",
+      "time": "0.632"
+    },
+    {
+      "classname": "tests.test_lab_inputs",
+      "name": "test_lab_uploads_contain_exact_config_bytes[r1-r2-2]",
+      "time": "0.004"
+    },
+    {
+      "classname": "tests.test_lab_inputs",
+      "name": "test_lab_uploads_contain_exact_config_bytes[cisco-four-4]",
+      "time": "0.002"
+    },
+    {
+      "classname": "tests.test_lab_inputs",
+      "name": "test_snapshot_identity_changes_with_content_and_filename",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_lab_inputs",
+      "name": "test_lab_archive_rejects_symlinked_inputs",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_lab_inputs",
+      "name": "test_lab_operation_lock_prevents_overlapping_runs",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_multipart",
+      "name": "test_chunked_upload_counts_bytes_without_content_length",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_multipart",
+      "name": "test_truncated_multipart_is_rejected",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_networks",
+      "name": "test_team_shares_network",
+      "time": "0.795"
+    },
+    {
+      "classname": "tests.test_networks",
+      "name": "test_same_label_different_identity",
+      "time": "0.425"
+    },
+    {
+      "classname": "tests.test_networks",
+      "name": "test_network_idempotency_conflict_and_scope",
+      "time": "0.679"
+    },
+    {
+      "classname": "tests.test_networks",
+      "name": "test_engine_busy_preserves_pending_identity",
+      "time": "0.569"
+    },
+    {
+      "classname": "tests.test_networks",
+      "name": "test_create_writeback_failure",
+      "time": "0.524"
+    },
+    {
+      "classname": "tests.test_networks",
+      "name": "test_unknown_slot_cannot_be_reused",
+      "time": "0.413"
+    },
+    {
+      "classname": "tests.test_networks",
+      "name": "test_network_validation_rejects_context_overrides",
+      "time": "0.385"
+    },
+    {
+      "classname": "tests.test_networks",
+      "name": "test_engine_lock_released_if_initial_commit_fails",
+      "time": "0.460"
+    },
+    {
+      "classname": "tests.test_networks",
+      "name": "test_generated_idempotency_key_can_resume_busy_request",
+      "time": "0.589"
+    },
+    {
+      "classname": "tests.test_networks",
+      "name": "test_first_sdk_timeout_reports_unknown",
+      "time": "0.670"
+    },
+    {
+      "classname": "tests.test_persistence",
+      "name": "test_migration_from_empty",
+      "time": "0.560"
+    },
+    {
+      "classname": "tests.test_persistence",
+      "name": "test_transaction_rollback",
+      "time": "0.116"
+    },
+    {
+      "classname": "tests.test_persistence",
+      "name": "test_unique_foreign_key_and_state_constraints",
+      "time": "0.146"
+    },
+    {
+      "classname": "tests.test_persistence",
+      "name": "test_repository_values_and_result_publication",
+      "time": "0.189"
+    },
+    {
+      "classname": "tests.test_results",
+      "name": "test_structured_serialization",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_results",
+      "name": "test_registry_rejects_unknown_and_context_options",
+      "time": "0.011"
+    },
+    {
+      "classname": "tests.test_results",
+      "name": "test_cache_context_versions",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_results",
+      "name": "test_stable_pagination_and_truncation",
+      "time": "0.580"
+    },
+    {
+      "classname": "tests.test_results",
+      "name": "test_result_and_job_success_publish_together",
+      "time": "0.786"
+    },
+    {
+      "classname": "tests.test_results",
+      "name": "test_real_result_pipeline_and_cache_identity[small_network]",
+      "time": "2.520"
+    },
+    {
+      "classname": "tests.test_results",
+      "name": "test_real_result_pipeline_and_cache_identity[cisco_four]",
+      "time": "2.585"
+    },
+    {
+      "classname": "tests.test_results",
+      "name": "test_trace_structure_and_byte_limit",
+      "time": "0.487"
+    },
+    {
+      "classname": "tests.test_results",
+      "name": "test_interruption_during_publication_cannot_publish",
+      "time": "0.477"
+    },
+    {
+      "classname": "tests.test_routing",
+      "name": "test_unsupported_address_family",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_routing",
+      "name": "test_next_hop_variants",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_routing",
+      "name": "test_routes_and_lpm_match_sdk[small_network]",
+      "time": "2.947"
+    },
+    {
+      "classname": "tests.test_routing",
+      "name": "test_routes_and_lpm_match_sdk[cisco_four]",
+      "time": "3.153"
+    },
+    {
+      "classname": "tests.test_routing",
+      "name": "test_route_filters_default_and_multiple_vrfs",
+      "time": "6.172"
+    },
+    {
+      "classname": "tests.test_routing",
+      "name": "test_routing_context_and_phase_fencing",
+      "time": "2.424"
+    },
+    {
+      "classname": "tests.test_snapshots",
+      "name": "test_snapshot_idempotency_and_overwrite_impossible",
+      "time": "0.597"
+    },
+    {
+      "classname": "tests.test_snapshots",
+      "name": "test_upload_consumed_once_atomic",
+      "time": "0.462"
+    },
+    {
+      "classname": "tests.test_snapshots",
+      "name": "test_snapshot_queue_failure_rolls_back_consumption",
+      "time": "0.460"
+    },
+    {
+      "classname": "tests.test_snapshots",
+      "name": "test_cancel_and_retry_initialization",
+      "time": "0.569"
+    },
+    {
+      "classname": "tests.test_snapshots",
+      "name": "test_snapshot_options_and_network_boundary",
+      "time": "0.488"
+    },
+    {
+      "classname": "tests.test_snapshots",
+      "name": "test_real_snapshot_initialization_quality[small_network-False]",
+      "time": "2.180"
+    },
+    {
+      "classname": "tests.test_snapshots",
+      "name": "test_real_snapshot_initialization_quality[cisco_four-False]",
+      "time": "2.444"
+    },
+    {
+      "classname": "tests.test_snapshots",
+      "name": "test_real_snapshot_initialization_quality[small_network-True]",
+      "time": "2.543"
+    },
+    {
+      "classname": "tests.test_snapshots",
+      "name": "test_failed_initialization_retains_input",
+      "time": "0.563"
+    },
+    {
+      "classname": "tests.test_snapshots",
+      "name": "test_interrupted_snapshot_retry_after_reconciliation",
+      "time": "0.518"
+    },
+    {
+      "classname": "tests.test_source_lines",
+      "name": "test_line_scanner_matches_engine_delimiters_across_chunks[]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_source_lines",
+      "name": "test_line_scanner_matches_engine_delimiters_across_chunks[a\\rb\\r]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_source_lines",
+      "name": "test_line_scanner_matches_engine_delimiters_across_chunks[\\r\\n\\n]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_source_lines",
+      "name": "test_line_scanner_matches_engine_delimiters_across_chunks[a\\r\\r\\nb\\rc\\nd]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_source_lines",
+      "name": "test_line_scanner_matches_engine_delimiters_across_chunks[xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\\r\\nnext\\r]",
+      "time": "0.010"
+    },
+    {
+      "classname": "tests.test_storage",
+      "name": "test_storage_key_boundary[]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_storage",
+      "name": "test_storage_key_boundary[.]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_storage",
+      "name": "test_storage_key_boundary[..]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_storage",
+      "name": "test_storage_key_boundary[../escape]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_storage",
+      "name": "test_storage_key_boundary[/tmp/escape]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_storage",
+      "name": "test_storage_key_boundary[a/b]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_storage",
+      "name": "test_storage_key_boundary[a\\\\b]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_storage",
+      "name": "test_storage_key_boundary[a\\x00b]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_storage",
+      "name": "test_storage_key_boundary[.tmp-x]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_storage",
+      "name": "test_atomic_publication_and_no_overwrite",
+      "time": "0.002"
+    },
+    {
+      "classname": "tests.test_storage",
+      "name": "test_failed_stage_cleanup",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_storage",
+      "name": "test_symlinks_cannot_escape",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_storage",
+      "name": "test_root_replacement_keeps_directory_boundary",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_storage",
+      "name": "test_pending_key_cannot_be_replaced",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_traceroute",
+      "name": "test_trace_options_validation",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_traceroute",
+      "name": "test_trace_matches_sdk_and_model_warning_propagates[small_network]",
+      "time": "2.355"
+    },
+    {
+      "classname": "tests.test_traceroute",
+      "name": "test_trace_matches_sdk_and_model_warning_propagates[cisco_four]",
+      "time": "2.908"
+    },
+    {
+      "classname": "tests.test_traceroute",
+      "name": "test_ecmp_mixed_dispositions_and_trace_limit",
+      "time": "2.611"
+    },
+    {
+      "classname": "tests.test_traceroute",
+      "name": "test_missing_source_is_explicit_and_recoverable",
+      "time": "2.183"
+    },
+    {
+      "classname": "tests.test_traceroute",
+      "name": "test_unknown_disposition_and_storage_truncation_summary",
+      "time": "1.276"
+    },
+    {
+      "classname": "tests.test_traceroute",
+      "name": "test_trace_protocol_alias_mapping",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_upload_archives",
+      "name": "test_traversal_rejected[../escape]",
+      "time": "0.004"
+    },
+    {
+      "classname": "tests.test_upload_archives",
+      "name": "test_traversal_rejected[/etc/passwd]",
+      "time": "0.002"
+    },
+    {
+      "classname": "tests.test_upload_archives",
+      "name": "test_traversal_rejected[root/configs/../../escape]",
+      "time": "0.002"
+    },
+    {
+      "classname": "tests.test_upload_archives",
+      "name": "test_traversal_rejected[C:/configs/a]",
+      "time": "0.002"
+    },
+    {
+      "classname": "tests.test_upload_archives",
+      "name": "test_traversal_rejected[root\\\\configs\\\\a]",
+      "time": "0.002"
+    },
+    {
+      "classname": "tests.test_upload_archives",
+      "name": "test_traversal_rejected[root/configs/a\\x00hidden]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_upload_archives",
+      "name": "test_zip_roots_conflicts_and_nested_rejected[entries0]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_upload_archives",
+      "name": "test_zip_roots_conflicts_and_nested_rejected[entries1]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_upload_archives",
+      "name": "test_zip_roots_conflicts_and_nested_rejected[entries2]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_upload_archives",
+      "name": "test_zip_roots_conflicts_and_nested_rejected[entries3]",
+      "time": "0.002"
+    },
+    {
+      "classname": "tests.test_upload_archives",
+      "name": "test_zip_roots_conflicts_and_nested_rejected[entries4]",
+      "time": "0.004"
+    },
+    {
+      "classname": "tests.test_upload_archives",
+      "name": "test_zip_roots_conflicts_and_nested_rejected[entries5]",
+      "time": "0.002"
+    },
+    {
+      "classname": "tests.test_upload_archives",
+      "name": "test_symlink_and_encrypted_zip_rejected",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_upload_archives",
+      "name": "test_original_bytes_and_hash_preserved",
+      "time": "0.002"
+    },
+    {
+      "classname": "tests.test_upload_archives",
+      "name": "test_zip_actual_limits[limits0]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_upload_archives",
+      "name": "test_zip_actual_limits[limits1]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_upload_archives",
+      "name": "test_zip_actual_limits[limits2]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_upload_archives",
+      "name": "test_stream_bytes_not_declared_size_and_duplicate_names",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_upload_archives",
+      "name": "test_corrupt_deflate_is_validation_error",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_upload_archives",
+      "name": "test_unsupported_zip_algorithm_is_validation_error[12]",
+      "time": "0.004"
+    },
+    {
+      "classname": "tests.test_upload_archives",
+      "name": "test_unsupported_zip_algorithm_is_validation_error[14]",
+      "time": "0.004"
+    },
+    {
+      "classname": "tests.test_uploads",
+      "name": "test_upload_original_bytes_and_database_manifest",
+      "time": "0.446"
+    },
+    {
+      "classname": "tests.test_uploads",
+      "name": "test_upload_owner_and_network",
+      "time": "1.066"
+    },
+    {
+      "classname": "tests.test_uploads",
+      "name": "test_failed_archive_cleans_files_and_rejects_mixed_input",
+      "time": "0.566"
+    },
+    {
+      "classname": "tests.test_uploads",
+      "name": "test_upload_expiration_cleanup_preserves_consumed",
+      "time": "0.446"
+    },
+    {
+      "classname": "tests.test_uploads",
+      "name": "test_upload_database_failure_cleans_published_directory",
+      "time": "0.777"
+    },
+    {
+      "classname": "tests.test_uploads",
+      "name": "test_unauthenticated_upload_rejected_before_body",
+      "time": "0.407"
+    },
+    {
+      "classname": "tests.test_uploads",
+      "name": "test_concurrent_consume_only_one_wins",
+      "time": "0.418"
+    },
+    {
+      "classname": "tests.test_uploads",
+      "name": "test_cleanup_only_old_unreferenced_directories",
+      "time": "0.375"
+    },
+    {
+      "classname": "tests.test_uploads",
+      "name": "test_commit_failure_leaves_reconcilable_orphan",
+      "time": "0.436"
+    },
+    {
+      "classname": "tests.test_uploads",
+      "name": "test_upload_limits_report_actual_settings_and_require_identity",
+      "time": "0.422"
+    },
+    {
+      "classname": "tests.test_uploads",
+      "name": "test_materialize_preserves_optional_snapshot_inputs",
+      "time": "0.406"
+    },
+    {
+      "classname": "tests.test_users",
+      "name": "test_member_cannot_administer",
+      "time": "0.594"
+    },
+    {
+      "classname": "tests.test_users",
+      "name": "test_creation_pagination_and_validation",
+      "time": "0.452"
+    },
+    {
+      "classname": "tests.test_users",
+      "name": "test_disable_revokes_sessions",
+      "time": "0.860"
+    },
+    {
+      "classname": "tests.test_users",
+      "name": "test_password_reset_and_role_immediate",
+      "time": "1.061"
+    },
+    {
+      "classname": "tests.test_users",
+      "name": "test_last_admin_guard[change0]",
+      "time": "0.714"
+    },
+    {
+      "classname": "tests.test_users",
+      "name": "test_last_admin_guard[change1]",
+      "time": "0.600"
+    },
+    {
+      "classname": "tests.test_users",
+      "name": "test_audit_redaction",
+      "time": "0.455"
+    },
+    {
+      "classname": "tests.test_users",
+      "name": "test_audit_failure_rolls_back_user_change",
+      "time": "0.460"
+    },
+    {
+      "classname": "tests.test_worker",
+      "name": "test_two_workers_one_claim",
+      "time": "0.549"
+    },
+    {
+      "classname": "tests.test_worker",
+      "name": "test_worker_virtual_handler_heartbeat_and_finish",
+      "time": "0.523"
+    },
+    {
+      "classname": "tests.test_worker",
+      "name": "test_crash_after_remote_submission_blocks_replay",
+      "time": "0.427"
+    },
+    {
+      "classname": "tests.test_worker",
+      "name": "test_disable_before_execution_never_calls_handler",
+      "time": "0.806"
+    },
+    {
+      "classname": "tests.test_worker",
+      "name": "test_retry_preserves_original",
+      "time": "1.032"
+    },
+    {
+      "classname": "tests.test_worker",
+      "name": "test_reconciliation_admin_and_live_lock",
+      "time": "0.598"
+    },
+    {
+      "classname": "tests.test_worker",
+      "name": "test_timeout_unknown_cannot_be_cleared_by_late_sdk_return",
+      "time": "0.516"
+    },
+    {
+      "classname": "tests.test_worker",
+      "name": "test_real_worker_process_crash_retains_unknown",
+      "time": "1.999"
+    },
+    {
+      "classname": "tests.test_worker",
+      "name": "test_budget_expiry_fences_late_success",
+      "time": "0.435"
+    },
+    {
+      "classname": "tests.test_worker",
+      "name": "test_reconcile_audit_failure_keeps_unknown",
+      "time": "0.426"
+    },
+    {
+      "classname": "tests.test_worker",
+      "name": "test_worker_admin_and_retry_http_permissions",
+      "time": "1.192"
+    },
+    {
+      "classname": "tests.test_worker",
+      "name": "test_sdk_factory_sessions_are_scoped_to_job",
+      "time": "0.579"
+    },
+    {
+      "classname": "tests.test_worker",
+      "name": "test_budget_checked_on_completion_before_next_heartbeat[False]",
+      "time": "0.500"
+    },
+    {
+      "classname": "tests.test_worker",
+      "name": "test_budget_checked_on_completion_before_next_heartbeat[True]",
+      "time": "0.913"
+    },
+    {
+      "classname": "tests.test_worker",
+      "name": "test_unknown_fence_cannot_be_overwritten_during_admission",
+      "time": "0.834"
+    },
+    {
+      "classname": "tests.test_worker",
+      "name": "test_reconcile_requires_old_worker_to_stop",
+      "time": "0.899"
+    },
+    {
+      "classname": "tests.test_worker",
+      "name": "test_budget_expired_before_handler_skips_execution",
+      "time": "0.922"
+    }
+  ],
+  "command": [
+    "/Users/gaorenjie/Documents/Coding/JAVA/batfish-dev/web/backend/.venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "--junitxml=/Users/gaorenjie/Documents/Coding/JAVA/batfish-dev/web/.runtime/test-lab/abb77b60f0c0/checks/4b5570893929/pytest.xml"
+  ],
+  "cwd": "/Users/gaorenjie/Documents/Coding/JAVA/batfish-dev/web/backend",
+  "run_id": "abb77b60f0c0",
+  "raw_evidence": "web/.runtime/test-lab/abb77b60f0c0/checks/4b5570893929",
+  "engine_revision": "7d0deeeac4a09973b3876327f6aef721ee12f955",
+  "jar_sha256": "0927de7c740bc72f999870e842605baad9a7cb6ea66e4b01fb9a6037bea00193",
+  "postgres_image": "postgres@sha256:67f624a4ad70edba8d65c82341124fab7054b277b4f7dea4b04be6f939ce2314",
+  "database_migration": "0008",
+  "fixture_sha256": {
+    "r1-r2": "f3a385cbf5901af2eecf667e0af36853f0a753ba573b23efa510ef3ea4695f24",
+    "cisco-four": "f63010f66ec700c625fe763905312b05225a597a37fabc9fb4552cefeeb91188"
+  },
+  "versions": {
+    "sqlalchemy": "2.0.54",
+    "alembic": "1.20.0",
+    "psycopg": "3.3.6",
+    "pybatfish": "2026.9.17.3748",
+    "argon2-cffi": "25.1.0",
+    "python-multipart": "0.0.32",
+    "host_python": "3.12.12",
+    "container_python": "3.12.13",
+    "container_java": "Temurin 25.0.4+7",
+    "postgres": "17.10",
+    "container_fastapi": "0.141.1",
+    "container_sqlalchemy": "2.0.54",
+    "build_node": "25.9.0",
+    "host_node": "25.6.1",
+    "pnpm": "11.19.0",
+    "uv_container": "0.11.2",
+    "compose": "5.0.2"
+  },
+  "checks": {
+    "ruff": "passed: web/backend web/scripts web/deploy",
+    "uv_lock": "passed: uv lock --check --project web/backend",
+    "smoke": {
+      "passed": 12,
+      "deselected": 277,
+      "scope": "intentional smoke subset; full suite 289 passed with zero skip",
+      "raw_evidence": "web/.runtime/test-lab/abb77b60f0c0/checks/782858f70ab4"
+    },
+    "frontend": {
+      "vitest": {
+        "passed": 37,
+        "files": 15,
+        "skipped": 0
+      },
+      "build_typecheck": "passed after final browser assertion changes",
+      "api_generation": "passed",
+      "format": "passed",
+      "browser": {
+        "regression": {
+          "stats": {
+            "startTime": "2026-09-25T19:45:24.675Z",
+            "duration": 162154.198,
+            "expected": 10,
+            "skipped": 0,
+            "unexpected": 0,
+            "flaky": 0
+          },
+          "raw_evidence": "web/.runtime/mvp-runner/mvp-25-browser"
+        },
+        "deployment": {
+          "stats": {
+            "startTime": "2026-09-25T19:48:28.966Z",
+            "duration": 5335.747,
+            "expected": 1,
+            "skipped": 0,
+            "unexpected": 0,
+            "flaky": 0
+          },
+          "raw_evidence": "web/.runtime/mvp-runner/mvp-25-deployment-browser"
+        },
+        "dual_user": {
+          "stats": {
+            "startTime": "2026-09-25T19:49:10.484Z",
+            "duration": 15575.341,
+            "expected": 1,
+            "skipped": 0,
+            "unexpected": 0,
+            "flaky": 0
+          },
+          "raw_evidence": "web/.runtime/mvp-runner/mvp-25-acceptance-browser"
+        }
+      },
+      "visual_review": "Viewed current HTTPS restored result, delete confirmation, Cisco path dispositions and both independent user results. Administrator selector changed to Cisco while result provenance/rows remain r1/r2; member result remains Cisco and admin navigation absent. Warnings/source/export/detail controls readable.",
+      "shared_chunk_warning": "816.53 kB shared UI chunk; no capacity guarantee"
+    },
+    "deployment": {
+      "status": "passed",
+      "state": {
+        "schema_version": 1,
+        "project": "bfw-9422128b86f6",
+        "state_dir": "/Users/gaorenjie/Documents/Coding/JAVA/batfish-dev/web/.runtime/deploy-mvp25-release",
+        "port": 18443,
+        "origin": "https://localhost:18443",
+        "release": "mvp24-6b8eb2fef8d8",
+        "engine_revision": "7d0deeeac4a09973b3876327f6aef721ee12f955",
+        "jar_sha256": "0927de7c740bc72f999870e842605baad9a7cb6ea66e4b01fb9a6037bea00193"
+      },
+      "restored": {
+        "schema_version": 1,
+        "project": "bfw-1c23e5e71e49",
+        "state_dir": "/Users/gaorenjie/Documents/Coding/JAVA/batfish-dev/web/.runtime/deploy-mvp25-release-restored",
+        "port": 18444,
+        "origin": "https://localhost:18444",
+        "release": "mvp24-6b8eb2fef8d8",
+        "engine_revision": "7d0deeeac4a09973b3876327f6aef721ee12f955",
+        "jar_sha256": "0927de7c740bc72f999870e842605baad9a7cb6ea66e4b01fb9a6037bea00193"
+      },
+      "samples": [
+        {
+          "fixture": "small_network",
+          "network": "8d82104f-1db5-4107-b0e4-9e623ea2309f",
+          "snapshot_id": "432ac250-d3b8-4e10-9bbb-4c85feb81926",
+          "job_id": "c8039949-a538-4794-9d93-62408c982fb6",
+          "result_id": "4d2f796b-3d32-41de-9c86-9d01dd2ed0b1",
+          "elapsed_seconds": 3.3441115830792114
+        },
+        {
+          "fixture": "cisco_four",
+          "network": "5ea95150-8d8f-424a-ac1f-5777e20e7a55",
+          "snapshot_id": "a37ab9a5-728f-4103-b43f-398a6aa1cd41",
+          "job_id": "a532f70f-fd86-47a9-a12e-a94cc6f81cdd",
+          "result_id": "eef383de-0013-4366-8f87-dc2821d84e29",
+          "elapsed_seconds": 4.189709583995864
+        }
+      ],
+      "image_ids": {
+        "backend": "sha256:3646533a4fc6a075b07bfa375e01adbb1e03031485d38ac37b57185128d217b5",
+        "frontend": "sha256:3c6d40ee7f7012d1b541b9fc40d3841de3d6372d23170ec1f6d1d09bf071edd5",
+        "engine": "sha256:f443ddb6757743e44d33153621be638a70fba42dddc5910c205ec9869cba02ba"
+      },
+      "checks": [
+        "HTTPS and Secure cookies",
+        "two topology initialization and nodes",
+        "API restart persists jobs",
+        "worker loss keeps unknown and interrupts job",
+        "unknown blocks SDK",
+        "engine restart and audited reconciliation",
+        "only proxy port published",
+        "read-only application images",
+        "offline DB/app/engine backup",
+        "new project restore and queries"
+      ]
+    },
+    "documentation_links": "passed",
+    "diff_check": "passed"
+  },
+  "review": "mvp25_review: read-only independent review; missing dual-user complete configuration/device assertions added; final rereview clear. Timing/sample/cache equivalence scope explicitly documented.",
+  "commands": {
+    "backend": [
+      "web/backend/.venv/bin/python web/scripts/lab.py smoke",
+      "web/backend/.venv/bin/python web/scripts/lab.py verify",
+      "web/backend/.venv/bin/ruff check web/backend web/scripts web/deploy",
+      "uv lock --check --project web/backend"
+    ],
+    "frontend_cwd": "web/frontend",
+    "frontend": [
+      "pnpm test",
+      "pnpm check:api",
+      "pnpm build",
+      "pnpm format:check",
+      "pnpm test:e2e",
+      "BFW_DEPLOYMENT_STATE=<owned restored state> BFW_DEPLOYMENT_EVIDENCE=<original verification.json> pnpm exec playwright test --config playwright.deployment.config.ts",
+      "BFW_DEPLOYMENT_STATE=<owned restored state> BFW_DEPLOYMENT_EVIDENCE=<original verification.json> pnpm exec playwright test --config playwright.acceptance.config.ts"
+    ],
+    "deployment": [
+      "web/backend/.venv/bin/python web/scripts/deploy.py build --state web/.runtime/deploy-mvp25-release",
+      "web/backend/.venv/bin/python web/scripts/verify_deployment.py --state web/.runtime/deploy-mvp25-release"
+    ]
+  },
+  "acceptance_samples": [
+    {
+      "raw_file": "web/.runtime/test-lab/abb77b60f0c0/acceptance/small_network-5399cc839a4546ea93b88fbd648e3048.json",
+      "report": {
+        "fixture": "small_network",
+        "devices": 2,
+        "network_id": "4956be06-c716-46f3-aad4-3ab1e07d219a",
+        "snapshot_id": "cc243cb6-54bf-44b6-9180-bf34199df2fb",
+        "context": {
+          "network_id": "4956be06-c716-46f3-aad4-3ab1e07d219a",
+          "snapshot_id": "cc243cb6-54bf-44b6-9180-bf34199df2fb",
+          "reference_snapshot_id": null,
+          "engine_network": "bfw-network-4956be06c71646f3aad43ab1e07d219a",
+          "engine_snapshot": "bfw-snapshot-cc243cb654bf44b69180bf34199df2fb",
+          "engine_reference_snapshot": null,
+          "engine_version": "0.36.0",
+          "sdk_version": "2026.9.17.3748",
+          "schema_version": "1"
+        },
+        "engine_revision": "7d0deeeac4a09973b3876327f6aef721ee12f955",
+        "jar_sha256": "0927de7c740bc72f999870e842605baad9a7cb6ea66e4b01fb9a6037bea00193",
+        "measurements": [
+          {
+            "operation": "initialize",
+            "seconds": 0.8451973749324679,
+            "sampled_peak_rss_bytes": {
+              "python_test_worker": 234668032,
+              "engine": 955662336
+            }
+          },
+          {
+            "operation": "nodes",
+            "seconds": 0.2883722920669243,
+            "export_bytes": 3220,
+            "saved_rows_or_flows": 2,
+            "sampled_peak_rss_bytes": {
+              "python_test_worker": 235110400,
+              "engine": 955695104
+            },
+            "sdk_comparison": "equal",
+            "basic_expert": "equal"
+          },
+          {
+            "operation": "interfaces",
+            "seconds": 0.2685787919908762,
+            "export_bytes": 3496,
+            "saved_rows_or_flows": 4,
+            "sampled_peak_rss_bytes": {
+              "python_test_worker": 235864064,
+              "engine": 956137472
+            },
+            "sdk_comparison": "equal",
+            "basic_expert": "equal"
+          },
+          {
+            "operation": "routes",
+            "seconds": 0.40496420790441334,
+            "export_bytes": 4747,
+            "saved_rows_or_flows": 8,
+            "sampled_peak_rss_bytes": {
+              "python_test_worker": 237092864,
+              "engine": 959594496
+            },
+            "sdk_comparison": "equal",
+            "basic_expert": "equal"
+          },
+          {
+            "operation": "lpm-routes",
+            "seconds": 0.2794459169963375,
+            "export_bytes": 3242,
+            "saved_rows_or_flows": 2,
+            "sampled_peak_rss_bytes": {
+              "python_test_worker": 237830144,
+              "engine": 959905792
+            },
+            "sdk_comparison": "equal",
+            "basic_expert": "equal"
+          },
+          {
+            "operation": "traceroute",
+            "seconds": 0.2932252499740571,
+            "export_bytes": 6134,
+            "saved_rows_or_flows": 2,
+            "sampled_peak_rss_bytes": {
+              "python_test_worker": 239271936,
+              "engine": 970031104
+            },
+            "sdk_comparison": "equal",
+            "basic_expert": "equal"
+          }
+        ],
+        "memory_method": "100ms ps RSS sampling; warm shared lab JVM and in-process Python test worker; sampled peak, not process allocation or capacity guarantee",
+        "status": "passed"
+      }
+    },
+    {
+      "raw_file": "web/.runtime/test-lab/abb77b60f0c0/acceptance/cisco_four-7410fbaf744b497baed9126ea81d7a12.json",
+      "report": {
+        "fixture": "cisco_four",
+        "devices": 4,
+        "network_id": "dabbe38a-e12a-40ac-8980-90b88d6142f0",
+        "snapshot_id": "59a331c0-3ebf-4d75-83c7-f894271d46c7",
+        "context": {
+          "network_id": "dabbe38a-e12a-40ac-8980-90b88d6142f0",
+          "snapshot_id": "59a331c0-3ebf-4d75-83c7-f894271d46c7",
+          "reference_snapshot_id": null,
+          "engine_network": "bfw-network-dabbe38ae12a40ac898090b88d6142f0",
+          "engine_snapshot": "bfw-snapshot-59a331c03ebf4d7583c7f894271d46c7",
+          "engine_reference_snapshot": null,
+          "engine_version": "0.36.0",
+          "sdk_version": "2026.9.17.3748",
+          "schema_version": "1"
+        },
+        "engine_revision": "7d0deeeac4a09973b3876327f6aef721ee12f955",
+        "jar_sha256": "0927de7c740bc72f999870e842605baad9a7cb6ea66e4b01fb9a6037bea00193",
+        "measurements": [
+          {
+            "operation": "initialize",
+            "seconds": 0.8108877079794183,
+            "sampled_peak_rss_bytes": {
+              "python_test_worker": 242040832,
+              "engine": 976355328
+            }
+          },
+          {
+            "operation": "nodes",
+            "seconds": 0.2777281670132652,
+            "export_bytes": 1890,
+            "saved_rows_or_flows": 4,
+            "sampled_peak_rss_bytes": {
+              "python_test_worker": 242614272,
+              "engine": 976175104
+            },
+            "sdk_comparison": "equal",
+            "basic_expert": "equal"
+          },
+          {
+            "operation": "interfaces",
+            "seconds": 0.2592717499937862,
+            "export_bytes": 2837,
+            "saved_rows_or_flows": 12,
+            "sampled_peak_rss_bytes": {
+              "python_test_worker": 243400704,
+              "engine": 976306176
+            },
+            "sdk_comparison": "equal",
+            "basic_expert": "equal"
+          },
+          {
+            "operation": "routes",
+            "seconds": 0.4134257090045139,
+            "export_bytes": 11022,
+            "saved_rows_or_flows": 44,
+            "sampled_peak_rss_bytes": {
+              "python_test_worker": 244924416,
+              "engine": 976322560
+            },
+            "sdk_comparison": "equal",
+            "basic_expert": "equal"
+          },
+          {
+            "operation": "lpm-routes",
+            "seconds": 0.2804217089433223,
+            "export_bytes": 1788,
+            "saved_rows_or_flows": 4,
+            "sampled_peak_rss_bytes": {
+              "python_test_worker": 244989952,
+              "engine": 976519168
+            },
+            "sdk_comparison": "equal",
+            "basic_expert": "equal"
+          },
+          {
+            "operation": "traceroute",
+            "seconds": 0.3391011250205338,
+            "export_bytes": 13734,
+            "saved_rows_or_flows": 3,
+            "sampled_peak_rss_bytes": {
+              "python_test_worker": 245022720,
+              "engine": 961052672
+            },
+            "sdk_comparison": "equal",
+            "basic_expert": "equal"
+          }
+        ],
+        "memory_method": "100ms ps RSS sampling; warm shared lab JVM and in-process Python test worker; sampled peak, not process allocation or capacity guarantee",
+        "status": "passed"
+      }
+    }
+  ],
+  "measurement_scope": "Single end-to-end test-process samples, initialize includes setup/upload/queue/in-process worker; queries include submission/worker/status/export. Warm shared JVM + Python in-process worker RSS sampled approximately every100ms plus ps overhead. Explicit expert defaults reuse same cached result. No 100-device, p95, cold-start, full-stack-memory or real-device forwarding claim.",
+  "screenshots": {
+    "web/.runtime/mvp-runner/mvp-25-browser/jobs-queued-cancellation-a-6430b-zation-retry-in-real-worker-chromium/immutable-retry.png": "903a8705bf1320f5eedf32acb651b72aa8787d32ead38f5c15c6de8828855918",
+    "web/.runtime/mvp-runner/mvp-25-browser/analysis-actual-cisco-four-inventory-routes-and-LPM-results-chromium/cisco_four-lpm.png": "42c5726c81964d3c36b73408aa487e5caf4239b3ac359cd93b1795d2fc67d408",
+    "web/.runtime/mvp-runner/mvp-25-browser/analysis-actual-cisco-four-inventory-routes-and-LPM-results-chromium/delete-confirmation.png": "c7d3b74ab00ba994269276b20b9e87e35a7aa154ffca6dcb39dd5c33c6b2345b",
+    "web/.runtime/mvp-runner/mvp-25-browser/analysis-actual-cisco-four-inventory-routes-and-LPM-results-chromium/cisco_four-query-form.png": "4272e466812570c970dae4024a11103f25cbeb0ce3a7260667fb4e3182c8329f",
+    "web/.runtime/mvp-runner/mvp-25-browser/analysis-actual-cisco-four-inventory-routes-and-LPM-results-chromium/cisco_four-routes.png": "5a752b37b7d0fc6fdecdd7b85b60b67fd8dac06495e919fd2341a8c72d26f01d",
+    "web/.runtime/mvp-runner/mvp-25-browser/analysis-actual-cisco-four-inventory-routes-and-LPM-results-chromium/table-export.png": "fa7b47fe1488d41ed46e52737c856f9e901e51ef2ac002375b864f3984dc57df",
+    "web/.runtime/mvp-runner/mvp-25-browser/analysis-actual-cisco-four-inventory-routes-and-LPM-results-chromium/retained-result.png": "e5ac83fa63e7d6c97dfa6d37a4d5d244dbbbb829a7d4df5a9621eccc47dc0144",
+    "web/.runtime/mvp-runner/mvp-25-browser/foundation-workbench-and-progressive-controls-at-1280-chromium/components-1280.png": "0623ecb4bdc951178c9cee5d6d9014935680371b3092a48457e83929a402323b",
+    "web/.runtime/mvp-runner/mvp-25-browser/foundation-workbench-and-progressive-controls-at-1280-chromium/overview-1280.png": "e4e4febe4b3b9cccac82f3ac8344d4d3f784214104441ee3f6269805cdf0aa60",
+    "web/.runtime/mvp-runner/mvp-25-browser/traceroute-actual-cisco-fo-4af1f-al-traces-and-path-evidence-chromium/cisco-multi-flow.png": "74215b8a23b7895546954fc86cb6c60d27cdd081b32ec8968dd1862ee435d55c",
+    "web/.runtime/mvp-runner/mvp-25-browser/traceroute-actual-cisco-fo-4af1f-al-traces-and-path-evidence-chromium/traces-export.png": "33d825506a77189c7df92761bd0efbef553a28ba784e3c190755a1775bf17b82",
+    "web/.runtime/mvp-runner/mvp-25-browser/traceroute-actual-cisco-fo-4af1f-al-traces-and-path-evidence-chromium/cisco_four-trace.png": "9f03a11287ab98cbfe211867a40a3b032dfdaeb422b16a4a5f1f21f47bd38425",
+    "web/.runtime/mvp-runner/mvp-25-browser/networks-snapshots-actual--b0fc5-ation-and-context-isolation-chromium/cisco_four-source.png": "666b8187ae3ca01aa8b19fe81300c5b5ecb972928486145d98fdbf540ca90232",
+    "web/.runtime/mvp-runner/mvp-25-browser/networks-snapshots-actual--b0fc5-ation-and-context-isolation-chromium/cisco_four-diagnostics.png": "3295acf88159f4a622101a0ba4d9187e42b19280b5573ec7eaab580624d1c214",
+    "web/.runtime/mvp-runner/mvp-25-browser/networks-snapshots-actual--b0fc5-ation-and-context-isolation-chromium/cisco_four-ready.png": "7952384534798e74dfe67035e18712399e1f692a50adb86b96aae9c60a6c2c0b",
+    "web/.runtime/mvp-runner/mvp-25-browser/analysis-actual-small-netw-41b00-tory-routes-and-LPM-results-chromium/delete-confirmation.png": "cc51c6f31ffe91d2d2576b2561e5c8e04aa239ece4b7d5bcfb5172a070f926d8",
+    "web/.runtime/mvp-runner/mvp-25-browser/analysis-actual-small-netw-41b00-tory-routes-and-LPM-results-chromium/small_network-routes.png": "8d7571df7239054f55b811a4badc027ec974ffcc06d9100b31dbfd72f996dbac",
+    "web/.runtime/mvp-runner/mvp-25-browser/analysis-actual-small-netw-41b00-tory-routes-and-LPM-results-chromium/small_network-query-form.png": "5fe690ff9b454889319bcf76b08832d9d97cb81085921221abc5e9494b2cb7dd",
+    "web/.runtime/mvp-runner/mvp-25-browser/analysis-actual-small-netw-41b00-tory-routes-and-LPM-results-chromium/table-export.png": "03ed77c9614d447b51fc2e9f524f0b500b0e9f2cb05966ef037638d634c24468",
+    "web/.runtime/mvp-runner/mvp-25-browser/analysis-actual-small-netw-41b00-tory-routes-and-LPM-results-chromium/retained-result.png": "5ec0d7b05b8f4eca1bcaefba28f82e4369a85afaf76c9a70e5038da520588aa9",
+    "web/.runtime/mvp-runner/mvp-25-browser/analysis-actual-small-netw-41b00-tory-routes-and-LPM-results-chromium/small_network-lpm.png": "1dad2ffff9b1558fcbfee8686f4701cb76d1889239b9d1fe1505c98fc972bf09",
+    "web/.runtime/mvp-runner/mvp-25-browser/foundation-workbench-and-progressive-controls-at-1920-chromium/overview-1920.png": "d36871fb565d80a384cb0ef0d04a71dfd69d600167810bf68f2b496e08f49b60",
+    "web/.runtime/mvp-runner/mvp-25-browser/foundation-workbench-and-progressive-controls-at-1920-chromium/components-1920.png": "7784cfdbdb55a051b343cf3eeaced5c63ff279450035f71b65596bc9039a7f64",
+    "web/.runtime/mvp-runner/mvp-25-browser/networks-snapshots-actual--8758a-ation-and-context-isolation-chromium/small_network-diagnostics.png": "b23b257aca237fa1485274483796f293691addec54aa98a3c84665e743c2287f",
+    "web/.runtime/mvp-runner/mvp-25-browser/networks-snapshots-actual--8758a-ation-and-context-isolation-chromium/small_network-source.png": "a0545390419fd62d196c07268fc5c48cb294a6ac3bb7feb683a80082e3cfc499",
+    "web/.runtime/mvp-runner/mvp-25-browser/networks-snapshots-actual--8758a-ation-and-context-isolation-chromium/small_network-ready.png": "592943b052a4fc7171dfed73cebb1b31d4e25b147d9af44a27472d4b0c964225",
+    "web/.runtime/mvp-runner/mvp-25-browser/auth-users-real-administra-f8b34-cle-with-session-revocation-chromium/login.png": "57dd8b72641ea5651c1cc3f0a4a8c58c38b4a3f233125df2371f9bc708374926",
+    "web/.runtime/mvp-runner/mvp-25-browser/auth-users-real-administra-f8b34-cle-with-session-revocation-chromium/users.png": "b67b4a613755c871e9fcee9212dfbd165a14d88565b5d6331260d1dbb6b3c193",
+    "web/.runtime/mvp-runner/mvp-25-browser/traceroute-actual-small-ne-008bc-al-traces-and-path-evidence-chromium/small_network-trace.png": "95834bf97cc15dc3f1b2274e8466636f36a8c023b7e321cf3ca327e458249f9d",
+    "web/.runtime/mvp-runner/mvp-25-browser/traceroute-actual-small-ne-008bc-al-traces-and-path-evidence-chromium/traces-export.png": "291cf7701fd93eafe71b485e6bb2d74c6a5c681d2cb97b3b0b7ec9a845bff0bc",
+    "web/.runtime/mvp-runner/mvp-25-deployment-browser/deployment-restored-HTTPS--35373-s-results-and-role-controls/https-restored-result.png": "c6ee6a99d18b8174a774a989b7271647cf453569af612bdbe336a07258a1acbc",
+    "web/.runtime/mvp-runner/mvp-25-acceptance-browser/mvp-two-independent-users--fa421-ries-refresh-and-revocation-chromium/member-cisco-result.png": "109838a7cf555a30c0336f7e7d86b9c7c3f2a771a728afe6ca4fc13c09f70f06",
+    "web/.runtime/mvp-runner/mvp-25-acceptance-browser/mvp-two-independent-users--fa421-ries-refresh-and-revocation-chromium/admin-fixed-r1r2-result.png": "b04e5f106157d54191ac0ad9f9f48882f202d2a8d0875215a982c760b65bcc71"
+  },
+  "two_user_context": {
+    "admin_user_id": "44ffe35c-73d3-4a37-a36d-c75efad53547",
+    "member_user_id": "54f61a11-a13a-4e0f-badd-badebc911109",
+    "first": {
+      "snapshot_id": "491d8c56-c082-4b9f-9bbe-967a1d88fb59",
+      "job_id": "499fce7d-f739-4432-876b-84af0794b645"
+    },
+    "second": {
+      "snapshot_id": "f0830abc-6c0d-4f30-b973-30c591831ff2",
+      "job_id": "d6148072-4b5f-4c76-a6ed-8add3104947f"
+    },
+    "queries": [
+      {
+        "id": "e1596388-710f-48e8-8073-c519dd751ea5",
+        "kind": "analysis",
+        "resource_ids": {
+          "network_id": "fd7b119b-c827-48c2-b5d1-31f325164aec",
+          "snapshot_id": "491d8c56-c082-4b9f-9bbe-967a1d88fb59"
+        },
+        "requested_parameters": {
+          "operation": "nodes",
+          "request": {
+            "options": {
+              "nodes": null,
+              "properties": [
+                "Hostname",
+                "Configuration_Format",
+                "Interfaces"
+              ]
+            }
+          }
+        },
+        "effective_parameters": {
+          "operation": "nodes",
+          "request": {
+            "options": {
+              "nodes": null,
+              "properties": [
+                "Hostname",
+                "Configuration_Format",
+                "Interfaces"
+              ]
+            }
+          }
+        },
+        "created_by": "44ffe35c-73d3-4a37-a36d-c75efad53547",
+        "status": "queued",
+        "phase": "queued",
+        "attempt": 0,
+        "lease_owner": null,
+        "heartbeat_at": null,
+        "engine_state": "idle",
+        "cancel_allowed": true,
+        "result_id": null,
+        "error": null,
+        "created_at": "2026-09-25T19:49:20.559039Z",
+        "started_at": null,
+        "finished_at": null,
+        "context": {
+          "network_id": "fd7b119b-c827-48c2-b5d1-31f325164aec",
+          "snapshot_id": "491d8c56-c082-4b9f-9bbe-967a1d88fb59",
+          "reference_snapshot_id": null,
+          "engine_network": "bfw-network-fd7b119bc82748c2b5d131f325164aec",
+          "engine_snapshot": "bfw-snapshot-491d8c56c0824b9f9bbe967a1d88fb59",
+          "engine_reference_snapshot": null,
+          "engine_version": "0.36.0",
+          "sdk_version": "2026.9.17.3748",
+          "schema_version": "1"
+        },
+        "retry_of": null
+      },
+      {
+        "id": "aa416fbc-5cf9-4a0b-9071-c2f8caac37bc",
+        "kind": "analysis",
+        "resource_ids": {
+          "network_id": "f6cc3e8e-bc5b-4b6c-8274-acc8b9ad707a",
+          "snapshot_id": "f0830abc-6c0d-4f30-b973-30c591831ff2"
+        },
+        "requested_parameters": {
+          "operation": "nodes",
+          "request": {
+            "options": {
+              "nodes": null,
+              "properties": [
+                "Hostname",
+                "Configuration_Format",
+                "Interfaces"
+              ]
+            }
+          }
+        },
+        "effective_parameters": {
+          "operation": "nodes",
+          "request": {
+            "options": {
+              "nodes": null,
+              "properties": [
+                "Hostname",
+                "Configuration_Format",
+                "Interfaces"
+              ]
+            }
+          }
+        },
+        "created_by": "54f61a11-a13a-4e0f-badd-badebc911109",
+        "status": "queued",
+        "phase": "queued",
+        "attempt": 0,
+        "lease_owner": null,
+        "heartbeat_at": null,
+        "engine_state": "idle",
+        "cancel_allowed": true,
+        "result_id": null,
+        "error": null,
+        "created_at": "2026-09-25T19:49:20.546140Z",
+        "started_at": null,
+        "finished_at": null,
+        "context": {
+          "network_id": "f6cc3e8e-bc5b-4b6c-8274-acc8b9ad707a",
+          "snapshot_id": "f0830abc-6c0d-4f30-b973-30c591831ff2",
+          "reference_snapshot_id": null,
+          "engine_network": "bfw-network-f6cc3e8ebc5b4b6c8274acc8b9ad707a",
+          "engine_snapshot": "bfw-snapshot-f0830abc6c0d4f30b97330c591831ff2",
+          "engine_reference_snapshot": null,
+          "engine_version": "0.36.0",
+          "sdk_version": "2026.9.17.3748",
+          "schema_version": "1"
+        },
+        "retry_of": null
+      }
+    ],
+    "result_urls": [
+      "https://localhost:18444/results/0b63e567-1e70-421c-88b2-78d403126a7b",
+      "https://localhost:18444/results/b2fc3840-7540-4c1f-b1ba-826873510aac"
+    ]
+  },
+  "limitations": [
+    "Only 2-device and 4-device configuration samples",
+    "Single worker and serial SDK",
+    "Local self-signed TLS certificate",
+    "No ADV work, push, merge or shared production deployment",
+    "Root .pnpm-store/ is unrelated and excluded"
+  ]
+}
