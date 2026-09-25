@@ -40,6 +40,8 @@ class Job(Base):
     finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     created_by: Mapped[UUID] = mapped_column(ForeignKey("users.id"))
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    context: Mapped[dict | None] = mapped_column(JSONB)
+    retry_of: Mapped[UUID | None] = mapped_column(ForeignKey("jobs.id"))
     __table_args__ = (
         CheckConstraint(
             "kind IN ('upload', 'initialization', 'analysis', 'deletion')", name="kind"

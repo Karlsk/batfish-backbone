@@ -21,7 +21,7 @@ ERRORS = {
     ErrorCode.NOT_READY: (503, "Service dependencies are not ready"),
     ErrorCode.INTERNAL_ERROR: (500, "Internal server error"),
     ErrorCode.HTTP_ERROR: (400, "Request failed"),
-    ErrorCode.RATE_LIMITED: (429, "Too many failed attempts; try again later"),
+    ErrorCode.RATE_LIMITED: (429, "Rate or queue limit exceeded; try again later"),
     ErrorCode.ENGINE_STATE_UNKNOWN: (
         503,
         "Engine state unknown; administrator reconciliation required",

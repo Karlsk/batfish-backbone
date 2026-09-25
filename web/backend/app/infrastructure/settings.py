@@ -25,6 +25,8 @@ class Settings(BaseSettings):
     upload_max_expanded_bytes: int = Field(default=500 * 1024 * 1024, ge=1)
     upload_max_files: int = Field(default=5000, ge=1, le=5000)
     upload_ttl_seconds: int = Field(default=86400, ge=1)
+    max_queued_jobs_per_user: int = Field(default=10, ge=1)
+    max_queued_jobs_global: int = Field(default=100, ge=1)
     auth_allowed_origins: tuple[str, ...] = ()
     auth_cookie_secure: bool = True
     auth_failure_limit: int = Field(default=5, ge=1, le=100)

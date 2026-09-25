@@ -384,3 +384,52 @@ def test_real_configuration_upload_smoke(lab, fixture_name, mode):
                 / record["storage_key"]
                 / entry["id"]
             ).read_bytes() == originals[entry["path"]]
+
+
+@pytest.mark.smoke
+def test_real_job_metadata_smoke(lab):
+    from uuid import uuid4
+
+    from app.composition import create_app
+    from app.contracts.dto import ExecutionContext
+    from app.infrastructure.database import Database
+    from app.infrastructure.settings import Settings
+
+    with httpx.Client(base_url=lab["api_url"], timeout=20) as client:
+        headers = _ready_lab_admin(client, lab)
+        network = client.post(
+            "/api/v1/networks", json={"display_name": "Job metadata smoke"}, headers=headers
+        )
+        assert network.status_code == 201
+        network = network.json()
+        secret = Path(lab["run_directory"]) / "database.env"
+        db = Database(secret.read_text().strip().removeprefix("DATABASE_URL="))
+        try:
+            app = create_app(Settings(), database=db)
+            actor = app.state.auth_service.require_actor(client.cookies.get("batfish_session"))
+            context = ExecutionContext(
+                network_id=network["id"],
+                engine_network=network["engine_name"],
+                engine_version="0.36.0",
+                sdk_version="2026.9.17.3748",
+                schema_version="1",
+            )
+            # There is no generic submit HTTP endpoint; real submission currently uses its service.
+            job = app.state.jobs_service.submit(
+                actor, "analysis", context, {"operation": "mvp08-metadata-smoke"}, uuid4().hex
+            )
+            response = client.get("/api/v1/jobs/" + str(job.id))
+            assert response.status_code == 200 and response.json()["status"] == "queued"
+            assert (
+                client.get("/api/v1/jobs", params={"network_id": network["id"]}).json()["total"]
+                == 1
+            )
+            cancelled = client.post("/api/v1/jobs/" + str(job.id) + "/cancel", headers=headers)
+            assert cancelled.status_code == 200 and cancelled.json()["status"] == "cancelled"
+            assert not cancelled.json()["cancel_allowed"] and cancelled.json()["finished_at"]
+            assert (
+                client.post("/api/v1/jobs/" + str(job.id) + "/cancel", headers=headers).status_code
+                == 409
+            )
+        finally:
+            db.close()

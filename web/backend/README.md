@@ -125,3 +125,11 @@ UploadsService.consume仅所有者/管理员可调用，绑定网络、未过期
 在backend目录、注入DATABASE_URL与DATA_DIR后运行 `uv run --locked python -m app.cleanup_uploads`。它清理过期未消费记录及超过TTL的孤立暂存/发布目录，跳过已引用、新目录和链接。文件准备失败或DB flush失败清理暂存；DB提交结果未知时保留已发布文件，后续根据数据库引用清理，避免误删可能已提交的数据。文件卷与数据库无分布式事务，需按运行文档共同备份。
 
 ZIP压缩算法支持 STORED/DEFLATED；其他算法及损坏压缩流受控返回422。
+
+## 任务记录与排队取消
+
+`GET /api/v1/jobs` 返回共享分页历史（items/total/offset/limit），可筛选status/network_id/created_by；`GET /api/v1/jobs/{id}` 返回详情。`POST /api/v1/jobs/{id}/cancel` 仅允许发起人或管理员取消queued且非deletion的任务，成功200 JobDTO，running/终态/删除任务409，越权403。写请求沿用Origin/CSRF，取消与领取通过行锁和原子条件更新互斥，不能把已运行任务显示为已取消。
+
+业务模块经JobsService.submit持久化任务；本篇不提供任意任务/SDK方法提交HTTP接口。requested/effective参数与ExecutionContext冻结保存，后者包含服务器资源映射及版本；JobDTO新增context和retry_of（兼容旧记录可空）。迁移0004添加上下文与重试父任务引用；实际重试由MVP-09接入，旧任务不复活。
+
+幂等作用域为用户、kind与网络/快照/引用快照，同键同规范化请求返回同任务，不同内容409。新任务和幂等记录同事务；默认`MAX_QUEUED_JOBS_PER_USER=10`、`MAX_QUEUED_JOBS_GLOBAL=100`，达到上限429且不留下半条记录。并发提交通过短事务锁核对限额，已存在的幂等重放不消耗新名额；不把排队限额当作引擎执行并发。MVP-08仅任务元数据，尚无worker，不能宣称后台计算完成。

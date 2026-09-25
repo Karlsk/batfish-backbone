@@ -160,3 +160,7 @@ MVP-02 的 field_errors 为 `[{path: ["body", "options", "字段名"], message: 
 MVP-07 已实现上传：multipart重复字段 `files` 或单字段 `archive`，二选一且不接收其他字段；需要write身份和ready网络。UploadDTO.manifest为UploadManifest（upload_id、network_id、storage_key、files）；每项文件含id、path（逻辑相对路径）、sha256、size_bytes、encoding（utf-8/gb18030/binary）及line_count（按LF计数，binary为null）。content_hash按排序逻辑路径/文件SHA256/字节数计算，不依赖随机文件ID。storage_key是内部UUID，不是客户端可指定的路径。上传不使用幂等键，不初始化SDK快照。实际大小超限413 UPLOAD_TOO_LARGE；无效ZIP/路径/冲突422 VALIDATION_ERROR。内部consume校验网络、所有者或管理员、过期时间及单次消费；跨用户403、网络不匹配404、已消费/过期409。
 
 ZIP压缩算法支持 STORED/DEFLATED；其他算法及损坏压缩流受控返回422。
+
+MVP-08 已实现任务分页、详情及排队取消：列表支持status/network_id/created_by，默认50最大200；取消成功200 JobDTO，running/终态/deletion返回409，非发起人且非管理员403。cancel_allowed按kind+当前状态派生。JobDTO新增context（ExecutionContext或null）及retry_of（UUID或null）；ExecutionContext沿用AnalysisContext的资源名/版本字段，允许network级任务的snapshot_id/engine_snapshot同时为空，身份与名称仍成对出现。新任务context必填，旧记录兼容null；requested/effective参数独立冻结。JobsService.submit无通用HTTP入口，由各业务service校验资源后调用；可共享事务保证业务资源与排队原子提交。重试执行与worker仍在MVP-09。
+
+JobsService.submit 接纳既有 AnalysisContext 和 ExecutionContext，均规范化并重新验证为不可变ExecutionContext，保持SnapshotsService.require_analyzable的返回契约可直接提交。

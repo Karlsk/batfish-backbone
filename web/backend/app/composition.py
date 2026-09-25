@@ -10,6 +10,7 @@ from app.modules.auth.api import create_router as create_auth_router
 from app.modules.auth.service import AuthService
 from app.modules.health.api import create_router
 from app.modules.health.service import HealthService
+from app.modules.jobs.api import create_router as create_jobs_router
 from app.modules.jobs.service import JobsService
 from app.modules.networks.api import create_router as create_networks_router
 from app.modules.networks.controller import NetworkController
@@ -95,7 +96,13 @@ def create_app(
             create_users_router(users, read_actor=read_actor, write_actor=write_actor),
             prefix="/api/v1",
         )
-        networks = NetworksService(db, auth, JobsService(), NetworkController(db, settings))
+        jobs = JobsService(db, auth, settings)
+        app.state.jobs_service = jobs
+        app.include_router(
+            create_jobs_router(jobs, read_actor=read_actor, write_actor=write_actor),
+            prefix="/api/v1",
+        )
+        networks = NetworksService(db, auth, jobs, NetworkController(db, settings))
         app.state.networks_service = networks
         app.include_router(
             create_networks_router(networks, read_actor=read_actor, write_actor=write_actor),

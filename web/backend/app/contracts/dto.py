@@ -34,6 +34,19 @@ class AnalysisContext(Contract):
         return self
 
 
+class ExecutionContext(AnalysisContext):
+    """Server-resolved context; network-level jobs need no snapshot."""
+
+    snapshot_id: UUID | None = None
+    engine_snapshot: str | None = Field(default=None, min_length=1)
+
+    @model_validator(mode="after")
+    def snapshot_pair(self):
+        if (self.snapshot_id is None) != (self.engine_snapshot is None):
+            raise ValueError("Snapshot identity and internal name must be supplied together")
+        return self
+
+
 class JobDTO(Contract):
     id: UUID
     kind: Literal["upload", "initialization", "analysis", "deletion"]
@@ -53,6 +66,8 @@ class JobDTO(Contract):
     created_at: AwareDatetime
     started_at: AwareDatetime | None = None
     finished_at: AwareDatetime | None = None
+    context: ExecutionContext | None = None
+    retry_of: UUID | None = None
 
 
 class ResultEnvelope(Contract):
