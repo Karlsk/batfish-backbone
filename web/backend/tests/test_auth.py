@@ -148,7 +148,7 @@ def test_failure_limit_shared_and_expiration(auth_app):
         assert login(other).status_code == 429
     with database.transaction() as transaction:
         transaction.execute(
-            text("UPDATE login_attempts SET window_start=now()-interval '16 minutes'")
+            text("UPDATE login_attempts SET window_start=now()-interval '61 seconds'")
         )
     assert login(client).status_code == 200
     with database.transaction() as transaction:
@@ -237,3 +237,15 @@ def test_cookie_from_logged_out_session_is_rejected(auth_app):
     )
     client.cookies.set("batfish_session", token)
     assert client.get("/api/v1/auth/me").status_code == 401
+
+
+def test_failure_limit_scoped_to_account_and_address_pair(auth_app):
+    client, _, _, app = auth_app
+    for _ in range(5):
+        assert login(client, password="wrong").status_code == 401
+    assert login(client).status_code == 429
+    assert login(client, username="someone-else", password="wrong").status_code == 401
+    info, _token = app.state.auth_service.login(
+        "admin", PASSWORD, origin=ORIGIN, client_address="different-client"
+    )
+    assert info.username == "admin"

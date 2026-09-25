@@ -1,6 +1,6 @@
 # API 与数据契约
 
-所有路径以 `/api/v1` 为前缀。MVP-02 已实现健康路由、统一错误及 Actor/AnalysisContext/JobDTO/ResultEnvelope，MVP-04 已实现认证路由；其余业务接口仍为拟实现契约，不是现有 Batfish REST 的重命名。网络/快照采用 UUID，SDK 内部名称由 service 维护。日期使用 UTC ISO 8601，前端转换为本地时间。
+所有路径以 `/api/v1` 为前缀。MVP-02 已实现健康路由、统一错误及 Actor/AnalysisContext/JobDTO/ResultEnvelope，MVP-04/05 已实现认证与账号管理路由，MVP-06 已实现网络创建/列表/详情；其余业务接口仍为拟实现契约，不是现有 Batfish REST 的重命名。网络/快照采用 UUID，SDK 内部名称由 service 维护。日期使用 UTC ISO 8601，前端转换为本地时间。
 
 ## 最小参数与专家扩展
 
@@ -38,7 +38,7 @@ SDK 映射：start_location→startLocation；destination_ip/source_ip/protocols
 
 密码使用 Argon2id；默认至少 12 字符、最多 128 字符，允许密码短语；管理员创建/重置时传入临时密码，用户首次登录必须修改。必须改密的会话仅允许 me/password/logout。用户停用、重置密码或自己改密后撤销既有会话。禁止停用/降级最后一个有效管理员。
 
-MVP-04 实现细节：Cookie 名为 `batfish_session`，CSRF 头为 `X-CSRF-Token`；登录/me 响应字段为 user_id、username、role、must_change_password、csrf_token，设 no-store。精确 Origin 白名单由环境配置，默认空；缺 Origin（含脚本调用）一律拒绝登录/写请求。本机 HTTP 测试显式关闭 Secure。失败默认按用户名及实际连接地址分别计数，15 分钟内最多 5 次失败，随后返回 429 RATE_LIMITED；成功不清除窗口内失败计数，防止用成功请求绕过限流。PostgreSQL 事务锁保证多实例一致。内部用户与会话 session_version 用于全设备撤销，不进入 API 响应。
+MVP-04 实现细节：Cookie 名为 `batfish_session`，CSRF 头为 `X-CSRF-Token`；登录/me 响应字段为 user_id、username、role、must_change_password、csrf_token，设 no-store。精确 Origin 白名单由环境配置，默认空；缺 Origin（含脚本调用）一律拒绝登录/写请求。本机 HTTP 测试显式关闭 Secure。失败默认按用户名及实际连接地址组合计数，1 分钟内最多 5 次失败，随后返回 429 RATE_LIMITED；成功不清除窗口内失败计数，防止用成功请求绕过限流。PostgreSQL 事务锁保证多实例一致。内部用户与会话 session_version 用于全设备撤销，不进入 API 响应。
 
 | 接口 | 参数/结果 | 权限 |
 | --- | --- | --- |
@@ -86,6 +86,8 @@ MVP-05 用户管理响应：创建 201/PATCH 200 返回 `{id, username, role, en
 | POST /admin/engine/reconcile | resolution、note | 管理员记录外部检查/受控重启证据并解除未知占用；不是远程强杀接口 |
 
 所有分析的查询过滤在 SDK 参数中尽早下推；分页接口不承诺降低引擎计算量。前端列表分页默认 50，最大 200。routes 的 rib 首版限定 main/bgp，evpn 不因 SDK 接受字符串就自动开放。重试不是再次领取原 Job；旧记录保持不可变。
+
+MVP-06 网络创建可省略 Idempotency-Key，由服务器生成并在成功/业务错误响应头回传；键限1～128个可打印 ASCII 字符。客户端应预生成并保留键以覆盖“未收到响应”的断网重试。NetworkDTO 增加可空 sync_error，仅保存 ENGINE_BUSY/ENGINE_UNKNOWN/ENGINE_UNAVAILABLE/WRITEBACK_FAILED 等安全码。网络列表返回 items/offset/limit/total。
 
 Idempotency-Key 用于上传之外的任务提交和网络创建：服务端按用户、路由、资源、key 记录请求摘要；相同摘要返回同一任务/资源，不同摘要返回 409。网络创建若此前未完成SDK操作，可在同一资源身份下恢复创建；不生成另一个内部网络名。幂等记录至少保留 24 小时。结果缓存与任务提交幂等是不同机制；命中缓存仍生成归属于当前用户的任务记录，指向相同不可变结果。
 

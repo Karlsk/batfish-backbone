@@ -27,7 +27,7 @@ controller 的职责是 SDK 适配，并非 HTTP controller。无 SDK 操作的�
 
 ## 代码结构与实施状态
 
-MVP-02 已实现 main/composition、公共 DTO、配置/HTTP 基础设施和 health 模块；MVP-03 增加按模块归属的初始表、迁移和文件存储；MVP-04 增加 auth、最小 UsersService 与初始化审计，MVP-05 增加账号管理与变更审计。其余业务及前端仍为目标结构。实际启动与测试见 [后端 README](../backend/README.md)。
+MVP-02 已实现 main/composition、公共 DTO、配置/HTTP 基础设施和 health 模块；MVP-03 增加按模块归属的初始表、迁移和文件存储；MVP-04 增加 auth、最小 UsersService 与初始化审计，MVP-05 增加账号管理与变更审计；MVP-06 增加网络三层模块、最小 JobsService 幂等入口及独占 SDK factory。其余业务及前端仍为目标结构。实际启动与测试见 [后端 README](../backend/README.md)。
 
 ```text
 web/backend/app/

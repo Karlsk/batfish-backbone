@@ -1,6 +1,6 @@
 # MVP-06 网络创建与共享查询
 
-- 状态：待开发
+- 状态：已完成
 - 阶段：1
 - 依赖：[MVP-05](../mvp/mvp-05-user-administration.md)
 - 预计工作量：1.0 人天（实现/验证 0.5 + 测试 0.25 + 文档/自检 0.25），依赖就绪后计；超过 2 人天先拆分。
@@ -33,10 +33,10 @@
 
 ## 实施步骤
 
-- [ ] 先落 pending 映射，再调用独占 Session 创建 SDK 网络，最后写回状态。
-- [ ] 读取网络列表只读本应用管理的网络；外部已有网络不自动导入。
-- [ ] 对 SDK 成功/数据库失败按固定 engine_name 对账，不重复创建。
-- [ ] 运行下述验证，记录实际命令与结果，更新本文及索引状态。
+- [x] 先落 pending 映射，再调用独占 Session 创建 SDK 网络，最后写回状态。
+- [x] 读取网络列表只读本应用管理的网络；外部已有网络不自动导入。
+- [x] 对 SDK 成功/数据库失败按固定 engine_name 对账，不重复创建。
+- [x] 运行下述验证，记录实际命令与结果，更新本文及索引状态。
 
 ## 测试与验收
 
@@ -54,4 +54,8 @@
 
 ## 完成记录
 
-当前尚未开发或运行本 spec 的产品测试。实施者完成后在本节记录实际文件、验证命令、结果、引擎/SDK版本（如涉及）和剩余限制；存在验收失败时保持未通过状态。
+2026-09-25 完成网络 API/service/controller/repository、数据库引擎独占槽位、每次独占 SDK Session、最小幂等预留与迁移 0003。不同成员共享应用网络，同名保持不同 UUID；pending 先落库、SDK 后写回，同键恢复原内部名称。业务失败回传自动生成的 Idempotency-Key；引擎未知返回 ENGINE_STATE_UNKNOWN 且不可自动重试。
+
+仓库根执行 `web/backend/.venv/bin/python web/scripts/lab.py seed` 和 `web/backend/.venv/bin/python web/scripts/lab.py verify`：MVP-01～06 累计 **120 passed、0 skipped**，包含10项网络测试和真实 HTTP 网络冒烟；r1/r2 与 Cisco 四设备基线均重新创建。backend 的 Ruff、`uv lock --check`、文档链接与 Git 空白检查通过。独立只读审查发现的未知状态分类已修复并复审。版本、源码摘要、逐项结果见 [证据](../../evidence/mvp-06-verification.json)。
+
+累计实测修复了 MVP-02 空 API key 配置导致真实引擎401的问题，并将 MVP-04 登录限流恢复为原运行契约的账号/IP组合每分钟5次失败，均新增回归测试。网络初始化尚不创建快照；unknown 的管理员对账入口在 MVP-09 接入。没有修改 Java 引擎，失败注入没有冒充真实引擎故障。

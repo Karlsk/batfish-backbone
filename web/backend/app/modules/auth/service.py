@@ -29,7 +29,7 @@ class AuthService:
         self, username: str, password: str, *, origin: str | None, client_address: str
     ) -> tuple[SessionInfo, str]:
         self.require_origin(origin)
-        keys = [_digest("address:" + client_address), _digest("username:" + username)]
+        keys = [_digest("login-pair:" + client_address + "\0" + username)]
         now = datetime.now(UTC)
         with self._database.transaction() as transaction:
             repository = AuthRepository(transaction)
@@ -79,6 +79,14 @@ class AuthService:
             if identity.must_change_password:
                 raise ServiceError(ErrorCode.FORBIDDEN)
             return Actor(user_id=identity.user_id, role=identity.role, enabled=identity.enabled)
+
+    def revalidate_actor(self, actor: Actor) -> Actor:
+        identity = self._users.get_identity(actor.user_id)
+        if not identity.enabled:
+            raise ServiceError(ErrorCode.UNAUTHORIZED)
+        if identity.must_change_password:
+            raise ServiceError(ErrorCode.FORBIDDEN)
+        return Actor(user_id=identity.user_id, role=identity.role, enabled=True)
 
     def me(self, session_token: str | None) -> SessionInfo:
         with self._database.transaction() as transaction:

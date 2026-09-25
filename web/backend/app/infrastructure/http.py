@@ -21,6 +21,10 @@ ERRORS = {
     ErrorCode.INTERNAL_ERROR: (500, "Internal server error"),
     ErrorCode.HTTP_ERROR: (400, "Request failed"),
     ErrorCode.RATE_LIMITED: (429, "Too many failed attempts; try again later"),
+    ErrorCode.ENGINE_STATE_UNKNOWN: (
+        503,
+        "Engine state unknown; administrator reconciliation required",
+    ),
 }
 logger = logging.getLogger("batfish_web.http")
 

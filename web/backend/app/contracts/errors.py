@@ -14,6 +14,7 @@ class ErrorCode(StrEnum):
     INTERNAL_ERROR = "INTERNAL_ERROR"
     HTTP_ERROR = "HTTP_ERROR"
     RATE_LIMITED = "RATE_LIMITED"
+    ENGINE_STATE_UNKNOWN = "ENGINE_STATE_UNKNOWN"
 
 
 class FieldError(Contract):

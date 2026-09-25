@@ -22,7 +22,13 @@ class Settings(BaseSettings):
     auth_allowed_origins: tuple[str, ...] = ()
     auth_cookie_secure: bool = True
     auth_failure_limit: int = Field(default=5, ge=1, le=100)
-    auth_failure_window_seconds: int = Field(default=900, ge=60, le=86400)
+    auth_failure_window_seconds: int = Field(default=60, ge=60, le=86400)
+
+    @field_validator("batfish_api_key", mode="before")
+    @classmethod
+    def empty_sdk_key_uses_default(cls, value):
+        raw = value.get_secret_value() if isinstance(value, SecretStr) else value
+        return None if raw == "" else value
 
     @field_validator("auth_allowed_origins")
     @classmethod

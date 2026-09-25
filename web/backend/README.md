@@ -34,7 +34,7 @@ uv run --locked uvicorn app.main:create_app --factory --host 127.0.0.1 --port 80
 | `READINESS_MAX_AGE_SECONDS` | 60 秒，必须大于 0；状态缺失、过期或时间在未来均不 ready |
 | `AUTH_ALLOWED_ORIGINS` | JSON 数组，如 `["https://batfish.example"]`；默认空，所有登录/写请求拒绝；只允许精确 HTTP(S) Origin，不允许通配符、路径或 null |
 | `AUTH_COOKIE_SECURE` | 默认 true；仅本机 HTTP 开发时显式 false，生产通过 HTTPS |
-| `AUTH_FAILURE_LIMIT` / `AUTH_FAILURE_WINDOW_SECONDS` | 默认 5 次失败 / 900 秒；分别按用户名和连接地址限制，保存在 PostgreSQL，跨进程生效 |
+| `AUTH_FAILURE_LIMIT` / `AUTH_FAILURE_WINDOW_SECONDS` | 默认 5 次失败 / 60 秒；按用户名和连接地址组合限制，保存在 PostgreSQL，跨进程生效 |
 
 数据库 URL、引擎地址/端口和 API key 不进入配置 repr/model_dump。公共 DTO 拒绝未知字段，时间要求时区并输出 UTC，JSON 参数深层不可变；需要普通 JSON 时使用 `model_dump(mode="json")` 或 `model_dump_json()`。
 
@@ -99,3 +99,15 @@ UsersService 每次查询实时身份与 session_version。改密增加版本并
 用户变更共用 PostgreSQL 事务锁，检查最后一个 enabled admin，禁止停用或降级该管理员（409）。自己停用/降级遵循相同规则：有其他有效管理员时允许，随后即时失去相应权限。并发操作不会使有效管理员数变成零。
 
 创建、更新、重置和初始化记录 actor、action、resource、outcome、请求 ID 与时间。审计与成功变更在同一事务；审计失败时不提交业务变更。进入管理 service 的权限/业务拒绝记录 failed，HTTP 参数/CSRF 拒绝发生在调用 service 前。审计不存临时密码、会话或完整请求体；当前无审计查询页面。
+
+## 共享网络与 SDK 占用
+
+已改密的团队成员可 `POST /api/v1/networks`（body 仅需 display_name）、`GET /api/v1/networks` 和 `GET /api/v1/networks/{id}`。创建返回 201，列表返回 items/offset/limit/total，默认50、最大200；只列本应用管理的网络。内部名由 UUID 生成，显示名重复不影响身份；用户不可覆盖 engine_name、actor_id 或连接参数。
+
+创建先提交 pending 映射，再调用独占 SDK Session 的公开 set_network，最后写 ready。可传 `Idempotency-Key`（1～128 个可打印 ASCII 字符），同用户、路由和资源作用域内同键/同请求复用原资源，不同请求返回409；至少保留24小时。API 会在成功/业务错误响应头回传有效键，未提供时生成。客户端应提前生成并保存键，尤其是需要处理断网且未收到任何响应的场景；普通忙碌503可使用收到的键重试。
+
+sync_error 仅包含安全错误码。SDK 成功但资源数据库写回失败保留 pending/WRITEBACK_FAILED；同键重试用原内部名选择已有网络并完成写回。引擎忙碌时保留 pending/ENGINE_BUSY，返回503 NOT_READY，retryable=true。
+
+数据库级 advisory lock 与持久 engine_slot 约束所有应用 SDK 工作；每次新建独占 Session，任务间不共享上下文。SDK 结果未知时保留 unknown，返回503 ENGINE_STATE_UNKNOWN、retryable=false。锁已释放但遗留 busy 也转 unknown，不能据此自动重放远端工作。迁移0003提供槽位和网络诊断字段；worker 与管理员对账入口在 MVP-09 接入，本篇不提供强杀或自动解除未知状态。正常 SDK 完成后释放占用，资源写回失败不等于引擎仍在计算。
+
+MVP-06 在 jobs 模块增加最小幂等 service/repository，网络 service 通过其公共方法共享事务；任务队列与执行仍待 MVP-08/09，不把幂等记录误称为已实现后台任务。

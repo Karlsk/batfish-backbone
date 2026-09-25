@@ -252,3 +252,11 @@ def test_contracts_reject_unknown_fields_invalid_json_and_naive_time():
     ):
         with pytest.raises(ValidationError):
             ResultEnvelope(**(base | override))
+
+
+def test_empty_sdk_key_uses_default_and_rate_window_matches_operations(monkeypatch):
+    monkeypatch.setenv("BATFISH_API_KEY", "")
+    settings = Settings()
+    assert settings.batfish_api_key is None
+    assert settings.auth_failure_limit == 5
+    assert settings.auth_failure_window_seconds == 60

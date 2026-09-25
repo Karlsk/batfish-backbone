@@ -10,6 +10,10 @@ from app.modules.auth.api import create_router as create_auth_router
 from app.modules.auth.service import AuthService
 from app.modules.health.api import create_router
 from app.modules.health.service import HealthService
+from app.modules.jobs.service import JobsService
+from app.modules.networks.api import create_router as create_networks_router
+from app.modules.networks.controller import NetworkController
+from app.modules.networks.service import NetworksService
 from app.modules.users.api import create_router as create_users_router
 from app.modules.users.service import UsersService
 
@@ -17,6 +21,7 @@ from app.modules.users.service import UsersService
 def database_metadata():
     """Composition is the only place registering models across module boundaries."""
     from app.infrastructure.database import Base
+    from app.infrastructure.engine import EngineSlot  # noqa: F401
     from app.modules.audit import models as audit_models  # noqa: F401
     from app.modules.auth import models as auth_models  # noqa: F401
     from app.modules.jobs import models as jobs_models  # noqa: F401
@@ -86,6 +91,12 @@ def create_app(
         )
         app.include_router(
             create_users_router(users, read_actor=read_actor, write_actor=write_actor),
+            prefix="/api/v1",
+        )
+        networks = NetworksService(db, auth, JobsService(), NetworkController(db, settings))
+        app.state.networks_service = networks
+        app.include_router(
+            create_networks_router(networks, read_actor=read_actor, write_actor=write_actor),
             prefix="/api/v1",
         )
     return app

@@ -271,3 +271,73 @@ def test_real_user_administration_smoke(lab):
             ).status_code
             == 200
         )
+
+
+def _ready_lab_admin(client, lab):
+    import secrets
+
+    path = Path(lab["run_directory"]) / "auth.json"
+    credentials = json.loads(path.read_text())
+    headers = {"Origin": lab["api_url"]}
+    response = client.post("/api/v1/auth/login", json=credentials, headers=headers)
+    assert response.status_code == 200
+    if response.json()["must_change_password"]:
+        password = secrets.token_urlsafe(24)
+        assert (
+            client.post(
+                "/api/v1/auth/password",
+                json={"current_password": credentials["password"], "new_password": password},
+                headers=headers | {"X-CSRF-Token": response.json()["csrf_token"]},
+            ).status_code
+            == 204
+        )
+        credentials["password"] = password
+        path.write_text(json.dumps(credentials))
+        response = client.post("/api/v1/auth/login", json=credentials, headers=headers)
+        assert response.status_code == 200
+    return headers | {"X-CSRF-Token": response.json()["csrf_token"]}
+
+
+@pytest.mark.smoke
+def test_real_network_management_smoke(lab):
+    from uuid import uuid4
+
+    with (
+        httpx.Client(base_url=lab["api_url"], timeout=15) as first,
+        httpx.Client(base_url=lab["api_url"], timeout=15) as second,
+    ):
+        headers = _ready_lab_admin(first, lab)
+        _ready_lab_admin(second, lab)
+        key = uuid4().hex
+        response = first.post(
+            "/api/v1/networks",
+            json={"display_name": "Integration lab"},
+            headers=headers | {"Idempotency-Key": key},
+        )
+        assert response.status_code == 201
+        network = response.json()
+        assert network["sync_state"] == "ready"
+        assert (
+            first.post(
+                "/api/v1/networks",
+                json={"display_name": "Integration lab"},
+                headers=headers | {"Idempotency-Key": key},
+            ).json()["id"]
+            == network["id"]
+        )
+        assert second.get("/api/v1/networks/" + network["id"]).json() == network
+        assert (
+            first.post(
+                "/api/v1/networks",
+                json={"display_name": "Conflicting name"},
+                headers=headers | {"Idempotency-Key": key},
+            ).status_code
+            == 409
+        )
+        listing = first.get("/api/v1/networks").json()
+        assert listing["total"] >= 1
+        assert not {item["engine_name"] for item in listing["items"]} & {
+            item["network"] for item in lab["snapshots"].values()
+        }
+        sdk = Session(host=lab["host"], port=lab["engine_port"], timeout=10, load_questions=False)
+        assert network["engine_name"] in sdk.list_networks()
