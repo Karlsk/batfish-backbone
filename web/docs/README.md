@@ -26,6 +26,7 @@
 8. [研发规格索引](changeloge/README.md)：完整顺序、依赖和工作量。
 9. [开发工作流](development-workflow.md)：项目级 spec-dev、Superpowers 与 grill-me 的分工及调用方式。
 10. [SDK 兼容性实测报告](sdk-compatibility.md)：MVP-01 版本、契约、测试证据和复现步骤。
+11. [本机功能测试环境](test-lab.md)：真实服务启动、r1/r2 与 Cisco 四设备配置快照、冒烟和累计回归入口。
 
 ## 目录与实施方式
 

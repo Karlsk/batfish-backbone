@@ -37,6 +37,8 @@ uv run --locked uvicorn app.main:create_app --factory --host 127.0.0.1 --port 80
 
 ## 测试
 
+需要一并启动真实服务并使用 r1/r2、Cisco 四设备配置时，使用 [功能测试环境](../docs/test-lab.md)。该入口负责本机隔离服务、快照、上传 ZIP 和包含集成测试的全量回归。
+
 ```bash
 uv run --locked pytest -m "not integration" -q
 uv run --locked ruff check app tests

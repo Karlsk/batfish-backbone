@@ -19,8 +19,12 @@ package = false
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["."]
-markers = ["integration: requires an explicitly configured isolated Batfish engine"]
+pythonpath = [".", "../scripts"]
+markers = [
+  "integration: requires an explicitly configured isolated Batfish engine",
+  "lab: requires the local service lab and its two seeded configuration snapshots",
+  "smoke: fast checks against running services and seeded snapshots",
+]
 
 [tool.ruff]
 target-version = "py312"
