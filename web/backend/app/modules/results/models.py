@@ -30,6 +30,7 @@ class Result(Base):
     coverage: Mapped[str] = mapped_column(String(16))
     truncated: Mapped[bool] = mapped_column(Boolean)
     truncation_reason: Mapped[str | None] = mapped_column(String(512))
+    cache_key: Mapped[str | None] = mapped_column(String(64), unique=True)
     storage_key: Mapped[str] = mapped_column(String(128), unique=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     __table_args__ = (

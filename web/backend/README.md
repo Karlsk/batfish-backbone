@@ -151,3 +151,9 @@ ready现读取真实数据库和最近worker/引擎观测；停止worker、观�
 迁移至head（0006）后，上传得到upload_id，再调用 `POST /api/v1/networks/{id}/snapshots`，提交display_name、upload_id和可选options，返回202的snapshot_id/job_id。options仅支持布尔ignore_management_interfaces（默认true）和parse_reuse（默认false）。独立worker已注册初始化handler；每次新建不可变SDK快照，质量门通过才可分析。任务取消/失败/中断对应快照failed；通过任务retry入口创建新快照及任务。
 
 `GET /api/v1/networks/{id}/snapshots/{snapshot_id}/diagnostics` 提供四类诊断分页；`/files` 列出原始文件；`/files/{file_id}` 按行分页（offset从0计、默认50、最大200）。只返回原始逻辑路径，不暴露磁盘目录。支持UTF-8/GB18030及LF/CR/CRLF换行，缺失源行不推断；超长行与二进制有明确说明。H3C/Huawei模型限制独立于解析PASSED展示；UNKNOWN/UNSUPPORTED等状态禁止分析。具体业务分析handler从MVP-13起加入。
+
+## 能力目录与标准结果（MVP-12）
+
+迁移0007增加版本化结果缓存；`GET /api/v1/capabilities` 显示已登记能力及开关，本篇具体查询仍禁用。`GET /api/v1/results/{id}`、`/rows`、`/flows`、`/flows/{flow_id}/traces` 提供已存结果及分页，默认50/最大200。嵌套Flow/Trace/NextHop保留结构，空结果、截断、模型限制分别表达。`RESULT_MAX_BYTES` 默认100MiB、`TABLE_ROWS` 默认100000，仅限制Web持久化输出。
+
+analysis handler支持执行和发布两个阶段；结果元数据、缓存和任务成功共同事务提交，发布失败/中断不暴露新结果。缓存命中仍生成当前用户的任务。执行前核对实际SDK/引擎版本，与快照初始化版本不同则要求重新初始化；旧结果保持可读。原子文件发布后数据库提交不确定可能保留未引用文件，需要按备份/清理设计核对，不能直接当作有效结果。

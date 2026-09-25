@@ -7,6 +7,10 @@ from app.infrastructure.database import Database
 from app.infrastructure.http import RequestContextMiddleware, install_error_handlers
 from app.infrastructure.settings import Settings
 from app.infrastructure.worker import WorkerRunner
+from app.modules.analysis.api import create_router as create_analysis_router
+from app.modules.analysis.controller import AnalysisController
+from app.modules.analysis.registry import Registry
+from app.modules.analysis.service import AnalysisService
 from app.modules.auth.api import create_router as create_auth_router
 from app.modules.auth.service import AuthService
 from app.modules.execution.api import create_router as create_execution_router
@@ -21,6 +25,8 @@ from app.modules.jobs.service import JobsService
 from app.modules.networks.api import create_router as create_networks_router
 from app.modules.networks.controller import NetworkController
 from app.modules.networks.service import NetworksService
+from app.modules.results.api import create_router as create_results_router
+from app.modules.results.service import ResultsService
 from app.modules.snapshots.api import create_router as create_snapshots_router
 from app.modules.snapshots.controller import SnapshotController
 from app.modules.snapshots.service import SnapshotsService
@@ -131,11 +137,24 @@ def create_app(
             create_snapshots_router(snapshots, read_actor=read_actor, write_actor=write_actor),
             prefix="/api/v1",
         )
+        results = ResultsService(db, auth, settings)
+        app.state.results_service = results
+        app.include_router(create_results_router(results, read_actor=read_actor), prefix="/api/v1")
+        analysis = AnalysisService(
+            auth, snapshots, jobs, results, AnalysisController(db, settings), Registry()
+        )
+        app.state.analysis_service = analysis
+        app.include_router(
+            create_analysis_router(analysis, read_actor=read_actor), prefix="/api/v1"
+        )
         execution = ExecutionService(
             db,
             auth,
             jobs,
-            handlers={"initialization": Handler(snapshots.execute, snapshots.retry)},
+            handlers={
+                "initialization": Handler(snapshots.execute, snapshots.retry),
+                "analysis": Handler(analysis.execute, analysis.retry, analysis.publish),
+            },
             controller=ExecutionController(db, settings),
             settings=settings,
         )
@@ -184,7 +203,14 @@ def create_worker(settings: Settings, *, database=None, handlers=None):
     snapshots = SnapshotsService(
         db, auth, networks, uploads, jobs, SnapshotController(db, settings)
     )
-    registered = {"initialization": Handler(snapshots.execute, snapshots.retry)}
+    results = ResultsService(db, auth, settings)
+    analysis = AnalysisService(
+        auth, snapshots, jobs, results, AnalysisController(db, settings), Registry()
+    )
+    registered = {
+        "initialization": Handler(snapshots.execute, snapshots.retry),
+        "analysis": Handler(analysis.execute, analysis.retry, analysis.publish),
+    }
     registered.update(handlers or {})
     execution = ExecutionService(
         db,

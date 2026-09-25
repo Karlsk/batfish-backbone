@@ -90,13 +90,29 @@ class ExecutionService:
             handler = self._handlers.get(job.kind)
             if handler is None:
                 raise ServiceError(ErrorCode.CONFLICT)
-            result_id = handler.execute(job)
-            if result_id is not None and not isinstance(result_id, UUID):
-                raise TypeError("Handler must return a result identifier or None")
+            value = handler.execute(job)
             if self._interruption_required():
                 self._jobs.interrupt(job.id, worker_id)
+            elif handler.publish is not None:
+                with self._database.transaction() as transaction:
+                    result_id = handler.publish(job, value, transaction=transaction)
+                    if not isinstance(result_id, UUID):
+                        raise TypeError("Publisher must return a result identifier")
+                    if self._interruption_required():
+                        raise ServiceError(ErrorCode.ENGINE_STATE_UNKNOWN)
+                    completed = self._jobs.finish(
+                        job.id,
+                        worker_id,
+                        status="succeeded",
+                        result_id=result_id,
+                        transaction=transaction,
+                    )
+                    if completed is None:
+                        raise ServiceError(ErrorCode.CONFLICT)
             else:
-                self._jobs.finish(job.id, worker_id, status="succeeded", result_id=result_id)
+                if value is not None and not isinstance(value, UUID):
+                    raise TypeError("Handler must return a result identifier or None")
+                self._jobs.finish(job.id, worker_id, status="succeeded", result_id=value)
         except Exception as error:
             if self._interruption_required():
                 self._jobs.interrupt(job.id, worker_id)
@@ -110,6 +126,7 @@ class ExecutionService:
                         code=code,
                         message="Task failed; review the error code and retry when its cause is resolved",
                         request_id=str(uuid4()),
+                        field_errors=error.field_errors if isinstance(error, ServiceError) else (),
                         retryable=isinstance(error, ServiceError) and error.retryable,
                     ),
                 )

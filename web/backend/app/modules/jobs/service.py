@@ -233,10 +233,12 @@ class JobsService:
         with self._database.transaction() as transaction:
             JobsRepository(transaction).heartbeat(job_id, worker_id)
 
-    def finish(self, job_id, worker_id, *, status, result_id=None, error=None):
+    def finish(self, job_id, worker_id, *, status, result_id=None, error=None, transaction=None):
         if status not in TRANSITIONS["running"]:
             raise ServiceError(ErrorCode.CONFLICT)
-        with self._database.transaction() as transaction:
+        with (
+            nullcontext(transaction) if transaction is not None else self._database.transaction()
+        ) as transaction:
             repository = JobsRepository(transaction)
             job = repository.get(job_id, lock=True)
             if job is None or job.status != "running" or job.lease_owner != worker_id:

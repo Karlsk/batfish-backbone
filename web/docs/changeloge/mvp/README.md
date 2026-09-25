@@ -1,6 +1,6 @@
 # 第一阶段：基础排障闭环
 
-状态：MVP-01～11 已完成，其余14份待开发。总计25份，预计40.0人天，单份≤2人天。
+状态：MVP-01～12 已完成，其余13份待开发。总计25份，预计40.0人天，单份≤2人天。
 
 阶段目标：内置账号、共享网络/快照、上传与解析诊断、设备/接口、路由/LPM、单向IPv4 traceroute、任务、导出及对应前端。不包含拓扑/BGP/ACL专页和变更验证。
 
@@ -17,7 +17,7 @@
 | [MVP-09 独立执行进程与中断恢复](mvp-09-worker-recovery.md) | MVP-08 | 2.0 | 已完成 |
 | [MVP-10 快照初始化与不可变生命周期](mvp-10-snapshot-initialization.md) | MVP-09 | 2.0 | 已完成 |
 | [MVP-11 解析质量与原始文件查看](mvp-11-initialization-diagnostics.md) | MVP-10 | 1.5 | 已完成 |
-| [MVP-12 分析目录与结果标准化](mvp-12-analysis-results.md) | MVP-11 | 2.0 | 待开发 |
+| [MVP-12 分析目录与结果标准化](mvp-12-analysis-results.md) | MVP-11 | 2.0 | 已完成 |
 | [MVP-13 设备与接口分析接口](mvp-13-inventory.md) | MVP-12 | 1.5 | 待开发 |
 | [MVP-14 路由与最长前缀匹配接口](mvp-14-routing.md) | MVP-13 | 1.5 | 待开发 |
 | [MVP-15 IPv4 单向虚拟 traceroute 接口](mvp-15-traceroute.md) | MVP-14 | 2.0 | 待开发 |

@@ -21,6 +21,8 @@ class Settings(BaseSettings):
     sdk_concurrency: Literal[1] = 1
     readiness_max_age_seconds: float = Field(default=60, gt=0, allow_inf_nan=False)
     data_dir: Path = Path(__file__).resolve().parents[3] / ".runtime" / "data"
+    result_max_bytes: int = Field(default=100 * 1024 * 1024, ge=1)
+    table_rows: int = Field(default=100000, ge=1)
     upload_max_bytes: int = Field(default=100 * 1024 * 1024, ge=1)
     upload_max_expanded_bytes: int = Field(default=500 * 1024 * 1024, ge=1)
     upload_max_files: int = Field(default=5000, ge=1, le=5000)

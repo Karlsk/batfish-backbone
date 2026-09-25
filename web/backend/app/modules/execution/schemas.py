@@ -11,6 +11,7 @@ from app.contracts.base import Contract
 class Handler:
     execute: Callable
     retry: Callable | None = None
+    publish: Callable | None = None
 
 
 class ReconcileRequest(Contract):

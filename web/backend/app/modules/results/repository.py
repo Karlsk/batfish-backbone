@@ -1,5 +1,6 @@
 from uuid import UUID
 
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.contracts.dto import ResultEnvelope
@@ -13,7 +14,9 @@ class ResultsRepository:
     def __init__(self, transaction: Session):
         self._transaction = transaction
 
-    def add(self, envelope: ResultEnvelope, *, storage_key: str) -> None:
+    def add(
+        self, envelope: ResultEnvelope, *, storage_key: str, cache_key: str | None = None
+    ) -> None:
         data = envelope.model_dump(mode="json")
         self._transaction.add(
             Result(
@@ -22,6 +25,7 @@ class ResultsRepository:
                 snapshot_id=envelope.context.snapshot_id,
                 reference_snapshot_id=envelope.context.reference_snapshot_id,
                 storage_key=validate_key(storage_key),
+                cache_key=cache_key,
             )
         )
         self._transaction.flush()
@@ -37,3 +41,6 @@ class ResultsRepository:
     def storage_key(self, result_id: UUID) -> str | None:
         result = self._transaction.get(Result, result_id)
         return result.storage_key if result else None
+
+    def cached(self, key):
+        return self._transaction.scalar(select(Result.id).where(Result.cache_key == key))

@@ -184,3 +184,15 @@ GET S/files 返回 `{items: FileEntry[]}`，不包含存储目录；GET S/files/
 质量规则应用于新初始化及既有快照读取：FAILED/UNKNOWN/UNSUPPORTED、Parse error/Convert error阻止分析，部分识别可分析但警告可见。quality_summary包含file_formats、model_limits及coverage。HUAWEI_VRP/H3C_COMWARE即使PASSED也标limited，明确IPv6/SRv6/EVPN转发未模拟、ACL正确性未确认；其他厂商未判定细粒度覆盖时标unknown，不能把PASSED翻译成全部能力完整模拟。后续analysis service还需按具体能力范围拒绝不支持的请求。
 
 FileEntry.line_policy区分lf-v0旧清单及crlf-v1新清单。旧清单读取时从原始文件重新统计以修正历史仅计LF的行数；源行以SDK明确给出的正整数为准，不按旧清单计数裁剪。原始文件字节和内容摘要不变。
+
+## MVP-12 能力目录及结果契约补充
+
+GET /capabilities 要求登录，返回已登记能力数组；本篇 nodes/interfaces/routes/lpm-routes/traceroute 均disabled，专用接口在MVP-13～15逐项启用。options_schema来自对应严格Pydantic options模型，未知字段带安全字段路径返回422；仅装配登记的query callable，不接受调用者提供SDK方法或连接信息。
+
+GET /results/{id}返回ResultEnvelope；/rows返回columns/rows/offset/limit/total/truncated；/flows返回Flow摘要items；/flows/{flow_id}/traces返回结构化路径items、total（实际已存路径数）、trace_count（SDK报告总数）及truncated。分页默认50/最大200，稳定保留原始顺序；sort为登记列名，前缀“-”降序，数字按数值、文本按文本、嵌套值按规范JSON排序。filters是JSON编码数组，每项column/op/value，op只接受eq或contains，未知列/非法结构422。
+
+RESULT_MAX_BYTES默认100MiB、TABLE_ROWS默认100000；持久化上限触发row_limit/byte_limit，SDK路径返回数不足总数标trace_limit。分页total表示已保存且筛选后的数量；原始行数在summary.total_rows，不能把输出截断解释为引擎计算受限。NaN/无穷转null，集合排序稳定，Flow/Trace/NextHop嵌套结构不字符串化。原始质量说明及厂商限制附着结果来源。
+
+结果文件先原子发布，results元数据、缓存与job成功在共享数据库事务提交；发布或任务完成失败一起回滚，已落盘但数据库未引用的文件保留用于核对，不暴露为结果。worker在发布前后检查预算及引擎未知状态，原任务已中断时成功更新失败并回滚结果。缓存键包含完整上下文/版本/快照内容摘要/问题版本/有效参数和输出限额，命中仍新建当前用户job。旧任务缺少目录字段时明确409，不报内部异常。
+
+worker在查询缓存前核对本次实际引擎及SDK版本。与快照记录不一致时返回CONFLICT，并在job.error.field_errors明确提示重新初始化；旧结果仍可读，不把升级后运行结果标记为旧版本，也不命中旧答案。
