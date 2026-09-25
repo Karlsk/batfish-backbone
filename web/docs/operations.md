@@ -1,8 +1,8 @@
 # 运行与部署设计
 
-本文定义将来部署行为，当前尚无可运行的 Web 命令或镜像。
+本文定义目标部署行为。MVP-02 已提供可运行的 API 骨架，安装/启动/测试见 [后端 README](../backend/README.md)；完整团队部署、worker 和镜像仍属后续规格。
 
-MVP-01 已验证 SDK 基线：Python 3.12.12、Pybatfish 2026.9.17.3748、引擎 revision `7d0deeeac4a09973b3876327f6aef721ee12f955`。JAR 摘要、隔离引擎启动及复现命令见 [兼容性报告](sdk-compatibility.md)。MVP-02 应据此生成应用锁文件；文档/引擎字符串 0.36.0 不能用作 PyPI 安装版本。
+MVP-01 已验证 SDK 基线：Python 3.12.12、Pybatfish 2026.9.17.3748、引擎 revision `7d0deeeac4a09973b3876327f6aef721ee12f955`。JAR 摘要、隔离引擎启动及复现命令见 [兼容性报告](sdk-compatibility.md)。MVP-02 已生成 `backend/uv.lock` 并使用该锁文件复验真实 SDK 基线；文档/引擎字符串 0.36.0 不能用作 PyPI 安装版本。
 
 ## 部署单元
 
@@ -16,9 +16,10 @@ MVP-01 已验证 SDK 基线：Python 3.12.12、Pybatfish 2026.9.17.3748、引擎
 
 | 配置 | 默认/约束 |
 | --- | --- |
-| DATABASE_URL | 必填，应用专用 PostgreSQL 数据库；不写入 Git |
+| DATABASE_URL | 持久化接入后必填，应用专用 PostgreSQL 数据库；MVP-02 骨架可空且不连接数据库；不写入 Git |
 | BATFISH_HOST / BATFISH_PORT | 服务端配置；默认端口 9996；用户参数不能覆盖 |
-| BATFISH_API_KEY / TLS | 由部署环境提供；不回传浏览器 |
+| BATFISH_API_KEY / BATFISH_TLS | 由部署环境提供；不回传浏览器 |
+| READINESS_MAX_AGE_SECONDS | 60 秒；依赖状态过期或时间在未来均不 ready |
 | DATA_DIR | 专用持久卷，不放代码库或前端静态目录 |
 | SDK_CONCURRENCY | 首版固定 1 |
 | MAX_QUEUED_JOBS_PER_USER / GLOBAL | 10 / 100；超限 429，避免队列无限增长 |
@@ -52,9 +53,13 @@ MVP-01 已验证 SDK 基线：Python 3.12.12、Pybatfish 2026.9.17.3748、引擎
 
 live 只报告进程；ready 检查数据库、worker 最近心跳和引擎最近健康检查。空闲时定期做轻量版本/能力检查，不通过创建快照作为心跳。
 
+当前健康路由带 `/api/v1` 前缀。MVP-02 的 ready 读取注入的状态快照，不主动探测依赖；默认状态源为空，返回 503 NOT_READY。数据库/worker/引擎健康观测分别由后续持久化及 worker 实现接入，不能通过固定健康状态让部署误判可用。
+
 worker 失联或 SDK 调用超时后，不自动重放初始化/删除。相关任务置 interrupted，引擎置 unknown；管理员检查 Batfish 日志/状态，必要时受控重启引擎并确认可用，在管理接口记录处理依据后释放调度。界面说明“停止等待不等于引擎停止”。MVP-01 必须验证公开 SDK 对已存在答案/快照的检查方法；若无法证明完成就保持未知，不猜测。
 
 日志字段为 request_id、job_id、actor_id、resource_id、kind、duration、error_code；不记录明文密码、token、SDK key、完整配置、全量原始结果。服务端堆栈仅记录到受控日志，不回传用户。
+
+MVP-02 未接入受控堆栈存储，未处理异常仅记录 request_id 和异常类型，不输出异常文本/输入/堆栈；HTTP 500 使用固定文案。请求 ID 由服务端生成，并写入响应头与错误信封。
 
 MVP-01 实测后台分析可取得 work ID，并在新 Session 中查询状态/读取命名答案；`list_snapshots(verbose=True)` 可读取初始化状态。初始化公开方法仍同步，`get_snapshot()` 仅返回会话选中名称，不是执行完成证明。这些观测不覆盖 worker 崩溃窗口和引擎重启持久性，当前 unknown/管理员对账流程保持不变。SDK HTTP 重试可能使等待超过单次 timeout，不能将 SDK_REQUEST_TIMEOUT 直接当作 JOB_WAIT_BUDGET。
 

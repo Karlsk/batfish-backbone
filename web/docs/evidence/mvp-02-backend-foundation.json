@@ -1,0 +1,531 @@
+{
+  "spec": "MVP-02",
+  "date": "2026-09-25",
+  "status": "passed",
+  "python": "3.12.12",
+  "packages": {
+    "PyYAML": "6.0.3",
+    "Pygments": "2.21.0",
+    "annotated-doc": "0.0.5",
+    "annotated-types": "0.8.0",
+    "anyio": "4.15.1",
+    "attrs": "26.1.0",
+    "cachebox": "5.2.3",
+    "certifi": "2026.7.22",
+    "charset-normalizer": "3.5.1",
+    "click": "8.5.0",
+    "deepdiff": "9.1.0",
+    "fastapi": "0.141.1",
+    "h11": "0.16.0",
+    "httpcore": "1.0.9",
+    "httpx": "0.28.1",
+    "idna": "3.20",
+    "iniconfig": "2.3.0",
+    "numpy": "2.5.3",
+    "orderly-set": "5.5.0",
+    "packaging": "26.3",
+    "pandas": "3.0.6",
+    "pluggy": "1.6.0",
+    "pybatfish": "2026.9.17.3748",
+    "pydantic": "2.13.5",
+    "pydantic-settings": "2.15.0",
+    "pydantic_core": "2.46.5",
+    "pytest": "8.4.2",
+    "python-dateutil": "2.9.0.post0",
+    "python-dotenv": "1.2.3",
+    "requests": "2.34.2",
+    "requests-toolbelt": "1.0.0",
+    "ruff": "0.16.8",
+    "setuptools": "84.0.0",
+    "simplejson": "4.1.2",
+    "six": "1.17.0",
+    "starlette": "1.7.0",
+    "typing-inspection": "0.4.4",
+    "typing_extensions": "4.16.0",
+    "urllib3": "2.8.0",
+    "uvicorn": "0.53.0"
+  },
+  "lock_sha256": "4b33c199253d5fa3f2de3fea5182a3602d2571a125473ca3a17937180f8bfb40",
+  "unit_tests": {
+    "summary": {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "tests": "47",
+      "time": "0.759",
+      "timestamp": "2026-09-25T01:28:35.508957+08:00",
+      "hostname": "gaorenjiedeMacBook-Air.local"
+    },
+    "cases": [
+      {
+        "classname": "tests.test_architecture",
+        "name": "test_import_boundaries_reject_violations[app/modules/a/api.py-import pybatfish.client.session]",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_architecture",
+        "name": "test_import_boundaries_reject_violations[app/modules/a/service.py-from pybatfish.client.session import Session as S]",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_architecture",
+        "name": "test_import_boundaries_reject_violations[app/modules/a/service.py-from app.infrastructure.sdk import factory]",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_architecture",
+        "name": "test_import_boundaries_reject_violations[app/modules/a/service.py-from app.modules.b.repository import Repository]",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_architecture",
+        "name": "test_import_boundaries_reject_violations[app/modules/a/service.py-from ..b import controller as adapter]",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_architecture",
+        "name": "test_import_boundaries_reject_violations[app/modules/a/service.py-from app.modules import b]",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_architecture",
+        "name": "test_import_boundaries_reject_violations[app/modules/a/api.py-from .controller import run]",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_architecture",
+        "name": "test_import_boundaries_reject_violations[app/modules/a/api.py-from . import repository]",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_architecture",
+        "name": "test_import_boundaries_reject_violations[app/modules/a/controller.py-from .service import Service]",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_architecture",
+        "name": "test_import_boundaries_reject_violations[app/modules/a/repository.py-from .controller import query]",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_architecture",
+        "name": "test_import_boundaries_reject_violations[app/modules/a/service.py-from fastapi import Request]",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_architecture",
+        "name": "test_import_boundaries_reject_violations[app/modules/a/service.py-from app.composition import create_app]",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_architecture",
+        "name": "test_import_boundaries_reject_violations[app/modules/a/api.py-from app.modules.b.service import Service]",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_architecture",
+        "name": "test_import_boundaries_reject_violations[app/contracts/models.py-from app.modules.a.service import Service]",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_architecture",
+        "name": "test_import_boundaries_reject_violations[app/infrastructure/settings.py-from app.modules.a.repository import Repository]",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_architecture",
+        "name": "test_import_boundaries_reject_violations[app/modules/a/service.py-import importlib\\nsdk = importlib.import_module('pybatfish')]",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_architecture",
+        "name": "test_import_boundaries_reject_violations[app/modules/a/service.py-sdk = __import__('pybatfish')]",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_architecture",
+        "name": "test_import_boundaries_allow_expected_dependencies[app/modules/a/api.py-from .service import Service]",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_architecture",
+        "name": "test_import_boundaries_allow_expected_dependencies[app/modules/a/service.py-from app.modules.b.service import Service]",
+        "time": "0.001"
+      },
+      {
+        "classname": "tests.test_architecture",
+        "name": "test_import_boundaries_allow_expected_dependencies[app/modules/a/service.py-from ..b import service as b_service]",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_architecture",
+        "name": "test_import_boundaries_allow_expected_dependencies[app/modules/a/service.py-from . import controller, repository]",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_architecture",
+        "name": "test_import_boundaries_allow_expected_dependencies[app/modules/a/controllers/routing.py-from pybatfish.client.session import Session]",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_architecture",
+        "name": "test_import_boundaries_allow_expected_dependencies[app/modules/a/controller.py-from app.infrastructure.sdk.factory import SessionFactory]",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_architecture",
+        "name": "test_import_boundaries_allow_expected_dependencies[app/infrastructure/sdk/factory.py-from pybatfish.client.session import Session]",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_architecture",
+        "name": "test_import_boundaries_allow_expected_dependencies[app/composition.py-from app.modules.a.api import router\\nfrom app.modules.a.service import Service]",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_architecture",
+        "name": "test_import_boundaries_allow_expected_dependencies[app/modules/a/schemas.py-from app.contracts.dto import Actor]",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_architecture",
+        "name": "test_import_boundaries_allow_expected_dependencies[app/modules/a/service.py-# import pybatfish\\ntext = 'from .api import router']",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_architecture",
+        "name": "test_cross_module_service_cycles_are_rejected",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_architecture",
+        "name": "test_import_boundaries_in_application",
+        "time": "0.007"
+      },
+      {
+        "classname": "tests.test_foundation",
+        "name": "test_live_without_batfish",
+        "time": "0.023"
+      },
+      {
+        "classname": "tests.test_foundation",
+        "name": "test_readiness_requires_every_fresh_dependency[healthy-200]",
+        "time": "0.003"
+      },
+      {
+        "classname": "tests.test_foundation",
+        "name": "test_readiness_requires_every_fresh_dependency[missing-503]",
+        "time": "0.003"
+      },
+      {
+        "classname": "tests.test_foundation",
+        "name": "test_readiness_requires_every_fresh_dependency[stale-503]",
+        "time": "0.003"
+      },
+      {
+        "classname": "tests.test_foundation",
+        "name": "test_readiness_requires_every_fresh_dependency[failed-503]",
+        "time": "0.003"
+      },
+      {
+        "classname": "tests.test_foundation",
+        "name": "test_readiness_requires_every_fresh_dependency[future-503]",
+        "time": "0.003"
+      },
+      {
+        "classname": "tests.test_foundation",
+        "name": "test_readiness_requires_every_fresh_dependency[exception-503]",
+        "time": "0.003"
+      },
+      {
+        "classname": "tests.test_foundation",
+        "name": "test_error_shape[payload0]",
+        "time": "0.004"
+      },
+      {
+        "classname": "tests.test_foundation",
+        "name": "test_error_shape[payload1]",
+        "time": "0.003"
+      },
+      {
+        "classname": "tests.test_foundation",
+        "name": "test_error_shape[payload2]",
+        "time": "0.003"
+      },
+      {
+        "classname": "tests.test_foundation",
+        "name": "test_all_errors_are_sanitized_and_correlated[/missing-404-NOT_FOUND]",
+        "time": "0.004"
+      },
+      {
+        "classname": "tests.test_foundation",
+        "name": "test_all_errors_are_sanitized_and_correlated[/test-unhandled-500-INTERNAL_ERROR]",
+        "time": "0.004"
+      },
+      {
+        "classname": "tests.test_foundation",
+        "name": "test_all_errors_are_sanitized_and_correlated[/test-http-403-FORBIDDEN]",
+        "time": "0.004"
+      },
+      {
+        "classname": "tests.test_foundation",
+        "name": "test_all_errors_are_sanitized_and_correlated[/test-service-409-CONFLICT]",
+        "time": "0.004"
+      },
+      {
+        "classname": "tests.test_foundation",
+        "name": "test_request_ids_are_unique_and_openapi_declares_errors",
+        "time": "0.010"
+      },
+      {
+        "classname": "tests.test_foundation",
+        "name": "test_settings_are_validated_without_disclosing_secrets",
+        "time": "0.001"
+      },
+      {
+        "classname": "tests.test_foundation",
+        "name": "test_contracts_are_json_serializable_and_jobs_are_deeply_immutable",
+        "time": "0.001"
+      },
+      {
+        "classname": "tests.test_foundation",
+        "name": "test_contracts_reject_unknown_fields_invalid_json_and_naive_time",
+        "time": "0.000"
+      }
+    ]
+  },
+  "sdk_tests": {
+    "summary": {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "tests": "7",
+      "time": "6.794",
+      "timestamp": "2026-09-25T01:25:08.915363+08:00",
+      "hostname": "gaorenjiedeMacBook-Air.local"
+    },
+    "cases": [
+      {
+        "classname": "tests.integration.test_sdk_baseline",
+        "name": "test_versions_templates_and_public_methods",
+        "time": "0.242"
+      },
+      {
+        "classname": "tests.integration.test_sdk_baseline",
+        "name": "test_minimal_questions_match_expected",
+        "time": "2.298"
+      },
+      {
+        "classname": "tests.integration.test_sdk_baseline",
+        "name": "test_session_context_isolation",
+        "time": "0.510"
+      },
+      {
+        "classname": "tests.integration.test_sdk_baseline",
+        "name": "test_initialization_diagnostics_and_no_overwrite",
+        "time": "1.040"
+      },
+      {
+        "classname": "tests.integration.test_sdk_baseline",
+        "name": "test_unsupported_or_missing_question",
+        "time": "0.023"
+      },
+      {
+        "classname": "tests.integration.test_sdk_baseline",
+        "name": "test_public_work_handle_and_answer_recovery",
+        "time": "0.190"
+      },
+      {
+        "classname": "tests.integration.test_sdk_baseline",
+        "name": "test_request_timeout_is_not_a_total_work_budget",
+        "time": "2.192"
+      }
+    ]
+  },
+  "http_smoke": {
+    "/api/v1/health/live": {
+      "status": 200,
+      "request_id": "57a42b38-06d0-465a-ad25-6a9ce2679c06",
+      "body": {
+        "status": "alive"
+      }
+    },
+    "/api/v1/health/ready": {
+      "status": 503,
+      "request_id": "e85d4de5-1444-4220-ba09-b5182ba555ae",
+      "body": {
+        "error": {
+          "code": "NOT_READY",
+          "message": "Service dependencies are not ready",
+          "field_errors": [
+            {
+              "path": [
+                "dependencies",
+                "database"
+              ],
+              "message": "Not ready"
+            },
+            {
+              "path": [
+                "dependencies",
+                "worker"
+              ],
+              "message": "Not ready"
+            },
+            {
+              "path": [
+                "dependencies",
+                "engine"
+              ],
+              "message": "Not ready"
+            }
+          ],
+          "request_id": "e85d4de5-1444-4220-ba09-b5182ba555ae",
+          "retryable": true
+        }
+      }
+    },
+    "/missing": {
+      "status": 404,
+      "request_id": "25645e8e-9f07-4d4c-9980-9a31ec826873",
+      "body": {
+        "error": {
+          "code": "NOT_FOUND",
+          "message": "Resource not found",
+          "field_errors": [],
+          "request_id": "25645e8e-9f07-4d4c-9980-9a31ec826873",
+          "retryable": false
+        }
+      }
+    },
+    "/openapi.json": {
+      "status": 200,
+      "request_id": "cc924d2b-cd7a-472b-bc86-9e30467a5357",
+      "body": {
+        "info": {
+          "title": "Batfish Web API",
+          "version": "0.1.0"
+        },
+        "paths": [
+          "/api/v1/health/live",
+          "/api/v1/health/ready"
+        ]
+      }
+    }
+  },
+  "engine": {
+    "engine_revision": "7d0deeeac4a09973b3876327f6aef721ee12f955",
+    "engine_versions": {
+      "Batfish": "0.36.0",
+      "api_version": "0.0.0"
+    },
+    "jar_sha256": "0927de7c740bc72f999870e842605baad9a7cb6ea66e4b01fb9a6037bea00193",
+    "fixture_sha256": {
+      "r1.cfg": "90a95f41726139e8998461daf01acdba643fbbf53a0a22c2dc95613d62df17eb",
+      "r2.cfg": "fc19dcd4522b92ba2a262c617d1fdccede8da706d5173230a7e8f69eb1a4c1d0"
+    }
+  },
+  "sdk_regression": {
+    "template_count": 75,
+    "recorded_answer_calls": 16,
+    "observations": {
+      "background": {
+        "incomplete_works": {
+          "worklist": "[]"
+        },
+        "observed_statuses": [
+          "ASSIGNED",
+          "TERMINATEDNORMALLY"
+        ],
+        "recovered_question": "mvp01-background",
+        "submission_seconds": 0.0106,
+        "work_id_type": "str"
+      },
+      "identities": [
+        {
+          "display_label": "baseline",
+          "init_seconds": 0.9419,
+          "network": "mvp01-mvp02-lock-04e55e456385-a",
+          "snapshot": "snapshot-a"
+        },
+        {
+          "display_label": "baseline",
+          "init_seconds": 0.2788,
+          "network": "mvp01-mvp02-lock-04e55e456385-b",
+          "snapshot": "snapshot-b"
+        }
+      ],
+      "initialization": {
+        "duplicate_overwrite_false": "ValueError",
+        "return_type": "str",
+        "snapshot_metadata": [
+          {
+            "metadata": {
+              "creationTimestamp": "2026-09-24T17:25:12.809384Z",
+              "initializationMetadata": {
+                "currentStatus": "PARSED",
+                "errMessage": null,
+                "statusHistory": [
+                  "Status changed to PARSING at 2026-09-24T17:25:12.819117Z",
+                  "Status changed to PARSED at 2026-09-24T17:25:12.913723Z"
+                ]
+              },
+              "parentSnapshotId": null
+            },
+            "name": "warning"
+          },
+          {
+            "metadata": {
+              "creationTimestamp": "2026-09-24T17:25:09.525838Z",
+              "initializationMetadata": {
+                "currentStatus": "DATAPLANED",
+                "errMessage": null,
+                "statusHistory": [
+                  "Status changed to PARSING at 2026-09-24T17:25:09.566925Z",
+                  "Status changed to PARSED at 2026-09-24T17:25:10.411858Z",
+                  "Status changed to DATAPLANING at 2026-09-24T17:25:11.042036Z",
+                  "Status changed to DATAPLANED at 2026-09-24T17:25:11.206079Z"
+                ]
+              },
+              "parentSnapshotId": null
+            },
+            "name": "snapshot-a"
+          }
+        ],
+        "warning_logged": false,
+        "warning_snapshot_return": "warning"
+      },
+      "session_isolation": "A/B/A/B: addresses stay in their network/snapshot",
+      "timeout": {
+        "configured_transport_seconds": 0.03,
+        "http_requests": 3,
+        "read_timeout_retried": true,
+        "scope": "controlled local HTTP only; not an engine work cancellation test",
+        "sdk_default_seconds": 30,
+        "server_request_continued": true,
+        "total_seconds": 1.6791
+      },
+      "unsupported": {
+        "missing_question": "AttributeError",
+        "missing_snapshot": "HTTPError",
+        "unknown_option": "QuestionValidationException"
+      }
+    }
+  },
+  "checks": {
+    "ruff": "passed",
+    "format_new_python": "passed",
+    "uv_lock_check_offline": "passed",
+    "uv_sync_locked_offline": "passed",
+    "independent_review": "no actionable findings",
+    "owned_processes": "API and engine stopped"
+  },
+  "limitations": [
+    "Readiness producers are deferred; default readiness is 503.",
+    "Starlette TestClient emits one httpx deprecation warning.",
+    "No database, authentication, worker, analysis or frontend implementation in this spec."
+  ],
+  "temporary_run_directory": "/private/tmp/batfish-mvp02-aw54q7ok"
+}

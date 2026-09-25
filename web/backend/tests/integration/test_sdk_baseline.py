@@ -11,22 +11,22 @@ import importlib.metadata
 import inspect
 import json
 import os
-from pathlib import Path
 import platform
 import re
 import shutil
-from threading import Event, Thread
-from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import time
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
+from threading import Event, Thread
 from uuid import UUID, uuid4
 
 import pytest
-from requests.exceptions import HTTPError
-
 from pybatfish.client.session import Session
 from pybatfish.datamodel import HeaderConstraints
 from pybatfish.exception import BatfishException, QuestionValidationException
+from requests.exceptions import HTTPError
 
+pytestmark = pytest.mark.integration
 
 ROOT = Path(__file__).resolve().parents[4]
 FIXTURE = Path(__file__).resolve().parents[1] / "fixtures" / "small_network"

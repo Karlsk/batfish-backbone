@@ -1,6 +1,6 @@
 # API 与数据契约
 
-所有路径以 `/api/v1` 为前缀。以下为拟实现契约，不是现有 Batfish REST 的重命名。网络/快照采用 UUID，SDK 内部名称由 service 维护。日期使用 UTC ISO 8601，前端转换为本地时间。
+所有路径以 `/api/v1` 为前缀。MVP-02 已实现健康路由、统一错误及 Actor/AnalysisContext/JobDTO/ResultEnvelope；其余接口仍为拟实现契约，不是现有 Batfish REST 的重命名。网络/快照采用 UUID，SDK 内部名称由 service 维护。日期使用 UTC ISO 8601，前端转换为本地时间。
 
 ## 最小参数与专家扩展
 
@@ -103,6 +103,8 @@ Idempotency-Key 用于上传之外的任务提交和网络创建：服务端按�
 
 数据库保存 UUID 外键与已删除资源的来源摘要。除结果发布需要共享事务句柄外，业务模块不共享 ORM 实体；事务由基础设施提供，service 仍通过其他模块的公共方法协作。
 
+MVP-02 DTO 位于 `backend/app/contracts/dto.py`：所有字段拒绝未知项；模型及嵌套 JSON 参数不可变，序列化后仍是标准对象/数组。AnalysisContext 的内部名称字段为 engine_network、engine_snapshot、engine_reference_snapshot；引用快照 ID 和内部名必须同时有值或同时为空。JobDTO.kind 为 upload/initialization/analysis/deletion；status 为 queued/running/succeeded/failed/cancelled/interrupted；engine_state 为 idle/busy/unknown。nullable 字段默认空，created_at 必填，所有日期必须有时区并归一为 UTC。ResultEnvelope 的 truncated=true 必须同时提供非空 truncation_reason。DTO 结构校验不替代 service 的可信身份、任务状态迁移和权限判断。
+
 模块间固定服务入口：`AuthService.require_actor(session_token) → Actor`；`UsersService.get_identity(user_id) → UserIdentity`；`NetworksService.require_ready(actor, network_id) → NetworkDTO`；`UploadsService.consume(actor, network_id, upload_id) → UploadManifest`；`SnapshotsService.require_analyzable(actor, network_id, snapshot_id) → AnalysisContext`；`JobsService.submit(actor, kind, context, parameters, idempotency_key) → JobDTO`；`JobsService.claim(worker_id) → JobDTO | None`；`ResultsService.publish(context, payload) → ResultEnvelope`；`AnalysisService.submit(actor, context_ids, kind, request) → JobDTO`；`AnalysisService.execute(job) → ResultEnvelope`。诊断读取与配置查看不要求 require_analyzable，使用快照存在性校验。
 
 SDK 边界方法：`SessionFactory.for_job(context)` 返回任务独占上下文；`AnalysisController.run(context, question_id, sdk_parameters) → StructuredAnswer`；`SnapshotController.initialize(context, upload_manifest, options) → InitializationAnswer`；`NetworkController.create/delete(engine_name)`；`SnapshotController.delete(context)`。StructuredAnswer/InitializationAnswer 只含普通类型、列 schema、警告及诊断，不含 requests.Response 或 SDK 实例。
@@ -142,5 +144,9 @@ ComparisonDTO 为 id、network_id、baseline_snapshot_id、candidate_snapshot_id
 ## 错误约定
 
 统一返回 `{error: {code, message, field_errors, request_id, retryable}}`。401 未登录，403 权限不足，404 不存在，409 状态/幂等/删除冲突，413 输入过大，422 参数或能力范围不合法，429 请求限流，503 引擎不可用/调度阻塞。SDK 算出“不通”是正常分析结果，不是 HTTP 500。
+
+MVP-02 的 field_errors 为 `[{path: ["body", "options", "字段名"], message: "Invalid value"}]`，路径也可包含数组下标；没有字段错误时为空数组。不包含输入值、validator 原始消息或异常上下文。request_id 是每个请求独立生成的 UUID，并对应 `X-Request-ID` 响应头；客户端同名头不被信任。当前错误代码为 VALIDATION_ERROR、UNAUTHORIZED、FORBIDDEN、NOT_FOUND、METHOD_NOT_ALLOWED、CONFLICT、NOT_READY、INTERNAL_ERROR 和兜底 HTTP_ERROR；领域专用代码随所属 spec 增补。
+
+健康响应：live 返回 200 `{"status":"alive"}`；ready 仅在 database/worker/engine 三份观测均可用且时间不超过 READINESS_MAX_AGE_SECONDS 时返回 200 `{"status":"ready"}`。缺失、失败、过期、未来时间或状态源异常返回 503 NOT_READY，retryable=true。当前未接入观测生产者，默认 503；健康请求不构造 SDK Session。
 
 扩展参数类型错误定位为 options 字段路径；SDK 拒绝表达式返回 SDK_PARAMETER_REJECTED，不返回堆栈和凭证。后台失败写入 job.error；查询失败任务本身仍返回 HTTP 200 和失败状态。引擎状态不明时 error code 为 ENGINE_STATE_UNKNOWN，retryable=false，直到管理员完成对账。

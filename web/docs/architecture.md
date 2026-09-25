@@ -25,7 +25,9 @@ HTTP → 模块 api → 模块 service → 模块 controller → Pybatfish → B
 
 controller 的职责是 SDK 适配，并非 HTTP controller。无 SDK 操作的模块可只有 api/service/repository。共享 SDK session factory 属于 infrastructure/sdk，且只允许 controllers 和兼容性测试使用。通过导入约束测试验证这些规则。
 
-## 预期代码结构（本次不创建）
+## 代码结构与实施状态
+
+MVP-02 已实现 main/composition、公共 DTO、配置/HTTP 基础设施和 health 模块；其余模块及前端仍为目标结构。实际启动与测试见 [后端 README](../backend/README.md)。
 
 ```text
 web/backend/app/
@@ -34,6 +36,7 @@ web/backend/app/
   contracts/           # Actor、AnalysisContext、结果和错误 DTO
   infrastructure/      # 数据库、文件、时钟、日志、SDK factory
   modules/
+    health/            # 已实现 api/service：存活及依赖状态快照判断
     auth/              # 登录、会话和业务权限
     users/             # 用户生命周期
     networks/          # network 生命周期和 SDK 映射
