@@ -40,6 +40,7 @@ class TraceFlow(Contract):
     start_location: str | None
     trace_count: int = Field(ge=0)
     returned_trace_count: int = Field(ge=0)
+    dispositions: Mapping[str, int] = Field(default_factory=dict)
     truncated: bool
 
 

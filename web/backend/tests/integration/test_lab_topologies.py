@@ -597,12 +597,19 @@ def test_real_snapshot_worker_smoke(lab, fixture_name, expected_nodes):
                 if fixture_name == "small_network":
                     assert detail["quality_summary"]["coverage"] == "limited"
                     assert detail["quality_summary"]["model_limits"]
-                for operation in ("nodes", "interfaces", "routes", "lpm-routes"):
+                for operation in ("nodes", "interfaces", "routes", "lpm-routes", "traceroute"):
                     body = (
                         {"ip": "10.0.0.2" if fixture_name == "small_network" else "10.64.0.4"}
                         if operation == "lpm-routes"
                         else {}
                     )
+                    if operation == "traceroute":
+                        body = {
+                            "start_location": "r1" if fixture_name == "small_network" else "c1",
+                            "destination_ip": "10.0.0.2"
+                            if fixture_name == "small_network"
+                            else "10.64.0.4",
+                        }
                     submitted = client.post(
                         base + "/analyses/" + operation, json=body, headers=headers
                     )
@@ -617,6 +624,20 @@ def test_real_snapshot_worker_smoke(lab, fixture_name, expected_nodes):
                     assert finished["status"] == "succeeded", finished
                     result_url = "/api/v1/results/" + finished["result_id"]
                     assert client.get(result_url).status_code == 200
+                    if operation == "traceroute":
+                        flows = client.get(result_url + "/flows").json()["items"]
+                        assert flows
+                        for flow in flows:
+                            paths = client.get(
+                                result_url + "/flows/" + flow["flow_id"] + "/traces"
+                            ).json()
+                            assert paths["items"] and paths["items"][0]["hops"][0]["steps"]
+                            assert (
+                                flow["trace_count"]
+                                >= flow["returned_trace_count"]
+                                == len(paths["items"])
+                            )
+                        continue
                     rows = client.get(result_url + "/rows").json()
                     assert (
                         rows["total"] == expected_nodes
@@ -630,6 +651,7 @@ def test_real_snapshot_worker_smoke(lab, fixture_name, expected_nodes):
                     "interfaces",
                     "routes",
                     "lpm-routes",
+                    "traceroute",
                 }
             finally:
                 worker.terminate()

@@ -5,6 +5,7 @@ from app.contracts.errors import ErrorCode, FieldError, ServiceError
 from app.modules.analysis.schemas import Capability, Entry
 from app.modules.analysis.schemas.inventory import InterfacesRequest, NodesRequest
 from app.modules.analysis.schemas.routing import LpmRequest, RoutesRequest
+from app.modules.analysis.schemas.traceroute import TraceRequest
 
 
 class Registry:
@@ -45,7 +46,14 @@ class Registry:
                 to_sdk=lambda request: request.model_dump(mode="json"),
             ),
             Entry(
-                "traceroute", "Virtual traceroute", result_kind="traces", requires_dataplane=True
+                "traceroute",
+                "Virtual traceroute",
+                request_model=TraceRequest,
+                enabled=True,
+                question_id="traceroute",
+                result_kind="traces",
+                requires_dataplane=True,
+                to_sdk=lambda request: request.model_dump(mode="json"),
             ),
         ]
         self._entries = {entry.id: entry for entry in (defaults if entries is None else entries)}

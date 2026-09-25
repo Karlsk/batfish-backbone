@@ -6,6 +6,7 @@ from app.contracts.dto import Actor, JobDTO
 from app.modules.analysis.schemas import Capability
 from app.modules.analysis.schemas.inventory import InterfacesRequest, NodesRequest
 from app.modules.analysis.schemas.routing import LpmRequest, RoutesRequest
+from app.modules.analysis.schemas.traceroute import TraceRequest
 from app.modules.analysis.service import AnalysisService
 
 
@@ -82,6 +83,23 @@ def create_router(service: AnalysisService, *, read_actor, write_actor):
             network_id,
             snapshot_id,
             "lpm-routes",
+            body.model_dump(mode="json", exclude_unset=True),
+            idempotency_key=idempotency_key,
+        )
+
+    @router.post(base + "/traceroute", response_model=JobDTO, status_code=202)
+    def traceroute(
+        network_id: UUID,
+        snapshot_id: UUID,
+        body: TraceRequest,
+        actor: Actor = Depends(write_actor),
+        idempotency_key: str | None = Header(None, max_length=128),
+    ):
+        return service.submit(
+            actor,
+            network_id,
+            snapshot_id,
+            "traceroute",
             body.model_dump(mode="json", exclude_unset=True),
             idempotency_key=idempotency_key,
         )

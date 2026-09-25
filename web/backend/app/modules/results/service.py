@@ -1,5 +1,6 @@
 import hashlib
 import json
+from collections import Counter
 from datetime import UTC, datetime
 from uuid import uuid4
 
@@ -99,6 +100,9 @@ class ResultsService:
                     "returned_trace_count": len(traces),
                     "truncated": count > len(traces),
                     "traces": traces,
+                    "dispositions": dict(
+                        Counter(str(trace.get("disposition", "UNKNOWN")) for trace in traces)
+                    ),
                 }
                 if row["truncated"]:
                     truncated = True
@@ -114,18 +118,39 @@ class ResultsService:
         assert len(raw) <= self._settings.result_max_bytes
         identifier = uuid4()
         model_warnings = tuple(str(item["description"]) for item in quality.get("model_limits", ()))
+        summary = {
+            "returned_rows": len(entries),
+            "total_rows": len(answer.rows),
+            "quality": quality,
+        }
+        warnings = [*answer.warnings, *model_warnings]
+        if answer.kind == "traces":
+            dispositions = Counter()
+            for flow in entries:
+                dispositions.update(flow["dispositions"])
+            summary.update(
+                dispositions=dict(dispositions),
+                disposition_scope="returned_traces",
+                trace_count_scope="stored_flows",
+                trace_count=sum(flow["trace_count"] for flow in entries),
+                returned_trace_count=sum(flow["returned_trace_count"] for flow in entries),
+            )
+            if parameters.get("operation") == "traceroute":
+                ignore_filters = bool(parameters["request"]["options"]["ignore_filters"])
+                summary["ignore_filters"] = ignore_filters
+                warnings.append(
+                    "Single-direction model analysis; not a live probe or reverse-path proof"
+                )
+                if ignore_filters:
+                    warnings.append("ACL filters were ignored")
         envelope = ResultEnvelope(
             id=identifier,
             kind=answer.kind,
             schema_version=context.schema_version,
             context=context,
             effective_parameters=parameters,
-            summary={
-                "returned_rows": len(entries),
-                "total_rows": len(answer.rows),
-                "quality": quality,
-            },
-            warnings=tuple(dict.fromkeys((*answer.warnings, *model_warnings))),
+            summary=summary,
+            warnings=tuple(dict.fromkeys(warnings)),
             coverage=quality.get("coverage", "unknown"),
             truncated=truncated,
             truncation_reason=",".join(sorted(set(reasons))) if truncated else None,

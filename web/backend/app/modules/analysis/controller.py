@@ -15,6 +15,7 @@ from app.contracts.results import Column, StructuredAnswer
 from app.infrastructure.sdk import SessionFactory
 from app.modules.analysis.controllers.inventory import QUERIES as INVENTORY_QUERIES
 from app.modules.analysis.controllers.routing import QUERIES as ROUTING_QUERIES
+from app.modules.analysis.controllers.traceroute import QUERIES as TRACE_QUERIES
 
 
 def normalize(value):
@@ -41,7 +42,9 @@ class AnalysisController:
     def __init__(self, database, settings, *, queries=None):
         self._sessions = SessionFactory(database, settings)
         self._wait_budget = settings.job_wait_budget_seconds
-        self._queries = dict((INVENTORY_QUERIES | ROUTING_QUERIES) if queries is None else queries)
+        self._queries = dict(
+            (INVENTORY_QUERIES | ROUTING_QUERIES | TRACE_QUERIES) if queries is None else queries
+        )
 
     def runtime_versions(self):
         with self._sessions.exclusive(owner="analysis-version-check") as session:
@@ -97,7 +100,8 @@ class AnalysisController:
                 )
             else:
                 while True:
-                    status = session.get_work_status(work_id)["workstatus"]
+                    observation = session.get_work_status(work_id)
+                    status = observation["workstatus"]
                     if status in {
                         "TERMINATEDNORMALLY",
                         "TERMINATEDABNORMALLY",
@@ -120,6 +124,50 @@ class AnalysisController:
                             ),
                         ),
                     )
+                    if question_id == "traceroute":
+                        # The status already proves termination. Diagnostic text only
+                        # selects a safe user hint and never controls engine release.
+                        try:
+                            task = json.loads(observation.get("taskstatus") or "{}")
+                            reason = str(task.get("errMessage") or "")
+                        except (TypeError, ValueError, AttributeError):
+                            reason = ""
+                        try:
+                            diagnostic = session.get_answer(
+                                question.get_name(),
+                                context.engine_snapshot,
+                                context.engine_reference_snapshot,
+                            ).dict()
+                            for element in diagnostic.get("answerElements", []):
+                                if element.get("class", "").endswith("BatfishStackTrace"):
+                                    lines = element.get("answer", [])
+                                    reason += "\n".join(
+                                        line for line in lines[:64] if isinstance(line, str)
+                                    )[:65536]
+                        except Exception:
+                            # Best-effort read after a proven terminal status. Failure
+                            # to read diagnostics cannot make that engine work run again.
+                            pass
+                        if "source IP" in reason or "Could not construct a flow" in reason:
+                            failure = ServiceError(
+                                ErrorCode.VALIDATION_ERROR,
+                                field_errors=(
+                                    FieldError(
+                                        path=("options", "source_ip"),
+                                        message="Cannot infer a source IPv4 address; supply source_ip for the selected start_location",
+                                    ),
+                                ),
+                            )
+                        elif "Found no active locations" in reason:
+                            failure = ServiceError(
+                                ErrorCode.VALIDATION_ERROR,
+                                field_errors=(
+                                    FieldError(
+                                        path=("start_location",),
+                                        message="No active start location matches this selector",
+                                    ),
+                                ),
+                            )
                 else:
                     raw = normalize(
                         session.get_answer(

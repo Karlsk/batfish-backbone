@@ -1,6 +1,6 @@
 # MVP-15 IPv4 单向虚拟 traceroute 接口
 
-- 状态：待开发
+- 状态：已完成
 - 阶段：1
 - 依赖：[MVP-14](../mvp/mvp-14-routing.md)
 - 预计工作量：2.0 人天（实现/验证 1.25 + 测试 0.5 + 文档/自检 0.25），依赖就绪后计；超过 2 人天先拆分。
@@ -31,10 +31,10 @@
 
 ## 实施步骤
 
-- [ ] 校验必要地址、协议端口组合和专家选项，构造 HeaderConstraints。
-- [ ] 保存实际 Flow、所有返回路径和逐跳动作；统一未知枚举的可显示形式。
-- [ ] 结果摘要按 disposition 分组，保留覆盖限制/截断/忽略过滤标记。
-- [ ] 运行下述验证，记录实际命令与结果，更新本文及索引状态。
+- [x] 校验必要地址、协议端口组合和专家选项，构造 HeaderConstraints。
+- [x] 保存实际 Flow、所有返回路径和逐跳动作；统一未知枚举的可显示形式。
+- [x] 结果摘要按 disposition 分组，保留覆盖限制/截断/忽略过滤标记。
+- [x] 运行下述验证，记录实际命令与结果，更新本文及索引状态。
 
 ## 测试与验收
 
@@ -53,4 +53,12 @@
 
 ## 完成记录
 
-当前尚未开发或运行本 spec 的产品测试。实施者完成后在本节记录实际文件、验证命令、结果、引擎/SDK版本（如涉及）和剩余限制；存在验收失败时保持未通过状态。
+2026-09-25 完成traceroute专用请求/接口、固定HeaderConstraints映射和目录启用，沿用现有AnalysisService执行/缓存/发布管道，无新增空业务层。默认icmp/max_traces=5/ignore_filters=false，IPv4单地址、协议端口组合、严格布尔/整数边界明确校验；AH映射固定引擎AHP名称。SDK推导源地址，展示实际Flow，不选管理地址替代。
+
+TraceFlow新增返回路径disposition计数；结果摘要明确计数只覆盖已保存Flow/返回路径，保留trace_count/returned_trace_count、原始hops/steps和未知枚举。混合成功/拒绝并存展示，不生成全部可达布尔结论。maxTraces/行/字节截断保持可见；ignore_filters、单向模型推演限制及华为/H3C覆盖限制进入结果摘要/警告。候选协议端口是SDK的代表Flow约束，不承诺穷举组合。
+
+无源地址场景先真实复现；公开工作状态只给泛化错误，再通过公开get_answer的失败答案提取已知类别并生成固定source_ip提示；无活动起点提示start_location。原堆栈不持久化为结果、不返回用户；诊断文本不参与引擎占用判定，只有已知终态才允许释放，网络/超时未知规则保持。
+
+仓库根执行 `web/backend/.venv/bin/python web/scripts/lab.py seed`、`smoke`、`verify`：真实HTTP/CLI worker冒烟 **12 passed**，两套配置均执行五类分析并读取Flow/Trace；MVP-01～15累计 **259 passed、0 skipped**。7项专项测试覆盖严格参数、两套配置与SDK逐Flow/Trace一致的成功和NO_ROUTE、Cisco ECMP成功+DENIED_IN混合/maxTraces截断/ignore_filters、缺源地址及显式source_ip恢复、未知枚举与存储截断统计、AH映射。见 [验收证据](../../evidence/mvp-15-verification.json)。
+
+独立审查无阻断；Ruff、锁文件、Markdown链接及Git空白检查通过。固定Batfish0.36.0/Pybatfish2026.9.17.3748/JAR，未改Java。后端MVP-01～15已验证，不等于MVP-25整体交付；继续MVP-16前端骨架与浏览器验收。

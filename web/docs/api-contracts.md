@@ -1,6 +1,6 @@
 # API 与数据契约
 
-所有路径以 `/api/v1` 为前缀。MVP-02 已实现健康路由、统一错误及 Actor/AnalysisContext/JobDTO/ResultEnvelope，MVP-04/05 已实现认证与账号管理路由，MVP-06 已实现网络创建/列表/详情；MVP-07～10 已实现上传、任务、独立 worker 与快照初始化，MVP-11～14 已实现诊断文件、结果目录、设备接口与路由/LPM分析；其余业务接口仍为拟实现契约，不是现有 Batfish REST 的重命名。网络/快照采用 UUID，SDK 内部名称由 service 维护。日期使用 UTC ISO 8601，前端转换为本地时间。
+所有路径以 `/api/v1` 为前缀。MVP-02 已实现健康路由、统一错误及 Actor/AnalysisContext/JobDTO/ResultEnvelope，MVP-04/05 已实现认证与账号管理路由，MVP-06 已实现网络创建/列表/详情；MVP-07～10 已实现上传、任务、独立 worker 与快照初始化，MVP-11～15 已实现诊断文件、结果目录、设备接口、路由/LPM与虚拟traceroute分析；其余业务接口仍为拟实现契约，不是现有 Batfish REST 的重命名。网络/快照采用 UUID，SDK 内部名称由 service 维护。日期使用 UTC ISO 8601，前端转换为本地时间。
 
 ## 最小参数与专家扩展
 
@@ -220,3 +220,13 @@ worker在查询缓存前核对本次实际引擎及SDK版本。与快照记录�
 两类接口的 `options.vrfs` 同样使用 literal/values 或 expression/expression 形状；专家表达式在此是Java正则（例如 `^BLUE$`），不是带斜杠的节点选择表达式。字面VRF使用严格锚定正则；VRF名称按引擎大小写敏感规则匹配。未提供筛选表示全部，正常无命中是成功空表。
 
 数据面分析执行期间JobDTO.phase为 `dataplane_or_query`（可能等待首次数据面计算或查询）；缓存检查阶段为 `checking_cache`，普通查询为 `querying`。这是应用阶段而非引擎百分比；只允许当前运行租约更新，已结束或已中断任务不可更新阶段。所有IPv6输入均在API校验时拒绝，不进入任务队列。
+
+### MVP-15 虚拟 traceroute
+
+`start_location` 为1～4096字符的Batfish location表达式，`destination_ip` 为单个IPv4字符串。options包括可选source_ip、ip_protocols（默认icmp；允许tcp/udp/icmp/gre/esp/ah/ospf/sctp/ipinip）、source_ports/destination_ports（0～65535整数列表，最多100项，必须仅选TCP/UDP）、max_traces（严格整数1～20，默认5）和ignore_filters（严格布尔，默认false）。AH在controller映射为引擎的AHP名称。候选协议/端口约束由SDK选择代表Flow，不表示枚举所有报文组合。
+
+TraceFlow.dispositions按返回路径统计，保留实际headers与起点；Trace详情保留未知disposition/action字符串及嵌套hops/steps。ResultEnvelope.summary.dispositions只统计已保存且可读取的路径（disposition_scope=returned_traces），trace_count/returned_trace_count统计已保存Flow（trace_count_scope=stored_flows）；返回行数与总行数仍分别可见。maxTraces或行/字节限制触发时明确truncated，不从有限样本推断其余路径结论。
+
+summary.ignore_filters及警告明确标注已忽略ACL；摘要同时保留单向模型推演、非在线探测、非回程证明和原快照模型覆盖限制。成功/拒绝/无路由分别按disposition计数，多种结论并存时不简化为全部可达。
+
+已知终态失败后，经公开get_answer读取有限诊断文本并映射固定安全提示：没有活动起点提示start_location；不能推导源地址提示options.source_ip。底层堆栈/完整配置不返回、不持久化到普通日志。诊断文本不参与是否释放引擎的判断，未知工作仍按MVP-09对账规则处理。
