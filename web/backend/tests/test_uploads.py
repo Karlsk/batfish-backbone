@@ -222,3 +222,26 @@ def test_upload_limits_report_actual_settings_and_require_identity(upload_app):
     }
     with TestClient(app, base_url=ORIGIN) as anonymous:
         assert anonymous.get("/api/v1/upload-limits").status_code == 401
+
+
+def test_materialize_preserves_optional_snapshot_inputs(upload_app):
+    client, _, app, headers = upload_app
+    network = create_network(client, headers).json()["id"]
+    entries = [
+        ("configs/r1.cfg", b"sysname r1\n"),
+        ("README.md", b"synthetic sample"),
+        ("batfish/runtime_data.json", b'{"runtimeData": []}'),
+    ]
+    record = upload(client, headers, network, archive=zipped(entries)).json()
+    actor = app.state.auth_service.require_actor(client.cookies.get("batfish_session"))
+    manifest = app.state.uploads_service.consume(actor, UUID(network), UUID(record["id"]))
+    with app.state.uploads_service.materialize(manifest) as folder:
+        for path, data in entries:
+            assert (folder / path).read_bytes() == data
+    for path in ["../outside", "/tmp/outside", "configs/../../outside", "configs/./r1"]:
+        bad = manifest.model_copy(
+            update={"files": (manifest.files[0].model_copy(update={"path": path}),)}
+        )
+        with pytest.raises(ValueError):
+            with app.state.uploads_service.materialize(bad):
+                pytest.fail("Unsafe stored path was accepted")

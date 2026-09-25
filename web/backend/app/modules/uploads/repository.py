@@ -10,7 +10,8 @@ from uuid import UUID
 
 from sqlalchemy import select
 
-from app.modules.uploads.archive import prepare
+from app.contracts.errors import ServiceError
+from app.modules.uploads.archive import prepare, safe_path
 from app.modules.uploads.models import Upload
 from app.modules.uploads.schemas import UploadDTO, UploadManifest
 
@@ -143,13 +144,11 @@ class UploadStore:
             )
             for item in manifest.files:
                 logical = PurePosixPath(item.path)
-                if (
-                    logical.is_absolute()
-                    or ".." in logical.parts
-                    or not logical.parts
-                    or logical.parts[0] != "configs"
-                    or "\\" in item.path
-                ):
+                try:
+                    canonical = safe_path(item.path)
+                except ServiceError:
+                    raise ValueError("Invalid stored manifest") from None
+                if canonical != item.path:
                     raise ValueError("Invalid stored manifest")
                 destination = temporary.joinpath(*logical.parts)
                 destination.parent.mkdir(mode=0o700, parents=True, exist_ok=True)

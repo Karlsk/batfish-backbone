@@ -1,6 +1,6 @@
 # 运行与部署设计
 
-本文定义目标部署行为。MVP-02提供API骨架、MVP-09接入独立worker，安装/启动/测试见 [后端 README](../backend/README.md)；完整团队部署和镜像仍属后续规格。
+本文定义运行行为。API与独立worker已实现；单机容器/HTTPS、启动、备份与恢复命令见 [部署 README](../README.md)，实际验收状态见 [部署验证](deployment-validation.md)。开发安装与测试见 [后端 README](../backend/README.md)。
 
 MVP-01 已验证 SDK 基线：Python 3.12.12、Pybatfish 2026.9.17.3748、引擎 revision `7d0deeeac4a09973b3876327f6aef721ee12f955`。JAR 摘要、隔离引擎启动及复现命令见 [兼容性报告](sdk-compatibility.md)。MVP-02 已生成 `backend/uv.lock` 并使用该锁文件复验真实 SDK 基线；文档/引擎字符串 0.36.0 不能用作 PyPI 安装版本。
 

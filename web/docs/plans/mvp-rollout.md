@@ -6,8 +6,8 @@
 
 ## 当前进度
 
-- 当前阶段：MVP-23 validated；后端286/前端37/浏览器10通过，0skip。
-- 下一动作：提交 MVP-23，继续 MVP-24 单机部署。
+- 当前阶段：MVP-24 validated；后端287/前端37/浏览器10+部署1通过。
+- 下一动作：提交MVP-24，继续MVP-25双用户和规模校准。
 - 环境观察：旧 API/JVM 已停止，保留了上一轮临时 PostgreSQL 容器；核对运行清单/标签后只停止该容器，重建测试环境。没有把历史证据当作本轮通过。
 - 当前无需求决策阻碍。所有新证据记录实际源码身份，运行凭证和完整日志留在忽略提交的 `.runtime/`。
 
@@ -35,8 +35,9 @@
 | MVP-20 | committed | bb89f5bf6b | a223a2e11e381511e2bb40776b1e7280f0f7b03ccb08356e07b764eb9c3a1642 | 后端260/前端28/浏览器8；smoke12 | [验收](../evidence/mvp-20-verification.json) | 937b4bfce2 |
 | MVP-21 | committed | 937b4bfce2 | 61658bee04e970fd66a4737db66ff3625e447c8e852728aa17b0e14dd12a9764 | 后端260/前端31/浏览器10；smoke12；静态检查通过 | [验收](../evidence/mvp-21-verification.json) | 6d8a79e489 |
 | MVP-22 | committed | 6d8a79e489 | adb58d88e981e6daaaca7cb48d872138717783f3ebdef4032582ad0b560d3474 | 后端275/前端33/浏览器10；smoke12；静态检查通过 | [验收](../evidence/mvp-22-verification.json) | af6b929722 |
-| MVP-23 | validated | af6b929722 | bd7108ad727c481fc50f3c62c279b5fbeb068ec412a08e7b082323c25e4b58b0 | 后端286/前端37/浏览器10；smoke12；静态检查通过 | [验收](../evidence/mvp-23-verification.json) | 待提交 |
-| MVP-24～25 | pending | 各篇开工时记录 | 尚未生成 | 逐篇加入验收矩阵 | 尚未运行 | 尚未提交 |
+| MVP-23 | committed | af6b929722 | bd7108ad727c481fc50f3c62c279b5fbeb068ec412a08e7b082323c25e4b58b0 | 后端286/前端37/浏览器10；smoke12；静态检查通过 | [验收](../evidence/mvp-23-verification.json) | 5ddfb9272a |
+| MVP-24 | validated | 5ddfb9272a | a7b79b7cef9669dae84341de6a20e13f6206d5cc4cfb39a7b86e04f537abb360 | 后端287/前端37/浏览器10+部署1；smoke12；完整恢复通过 | [验收](../evidence/mvp-24-verification.json) | 待提交 |
+| MVP-25 | pending | 各篇开工时记录 | 尚未生成 | 逐篇加入验收矩阵 | 尚未运行 | 尚未提交 |
 
 可恢复状态：`web/.runtime/mvp-runner/checkpoint.json`。提交后的实际哈希先写 checkpoint，下一篇带入本文件；不为记录自己的哈希重复提交。
 
@@ -45,3 +46,4 @@
 沿用现有 spec 与共享契约，不生成平行需求；按 writing-plans / executing-plans / TDD 方法逐篇推进。本篇所需表、测试及最小基础设施可建立，后续业务行为留给所属 spec。每篇使用一个只读审查者，主流程串行实现。
 
 使用实际本机 Batfish、PostgreSQL、API 与逐步实现的 worker/前端；设备仅使用配置。运行旧代码的服务必须刷新，数据库环境重建后重新迁移并 seed。已有前端/浏览器/部署验证不能被后端 pytest 代替。失败修复后复验，不降低验收标准。
+
