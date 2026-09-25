@@ -63,9 +63,15 @@ const SnapshotsPage = lazy(() =>
     default: m.SnapshotsPage,
   })),
 );
-const InitializationJobPage = lazy(() =>
-  import("../features/snapshots/Snapshots").then((m) => ({
-    default: m.InitializationJobPage,
+const JobsPage = lazy(() =>
+  import("../features/jobs/Jobs").then((m) => ({ default: m.JobsPage })),
+);
+const JobDetail = lazy(() =>
+  import("../features/jobs/Jobs").then((m) => ({ default: m.JobDetail })),
+);
+const DiagnosticsPage = lazy(() =>
+  import("../features/snapshots/diagnostics/Diagnostics").then((m) => ({
+    default: m.DiagnosticsPage,
   })),
 );
 const UsersPage = lazy(() =>
@@ -191,8 +197,7 @@ export function Shell({ children }: PropsWithChildren) {
             {
               key: "/jobs",
               icon: <ClockCircleOutlined />,
-              label: "任务中心",
-              disabled: true,
+              label: <Link to="/jobs">任务中心</Link>,
             },
           ]}
         />
@@ -316,10 +321,12 @@ function WorkbenchRoutes() {
                 />
                 <Route path="/networks" element={<NetworksPage />} />
                 <Route path="/snapshots" element={<SnapshotsPage />} />
+                <Route path="/jobs" element={<JobsPage />} />
                 <Route
-                  path="/jobs/:jobId"
-                  element={<InitializationJobPage />}
+                  path="/networks/:networkId/snapshots/:snapshotId/diagnostics"
+                  element={<DiagnosticsPage />}
                 />
+                <Route path="/jobs/:jobId" element={<JobDetail />} />
                 <Route path="/password" element={<PasswordPage />} />
                 <Route path="/" element={<Overview />} />
                 <Route

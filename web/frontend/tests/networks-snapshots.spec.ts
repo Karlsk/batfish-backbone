@@ -97,6 +97,41 @@ for (const topology of ["small_network", "cisco_four"]) {
     });
     await page.getByRole("link", { name: "查看初始化任务" }).click();
     await expect(page.getByText("已完成", { exact: true })).toBeVisible();
+    await page.reload();
+    await expect(page.getByText("已完成", { exact: true })).toBeVisible();
+    await expect(page.getByRole("button", { name: "取消排队" })).toHaveCount(0);
+    await page.getByRole("button", { name: "查看解析诊断" }).click();
+    await expect(
+      page.getByText(
+        "解析完成不等于全部网络能力已被模拟；请结合下方诊断和模型限制判断。",
+      ),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: "查看文件", exact: true }),
+    ).toHaveCount(topology === "small_network" ? 2 : 4);
+    await page.screenshot({
+      path: testInfo.outputPath(`${topology}-diagnostics.png`),
+      fullPage: true,
+    });
+    await page
+      .getByRole("button", { name: "查看文件", exact: true })
+      .first()
+      .click();
+    const source = page.getByRole("dialog");
+    await expect(
+      source.getByText("诊断未提供行号，仅展示原始文件，不高亮推测位置。"),
+    ).toBeVisible();
+    await expect(source.locator('[data-line="1"]')).toBeVisible();
+    expect(await source.locator(".source-line").count()).toBeGreaterThan(1);
+    await expect(source.locator('[data-highlight="true"]')).toHaveCount(0);
+    await expect(source).toHaveCSS("width", "760px");
+    await page.screenshot({
+      animations: "disabled",
+      path: testInfo.outputPath(`${topology}-source.png`),
+      fullPage: false,
+    });
+    await source.getByRole("button", { name: "关闭", exact: true }).click();
+    await page.getByRole("button", { name: "初始化任务", exact: true }).click();
     await page.getByRole("button", { name: "返回快照列表" }).click();
     const other = `空网络-${randomUUID().slice(0, 6)}`;
     await createNetwork(page, other);

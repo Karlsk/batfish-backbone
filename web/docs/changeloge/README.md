@@ -1,6 +1,6 @@
 # 分阶段研发规格索引
 
-日期：2026-09-25。MVP-01～18 已完成，其余25份待开发。以下为分阶段 RDP spec；“RDP”沿用用户称呼，不额外假定某种公司模板。每份规格包含需求、设计/接口、改动位置、实施步骤、测试与验收、非目标和完成记录。
+日期：2026-09-25。MVP-01～19 已完成，其余24份待开发。以下为分阶段 RDP spec；“RDP”沿用用户称呼，不额外假定某种公司模板。每份规格包含需求、设计/接口、改动位置、实施步骤、测试与验收、非目标和完成记录。
 
 ## 阶段门槛与顺序
 
@@ -43,7 +43,7 @@ MVP 只包含阶段1，不能因为 advance spec 已写好就提前实现其功�
 | [MVP-16 前端骨架与渐进展示组件](mvp/mvp-16-frontend-foundation.md) | MVP-12 | 1.5 | 已完成 |
 | [MVP-17 登录与用户管理界面](mvp/mvp-17-frontend-auth-users.md) | MVP-05、MVP-16 | 1.5 | 已完成 |
 | [MVP-18 网络、快照与上传向导界面](mvp/mvp-18-frontend-networks-snapshots.md) | MVP-10、MVP-17 | 2.0 | 已完成 |
-| [MVP-19 任务记录与解析诊断界面](mvp/mvp-19-frontend-jobs-diagnostics.md) | MVP-11、MVP-18 | 1.5 | 待开发 |
+| [MVP-19 任务记录与解析诊断界面](mvp/mvp-19-frontend-jobs-diagnostics.md) | MVP-11、MVP-18 | 1.5 | 已完成 |
 | [MVP-20 设备、接口与路由界面](mvp/mvp-20-frontend-inventory-routing.md) | MVP-13、MVP-14、MVP-19 | 2.0 | 待开发 |
 | [MVP-21 连通性表单与逐跳路径界面](mvp/mvp-21-frontend-traceroute.md) | MVP-15、MVP-20 | 2.0 | 待开发 |
 | [MVP-22 结果导出与下载入口](mvp/mvp-22-result-export.md) | MVP-21 | 1.0 | 待开发 |

@@ -1,30 +1,11 @@
 import { Button, Card, Space, Table, Tag, Typography } from "antd";
-import { Link, useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { api, unwrap, ApiError } from "../../api/client";
-import { useResourceContext, resourceKey } from "../../app/context";
-import { useSession } from "../../app/session";
+import { Link } from "react-router-dom";
+import { useResourceContext } from "../../app/context";
 import { useSnapshots } from "../networks/queries";
-import { EmptyState, ErrorState, LoadingState } from "../../components/States";
+import { EmptyState, ErrorState } from "../../components/States";
 import { UploadWizard } from "./UploadWizard";
 import type { components } from "../../api/schema";
-export const snapshotLabels: Record<string, string> = {
-  queued: "排队中",
-  initializing: "初始化中",
-  ready: "就绪",
-  ready_with_warnings: "就绪（有警告）",
-  failed: "初始化失败",
-  deleting: "删除中",
-  deleted: "已删除",
-};
-export const jobLabels: Record<string, string> = {
-  queued: "排队中",
-  running: "执行中",
-  succeeded: "已完成",
-  failed: "失败",
-  cancelled: "已取消",
-  interrupted: "执行中断",
-};
+import { snapshotLabels } from "./model";
 export function SnapshotsPage() {
   const { network, snapshot, selectSnapshot } = useResourceContext();
   const query = useSnapshots(network?.id ?? null);
@@ -104,6 +85,11 @@ export function SnapshotsPage() {
                   title: "操作",
                   render: (_, s) => (
                     <Space>
+                      <Link
+                        to={`/networks/${network.id}/snapshots/${s.id}/diagnostics`}
+                      >
+                        诊断
+                      </Link>
                       <Button
                         type="link"
                         onClick={() =>
@@ -138,59 +124,5 @@ export function SnapshotsPage() {
         )}
       </Card>
     </>
-  );
-}
-export function InitializationJobPage() {
-  const { jobId } = useParams();
-  const session = useSession();
-  const query = useQuery({
-    queryKey: resourceKey(
-      session?.user_id ?? null,
-      { networkId: null, snapshotId: null },
-      "job",
-      { jobId },
-    ),
-    queryFn: () =>
-      unwrap(
-        api.GET("/api/v1/jobs/{job_id}", {
-          params: { path: { job_id: jobId! } },
-        }),
-      ),
-    refetchInterval: (query) =>
-      ["queued", "running"].includes(query.state.data?.status ?? "queued")
-        ? 2000
-        : false,
-  });
-  if (query.isPending) return <LoadingState />;
-  if (query.isError)
-    return (
-      <ErrorState error={query.error} retry={() => void query.refetch()} />
-    );
-  const job = query.data;
-  return (
-    <Card title={job.kind === "initialization" ? "初始化任务" : "任务记录"}>
-      <Tag>{jobLabels[job.status] ?? job.status}</Tag>
-      <p>任务编号：{job.id}</p>
-      <p className="record-id">
-        来源网络：{job.resource_ids.network_id ?? "未记录"} · 来源快照：
-        {job.resource_ids.snapshot_id ?? "未记录"}
-      </p>
-      <p>创建时间：{new Date(job.created_at).toLocaleString("zh-CN")}</p>
-      {job.error && (
-        <ErrorState
-          error={
-            new ApiError(
-              job.error.code,
-              job.error.request_id,
-              job.error.field_errors,
-            )
-          }
-        />
-      )}
-      <p>当前页面显示任务实际状态，初始化完成后再检查快照质量。</p>
-      <Link to="/snapshots">
-        <Button>返回快照列表</Button>
-      </Link>
-    </Card>
   );
 }
