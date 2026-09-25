@@ -27,7 +27,7 @@ controller 的职责是 SDK 适配，并非 HTTP controller。无 SDK 操作的�
 
 ## 代码结构与实施状态
 
-MVP-02 已实现 main/composition、公共 DTO、配置/HTTP 基础设施和 health 模块；其余模块及前端仍为目标结构。实际启动与测试见 [后端 README](../backend/README.md)。
+MVP-02 已实现 main/composition、公共 DTO、配置/HTTP 基础设施和 health 模块；MVP-03 增加按模块归属的初始表、迁移和文件存储；MVP-04 增加 auth、最小 UsersService 与初始化审计。其余业务及前端仍为目标结构。实际启动与测试见 [后端 README](../backend/README.md)。
 
 ```text
 web/backend/app/
@@ -60,6 +60,8 @@ web/frontend/src/
 ## 依赖与任务装配
 
 基础方向：users → 本模块存储；auth → users.service；networks → auth.service；uploads → auth.service；snapshots → networks.service / uploads.service / jobs.service；analysis → snapshots.service / jobs.service / results.service / auth.service；changes → snapshots.service / analysis.service / jobs.service。jobs 与 results 不反向导入业务模块；jobs.service 使用公共 Actor 和数据契约执行通用任务所有权规则。
+
+UsersService 初始化审计通过 audit.service 写入。用户 session_version 与会话版本匹配才能认证，停用和版本变更每次请求生效；users 不反向依赖 auth，以便后续管理重置/停用保持模块依赖无环。bootstrap 命令通过 composition 装配 UsersService，不绕过 service 直接写 ORM。
 
 跨资源删除统一由 lifecycle.service（ResourceLifecycleService）编排，依赖 networks/snapshots/jobs.service，第三阶段增加 changes.service 检查比较引用。DELETE 路由由 lifecycle.api 提供但URL不变。snapshots/changes 不反向依赖 lifecycle；比较引用与派生依赖的删除检查在同一资源锁/事务边界完成，避免先检查后并发新增引用。所有删除入口必须经过 lifecycle.service。
 

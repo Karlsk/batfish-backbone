@@ -123,3 +123,49 @@ def test_two_profiles_remain_isolated_when_interleaved(lab):
     for session, profile in sessions * 2:
         nodes = session.q.nodeProperties(properties="Configuration_Format").answer().frame()
         assert set(nodes.Node) == set(profile["nodes"])
+
+
+@pytest.mark.smoke
+def test_real_authentication_smoke(lab):
+    import secrets
+
+    credentials_path = Path(lab["run_directory"]) / "auth.json"
+    credentials = json.loads(credentials_path.read_text())
+    origin = {"Origin": lab["api_url"]}
+    with (
+        httpx.Client(base_url=lab["api_url"], timeout=10) as first,
+        httpx.Client(base_url=lab["api_url"], timeout=10) as second,
+    ):
+        assert first.get("/api/v1/auth/me").status_code == 401
+        response = first.post("/api/v1/auth/login", json=credentials, headers=origin)
+        assert response.status_code == 200
+        assert first.get("/api/v1/auth/me").json()["user_id"] == response.json()["user_id"]
+        assert (
+            second.post("/api/v1/auth/login", json=credentials, headers=origin).status_code == 200
+        )
+        assert first.post("/api/v1/auth/logout", headers=origin).status_code == 403
+        new_password = secrets.token_urlsafe(24)
+        changed = first.post(
+            "/api/v1/auth/password",
+            json={"current_password": credentials["password"], "new_password": new_password},
+            headers=origin | {"X-CSRF-Token": response.json()["csrf_token"]},
+        )
+        assert changed.status_code == 204
+        credentials["password"] = new_password
+        temporary = credentials_path.with_suffix(".tmp")
+        with open(temporary, "x", opener=lambda path, flags: os.open(path, flags, 0o600)) as output:
+            json.dump(credentials, output)
+        temporary.replace(credentials_path)
+        assert second.get("/api/v1/auth/me").status_code == 401
+        response = first.post("/api/v1/auth/login", json=credentials, headers=origin)
+        assert response.status_code == 200 and response.json()["must_change_password"] is False
+        old_cookie = first.cookies["batfish_session"]
+        assert (
+            first.post(
+                "/api/v1/auth/logout",
+                headers=origin | {"X-CSRF-Token": response.json()["csrf_token"]},
+            ).status_code
+            == 204
+        )
+        first.cookies.set("batfish_session", old_cookie)
+        assert first.get("/api/v1/auth/me").status_code == 401

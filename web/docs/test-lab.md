@@ -2,7 +2,7 @@
 
 目标：实际运行 Batfish、FastAPI 和 PostgreSQL，使用两套配置快照验证 Web 功能链路。设备均为配置文件输入，无需真实设备、虚拟路由器或厂商镜像；不做设备实测与仿真结果的一致性验证，后者属于 Java 核心范围。
 
-当前应用阶段为 MVP-02：API 仅有健康接口，尚无上传页面、业务表、worker 或分析 API。当前通过公开 Pybatfish 导入配置并验证可用的测试输入，后续再让同一 ZIP 经过上传 API/页面完成应用闭环。不得将本次结果标为 MVP-25 验收完成。
+当前已接入 MVP-03 数据库迁移和 MVP-04 认证流程，尚无上传页面、worker 或分析 API。通过公开 Pybatfish 导入配置并验证测试输入，后续再让同一 ZIP 经过上传 API/页面完成应用闭环。不得将当前结果标为 MVP-25 验收完成。
 
 ## 服务和隔离
 
@@ -45,10 +45,10 @@ web/backend/.venv/bin/python web/scripts/lab.py smoke
 web/backend/.venv/bin/python web/scripts/lab.py verify
 ```
 
-- `serve`：启动并监管三个服务，对本次临时 PostgreSQL 执行 Alembic 升级；只允许一个管理进程。Ctrl-C 关闭本次 API/JVM 和本次 PostgreSQL 容器，不影响其他容器。
+- `serve`：启动并监管三个服务，对本次临时 PostgreSQL 执行 Alembic 升级并初始化随机测试管理员；凭证仅在运行目录 `auth.json`（0600）。只允许一个管理进程。Ctrl-C 关闭本次 API/JVM 和本次 PostgreSQL 容器，不影响其他容器。
 - `seed`：导入/选择两套不可变快照，生成可用于未来上传页面的 `r1-r2.zip` 和 `cisco-four.zip`。
 - `status`：读取实际 API/引擎 HTTP 状态及快照身份，不展示数据库密码。
-- `smoke`：API live、真实数据库迁移版本、两套快照节点清单；显式只运行 smoke 标记测试。
+- `smoke`：API live、真实数据库迁移版本、两套快照节点清单，以及真实 HTTP 双会话登录/改密/撤销/退出；显式只运行 smoke 标记测试。改密后同步更新受保护测试凭证，支持重复运行。
 - `verify`：当前后端全部测试，包含单元测试、分层检查、原 MVP-01 SDK 基线及两套快照集成测试；不排除 integration、不允许缺环境时静默跳过。
 
 seed/smoke/verify 使用同一排他锁，防止多个入口同时向引擎提交工作。手动 SDK 操作也应保持串行。每次 verify 生成全新证据目录，SDK 基线会创建独立随机名称的测试网络，不覆盖 seed 的快照。
@@ -71,7 +71,7 @@ uv run --locked ruff check app tests ../scripts/lab.py
 
 | 后续阶段 | 两套配置如何进入验收 |
 | --- | --- |
-| MVP-03～09 | 真实 PostgreSQL 的迁移、事务、账号、上传、队列和恢复检查逐步加入 verify；当前尚未实现 |
+| MVP-03～09 | 已加入真实 PostgreSQL 迁移/事务及登录认证；账号管理、上传、队列和恢复随后续 spec 加入 |
 | MVP-10～15 | 通过 Web API 上传同一 ZIP，初始化、查询诊断、节点/接口、routes/LPM、traceroute；对应用字段与来源做检查 |
 | MVP-16～21 | 页面可运行后添加浏览器测试，执行上传、快照选择、基础/高级参数、详情和刷新；页面变更补视觉检查 |
 | MVP-22～25 | 加入导出、删除互斥、本机完整部署与双用户闭环；两套配置均纳入累计回归 |

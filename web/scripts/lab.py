@@ -31,7 +31,9 @@ RUNTIME = WEB / ".runtime" / "test-lab"
 CURRENT = RUNTIME / "current.json"
 ENGINE_REVISION = "7d0deeeac4a09973b3876327f6aef721ee12f955"
 JAR_SHA256 = "0927de7c740bc72f999870e842605baad9a7cb6ea66e4b01fb9a6037bea00193"
-POSTGRES_IMAGE = "postgres@sha256:67f624a4ad70edba8d65c82341124fab7054b277b4f7dea4b04be6f939ce2314"
+POSTGRES_IMAGE = (
+    "postgres@sha256:67f624a4ad70edba8d65c82341124fab7054b277b4f7dea4b04be6f939ce2314"
+)
 PROFILES = {
     "r1-r2": {
         "source": BACKEND / "tests/fixtures/small_network",
@@ -260,6 +262,7 @@ def serve(args):
                     "--port",
                     str(args.api_port),
                     "--no-access-log",
+                    "--no-proxy-headers",
                 ],
             ),
         ]:
@@ -272,6 +275,8 @@ def serve(args):
                 "BATFISH_API_KEY": "",
                 "BATFISH_TLS": "false",
                 "DATABASE_URL": connection_file.read_text().strip().split("=", 1)[1],
+                "AUTH_ALLOWED_ORIGINS": json.dumps([state["api_url"]]),
+                "AUTH_COOKIE_SECURE": "false",
             }
             processes.append(
                 subprocess.Popen(
@@ -279,12 +284,16 @@ def serve(args):
                 )
             )
         wait_until(
-            lambda: http_status(f"http://127.0.0.1:{args.engine_port}/v2/version") == 200,
+            lambda: (
+                http_status(f"http://127.0.0.1:{args.engine_port}/v2/version") == 200
+            ),
             processes,
             "Batfish",
         )
         wait_until(
-            lambda: http_status(state["api_url"] + "/api/v1/health/live") == 200, processes, "API"
+            lambda: http_status(state["api_url"] + "/api/v1/health/live") == 200,
+            processes,
+            "API",
         )
         wait_until(
             lambda: (
@@ -319,7 +328,27 @@ def serve(args):
                 check=True,
                 timeout=60,
             )
-        state["database_migration"] = "0001"
+        state["database_migration"] = "0002"
+        auth_password = secrets.token_urlsafe(24)
+        auth_file = run / "auth.json"
+        with open(
+            auth_file, "x", opener=lambda path, flags: os.open(path, flags, 0o600)
+        ) as output:
+            json.dump({"username": "lab-admin", "password": auth_password}, output)
+        with (run / "bootstrap.log").open("w") as bootstrap_log:
+            subprocess.run(
+                [sys.executable, "-m", "app.bootstrap_admin"],
+                cwd=BACKEND,
+                env=env
+                | {
+                    "BOOTSTRAP_USERNAME": "lab-admin",
+                    "BOOTSTRAP_PASSWORD": auth_password,
+                },
+                stdout=bootstrap_log,
+                stderr=subprocess.STDOUT,
+                check=True,
+                timeout=30,
+            )
         write_json(CURRENT, state)
         write_json(run / "manifest.json", state)
         print(
@@ -336,7 +365,8 @@ def serve(args):
             flush=True,
         )
         print(
-            "Use seed, smoke, verify in a second terminal. Ctrl-C stops this lab only.", flush=True
+            "Use seed, smoke, verify in a second terminal. Ctrl-C stops this lab only.",
+            flush=True,
         )
         while all(p.poll() is None for p in processes):
             time.sleep(1)
@@ -363,7 +393,9 @@ def serve(args):
             )
         state["stopped_at"] = datetime.now(UTC).isoformat()
         if CURRENT.exists() and json.loads(CURRENT.read_text()).get("run_id") == run_id:
-            state = json.loads(CURRENT.read_text()) | {"stopped_at": state["stopped_at"]}
+            state = json.loads(CURRENT.read_text()) | {
+                "stopped_at": state["stopped_at"]
+            }
             write_json(CURRENT, state)
         write_json(run / "manifest.json", state)
 
@@ -384,10 +416,14 @@ def seed():
         session = Session(host=state["host"], port=state["engine_port"], timeout=15)
         session.set_network(network)
         if snapshot not in session.list_snapshots():
-            session.init_snapshot(str(profile["source"]), name=snapshot, overwrite=False)
+            session.init_snapshot(
+                str(profile["source"]), name=snapshot, overwrite=False
+            )
         else:
             session.set_snapshot(snapshot)
-        nodes = session.q.nodeProperties(properties="Configuration_Format").answer().frame()
+        nodes = (
+            session.q.nodeProperties(properties="Configuration_Format").answer().frame()
+        )
         if set(nodes.Node) != set(profile["nodes"]):
             raise RuntimeError(f"{name}: unexpected parsed inventory")
         archive = archive_snapshot(profile["source"], artifacts / f"{name}.zip")
@@ -419,7 +455,13 @@ def verify(smoke=False):
         "BATFISH_TEST_MANIFEST": str(run / "engine-manifest.json"),
         "BATFISH_TEST_EVIDENCE": str(evidence / "sdk-baseline.json"),
     }
-    command = [sys.executable, "-m", "pytest", "-q", f"--junitxml={evidence}/pytest.xml"]
+    command = [
+        sys.executable,
+        "-m",
+        "pytest",
+        "-q",
+        f"--junitxml={evidence}/pytest.xml",
+    ]
     if smoke:
         command.extend(["-m", "smoke"])
     with (evidence / "pytest.log").open("w") as log:
@@ -450,7 +492,9 @@ def verify(smoke=False):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=["serve", "seed", "status", "smoke", "verify"])
+    parser.add_argument(
+        "command", choices=["serve", "seed", "status", "smoke", "verify"]
+    )
     parser.add_argument("--engine-port", type=int, default=19996)
     parser.add_argument("--api-port", type=int, default=18000)
     parser.add_argument("--database-port", type=int, default=15439)
@@ -468,7 +512,9 @@ def main():
                 {
                     "manifest": str(CURRENT),
                     "run_id": state["run_id"],
-                    "api_live_status": http_status(state["api_url"] + "/api/v1/health/live"),
+                    "api_live_status": http_status(
+                        state["api_url"] + "/api/v1/health/live"
+                    ),
                     "engine_status": http_status(
                         f"http://127.0.0.1:{state['engine_port']}/v2/version"
                     ),

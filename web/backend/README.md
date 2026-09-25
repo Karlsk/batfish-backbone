@@ -8,10 +8,10 @@ MVP-02 提供 FastAPI 工厂、健康接口、统一错误、公共 DTO 和分�
 
 ```bash
 uv sync --locked
-uv run --locked uvicorn app.main:create_app --factory --host 127.0.0.1 --port 8000 --no-access-log
+uv run --locked uvicorn app.main:create_app --factory --host 127.0.0.1 --port 8000 --no-access-log --no-proxy-headers
 ```
 
-访问 `/docs` 查看 OpenAPI 文档。当前仅有健康接口，尚无登录、worker 或分析入口。日志关闭默认访问记录，避免后续含敏感参数的 URL 被记录。
+访问 `/docs` 查看 OpenAPI 文档。配置数据库后提供认证与健康接口，尚无 worker 或分析入口。日志关闭默认访问记录，避免含敏感参数的 URL 被记录。默认禁用代理头，客户端不能自行声明限流来源地址；反向代理部署须另行明确可信代理边界。
 
 | 接口 | 当前行为 |
 | --- | --- |
@@ -32,6 +32,9 @@ uv run --locked uvicorn app.main:create_app --factory --host 127.0.0.1 --port 80
 | `SDK_REQUEST_TIMEOUT` | 120 秒，必须大于 0；后续 controller 显式传入 SDK |
 | `SDK_CONCURRENCY` | 固定 1 |
 | `READINESS_MAX_AGE_SECONDS` | 60 秒，必须大于 0；状态缺失、过期或时间在未来均不 ready |
+| `AUTH_ALLOWED_ORIGINS` | JSON 数组，如 `["https://batfish.example"]`；默认空，所有登录/写请求拒绝；只允许精确 HTTP(S) Origin，不允许通配符、路径或 null |
+| `AUTH_COOKIE_SECURE` | 默认 true；仅本机 HTTP 开发时显式 false，生产通过 HTTPS |
+| `AUTH_FAILURE_LIMIT` / `AUTH_FAILURE_WINDOW_SECONDS` | 默认 5 次失败 / 900 秒；分别按用户名和连接地址限制，保存在 PostgreSQL，跨进程生效 |
 
 数据库 URL、引擎地址/端口和 API key 不进入配置 repr/model_dump。公共 DTO 拒绝未知字段，时间要求时区并输出 UTC，JSON 参数深层不可变；需要普通 JSON 时使用 `model_dump(mode="json")` 或 `model_dump_json()`。
 
@@ -74,3 +77,15 @@ ORM 归各业务模块，composition 统一注册 metadata。repository 返回�
 结果发布顺序：外层 `store.stage(key, bytes)`，内层 `database.transaction()` 中插入并 flush 结果元数据，调用 `pending.publish()`，随后退出事务提交。发布前失败会清理临时文件并回滚元数据；已发布文件不可覆盖。文件与 PostgreSQL 并非一个分布式事务：发布后崩溃、提交失败或提交结果未知可能留下未引用文件，不能盲目删除或声称成功；后续清理需先确认数据库引用。原子性不等于跨两种存储的同时提交。
 
 真实数据库检查包含在 `lab.py verify` 中；可在已运行的隔离 lab 上设置 `BATFISH_LAB_MANIFEST` 为其 current.json 路径后，单独运行 `uv run --locked pytest tests/test_persistence.py -q`。该变量仅用于测试，不是生产数据库配置入口。
+
+## 管理员初始化与认证
+
+在迁移完成且数据库环境已注入后执行 `uv run --locked python -m app.bootstrap_admin`，交互输入用户名及至少 12、最多 128 字符的临时密码。密码通过 getpass 隐藏，不放入命令行参数；自动化可注入 `BOOTSTRAP_USERNAME` / `BOOTSTRAP_PASSWORD` 受保护环境变量。命令仅在不存在管理员时成功，数据库锁防止并发重复初始化，并记录脱敏审计。
+
+认证路径均在 `/api/v1/auth`：`POST /login`、`GET /me`、`POST /password`、`POST /logout`。登录体为 username/password，响应包含 user_id、username、role、must_change_password 和 csrf_token。Cookie `batfish_session` 为 HttpOnly、SameSite=Lax、Path=/，默认 Secure、8 小时绝对过期；数据库只存 token 的 SHA256。密码使用 Argon2id。不存在、停用或密码错误均返回相同 401；达到失败阈值后返回 429，窗口结束后恢复。
+
+登录要求 Origin；后续写请求同时要求相同白名单中的 Origin 与 `X-CSRF-Token`。缺 Origin 一律拒绝，包括脚本客户端。仅绑定当前会话的 CSRF 值有效；`me` 和登录响应设 `Cache-Control: no-store`。首次登录必须更换临时密码，只能访问 me/password/logout。改密成功返回 204、清 Cookie、撤销该用户所有会话；随后重新登录。退出后的旧 Cookie 即使重放也无效。
+
+UsersService 每次查询实时身份与 session_version。改密增加版本并撤销会话；后续用户管理可以通过版本失效机制实现停用/重置撤销，避免 users 与 auth 相互依赖。会话和失败计数位于迁移 `0002`。数据库不可用不能认证成功；无 DATABASE_URL 的健康骨架不注册业务认证路由。
+
+测试环境 `serve` 自动创建随机临时管理员，凭证仅保存在本次运行目录的 `auth.json`（0600）。真实 HTTP 冒烟会登录两个独立客户端、改密、检查旧会话失效、重新登录并退出，同时更新该受保护文件；可重复运行累计验收。

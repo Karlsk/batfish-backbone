@@ -1,10 +1,16 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 
 from app.contracts.errors import ErrorEnvelope
+from app.infrastructure.database import Database
 from app.infrastructure.http import RequestContextMiddleware, install_error_handlers
 from app.infrastructure.settings import Settings
+from app.modules.auth.api import create_router as create_auth_router
+from app.modules.auth.service import AuthService
 from app.modules.health.api import create_router
 from app.modules.health.service import HealthService
+from app.modules.users.service import UsersService
 
 
 def database_metadata():
@@ -23,9 +29,23 @@ def database_metadata():
 
 
 def create_app(
-    settings: Settings | None = None, *, health_service: HealthService | None = None
+    settings: Settings | None = None,
+    *,
+    health_service: HealthService | None = None,
+    database: Database | None = None,
 ) -> FastAPI:
     settings = settings if settings is not None else Settings()
+    owns_database = database is None and settings.database_url is not None
+    db = Database(settings.database_url) if owns_database else database
+
+    @asynccontextmanager
+    async def lifespan(_app):
+        try:
+            yield
+        finally:
+            if owns_database:
+                db.close()
+
     health = (
         health_service
         if health_service is not None
@@ -37,9 +57,28 @@ def create_app(
         title="Batfish Web API",
         version="0.1.0",
         debug=False,
+        lifespan=lifespan,
         responses={422: {"model": ErrorEnvelope}, 500: {"model": ErrorEnvelope}},
     )
     app.add_middleware(RequestContextMiddleware)
     install_error_handlers(app)
     app.include_router(create_router(health), prefix="/api/v1")
+    if db is not None:
+        database_metadata()
+        users = UsersService(db)
+        auth = AuthService(db, users, settings)
+        app.state.auth_service = auth
+        app.state.users_service = users
+        app.include_router(
+            create_auth_router(auth, secure_cookie=settings.auth_cookie_secure), prefix="/api/v1"
+        )
     return app
+
+
+def initialize_administrator(settings: Settings, username: str, password: str) -> None:
+    database_metadata()
+    database = Database(settings.database_url)
+    try:
+        UsersService(database).bootstrap_admin(username, password)
+    finally:
+        database.close()

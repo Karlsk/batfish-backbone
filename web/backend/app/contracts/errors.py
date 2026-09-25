@@ -13,6 +13,7 @@ class ErrorCode(StrEnum):
     NOT_READY = "NOT_READY"
     INTERNAL_ERROR = "INTERNAL_ERROR"
     HTTP_ERROR = "HTTP_ERROR"
+    RATE_LIMITED = "RATE_LIMITED"
 
 
 class FieldError(Contract):
