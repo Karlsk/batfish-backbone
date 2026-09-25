@@ -62,6 +62,7 @@ MVP-05 用户管理响应：创建 201/PATCH 200 返回 `{id, username, role, en
 | GET /capabilities | 无 | 已登记能力和可用状态，不暴露连接凭证 |
 | GET/POST /networks | 创建 display_name | 列表；创建 201 NetworkDTO；SDK 状态失败保留可诊断记录 |
 | GET N | 无 | 共享网络详情和 sync_state |
+| GET /upload-limits | 已登录且完成改密的成员 | 200 当前max_bytes、max_expanded_bytes、max_files；无SDK调用 |
 | POST N/uploads | multipart files 或一个 ZIP，二选一 | 201 UploadDTO；不触发初始化 |
 | POST N/snapshots | display_name、upload_id、options | 202 {snapshot_id, job_id} |
 | GET N/snapshots、GET S | 无 | 列表/详情含解析状态、内容摘要、来源和创建者 |
@@ -230,3 +231,5 @@ TraceFlow.dispositions按返回路径统计，保留实际headers与起点；Tra
 summary.ignore_filters及警告明确标注已忽略ACL；摘要同时保留单向模型推演、非在线探测、非回程证明和原快照模型覆盖限制。成功/拒绝/无路由分别按disposition计数，多种结论并存时不简化为全部可达。
 
 已知终态失败后，经公开get_answer读取有限诊断文本并映射固定安全提示：没有活动起点提示start_location；不能推导源地址提示options.source_ip。底层堆栈/完整配置不返回、不持久化到普通日志。诊断文本不参与是否释放引擎的判断，未知工作仍按MVP-09对账规则处理。
+
+MVP-18 增加只读上传限额查询，来源为当前部署Settings而非前端常量；身份经AuthService复验。OpenAPI二进制字段在前端生成时映射Blob，浏览器使用FormData携带实际文件并自动生成multipart boundary。

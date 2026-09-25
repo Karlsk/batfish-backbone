@@ -6,7 +6,7 @@ from starlette.datastructures import UploadFile
 
 from app.contracts.errors import ErrorCode, ServiceError
 from app.infrastructure.multipart import bounded_form
-from app.modules.uploads.schemas import UploadDTO, UploadInput
+from app.modules.uploads.schemas import UploadDTO, UploadInput, UploadLimits
 from app.modules.uploads.service import UploadsService
 
 MULTIPART_SCHEMA = {
@@ -41,8 +41,12 @@ MULTIPART_SCHEMA = {
 }
 
 
-def create_router(service: UploadsService, *, write_actor):
+def create_router(service: UploadsService, *, read_actor, write_actor):
     router = APIRouter(tags=["uploads"])
+
+    @router.get("/upload-limits", response_model=UploadLimits)
+    def limits(actor=Depends(read_actor)):
+        return service.get_limits(actor)
 
     @router.post(
         "/networks/{network_id}/uploads",

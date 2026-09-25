@@ -20,6 +20,10 @@ class UploadsService:
         )
         self._ttl = settings.upload_ttl_seconds
 
+    def get_limits(self, actor: Actor) -> UploadLimits:
+        self._auth.revalidate_actor(actor)
+        return self.limits
+
     @property
     def storage_root(self):
         self._store.ensure_root()

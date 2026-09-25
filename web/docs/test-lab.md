@@ -76,7 +76,7 @@ MVP-09已接入真实观测：正常运行且观测新鲜时ready=200；累计�
 | MVP-16～21 | 页面可运行后添加浏览器测试，执行上传、快照选择、基础/高级参数、详情和刷新；页面变更补视觉检查 |
 | MVP-22～25 | 加入导出、删除互斥、本机完整部署与双用户闭环；两套配置均纳入累计回归 |
 
-当前没有前端，未执行浏览器测试；不为健康接口测试临时造一个前端。后续流程要求“当前 MVP + 之前所有 MVP 验收通过才 commit”，这里提供环境和当前后端检查入口，前端/部署检查需随所属 spec 明确接入，不能只保留后端 pytest 就声称全部回归通过。
+MVP-16起已有前端及真实浏览器测试，MVP-17增加真实双用户认证。前端在15173端口同源代理API，实验环境显式允许该Origin且不绕过CSRF。后续流程要求“当前 MVP + 之前所有 MVP 验收通过才 commit”，这里提供环境和当前后端检查入口，前端/部署检查需随所属 spec 明确接入，不能只保留后端 pytest 就声称全部回归通过。
 
 ## 本次实测记录
 
@@ -95,3 +95,9 @@ MVP-09已接入真实观测：正常运行且观测新鲜时ready=200；累计�
 serve现在启动独立worker并迁移0005，manifest记录worker_pid。seed/smoke/verify先向本轮manager请求优雅停止其worker并等待确认，防止SDK基线直接调用与后台探测重叠；超时则拒绝并发运行。命令结束后manager重新启动worker。这个控制只管理本轮测试进程，不作用于其他环境。
 
 真实worker冒烟在暂停期间启动独立子进程，验证心跳/真实SDK版本探测、ready=200、第二worker被拒绝、优雅退出后ready=503。进程恢复测试使用独立schema、真实SDK GET后在持久完成前SIGKILL，确认interrupted/unknown及阻止领取；它证明Web恢复约束，不宣称完成了尚未实现的快照/分析业务。MVP-08任务元数据冒烟在worker暂停时验证queued/cancel语义，保留原验收覆盖。
+
+## 前端累计验证
+
+后端verify结束且worker恢复后，在 `web/frontend` 执行 `pnpm test`、`pnpm check:api`、`pnpm typecheck`、`pnpm build`、`pnpm format:check`、`pnpm test:e2e`。Playwright自启动15173开发服务器并在结束后关闭；不要同时手动占用该端口。初次运行先 `pnpm exec playwright install chromium`。浏览器读取当前实验清单下的auth.json，不在文档/仓库写密码；失败trace可能含测试凭证，必须留在忽略提交的运行目录。
+
+MVP-18起浏览器将向真实worker提交两套配置的初始化任务，因此浏览器验收与直接SDK/后端累计测试串行执行，避免争用单引擎。

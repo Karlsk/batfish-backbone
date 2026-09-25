@@ -127,7 +127,8 @@ def create_app(
         uploads = UploadsService(db, auth, networks, settings)
         app.state.uploads_service = uploads
         app.include_router(
-            create_uploads_router(uploads, write_actor=write_actor), prefix="/api/v1"
+            create_uploads_router(uploads, read_actor=read_actor, write_actor=write_actor),
+            prefix="/api/v1",
         )
         snapshots = SnapshotsService(
             db, auth, networks, uploads, jobs, SnapshotController(db, settings)

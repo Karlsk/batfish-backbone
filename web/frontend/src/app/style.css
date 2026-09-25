@@ -242,3 +242,42 @@ input:focus-visible {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.record-id {
+  font-size: 11px;
+  color: #8a96a8;
+  overflow-wrap: anywhere;
+  margin-top: 4px;
+}
+.muted {
+  color: #66758b;
+  font-size: 12px;
+  line-height: 1.7;
+}
+.upload-wizard {
+  margin-bottom: 24px;
+}
+.upload-wizard .ant-alert {
+  margin: 16px 0;
+}
+.upload-wizard details {
+  margin: 16px 0;
+}
+.upload-wizard summary {
+  cursor: pointer;
+  color: #2563eb;
+}
+.file-picker {
+  display: block;
+  margin: 18px 0;
+  font-weight: 500;
+}
+.file-picker input {
+  display: block;
+  margin-top: 8px;
+}
+.page-heading h2 {
+  overflow-wrap: anywhere;
+}
+.ant-table-cell strong {
+  overflow-wrap: anywhere;
+}

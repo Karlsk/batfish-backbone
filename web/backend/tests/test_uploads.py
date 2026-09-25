@@ -179,7 +179,6 @@ def test_cleanup_only_old_unreferenced_directories(upload_app):
 def test_commit_failure_leaves_reconcilable_orphan(upload_app):
     from sqlalchemy import event
 
-
     client, db, app, headers = upload_app
     network = create_network(client, headers).json()["id"]
 
@@ -209,3 +208,17 @@ def test_commit_failure_leaves_reconcilable_orphan(upload_app):
     )  # Retained until DB outcome can be checked by TTL cleanup.
     with db.transaction() as tx:
         assert tx.execute(text("SELECT count(*) FROM uploads")).scalar_one() == 0
+
+
+def test_upload_limits_report_actual_settings_and_require_identity(upload_app):
+    client, _, app, _ = upload_app
+    response = client.get("/api/v1/upload-limits")
+    assert response.status_code == 200
+    limits = app.state.uploads_service.limits
+    assert response.json() == {
+        "max_bytes": limits.max_bytes,
+        "max_expanded_bytes": limits.max_expanded_bytes,
+        "max_files": limits.max_files,
+    }
+    with TestClient(app, base_url=ORIGIN) as anonymous:
+        assert anonymous.get("/api/v1/upload-limits").status_code == 401

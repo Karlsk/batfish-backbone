@@ -33,7 +33,8 @@ import {
   useQuery,
 } from "@tanstack/react-query";
 import {
-  BrowserRouter,
+  createBrowserRouter,
+  RouterProvider,
   Routes,
   Route,
   Link,
@@ -50,7 +51,23 @@ import {
   PasswordPage,
 } from "../features/auth/Auth";
 import { AdminOnly } from "../features/users/Access";
+import { ContextPicker } from "../features/networks/ContextPicker";
 import { LoadingState } from "../components/States";
+const NetworksPage = lazy(() =>
+  import("../features/networks/Networks").then((m) => ({
+    default: m.NetworksPage,
+  })),
+);
+const SnapshotsPage = lazy(() =>
+  import("../features/snapshots/Snapshots").then((m) => ({
+    default: m.SnapshotsPage,
+  })),
+);
+const InitializationJobPage = lazy(() =>
+  import("../features/snapshots/Snapshots").then((m) => ({
+    default: m.InitializationJobPage,
+  })),
+);
 const UsersPage = lazy(() =>
   import("../features/users/Users").then((module) => ({
     default: module.UsersPage,
@@ -163,8 +180,7 @@ export function Shell({ children }: PropsWithChildren) {
             {
               key: "/networks",
               icon: <DatabaseOutlined />,
-              label: "网络与快照",
-              disabled: true,
+              label: <Link to="/networks">网络与快照</Link>,
             },
             {
               key: "/analysis",
@@ -188,35 +204,7 @@ export function Shell({ children }: PropsWithChildren) {
       </Layout.Sider>
       <Layout className="main-layout">
         <Layout.Header className="topbar">
-          <div className="context-group">
-            <label>
-              当前网络
-              <Select
-                aria-label="当前网络"
-                className="context-select"
-                disabled
-                value={network?.id}
-                placeholder="选择网络"
-                options={
-                  network ? [{ value: network.id, label: network.name }] : []
-                }
-              />
-            </label>
-            <span className="context-divider">/</span>
-            <label>
-              当前快照
-              <Select
-                aria-label="当前快照"
-                className="context-select"
-                disabled
-                value={snapshot?.id}
-                placeholder="选择快照"
-                options={
-                  snapshot ? [{ value: snapshot.id, label: snapshot.name }] : []
-                }
-              />
-            </label>
-          </div>
+          <ContextPicker />
           <Space>
             <ServiceStatus />
             {session && (
@@ -239,6 +227,7 @@ export function Shell({ children }: PropsWithChildren) {
   );
 }
 function Overview() {
+  const { network, snapshot } = useResourceContext();
   return (
     <>
       <div className="page-heading">
@@ -271,8 +260,19 @@ function Overview() {
       <div className="overview-grid">
         <Card title="当前上下文">
           <EmptyState
-            title="尚未选择网络与快照"
-            description="网络和快照页面将在后续功能中开放。"
+            title={network ? network.name : "尚未选择网络与快照"}
+            description={
+              snapshot
+                ? `当前快照：${snapshot.name}`
+                : "选择网络后上传配置，开始分析。"
+            }
+            action={
+              <Link to={network ? "/snapshots" : "/networks"}>
+                <Button type="primary">
+                  {network ? "查看快照" : "选择或创建网络"}
+                </Button>
+              </Link>
+            }
           />
         </Card>
         <Card title="分析使用原则">
@@ -298,44 +298,55 @@ function Overview() {
     </>
   );
 }
-export function App() {
+function WorkbenchRoutes() {
   return (
     <Providers>
-      <BrowserRouter>
-        <SessionBootstrap>
-          <AuthGuard>
-            <Shell>
-              <Suspense fallback={<LoadingState />}>
-                <Routes>
-                  <Route
-                    path="/users"
-                    element={
-                      <AdminOnly>
-                        <UsersPage />
-                      </AdminOnly>
-                    }
-                  />
-                  <Route path="/password" element={<PasswordPage />} />
-                  <Route path="/" element={<Overview />} />
-                  <Route
-                    path="*"
-                    element={
-                      <EmptyState
-                        title="页面暂未开放"
-                        action={
-                          <Link to="/">
-                            <Button>返回概览</Button>
-                          </Link>
-                        }
-                      />
-                    }
-                  />
-                </Routes>
-              </Suspense>
-            </Shell>
-          </AuthGuard>
-        </SessionBootstrap>
-      </BrowserRouter>
+      <SessionBootstrap>
+        <AuthGuard>
+          <Shell>
+            <Suspense fallback={<LoadingState />}>
+              <Routes>
+                <Route
+                  path="/users"
+                  element={
+                    <AdminOnly>
+                      <UsersPage />
+                    </AdminOnly>
+                  }
+                />
+                <Route path="/networks" element={<NetworksPage />} />
+                <Route path="/snapshots" element={<SnapshotsPage />} />
+                <Route
+                  path="/jobs/:jobId"
+                  element={<InitializationJobPage />}
+                />
+                <Route path="/password" element={<PasswordPage />} />
+                <Route path="/" element={<Overview />} />
+                <Route
+                  path="*"
+                  element={
+                    <EmptyState
+                      title="页面暂未开放"
+                      action={
+                        <Link to="/">
+                          <Button>返回概览</Button>
+                        </Link>
+                      }
+                    />
+                  }
+                />
+              </Routes>
+            </Suspense>
+          </Shell>
+        </AuthGuard>
+      </SessionBootstrap>
     </Providers>
   );
+}
+
+export function App() {
+  const [router] = useState(() =>
+    createBrowserRouter([{ path: "*", element: <WorkbenchRoutes /> }]),
+  );
+  return <RouterProvider router={router} />;
 }
