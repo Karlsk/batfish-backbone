@@ -6,8 +6,8 @@
 
 ## 当前进度
 
-- 当前阶段：MVP-15 validated，累计259 passed、0 skipped；即将提交。
-- 下一动作：提交 MVP-15，继续 MVP-16 前端骨架与浏览器验收。
+- 当前阶段：MVP-16 validated；后端259/前端7/浏览器2通过，0 skipped。
+- 下一动作：提交 MVP-16，然后实施 MVP-17 登录与用户管理。
 - 环境观察：旧 API/JVM 已停止，保留了上一轮临时 PostgreSQL 容器；核对运行清单/标签后只停止该容器，重建测试环境。没有把历史证据当作本轮通过。
 - 当前无需求决策阻碍。所有新证据记录实际源码身份，运行凭证和完整日志留在忽略提交的 `.runtime/`。
 
@@ -27,8 +27,9 @@
 | MVP-12 | committed | 95df112c1e | f211ce5c9909f423dec3eef3a60234c572e0837c93291c276039fef0829f3a03 | 累计231 passed；smoke12；Ruff/锁文件/文档通过 | [验收](../evidence/mvp-12-verification.json) | 50cbc1d307 |
 | MVP-13 | committed | 50cbc1d307 | 42f94d1c760982615c7dc0a1e6243bb020f5f68006dd4830a88b3c42b90cbac0 | 累计246 passed；smoke12；Ruff/锁文件/文档通过 | [验收](../evidence/mvp-13-verification.json) | dedcc1a004 |
 | MVP-14 | committed | dedcc1a004 | 624aaefdfdcd3cf3239eb5e0ee236997c5bcd96099427e716204593c56f018f4 | 累计252 passed；smoke12；Ruff/锁文件/文档通过 | [验收](../evidence/mvp-14-verification.json) | 2fd851c926 |
-| MVP-15 | validated | 2fd851c926 | e7ad202de43ece28d8aa3e594b9931f8f020d3ef220903b30a1318e2c9b9625e | 累计259 passed；smoke12；Ruff/锁文件/文档通过 | [验收](../evidence/mvp-15-verification.json) | 待提交 |
-| MVP-16～25 | pending | 各篇开工时记录 | 尚未生成 | 逐篇加入验收矩阵 | 尚未运行 | 尚未提交 |
+| MVP-15 | committed | 2fd851c926 | e7ad202de43ece28d8aa3e594b9931f8f020d3ef220903b30a1318e2c9b9625e | 累计259 passed；smoke12；Ruff/锁文件/文档通过 | [验收](../evidence/mvp-15-verification.json) | 42f7aea7f5 |
+| MVP-16 | validated | 42f7aea7f5 | d4290535f64042740d1e4da7e7089c90121faf770185ed9caaa774a7ff0d6895 | 后端259/前端7/浏览器2；smoke12；静态检查通过 | [验收](../evidence/mvp-16-verification.json) | 待提交 |
+| MVP-17～25 | pending | 各篇开工时记录 | 尚未生成 | 逐篇加入验收矩阵 | 尚未运行 | 尚未提交 |
 
 可恢复状态：`web/.runtime/mvp-runner/checkpoint.json`。提交后的实际哈希先写 checkpoint，下一篇带入本文件；不为记录自己的哈希重复提交。
 
