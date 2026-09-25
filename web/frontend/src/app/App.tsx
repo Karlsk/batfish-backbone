@@ -53,6 +53,11 @@ import {
 import { AdminOnly } from "../features/users/Access";
 import { ContextPicker } from "../features/networks/ContextPicker";
 import { LoadingState } from "../components/States";
+const TracePage = lazy(() =>
+  import("../features/traceroute/TraceForm").then((m) => ({
+    default: m.TracePage,
+  })),
+);
 const AnalysisPage = lazy(() =>
   import("../features/inventory/Analysis").then((m) => ({
     default: m.AnalysisPage,
@@ -320,6 +325,7 @@ function WorkbenchRoutes() {
           <Shell>
             <Suspense fallback={<LoadingState />}>
               <Routes>
+                <Route path="/traceroute" element={<TracePage />} />
                 <Route path="/analysis/:operation" element={<AnalysisPage />} />
                 <Route path="/analysis" element={<AnalysisPage />} />
                 <Route path="/results/:resultId" element={<ResultsPage />} />

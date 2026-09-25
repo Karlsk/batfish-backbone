@@ -32,7 +32,14 @@ const interfaceOptions = schemas.InterfaceOptions.properties.properties;
 const routingProtocols = schemas.RoutingOptions.properties.protocols.anyOf.find(
   (value) => value.type === "array",
 );
+const trace = schemas.TraceOptions.properties;
 const catalogs = {
+  traceProtocols: trace.ip_protocols.items.enum,
+  traceDefaults: {
+    ip_protocols: trace.ip_protocols.default,
+    max_traces: trace.max_traces.default,
+    ignore_filters: trace.ignore_filters.default,
+  },
   nodeProperties: nodeOptions.items.enum,
   interfaceProperties: interfaceOptions.items.enum,
   protocols: routingProtocols.items.enum,

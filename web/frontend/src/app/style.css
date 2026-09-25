@@ -342,3 +342,10 @@ input:focus-visible {
   overflow: hidden;
   overflow-wrap: anywhere;
 }
+.path-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin: 24px 0;
+}

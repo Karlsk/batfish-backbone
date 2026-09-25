@@ -1,4 +1,20 @@
 // Generated from OpenAPI by pnpm generate:api. Do not edit.
+export const traceProtocols = [
+  "icmp",
+  "tcp",
+  "udp",
+  "gre",
+  "esp",
+  "ah",
+  "ospf",
+  "sctp",
+  "ipinip",
+] as const;
+export const traceDefaults = {
+  ip_protocols: ["icmp"],
+  max_traces: 5,
+  ignore_filters: false,
+} as const;
 export const nodeProperties = [
   "AS_Path_Access_Lists",
   "Authentication_Key_Chains",

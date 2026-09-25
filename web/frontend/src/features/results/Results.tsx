@@ -1,3 +1,4 @@
+import { TraceResults } from "../traceroute/TraceResults";
 import { useState } from "react";
 import {
   Alert,
@@ -60,6 +61,8 @@ function ResultView({ resultId }: { resultId: string }) {
       </p>
       {result.kind === "table" ? (
         <ResultTable result={result} />
+      ) : result.kind === "traces" ? (
+        <TraceResults result={result} />
       ) : (
         <EmptyState title="此结果请通过对应分析视图查看" />
       )}

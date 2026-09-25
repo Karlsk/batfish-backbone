@@ -57,6 +57,9 @@ export function AnalysisPage() {
             </Button>
           </Link>
         ))}
+        <Link to="/traceroute">
+          <Button>虚拟 traceroute</Button>
+        </Link>
       </Space>
       <AnalysisForm
         key={`${network.id}:${snapshot.id}:${operation}`}
