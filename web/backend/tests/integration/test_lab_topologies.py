@@ -597,9 +597,14 @@ def test_real_snapshot_worker_smoke(lab, fixture_name, expected_nodes):
                 if fixture_name == "small_network":
                     assert detail["quality_summary"]["coverage"] == "limited"
                     assert detail["quality_summary"]["model_limits"]
-                for operation in ("nodes", "interfaces"):
+                for operation in ("nodes", "interfaces", "routes", "lpm-routes"):
+                    body = (
+                        {"ip": "10.0.0.2" if fixture_name == "small_network" else "10.64.0.4"}
+                        if operation == "lpm-routes"
+                        else {}
+                    )
                     submitted = client.post(
-                        base + "/analyses/" + operation, json={}, headers=headers
+                        base + "/analyses/" + operation, json=body, headers=headers
                     )
                     assert submitted.status_code == 202, submitted.text
                     deadline = time.monotonic() + 45
@@ -623,6 +628,8 @@ def test_real_snapshot_worker_smoke(lab, fixture_name, expected_nodes):
                 assert {item["id"] for item in capabilities.json() if item["enabled"]} == {
                     "nodes",
                     "interfaces",
+                    "routes",
+                    "lpm-routes",
                 }
             finally:
                 worker.terminate()

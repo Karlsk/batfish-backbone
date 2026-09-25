@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends, Header
 from app.contracts.dto import Actor, JobDTO
 from app.modules.analysis.schemas import Capability
 from app.modules.analysis.schemas.inventory import InterfacesRequest, NodesRequest
+from app.modules.analysis.schemas.routing import LpmRequest, RoutesRequest
 from app.modules.analysis.service import AnalysisService
 
 
@@ -47,6 +48,40 @@ def create_router(service: AnalysisService, *, read_actor, write_actor):
             network_id,
             snapshot_id,
             "interfaces",
+            body.model_dump(mode="json", exclude_unset=True),
+            idempotency_key=idempotency_key,
+        )
+
+    @router.post(base + "/routes", response_model=JobDTO, status_code=202)
+    def routes(
+        network_id: UUID,
+        snapshot_id: UUID,
+        body: RoutesRequest,
+        actor: Actor = Depends(write_actor),
+        idempotency_key: str | None = Header(None, max_length=128),
+    ):
+        return service.submit(
+            actor,
+            network_id,
+            snapshot_id,
+            "routes",
+            body.model_dump(mode="json", exclude_unset=True),
+            idempotency_key=idempotency_key,
+        )
+
+    @router.post(base + "/lpm-routes", response_model=JobDTO, status_code=202)
+    def lpm_routes(
+        network_id: UUID,
+        snapshot_id: UUID,
+        body: LpmRequest,
+        actor: Actor = Depends(write_actor),
+        idempotency_key: str | None = Header(None, max_length=128),
+    ):
+        return service.submit(
+            actor,
+            network_id,
+            snapshot_id,
+            "lpm-routes",
             body.model_dump(mode="json", exclude_unset=True),
             idempotency_key=idempotency_key,
         )

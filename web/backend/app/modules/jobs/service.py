@@ -229,6 +229,16 @@ class JobsService:
                 cancel_allowed=False,
             )
 
+    def set_phase(self, job_id, worker_id, phase):
+        if phase not in {"checking_cache", "querying", "dataplane_or_query"}:
+            raise ServiceError(ErrorCode.VALIDATION_ERROR)
+        with self._database.transaction() as transaction:
+            repository = JobsRepository(transaction)
+            job = repository.get(job_id, lock=True)
+            if job is None or job.status != "running" or job.lease_owner != worker_id:
+                raise ServiceError(ErrorCode.CONFLICT)
+            return repository.transition(job_id, expected="running", status="running", phase=phase)
+
     def heartbeat(self, job_id, worker_id):
         with self._database.transaction() as transaction:
             JobsRepository(transaction).heartbeat(job_id, worker_id)

@@ -91,7 +91,14 @@ class AnalysisService:
             parameters,
             output_limits=self._results.output_limits,
         )
+        self._jobs.set_phase(job.id, job.lease_owner, "checking_cache")
         cached = self._results.cached(key)
+        if not cached:
+            self._jobs.set_phase(
+                job.id,
+                job.lease_owner,
+                "dataplane_or_query" if entry.requires_dataplane else "querying",
+            )
         answer = (
             None
             if cached

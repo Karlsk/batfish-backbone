@@ -13,7 +13,8 @@ from requests.exceptions import HTTPError
 from app.contracts.errors import ErrorCode, FieldError, ServiceError
 from app.contracts.results import Column, StructuredAnswer
 from app.infrastructure.sdk import SessionFactory
-from app.modules.analysis.controllers.inventory import QUERIES
+from app.modules.analysis.controllers.inventory import QUERIES as INVENTORY_QUERIES
+from app.modules.analysis.controllers.routing import QUERIES as ROUTING_QUERIES
 
 
 def normalize(value):
@@ -40,7 +41,7 @@ class AnalysisController:
     def __init__(self, database, settings, *, queries=None):
         self._sessions = SessionFactory(database, settings)
         self._wait_budget = settings.job_wait_budget_seconds
-        self._queries = dict(QUERIES if queries is None else queries)
+        self._queries = dict((INVENTORY_QUERIES | ROUTING_QUERIES) if queries is None else queries)
 
     def runtime_versions(self):
         with self._sessions.exclusive(owner="analysis-version-check") as session:

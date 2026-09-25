@@ -1,6 +1,6 @@
 # MVP-14 路由与最长前缀匹配接口
 
-- 状态：待开发
+- 状态：已完成
 - 阶段：1
 - 依赖：[MVP-13](../mvp/mvp-13-inventory.md)
 - 预计工作量：1.5 人天（实现/验证 1.0 + 测试 0.25 + 文档/自检 0.25），依赖就绪后计；超过 2 人天先拆分。
@@ -33,10 +33,10 @@
 
 ## 实施步骤
 
-- [ ] 增加两个专用请求模型、controller 和目录记录。
-- [ ] 过滤参数下推 SDK，保留 NextHop 类型和 VRF，不拍平成丢失语义的单字符串。
-- [ ] 接入任务/结果，记录首次数据面计算的等待阶段。
-- [ ] 运行下述验证，记录实际命令与结果，更新本文及索引状态。
+- [x] 增加两个专用请求模型、controller 和目录记录。
+- [x] 过滤参数下推 SDK，保留 NextHop 类型和 VRF，不拍平成丢失语义的单字符串。
+- [x] 接入任务/结果，记录首次数据面计算的等待阶段。
+- [x] 运行下述验证，记录实际命令与结果，更新本文及索引状态。
 
 ## 测试与验收
 
@@ -54,4 +54,10 @@
 
 ## 完成记录
 
-当前尚未开发或运行本 spec 的产品测试。实施者完成后在本节记录实际文件、验证命令、结果、引擎/SDK版本（如涉及）和剩余限制；存在验收失败时保持未通过状态。
+2026-09-25 完成routes/lpm-routes专用接口、routing schemas/controller、能力目录启用和有效参数记录。nodes显式选择器复用MVP-13；VRF字面安全编码，专家模式为Java正则；协议为固定引擎白名单，prefix_match_type严格四枚举且默认EXACT，RIB仅main/bgp。network/ip严格IPv4，IPv6与LPM额外RIB参数在入队前拒绝。
+
+结果保留结构化Next_Hop与VRF；LPM仅保留SDK的Node/VRF/Ip/Network/Num_Routes，详情查询以命中前缀和Node/VRF调用routes。JobsService增加当前运行租约保护的phase更新，AnalysisService仅经service更新checking_cache、querying、dataplane_or_query；不虚构数据面计算百分比，也不宣称能区分引擎已缓存的数据面。
+
+仓库根运行 `web/backend/.venv/bin/python web/scripts/lab.py seed`、`smoke`、`verify`：实际HTTP/CLI worker冒烟 **12 passed**（两套配置均执行四类已开放分析）；MVP-01～14累计 **252 passed、0 skipped**。6项专项测试包括IPv6/未知RIB/匹配枚举拒绝、四种真实SDK下一跳对象结构、两套配置逐行逐列SDK对照、Cisco派生默认路由/BLUE VRF/同前缀不同协议/丢弃路由/四种前缀匹配、空BGP/无LPM命中、阶段更新租约与终态保护。VRF类型下一跳使用SDK对象序列化单测；真实拓扑覆盖IP/接口/丢弃结果，不声称此Cisco样例包含跨VRF转发。见 [验收证据](../../evidence/mvp-14-verification.json)。
+
+独立审查发现地址库接受非CIDR别名并改写原始请求的问题，已先复现再限制规范CIDR，补充三种别名的registry和HTTP拒绝测试；复审通过。Ruff、锁文件、Markdown链接与Git空白检查通过。固定Batfish0.36.0/Pybatfish2026.9.17.3748/JAR，未修改Java；无必需检查遗漏，MVP-15依赖就绪。

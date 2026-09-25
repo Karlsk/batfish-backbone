@@ -1,6 +1,6 @@
 # API 与数据契约
 
-所有路径以 `/api/v1` 为前缀。MVP-02 已实现健康路由、统一错误及 Actor/AnalysisContext/JobDTO/ResultEnvelope，MVP-04/05 已实现认证与账号管理路由，MVP-06 已实现网络创建/列表/详情；MVP-07～10 已实现上传、任务、独立 worker 与快照初始化；其余业务接口仍为拟实现契约，不是现有 Batfish REST 的重命名。网络/快照采用 UUID，SDK 内部名称由 service 维护。日期使用 UTC ISO 8601，前端转换为本地时间。
+所有路径以 `/api/v1` 为前缀。MVP-02 已实现健康路由、统一错误及 Actor/AnalysisContext/JobDTO/ResultEnvelope，MVP-04/05 已实现认证与账号管理路由，MVP-06 已实现网络创建/列表/详情；MVP-07～10 已实现上传、任务、独立 worker 与快照初始化，MVP-11～14 已实现诊断文件、结果目录、设备接口与路由/LPM分析；其余业务接口仍为拟实现契约，不是现有 Batfish REST 的重命名。网络/快照采用 UUID，SDK 内部名称由 service 维护。日期使用 UTC ISO 8601，前端转换为本地时间。
 
 ## 最小参数与专家扩展
 
@@ -210,3 +210,13 @@ worker在查询缓存前核对本次实际引擎及SDK版本。与快照记录�
 两类接口均要求写入身份/CSRF，支持 Idempotency-Key，使用不可变快照绑定的任务和结果；路由和 traceroute 继续由后续篇目启用。
 
 分析 worker 使用已验证的公开后台查询/工作状态/答案读取能力，同一 SDK Session 内等待。引擎明确报告终止失败时，任务返回 `ENGINE_QUERY_FAILED` 和脱敏检查提示，释放串行占用，后续任务可继续；SDK 本地参数校验失败返回 `VALIDATION_ERROR`。等待超时、网络异常等无法确认引擎终态时，仍进入 `ENGINE_STATE_UNKNOWN` 并要求对账，不根据异常字符串猜测是否可以释放。
+
+### MVP-14 路由与 LPM 参数
+
+`POST S/analyses/routes` 接受 `{}`；nodes 可选且复用显式选择器。`options.network` 为严格IPv4 CIDR（不接受带主机位前缀），`protocols` 为非空协议/协议组枚举列表；`rib` 仅 main/bgp、默认main；`prefix_match_type` 为 EXACT（默认）、LONGEST_PREFIX_MATCH、LONGER_PREFIXES、SHORTER_PREFIXES。原始与默认补齐后的有效参数分别随任务保存，结果保留有效参数。
+
+`POST S/analyses/lpm-routes` 只要求IPv4字符串 `ip`，可选nodes与options.vrfs。LPM仅main RIB，结果为Node/VRF/Ip/Network/Num_Routes，不补造Next_Hop；需要详情时使用明确Node/VRF和命中Network查询routes。
+
+两类接口的 `options.vrfs` 同样使用 literal/values 或 expression/expression 形状；专家表达式在此是Java正则（例如 `^BLUE$`），不是带斜杠的节点选择表达式。字面VRF使用严格锚定正则；VRF名称按引擎大小写敏感规则匹配。未提供筛选表示全部，正常无命中是成功空表。
+
+数据面分析执行期间JobDTO.phase为 `dataplane_or_query`（可能等待首次数据面计算或查询）；缓存检查阶段为 `checking_cache`，普通查询为 `querying`。这是应用阶段而非引擎百分比；只允许当前运行租约更新，已结束或已中断任务不可更新阶段。所有IPv6输入均在API校验时拒绝，不进入任务队列。

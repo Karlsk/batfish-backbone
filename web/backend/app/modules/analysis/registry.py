@@ -4,6 +4,7 @@ from app.contracts.base import thaw
 from app.contracts.errors import ErrorCode, FieldError, ServiceError
 from app.modules.analysis.schemas import Capability, Entry
 from app.modules.analysis.schemas.inventory import InterfacesRequest, NodesRequest
+from app.modules.analysis.schemas.routing import LpmRequest, RoutesRequest
 
 
 class Registry:
@@ -25,8 +26,24 @@ class Registry:
                 question_id="interfaceProperties",
                 to_sdk=lambda request: request.model_dump(mode="json"),
             ),
-            Entry("routes", "Routes", requires_dataplane=True),
-            Entry("lpm-routes", "Longest prefix match", requires_dataplane=True),
+            Entry(
+                "routes",
+                "Routes",
+                request_model=RoutesRequest,
+                enabled=True,
+                question_id="routes",
+                requires_dataplane=True,
+                to_sdk=lambda request: request.model_dump(mode="json"),
+            ),
+            Entry(
+                "lpm-routes",
+                "Longest prefix match",
+                request_model=LpmRequest,
+                enabled=True,
+                question_id="lpmRoutes",
+                requires_dataplane=True,
+                to_sdk=lambda request: request.model_dump(mode="json"),
+            ),
             Entry(
                 "traceroute", "Virtual traceroute", result_kind="traces", requires_dataplane=True
             ),

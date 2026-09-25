@@ -14,7 +14,12 @@ def test_inventory_options_are_typed():
     from app.modules.analysis.registry import Registry
 
     registry = Registry()
-    assert {c.id for c in registry.capabilities() if c.enabled} == {"nodes", "interfaces"}
+    assert {c.id for c in registry.capabilities() if c.enabled} == {
+        "nodes",
+        "interfaces",
+        "routes",
+        "lpm-routes",
+    }
     for operation, request in [
         ("nodes", {"options": {"nodes": "r1"}}),
         ("nodes", {"options": {"nodes": {"mode": "literal", "values": []}}}),
