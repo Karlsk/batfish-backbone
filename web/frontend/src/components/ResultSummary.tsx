@@ -6,6 +6,19 @@ export function ResultSummary({
   result: components["schemas"]["ResultEnvelope"];
 }) {
   const warnings = [...result.warnings];
+  const quality = result.summary.quality;
+  if (quality && typeof quality === "object" && !Array.isArray(quality)) {
+    const data = quality as Record<string, unknown>;
+    const statuses = data.parse_statuses;
+    if (
+      Number(data.issue_count ?? 0) > 0 ||
+      (Array.isArray(statuses) &&
+        statuses.some((status) => status !== "PASSED"))
+    )
+      warnings.unshift(
+        "此快照存在解析问题或部分解析，请先查看快照诊断；结果可能不完整。",
+      );
+  }
   if (result.coverage !== "complete")
     warnings.unshift(
       result.coverage === "limited"

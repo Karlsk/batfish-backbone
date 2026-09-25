@@ -399,6 +399,11 @@ function JobView({ jobId }: { jobId: string }) {
               新建重试任务
             </Button>
           )}
+          {job.result_id && (
+            <Link to={`/results/${job.result_id}`}>
+              <Button type="primary">查看分析结果</Button>
+            </Link>
+          )}
           <Button onClick={() => setDetails(true)}>查看参数与来源详情</Button>
           {networkId && snapshotId && (
             <Link

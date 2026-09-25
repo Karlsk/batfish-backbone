@@ -25,3 +25,32 @@ if (process.argv.includes("--check")) {
   if (readFileSync(path, "utf8") !== output)
     throw new Error("OpenAPI types are stale: run pnpm generate:api");
 } else writeFileSync(path, output);
+
+const schemas = contract.components.schemas;
+const nodeOptions = schemas.NodeOptions.properties.properties;
+const interfaceOptions = schemas.InterfaceOptions.properties.properties;
+const routingProtocols = schemas.RoutingOptions.properties.protocols.anyOf.find(
+  (value) => value.type === "array",
+);
+const catalogs = {
+  nodeProperties: nodeOptions.items.enum,
+  interfaceProperties: interfaceOptions.items.enum,
+  protocols: routingProtocols.items.enum,
+  defaultNodeProperties: nodeOptions.default,
+  defaultInterfaceProperties: interfaceOptions.default,
+};
+const catalogPath = "src/features/inventory/catalog.ts";
+const catalog = await format(
+  "// Generated from OpenAPI by pnpm generate:api. Do not edit.\n" +
+    Object.entries(catalogs)
+      .map(
+        ([name, value]) =>
+          `export const ${name} = ${JSON.stringify(value)} as const;`,
+      )
+      .join("\n"),
+  { parser: "typescript" },
+);
+if (process.argv.includes("--check")) {
+  if (readFileSync(catalogPath, "utf8") !== catalog)
+    throw new Error("Option catalogs are stale: run pnpm generate:api");
+} else writeFileSync(catalogPath, catalog);

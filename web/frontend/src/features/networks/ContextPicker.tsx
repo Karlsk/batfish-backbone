@@ -1,13 +1,45 @@
+import { useEffect, useState } from "react";
 import { Select, Button, Space } from "antd";
 import { useResourceContext } from "../../app/context";
 import { useNetworks, useSnapshots } from "./queries";
 export function ContextPicker() {
   const { network, snapshot, selectNetwork, selectSnapshot } =
     useResourceContext();
+  const [networkSearch, setNetworkSearch] = useState("");
+  const [snapshotSearch, setSnapshotSearch] = useState("");
   const networks = useNetworks();
   const snapshots = useSnapshots(network?.id ?? null);
   const ns = networks.data?.pages.flatMap((p) => p.items) ?? [];
   const ss = snapshots.data?.pages.flatMap((p) => p.items) ?? [];
+  useEffect(() => {
+    if (
+      networkSearch &&
+      !ns.some((n) =>
+        `${n.display_name} · ${n.id.slice(0, 8)}`
+          .toLowerCase()
+          .includes(networkSearch.toLowerCase()),
+      ) &&
+      networks.hasNextPage &&
+      !networks.isFetching &&
+      !networks.isError
+    )
+      void networks.fetchNextPage();
+  }, [networkSearch, ns, networks]);
+  useEffect(() => {
+    if (
+      snapshotSearch &&
+      !ss.some((s) =>
+        `${s.display_name} · ${s.id.slice(0, 8)}`
+          .toLowerCase()
+          .includes(snapshotSearch.toLowerCase()),
+      ) &&
+      snapshots.hasNextPage &&
+      !snapshots.isFetching &&
+      !snapshots.isError
+    )
+      void snapshots.fetchNextPage();
+  }, [snapshotSearch, ss, snapshots]);
+  useEffect(() => setSnapshotSearch(""), [network?.id]);
   return (
     <div className="context-group">
       <label>
@@ -15,7 +47,8 @@ export function ContextPicker() {
         <Select
           aria-label="当前网络"
           className="context-select"
-          showSearch={{ optionFilterProp: "label" }}
+          virtual={false}
+          showSearch={{ optionFilterProp: "label", onSearch: setNetworkSearch }}
           value={network?.id}
           loading={networks.isFetching}
           placeholder="选择网络"
@@ -52,7 +85,11 @@ export function ContextPicker() {
         <Select
           aria-label="当前快照"
           className="context-select"
-          showSearch={{ optionFilterProp: "label" }}
+          virtual={false}
+          showSearch={{
+            optionFilterProp: "label",
+            onSearch: setSnapshotSearch,
+          }}
           disabled={!network}
           value={snapshot?.id}
           loading={snapshots.isFetching}

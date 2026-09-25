@@ -17,3 +17,9 @@ window.getComputedStyle = new Proxy(window.getComputedStyle, {
     return Reflect.apply(target, thisArg, [args[0]]);
   },
 });
+// jsdom has no layout engine; real resize behavior is covered by Playwright.
+globalThis.ResizeObserver = class {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+};

@@ -53,6 +53,16 @@ import {
 import { AdminOnly } from "../features/users/Access";
 import { ContextPicker } from "../features/networks/ContextPicker";
 import { LoadingState } from "../components/States";
+const AnalysisPage = lazy(() =>
+  import("../features/inventory/Analysis").then((m) => ({
+    default: m.AnalysisPage,
+  })),
+);
+const ResultsPage = lazy(() =>
+  import("../features/results/Results").then((m) => ({
+    default: m.ResultsPage,
+  })),
+);
 const NetworksPage = lazy(() =>
   import("../features/networks/Networks").then((m) => ({
     default: m.NetworksPage,
@@ -191,8 +201,7 @@ export function Shell({ children }: PropsWithChildren) {
             {
               key: "/analysis",
               icon: <BranchesOutlined />,
-              label: "网络分析",
-              disabled: true,
+              label: <Link to="/analysis/nodes">网络分析</Link>,
             },
             {
               key: "/jobs",
@@ -311,6 +320,9 @@ function WorkbenchRoutes() {
           <Shell>
             <Suspense fallback={<LoadingState />}>
               <Routes>
+                <Route path="/analysis/:operation" element={<AnalysisPage />} />
+                <Route path="/analysis" element={<AnalysisPage />} />
+                <Route path="/results/:resultId" element={<ResultsPage />} />
                 <Route
                   path="/users"
                   element={

@@ -149,6 +149,9 @@ for (const topology of ["small_network", "cisco_four"]) {
       exact: true,
     });
     await networkPicker.fill(networkName);
+    await expect(
+      page.getByRole("option", { name: new RegExp(networkName) }),
+    ).toBeVisible();
     await networkPicker.press("Enter");
     await expect(
       page.getByRole("dialog", { name: "放弃未完成的快照向导？", exact: true }),
@@ -161,6 +164,9 @@ for (const topology of ["small_network", "cisco_four"]) {
       page.getByRole("heading", { name: other, exact: true }),
     ).toBeVisible();
     await networkPicker.fill(networkName);
+    await expect(
+      page.getByRole("option", { name: new RegExp(networkName) }),
+    ).toBeVisible();
     await networkPicker.press("Enter");
     await page.getByRole("button", { name: "放弃并切换", exact: true }).click();
     await expect(
