@@ -14,6 +14,7 @@ dependencies = [
   "psycopg[binary]>=3.2,<4",
   "argon2-cffi>=25.1,<26",
   "python-multipart>=0.0.20,<0.1",
+  "requests>=2.32,<3",
 ]
 
 [dependency-groups]

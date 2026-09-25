@@ -145,7 +145,8 @@ def create_app(
         )
         app.state.analysis_service = analysis
         app.include_router(
-            create_analysis_router(analysis, read_actor=read_actor), prefix="/api/v1"
+            create_analysis_router(analysis, read_actor=read_actor, write_actor=write_actor),
+            prefix="/api/v1",
         )
         execution = ExecutionService(
             db,

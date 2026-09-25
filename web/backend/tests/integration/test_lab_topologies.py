@@ -597,61 +597,33 @@ def test_real_snapshot_worker_smoke(lab, fixture_name, expected_nodes):
                 if fixture_name == "small_network":
                     assert detail["quality_summary"]["coverage"] == "limited"
                     assert detail["quality_summary"]["model_limits"]
+                for operation in ("nodes", "interfaces"):
+                    submitted = client.post(
+                        base + "/analyses/" + operation, json={}, headers=headers
+                    )
+                    assert submitted.status_code == 202, submitted.text
+                    deadline = time.monotonic() + 45
+                    while True:
+                        finished = client.get("/api/v1/jobs/" + submitted.json()["id"]).json()
+                        if finished["status"] not in {"queued", "running"}:
+                            break
+                        assert worker.poll() is None and time.monotonic() < deadline
+                        time.sleep(0.1)
+                    assert finished["status"] == "succeeded", finished
+                    result_url = "/api/v1/results/" + finished["result_id"]
+                    assert client.get(result_url).status_code == 200
+                    rows = client.get(result_url + "/rows").json()
+                    assert (
+                        rows["total"] == expected_nodes
+                        if operation == "nodes"
+                        else rows["total"] >= expected_nodes
+                    )
+                capabilities = client.get("/api/v1/capabilities")
+                assert capabilities.status_code == 200
+                assert {item["id"] for item in capabilities.json() if item["enabled"]} == {
+                    "nodes",
+                    "interfaces",
+                }
             finally:
                 worker.terminate()
                 worker.wait(timeout=15)
-        # MVP-12 registers a test-only query; product inventory remains disabled until MVP-13.
-        from uuid import UUID
-
-        from app.composition import create_app
-        from app.infrastructure.database import Database
-        from app.infrastructure.settings import Settings
-        from app.modules.analysis.controller import AnalysisController
-        from app.modules.analysis.registry import Registry
-        from app.modules.analysis.schemas import Entry
-        from app.modules.analysis.service import AnalysisService
-        from app.modules.execution.schemas import Handler
-
-        db = Database(env["DATABASE_URL"])
-        try:
-            settings = Settings(
-                data_dir=run / "data", batfish_host=lab["host"], batfish_port=lab["engine_port"]
-            )
-            application = create_app(settings, database=db)
-            actor = application.state.auth_service.require_actor(
-                client.cookies.get("batfish_session")
-            )
-            registry = Registry(
-                [Entry("nodes", "Test nodes", enabled=True, question_id="nodeProperties")]
-            )
-            controller = AnalysisController(
-                db,
-                settings,
-                queries={"nodeProperties": lambda session, args: session.q.nodeProperties(**args)},
-            )
-            analysis = AnalysisService(
-                application.state.auth_service,
-                application.state.snapshots_service,
-                application.state.jobs_service,
-                application.state.results_service,
-                controller,
-                registry,
-            )
-            application.state.execution_service._handlers["analysis"] = Handler(
-                analysis.execute, analysis.retry, analysis.publish
-            )
-            submitted = analysis.submit(
-                actor, UUID(network), UUID(created["snapshot_id"]), "nodes", {}
-            )
-            assert application.state.execution_service.run_once("result-smoke")
-            finished = client.get("/api/v1/jobs/" + str(submitted.id)).json()
-            assert finished["status"] == "succeeded"
-            result_url = "/api/v1/results/" + finished["result_id"]
-            assert client.get(result_url).status_code == 200
-            assert client.get(result_url + "/rows").json()["total"] == expected_nodes
-            capabilities = client.get("/api/v1/capabilities")
-            assert capabilities.status_code == 200 and all(
-                not item["enabled"] for item in capabilities.json()
-            )
-        finally:
-            db.close()

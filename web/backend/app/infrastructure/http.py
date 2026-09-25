@@ -22,6 +22,10 @@ ERRORS = {
     ErrorCode.INTERNAL_ERROR: (500, "Internal server error"),
     ErrorCode.HTTP_ERROR: (400, "Request failed"),
     ErrorCode.RATE_LIMITED: (429, "Rate or queue limit exceeded; try again later"),
+    ErrorCode.ENGINE_QUERY_FAILED: (
+        422,
+        "Engine query failed; check parameters and snapshot diagnostics",
+    ),
     ErrorCode.ENGINE_STATE_UNKNOWN: (
         503,
         "Engine state unknown; administrator reconciliation required",

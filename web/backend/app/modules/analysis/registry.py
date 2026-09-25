@@ -3,13 +3,28 @@ from pydantic import ValidationError
 from app.contracts.base import thaw
 from app.contracts.errors import ErrorCode, FieldError, ServiceError
 from app.modules.analysis.schemas import Capability, Entry
+from app.modules.analysis.schemas.inventory import InterfacesRequest, NodesRequest
 
 
 class Registry:
     def __init__(self, entries=None):
         defaults = [
-            Entry("nodes", "Devices"),
-            Entry("interfaces", "Interfaces"),
+            Entry(
+                "nodes",
+                "Devices",
+                request_model=NodesRequest,
+                enabled=True,
+                question_id="nodeProperties",
+                to_sdk=lambda request: request.model_dump(mode="json"),
+            ),
+            Entry(
+                "interfaces",
+                "Interfaces",
+                request_model=InterfacesRequest,
+                enabled=True,
+                question_id="interfaceProperties",
+                to_sdk=lambda request: request.model_dump(mode="json"),
+            ),
             Entry("routes", "Routes", requires_dataplane=True),
             Entry("lpm-routes", "Longest prefix match", requires_dataplane=True),
             Entry(

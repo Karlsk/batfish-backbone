@@ -1,15 +1,54 @@
-from fastapi import APIRouter, Depends
+from uuid import UUID
 
-from app.contracts.dto import Actor
+from fastapi import APIRouter, Depends, Header
+
+from app.contracts.dto import Actor, JobDTO
 from app.modules.analysis.schemas import Capability
+from app.modules.analysis.schemas.inventory import InterfacesRequest, NodesRequest
 from app.modules.analysis.service import AnalysisService
 
 
-def create_router(service: AnalysisService, *, read_actor):
+def create_router(service: AnalysisService, *, read_actor, write_actor):
     router = APIRouter(tags=["Capabilities"])
 
     @router.get("/capabilities", response_model=tuple[Capability, ...])
     def capabilities(actor: Actor = Depends(read_actor)):
         return service.capabilities(actor)
+
+    base = "/networks/{network_id}/snapshots/{snapshot_id}/analyses"
+
+    @router.post(base + "/nodes", response_model=JobDTO, status_code=202)
+    def nodes(
+        network_id: UUID,
+        snapshot_id: UUID,
+        body: NodesRequest,
+        actor: Actor = Depends(write_actor),
+        idempotency_key: str | None = Header(None, max_length=128),
+    ):
+        return service.submit(
+            actor,
+            network_id,
+            snapshot_id,
+            "nodes",
+            body.model_dump(mode="json", exclude_unset=True),
+            idempotency_key=idempotency_key,
+        )
+
+    @router.post(base + "/interfaces", response_model=JobDTO, status_code=202)
+    def interfaces(
+        network_id: UUID,
+        snapshot_id: UUID,
+        body: InterfacesRequest,
+        actor: Actor = Depends(write_actor),
+        idempotency_key: str | None = Header(None, max_length=128),
+    ):
+        return service.submit(
+            actor,
+            network_id,
+            snapshot_id,
+            "interfaces",
+            body.model_dump(mode="json", exclude_unset=True),
+            idempotency_key=idempotency_key,
+        )
 
     return router

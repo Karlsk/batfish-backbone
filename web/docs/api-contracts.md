@@ -196,3 +196,17 @@ RESULT_MAX_BYTES默认100MiB、TABLE_ROWS默认100000；持久化上限触发row
 结果文件先原子发布，results元数据、缓存与job成功在共享数据库事务提交；发布或任务完成失败一起回滚，已落盘但数据库未引用的文件保留用于核对，不暴露为结果。worker在发布前后检查预算及引擎未知状态，原任务已中断时成功更新失败并回滚结果。缓存键包含完整上下文/版本/快照内容摘要/问题版本/有效参数和输出限额，命中仍新建当前用户job。旧任务缺少目录字段时明确409，不报内部异常。
 
 worker在查询缓存前核对本次实际引擎及SDK版本。与快照记录不一致时返回CONFLICT，并在job.error.field_errors明确提示重新初始化；旧结果仍可读，不把升级后运行结果标记为旧版本，也不命中旧答案。
+
+### MVP-13 设备与接口参数
+
+两个 POST 分析接口接受 `{}`，默认精简列。nodes 的 `options.nodes`、interfaces 的顶层 `nodes` 与 `options.interfaces` 使用同一选择器：
+
+- 字面名称：`{"mode":"literal","values":["r1","r2"]}`，1～100 个、每个1～255字符；按 Batfish 名称规则不区分大小写、完整匹配，不解释名称中的运算符。
+- 专家表达式：`{"mode":"expression","expression":"/^r/"}`，1～4096字符；不接受混合模式或控制字符。
+- 不传或传 null 表示不增加该项筛选。接口名筛选与节点筛选共同生效；接口名称不是文件路径。
+
+`options.properties` 是非空属性白名单列表，具体枚举来自固定引擎的 NodePropertySpecifier/InterfacePropertySpecifier，并体现在 OpenAPI/capabilities。设备默认 Hostname、Configuration_Format、Interfaces；接口默认 Description、Active、Primary_Address、VRF。返回列使用 SDK 稳定字段名作 key、SDK 列说明作 label；保留结构化 Node/Interface 值及模型覆盖说明。正常无匹配返回成功、空 rows、稳定列，并附 `No matching rows`。属性中出现 IPv6/ACL 等信息只表示已解析模型属性，不证明具有对应仿真能力。
+
+两类接口均要求写入身份/CSRF，支持 Idempotency-Key，使用不可变快照绑定的任务和结果；路由和 traceroute 继续由后续篇目启用。
+
+分析 worker 使用已验证的公开后台查询/工作状态/答案读取能力，同一 SDK Session 内等待。引擎明确报告终止失败时，任务返回 `ENGINE_QUERY_FAILED` 和脱敏检查提示，释放串行占用，后续任务可继续；SDK 本地参数校验失败返回 `VALIDATION_ERROR`。等待超时、网络异常等无法确认引擎终态时，仍进入 `ENGINE_STATE_UNKNOWN` 并要求对账，不根据异常字符串猜测是否可以释放。
