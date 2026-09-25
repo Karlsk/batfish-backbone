@@ -1,0 +1,4 @@
+interface:
+  display_name: "Batfish MVP Runner"
+  short_description: "Run Batfish MVPs with cumulative tests and commits"
+  default_prompt: "使用 $mvp-runner 从首个未完成的 MVP 连续执行到 MVP-25，每篇通过当前与此前全部 MVP 的累计验收后提交，再继续下一篇。"

@@ -54,3 +54,5 @@ description: Use when implementing or resuming a Batfish Web MVP/ADV spec in thi
 - 是否满足下一项依赖或阶段门槛。
 
 最终给出本篇 ID/状态、主要行为变化、验证证据和剩余阻碍。默认停在本篇交付，不自动进入下一篇，不提交/推送/部署。
+
+当用户已启动项目级 `mvp-runner` 连续执行时，本 skill 仍只完成当前篇；累计回归、提交与选择下一篇由 runner 按用户授权处理。不要为此重复询问已授权的提交，也不要独自越过 runner 的累计验收门槛。仅创建/检查 runner skill 不算启动批次。
