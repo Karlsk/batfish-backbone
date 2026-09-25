@@ -54,14 +54,14 @@ def test_real_api_and_database_smoke(lab):
             "-v",
             "ON_ERROR_STOP=1",
             "-c",
-            "SELECT 1",
+            "SELECT version_num FROM alembic_version",
         ],
         check=True,
         capture_output=True,
         text=True,
         timeout=10,
     )
-    assert result.stdout.strip() == "1"
+    assert result.stdout.strip() == lab["database_migration"]
 
 
 @pytest.mark.smoke

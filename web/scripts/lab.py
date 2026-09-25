@@ -309,6 +309,17 @@ def serve(args):
             processes,
             "PostgreSQL",
         )
+        with (run / "migration.log").open("w") as migration_log:
+            subprocess.run(
+                [sys.executable, "-m", "alembic", "upgrade", "head"],
+                cwd=BACKEND,
+                env=env,
+                stdout=migration_log,
+                stderr=subprocess.STDOUT,
+                check=True,
+                timeout=60,
+            )
+        state["database_migration"] = "0001"
         write_json(CURRENT, state)
         write_json(run / "manifest.json", state)
         print(

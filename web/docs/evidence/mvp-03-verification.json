@@ -1,0 +1,546 @@
+{
+  "date": "2026-09-25",
+  "scope": "MVP-01 through MVP-03 cumulative verification",
+  "base_commit": "c8d826dcf124d1f5ce64c80b449fca8bc6745d8f",
+  "source_sha256": "7bb3e8545628972002d041f26f1553d445a066bb9520eaeb53c6dceacfea5b4d",
+  "files": {
+    "web/backend/alembic.ini": "4be35c86b24192bde1327811488c4fcbc1f446b8c1e688fbbcba8f27640a252b",
+    "web/backend/app/__init__.py": "87c0efc145b6b7e07a8fc8eef2038ad50e1c94ba3e453f20a0efb626e1a2b7f3",
+    "web/backend/app/composition.py": "0fe9195f257dcf4f6b963429dac831db82a93cc011c19a5e356f0a0866c9d962",
+    "web/backend/app/contracts/__init__.py": "f9587471eb4826092c7d01a3cb9bfcda621095b5666065123f0938db0be2772a",
+    "web/backend/app/contracts/base.py": "e25fd53fd717784a27f4644e8c05b570e6f35e887afb708f048345d840593bce",
+    "web/backend/app/contracts/dto.py": "7c8dd1531a2553c69b010a729679c631c78a4cf1e09bd47670e2b9834673d5b7",
+    "web/backend/app/contracts/errors.py": "1f8fe1bfa34d0cff1af79ca361e79e2e80e3750f33a377e340ad4c88e6b10f33",
+    "web/backend/app/infrastructure/__init__.py": "b057c11ae887931d02517d9d38545736a9d358c21aaea8b6569ef626de348b0e",
+    "web/backend/app/infrastructure/database.py": "51276ac77620db2d736c1fb71ee364ff9c9ea903c8426f4e091975f7d9c002b0",
+    "web/backend/app/infrastructure/http.py": "055285ffee690e054dceb95c2c55fa9f805cef30753d58168f2a1d5df9236908",
+    "web/backend/app/infrastructure/settings.py": "bb2131dd7dcb47f9913b4a9f5216f6a0129768d59228e5f1d609747b1147dd0b",
+    "web/backend/app/infrastructure/storage.py": "e58223b48e346a6e188f9376578972bde2d3cf60898c5489e20e268f8fafa532",
+    "web/backend/app/main.py": "6d77be8a6356281b7ffd53506887a7416581fe976e15b00e450e30ea458de9be",
+    "web/backend/app/modules/__init__.py": "7fdfdb193a24cf257b387b01c55100074c12057bdf571d3ac4ac1d3114a65d20",
+    "web/backend/app/modules/audit/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "web/backend/app/modules/audit/models.py": "370c4f6edfccf2cd789e59ad68f0c444371543efcbcd4f0e0326430c1c1916c7",
+    "web/backend/app/modules/auth/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "web/backend/app/modules/auth/models.py": "ff7c7158ebd652e0357bb37a20eecbcc9b70a3db3c7e0d85e6b0d8a97e8a595e",
+    "web/backend/app/modules/health/__init__.py": "300221287f6ca1788ba612d29aa88a6309acdb049c69ce9d998701e6c0fbad77",
+    "web/backend/app/modules/health/api.py": "7c2982d16e8138d4c5e6e890bb4619c112bbe0d0b8c71acd8fa5705192665565",
+    "web/backend/app/modules/health/schemas.py": "1fd03e7aa0af0972007d32818ed293e3dc55311278cdb041a42a378eeaf17475",
+    "web/backend/app/modules/health/service.py": "68771f50ec1eb947549a2665d07ca3f91623d124fe660b364e15ab1549f83529",
+    "web/backend/app/modules/jobs/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "web/backend/app/modules/jobs/models.py": "647965361dbd4f49849e681c7aef20ce3af60eef290249181b9866bd1734a6c4",
+    "web/backend/app/modules/networks/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "web/backend/app/modules/networks/models.py": "9edf601f9d95119b3212d2d693773c249613da58c46d98bf794740df9ddd7e02",
+    "web/backend/app/modules/results/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "web/backend/app/modules/results/models.py": "950de94a3f1f776cded0f8fa35bbfd8cc33e7593f59227d1f02cc9c28e0bdbfd",
+    "web/backend/app/modules/results/repository.py": "bc0021a4a39b3287632bd4d7a697118d78125e8d2981583e66495a21144820f5",
+    "web/backend/app/modules/snapshots/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "web/backend/app/modules/snapshots/models.py": "6cf3f72e6a3ee53a62717e4247793f0a95475879c152d6f505e62e2ce54d177f",
+    "web/backend/app/modules/uploads/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "web/backend/app/modules/uploads/models.py": "2a98bba85e38d007443f7ce8929ebddd5a68e512b2840fe1c7e4ed6b819819ca",
+    "web/backend/app/modules/users/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "web/backend/app/modules/users/models.py": "f8a4bbf4a1a5207bf0d62af8ce55cb9b89d6b7591cda4d2d83d6d12c73b44063",
+    "web/backend/app/modules/users/repository.py": "95ff098ce9084fb8ef3a7322612b4e4c9bed8c114bbe36f067731c21c4ae6c13",
+    "web/backend/app/modules/users/schemas.py": "0b0d9d1197360ae65e1760478a1c0bc71f071eca014c9fa80bc402861aa19187",
+    "web/backend/migrations/env.py": "5c70ca5c7742cb34cca37b4fd3b2bb3f66ca8cafdb2ee8a210940c88ca54633f",
+    "web/backend/migrations/script.py.mako": "d7558dcb7ce01d3e44830898336d3027de66e5ffdb1491c0cd27f6159b021902",
+    "web/backend/migrations/versions/0001_initial_business_persistence.py": "45b2ad6a1ca3aa6377ebb72f7cb2e5676ac09de677d9dd32b52fe959809d1502",
+    "web/backend/pyproject.toml": "f034023408f2167956fe1765defd9e4ef8efd7c156b74bafe001381da8fe5c2c",
+    "web/backend/tests/__init__.py": "c11cb39a80c0c0be01e1de68bb53a7644c026a91312f665d6a39f1596509490f",
+    "web/backend/tests/architecture_rules.py": "b4b69f70f9d1f9430131a2739a47c2c38cacef7c69d82db1ced30690c75f9629",
+    "web/backend/tests/fixtures/cisco_four/configs/c1.cfg": "e36c9202889bf7338d5548a16287d4c4b1b0cc8467d9fac351c45901bd096f53",
+    "web/backend/tests/fixtures/cisco_four/configs/c2.cfg": "543eb93c9250476c03ca93d49b9616647aa5978217298b9fc0eef5072ab9ab2e",
+    "web/backend/tests/fixtures/cisco_four/configs/c3.cfg": "6e5ee12d4058ba38a7da3189cc2006925782b68fd0a9f43714cbe8d0e05b6956",
+    "web/backend/tests/fixtures/cisco_four/configs/c4.cfg": "0b740a8f61e49018f74f8d1d676c4e52449079d43b6865aa8abdd3ed612604b3",
+    "web/backend/tests/fixtures/small_network/configs/r1.cfg": "90a95f41726139e8998461daf01acdba643fbbf53a0a22c2dc95613d62df17eb",
+    "web/backend/tests/fixtures/small_network/configs/r2.cfg": "fc19dcd4522b92ba2a262c617d1fdccede8da706d5173230a7e8f69eb1a4c1d0",
+    "web/backend/tests/integration/test_lab_topologies.py": "ee9a2772610d169e59aff8e2c49b653796f86a9dc1df5990cca513dc636f94e9",
+    "web/backend/tests/integration/test_sdk_baseline.py": "abfda6d3e8a143a5bd7987b2151fb825a374f976493927e5dad06a3cef6b91ba",
+    "web/backend/tests/test_architecture.py": "f08795935f0d3c1eeb34b1d599f45b7b9b4e07f5cf9501255e5bdac758bae16d",
+    "web/backend/tests/test_foundation.py": "62a4f82b336ecb746e33bf47f1239b942b33cdb82e65e99ddbde1e84299c127e",
+    "web/backend/tests/test_lab_inputs.py": "f414ba731498e9c723516558512d567c648c9ae905e5cacc2fb6a90907c863c9",
+    "web/backend/tests/test_persistence.py": "26b22373c5db6f0bddc0e9fc1d3434abf1b3166f30630b3f5e6514869c9535d3",
+    "web/backend/tests/test_storage.py": "624883775b2313ec0d7308bbc86a3ea6c62743507a8b821e00396a448e1d7f6f",
+    "web/backend/uv.lock": "d5000ce923012ea687023e59ded888ea1b2bb9708f84b5f007fb025b92f8ceac",
+    "web/scripts/lab.py": "c6c972138c22c0231e1d2d740c8c118f66f4987bacb2d556c3b90d99a16e6cf3"
+  },
+  "suite": {
+    "name": "pytest",
+    "errors": "0",
+    "failures": "0",
+    "skipped": "0",
+    "tests": "87",
+    "time": "9.967",
+    "timestamp": "2026-09-25T15:32:15.686152+08:00",
+    "hostname": "gaorenjiedeMacBook-Air.local"
+  },
+  "tests": [
+    {
+      "classname": "tests.integration.test_lab_topologies",
+      "name": "test_real_api_and_database_smoke",
+      "time": "0.165"
+    },
+    {
+      "classname": "tests.integration.test_lab_topologies",
+      "name": "test_seeded_inventory[r1-r2]",
+      "time": "0.174"
+    },
+    {
+      "classname": "tests.integration.test_lab_topologies",
+      "name": "test_seeded_inventory[cisco-four]",
+      "time": "0.192"
+    },
+    {
+      "classname": "tests.integration.test_lab_topologies",
+      "name": "test_configuration_initialization_and_diagnostics[r1-r2]",
+      "time": "0.409"
+    },
+    {
+      "classname": "tests.integration.test_lab_topologies",
+      "name": "test_configuration_initialization_and_diagnostics[cisco-four]",
+      "time": "0.415"
+    },
+    {
+      "classname": "tests.integration.test_lab_topologies",
+      "name": "test_interface_route_and_lpm_queries[r1-r2]",
+      "time": "0.828"
+    },
+    {
+      "classname": "tests.integration.test_lab_topologies",
+      "name": "test_interface_route_and_lpm_queries[cisco-four]",
+      "time": "0.571"
+    },
+    {
+      "classname": "tests.integration.test_lab_topologies",
+      "name": "test_traceroute_query_returns_structured_paths[r1-r2]",
+      "time": "0.181"
+    },
+    {
+      "classname": "tests.integration.test_lab_topologies",
+      "name": "test_traceroute_query_returns_structured_paths[cisco-four]",
+      "time": "0.158"
+    },
+    {
+      "classname": "tests.integration.test_lab_topologies",
+      "name": "test_two_profiles_remain_isolated_when_interleaved",
+      "time": "0.556"
+    },
+    {
+      "classname": "tests.integration.test_sdk_baseline",
+      "name": "test_versions_templates_and_public_methods",
+      "time": "0.112"
+    },
+    {
+      "classname": "tests.integration.test_sdk_baseline",
+      "name": "test_minimal_questions_match_expected",
+      "time": "1.022"
+    },
+    {
+      "classname": "tests.integration.test_sdk_baseline",
+      "name": "test_session_context_isolation",
+      "time": "0.488"
+    },
+    {
+      "classname": "tests.integration.test_sdk_baseline",
+      "name": "test_initialization_diagnostics_and_no_overwrite",
+      "time": "1.001"
+    },
+    {
+      "classname": "tests.integration.test_sdk_baseline",
+      "name": "test_unsupported_or_missing_question",
+      "time": "0.012"
+    },
+    {
+      "classname": "tests.integration.test_sdk_baseline",
+      "name": "test_public_work_handle_and_answer_recovery",
+      "time": "0.052"
+    },
+    {
+      "classname": "tests.integration.test_sdk_baseline",
+      "name": "test_request_timeout_is_not_a_total_work_budget",
+      "time": "2.178"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/api.py-import pybatfish.client.session]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/service.py-from pybatfish.client.session import Session as S]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/service.py-from app.infrastructure.sdk import factory]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/service.py-from app.modules.b.repository import Repository]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/service.py-from ..b import controller as adapter]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/service.py-from app.modules import b]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/api.py-from .controller import run]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/api.py-from . import repository]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/controller.py-from .service import Service]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/repository.py-from .controller import query]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/service.py-from fastapi import Request]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/service.py-from app.composition import create_app]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/api.py-from app.modules.b.service import Service]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/contracts/models.py-from app.modules.a.service import Service]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/infrastructure/settings.py-from app.modules.a.repository import Repository]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/service.py-import importlib\\nsdk = importlib.import_module('pybatfish')]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/service.py-sdk = __import__('pybatfish')]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_allow_expected_dependencies[app/modules/a/api.py-from .service import Service]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_allow_expected_dependencies[app/modules/a/service.py-from app.modules.b.service import Service]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_allow_expected_dependencies[app/modules/a/service.py-from ..b import service as b_service]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_allow_expected_dependencies[app/modules/a/service.py-from . import controller, repository]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_allow_expected_dependencies[app/modules/a/controllers/routing.py-from pybatfish.client.session import Session]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_allow_expected_dependencies[app/modules/a/controller.py-from app.infrastructure.sdk.factory import SessionFactory]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_allow_expected_dependencies[app/infrastructure/sdk/factory.py-from pybatfish.client.session import Session]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_allow_expected_dependencies[app/composition.py-from app.modules.a.api import router\\nfrom app.modules.a.service import Service]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_allow_expected_dependencies[app/modules/a/schemas.py-from app.contracts.dto import Actor]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_allow_expected_dependencies[app/modules/a/service.py-# import pybatfish\\ntext = 'from .api import router']",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_cross_module_service_cycles_are_rejected",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_in_application",
+      "time": "0.018"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_live_without_batfish",
+      "time": "0.021"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_readiness_requires_every_fresh_dependency[healthy-200]",
+      "time": "0.003"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_readiness_requires_every_fresh_dependency[missing-503]",
+      "time": "0.003"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_readiness_requires_every_fresh_dependency[stale-503]",
+      "time": "0.003"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_readiness_requires_every_fresh_dependency[failed-503]",
+      "time": "0.003"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_readiness_requires_every_fresh_dependency[future-503]",
+      "time": "0.003"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_readiness_requires_every_fresh_dependency[exception-503]",
+      "time": "0.003"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_error_shape[payload0]",
+      "time": "0.004"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_error_shape[payload1]",
+      "time": "0.004"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_error_shape[payload2]",
+      "time": "0.004"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_all_errors_are_sanitized_and_correlated[/missing-404-NOT_FOUND]",
+      "time": "0.003"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_all_errors_are_sanitized_and_correlated[/test-unhandled-500-INTERNAL_ERROR]",
+      "time": "0.004"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_all_errors_are_sanitized_and_correlated[/test-http-403-FORBIDDEN]",
+      "time": "0.004"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_all_errors_are_sanitized_and_correlated[/test-service-409-CONFLICT]",
+      "time": "0.004"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_request_ids_are_unique_and_openapi_declares_errors",
+      "time": "0.011"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_settings_are_validated_without_disclosing_secrets",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_contracts_are_json_serializable_and_jobs_are_deeply_immutable",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_contracts_reject_unknown_fields_invalid_json_and_naive_time",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_lab_inputs",
+      "name": "test_lab_uploads_contain_exact_config_bytes[r1-r2-2]",
+      "time": "0.005"
+    },
+    {
+      "classname": "tests.test_lab_inputs",
+      "name": "test_lab_uploads_contain_exact_config_bytes[cisco-four-4]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_lab_inputs",
+      "name": "test_snapshot_identity_changes_with_content_and_filename",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_lab_inputs",
+      "name": "test_lab_archive_rejects_symlinked_inputs",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_lab_inputs",
+      "name": "test_lab_operation_lock_prevents_overlapping_runs",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_persistence",
+      "name": "test_migration_from_empty",
+      "time": "0.355"
+    },
+    {
+      "classname": "tests.test_persistence",
+      "name": "test_transaction_rollback",
+      "time": "0.137"
+    },
+    {
+      "classname": "tests.test_persistence",
+      "name": "test_unique_foreign_key_and_state_constraints",
+      "time": "0.087"
+    },
+    {
+      "classname": "tests.test_persistence",
+      "name": "test_repository_values_and_result_publication",
+      "time": "0.098"
+    },
+    {
+      "classname": "tests.test_storage",
+      "name": "test_storage_key_boundary[]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_storage",
+      "name": "test_storage_key_boundary[.]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_storage",
+      "name": "test_storage_key_boundary[..]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_storage",
+      "name": "test_storage_key_boundary[../escape]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_storage",
+      "name": "test_storage_key_boundary[/tmp/escape]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_storage",
+      "name": "test_storage_key_boundary[a/b]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_storage",
+      "name": "test_storage_key_boundary[a\\\\b]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_storage",
+      "name": "test_storage_key_boundary[a\\x00b]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_storage",
+      "name": "test_storage_key_boundary[.tmp-x]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_storage",
+      "name": "test_atomic_publication_and_no_overwrite",
+      "time": "0.002"
+    },
+    {
+      "classname": "tests.test_storage",
+      "name": "test_failed_stage_cleanup",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_storage",
+      "name": "test_symlinks_cannot_escape",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_storage",
+      "name": "test_root_replacement_keeps_directory_boundary",
+      "time": "0.002"
+    },
+    {
+      "classname": "tests.test_storage",
+      "name": "test_pending_key_cannot_be_replaced",
+      "time": "0.002"
+    }
+  ],
+  "command": [
+    "/Users/gaorenjie/Documents/Coding/JAVA/batfish-dev/web/backend/.venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "--junitxml=/Users/gaorenjie/Documents/Coding/JAVA/batfish-dev/web/.runtime/test-lab/bb163cc5168a/checks/306b9b65d29f/pytest.xml"
+  ],
+  "cwd": "/Users/gaorenjie/Documents/Coding/JAVA/batfish-dev/web/backend",
+  "run_id": "bb163cc5168a",
+  "raw_evidence": "web/.runtime/test-lab/bb163cc5168a/checks/306b9b65d29f",
+  "engine_revision": "7d0deeeac4a09973b3876327f6aef721ee12f955",
+  "jar_sha256": "0927de7c740bc72f999870e842605baad9a7cb6ea66e4b01fb9a6037bea00193",
+  "postgres_image": "postgres@sha256:67f624a4ad70edba8d65c82341124fab7054b277b4f7dea4b04be6f939ce2314",
+  "database_migration": "0001",
+  "fixture_sha256": {
+    "r1-r2": "f3a385cbf5901af2eecf667e0af36853f0a753ba573b23efa510ef3ea4695f24",
+    "cisco-four": "f63010f66ec700c625fe763905312b05225a597a37fabc9fb4552cefeeb91188"
+  },
+  "versions": {
+    "sqlalchemy": "2.0.54",
+    "alembic": "1.20.0",
+    "psycopg": "3.3.6",
+    "pybatfish": "2026.9.17.3748"
+  },
+  "checks": {
+    "ruff": "passed: .venv/bin/ruff check app tests migrations ../scripts/lab.py",
+    "lock": "passed: uv lock --check (50 packages)",
+    "markdown_links": "passed: all local Markdown links under web",
+    "git_diff_check": "passed",
+    "tdd": "Observed missing-module failures; migration metadata parity failure fixed; pending key mutation test red then green",
+    "warning": "1 upstream Starlette TestClient/httpx deprecation; 0 skips"
+  },
+  "review": "Independent read-only mvp03_review found writable pending.key could bypass validation; fixed read-only property and validation at publish; regression test passed."
+}

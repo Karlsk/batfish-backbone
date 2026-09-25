@@ -45,10 +45,10 @@ web/backend/.venv/bin/python web/scripts/lab.py smoke
 web/backend/.venv/bin/python web/scripts/lab.py verify
 ```
 
-- `serve`：启动并监管三个服务；只允许一个管理进程。Ctrl-C 关闭本次 API/JVM 和本次 PostgreSQL 容器，不影响其他容器。
+- `serve`：启动并监管三个服务，对本次临时 PostgreSQL 执行 Alembic 升级；只允许一个管理进程。Ctrl-C 关闭本次 API/JVM 和本次 PostgreSQL 容器，不影响其他容器。
 - `seed`：导入/选择两套不可变快照，生成可用于未来上传页面的 `r1-r2.zip` 和 `cisco-four.zip`。
 - `status`：读取实际 API/引擎 HTTP 状态及快照身份，不展示数据库密码。
-- `smoke`：API live、真实数据库查询、两套快照节点清单；显式只运行 smoke 标记测试。
+- `smoke`：API live、真实数据库迁移版本、两套快照节点清单；显式只运行 smoke 标记测试。
 - `verify`：当前后端全部测试，包含单元测试、分层检查、原 MVP-01 SDK 基线及两套快照集成测试；不排除 integration、不允许缺环境时静默跳过。
 
 seed/smoke/verify 使用同一排他锁，防止多个入口同时向引擎提交工作。手动 SDK 操作也应保持串行。每次 verify 生成全新证据目录，SDK 基线会创建独立随机名称的测试网络，不覆盖 seed 的快照。
