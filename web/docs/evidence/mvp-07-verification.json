@@ -1,0 +1,945 @@
+{
+  "date": "2026-09-25",
+  "scope": "MVP-01 through MVP-07 cumulative verification",
+  "base_commit": "8cce94561dffe9e36cc0e88131cf74b44a971f9c",
+  "source_sha256": "508d2eeb8a2fd6f2a4aebb2a013534fc978636f7274213102615ab3d966faa43",
+  "files": {
+    "web/backend/alembic.ini": "4be35c86b24192bde1327811488c4fcbc1f446b8c1e688fbbcba8f27640a252b",
+    "web/backend/app/__init__.py": "87c0efc145b6b7e07a8fc8eef2038ad50e1c94ba3e453f20a0efb626e1a2b7f3",
+    "web/backend/app/bootstrap_admin.py": "94b1774983e845c5cf57a56c5c611d9197b130f8f88aba8e464e18291c7016e2",
+    "web/backend/app/cleanup_uploads.py": "ca0d41a98b40d865d6af1a52835761f5e920ef3ec992aeb2ebbecd7d36b02799",
+    "web/backend/app/composition.py": "96bf05cbd8f7568624c8f682789ecd6f3027821f1353ea18794ce53d1d304f4f",
+    "web/backend/app/contracts/__init__.py": "f9587471eb4826092c7d01a3cb9bfcda621095b5666065123f0938db0be2772a",
+    "web/backend/app/contracts/base.py": "e25fd53fd717784a27f4644e8c05b570e6f35e887afb708f048345d840593bce",
+    "web/backend/app/contracts/dto.py": "7c8dd1531a2553c69b010a729679c631c78a4cf1e09bd47670e2b9834673d5b7",
+    "web/backend/app/contracts/errors.py": "ad7d69766ab8861f6cf45fd9f7c8e47eb78dfb6d2188f80ba570d8e96760d664",
+    "web/backend/app/contracts/idempotency.py": "838d628c709f8283cae13ecbbbc48126d2edf0fe01c13f580edc8f41d6af7711",
+    "web/backend/app/infrastructure/__init__.py": "b057c11ae887931d02517d9d38545736a9d358c21aaea8b6569ef626de348b0e",
+    "web/backend/app/infrastructure/database.py": "51276ac77620db2d736c1fb71ee364ff9c9ea903c8426f4e091975f7d9c002b0",
+    "web/backend/app/infrastructure/engine.py": "f90f8a9b08c62c54f1c5a586a36ef7b56f7f08e1ef6bf68ff359cf35aba1e62d",
+    "web/backend/app/infrastructure/http.py": "99952cc04a22204a88df20d3dd72c065a810cbe249e765174b8f70f983a13fe3",
+    "web/backend/app/infrastructure/multipart.py": "e1e9481ceb2f68949bcc35242853140d84812dca0b3298e2ceb403aa59d7485c",
+    "web/backend/app/infrastructure/passwords.py": "0bb3659c43730aa76d59b47b0a628461167d7f53d0bb08bba425ba3600b71502",
+    "web/backend/app/infrastructure/sdk.py": "edcc97978de71f86f118ba78943a7bc060b1e2e316c96319ad980b18a45c150f",
+    "web/backend/app/infrastructure/settings.py": "1628cfe0aa6327ab5e524428d5cd73da214899f82993476299d83ad3c35acb46",
+    "web/backend/app/infrastructure/storage.py": "e58223b48e346a6e188f9376578972bde2d3cf60898c5489e20e268f8fafa532",
+    "web/backend/app/main.py": "6d77be8a6356281b7ffd53506887a7416581fe976e15b00e450e30ea458de9be",
+    "web/backend/app/modules/__init__.py": "7fdfdb193a24cf257b387b01c55100074c12057bdf571d3ac4ac1d3114a65d20",
+    "web/backend/app/modules/audit/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "web/backend/app/modules/audit/models.py": "370c4f6edfccf2cd789e59ad68f0c444371543efcbcd4f0e0326430c1c1916c7",
+    "web/backend/app/modules/audit/repository.py": "58d1fcabdce84369cdc6994080ce1b0ad3a5ef7d4acb68d2fd96c43814c5da43",
+    "web/backend/app/modules/audit/service.py": "621f138828e07587a503c1881ac7f74d138f1ad2ceaa06f7af37a553c599a663",
+    "web/backend/app/modules/auth/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "web/backend/app/modules/auth/api.py": "14cdc93277efb22dfbb5b4de2dfd07aa29579c80623d88fdf7bd48dcbd5c3d72",
+    "web/backend/app/modules/auth/models.py": "b694e4a4f82e3103f426c2ecaced2e1b65e1ea7be853caca334e8b11c0a67c15",
+    "web/backend/app/modules/auth/repository.py": "3fe272657abe2fd701ef19b79b8e5e03364da3d96431a6251fbe907411bf810a",
+    "web/backend/app/modules/auth/schemas.py": "2a63bb1f19f3a00046b5c1e5d574290f3a47937898ee2acf5378b89a7a48e888",
+    "web/backend/app/modules/auth/service.py": "874a1e37ad711f83537a2cf00eb0db6aad618ab2e473593b1993f1dadfa1e71c",
+    "web/backend/app/modules/health/__init__.py": "300221287f6ca1788ba612d29aa88a6309acdb049c69ce9d998701e6c0fbad77",
+    "web/backend/app/modules/health/api.py": "7c2982d16e8138d4c5e6e890bb4619c112bbe0d0b8c71acd8fa5705192665565",
+    "web/backend/app/modules/health/schemas.py": "1fd03e7aa0af0972007d32818ed293e3dc55311278cdb041a42a378eeaf17475",
+    "web/backend/app/modules/health/service.py": "68771f50ec1eb947549a2665d07ca3f91623d124fe660b364e15ab1549f83529",
+    "web/backend/app/modules/jobs/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "web/backend/app/modules/jobs/models.py": "647965361dbd4f49849e681c7aef20ce3af60eef290249181b9866bd1734a6c4",
+    "web/backend/app/modules/jobs/repository.py": "c8fe372f229ee6862c56bedc7294534907d12e6f72c3a4739a4e314e8360ed7f",
+    "web/backend/app/modules/jobs/service.py": "cfdff5957b0e682d8a0ac4f64459a1da7948400dbe9faf4ab8a4320e1fb534b4",
+    "web/backend/app/modules/networks/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "web/backend/app/modules/networks/api.py": "7e8cb8cc24f8ac01c45491404efd45537aec0e83f4bf0ce7d6ff6d6c30cf8c8e",
+    "web/backend/app/modules/networks/controller.py": "2ca69eff047e99f8a3665866ad2c115ee36f24cfa3037565f78f49d980f0979f",
+    "web/backend/app/modules/networks/models.py": "fb2f028ec3d8b0c0646c272e7f0baf0b63f91f23a54639f89aacd4acee7ba31b",
+    "web/backend/app/modules/networks/repository.py": "2587c96bb924afed54f70c9d4c9f7a6232609fdcde2188d5da630560a82841a4",
+    "web/backend/app/modules/networks/schemas.py": "35f773c2f2e5cefa71176d8c86b50945c47ef9ef72f6cb6ec996419121c5e573",
+    "web/backend/app/modules/networks/service.py": "07fbe3a70e380a37db812f262dc3b0915c30c3857210e4540caf1dc8bf8050b2",
+    "web/backend/app/modules/results/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "web/backend/app/modules/results/models.py": "950de94a3f1f776cded0f8fa35bbfd8cc33e7593f59227d1f02cc9c28e0bdbfd",
+    "web/backend/app/modules/results/repository.py": "bc0021a4a39b3287632bd4d7a697118d78125e8d2981583e66495a21144820f5",
+    "web/backend/app/modules/snapshots/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "web/backend/app/modules/snapshots/models.py": "6cf3f72e6a3ee53a62717e4247793f0a95475879c152d6f505e62e2ce54d177f",
+    "web/backend/app/modules/uploads/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "web/backend/app/modules/uploads/api.py": "2263db7ef463b3954d75aaa744ef87fccb45c5d8c8641db151a00db0a0f35543",
+    "web/backend/app/modules/uploads/archive.py": "2e8ea701cde54ef6bb46ddb9b57da9b8048cae5c64a90a019f83e1ab597c6d3c",
+    "web/backend/app/modules/uploads/models.py": "2a98bba85e38d007443f7ce8929ebddd5a68e512b2840fe1c7e4ed6b819819ca",
+    "web/backend/app/modules/uploads/repository.py": "511eb09237c35bfba887ff0376562af88907d05b19ea2affbe8e57f57fdd91d2",
+    "web/backend/app/modules/uploads/schemas.py": "08ef993e6941c276d1a3274f1a2b587e02893226674dec9261aacde36a469c15",
+    "web/backend/app/modules/uploads/service.py": "bbf66be6552ba56f6f13f37c362698804951ad37c5a7b73e7de790565ef5b2d8",
+    "web/backend/app/modules/users/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "web/backend/app/modules/users/api.py": "4e4adcf11930bd675ee04ac7c4c8b9abd697cc63cd7ee216fb7fd17505560dad",
+    "web/backend/app/modules/users/models.py": "78cb7efbed24c1f4e7f2757b957da00384e7aaa1a678d4ff5cfa35e52ceae251",
+    "web/backend/app/modules/users/repository.py": "2b422d9109ae8b7072bc5889df6d57679c248cdc408a43b2eabd2fc713a054af",
+    "web/backend/app/modules/users/schemas.py": "fe12062dec3df0ccd76370f9e2559c710b97f548c818e658784a63e3728d273f",
+    "web/backend/app/modules/users/service.py": "a00f91bcb53c5aec804db867ec2f5f10c0724a52ca7be160485e849b5ef594a0",
+    "web/backend/migrations/env.py": "5c70ca5c7742cb34cca37b4fd3b2bb3f66ca8cafdb2ee8a210940c88ca54633f",
+    "web/backend/migrations/script.py.mako": "d7558dcb7ce01d3e44830898336d3027de66e5ffdb1491c0cd27f6159b021902",
+    "web/backend/migrations/versions/0001_initial_business_persistence.py": "45b2ad6a1ca3aa6377ebb72f7cb2e5676ac09de677d9dd32b52fe959809d1502",
+    "web/backend/migrations/versions/0002_authentication.py": "b591629823b421f5e2a2d4eaddeac07d611a215bae7ad4bee05d37a2efcc8b66",
+    "web/backend/migrations/versions/0003_network_coordination.py": "04c46a59bfc251721f9476b423c88467b32d55360875e99e8d6cc93cf54054c8",
+    "web/backend/pyproject.toml": "931506e6228493b973810e7988b86f5c2d13bb1b1fd0cc6d97964f0249a6c6b6",
+    "web/backend/tests/__init__.py": "c11cb39a80c0c0be01e1de68bb53a7644c026a91312f665d6a39f1596509490f",
+    "web/backend/tests/architecture_rules.py": "e7903a57cb0622bff723991ed025227edf159707935449c53a7c934ca34add1a",
+    "web/backend/tests/conftest.py": "455cc544d81c632ece5a5a076f8bad3cdb107e5e7c3f51b40916877c0cd1fe5a",
+    "web/backend/tests/fixtures/cisco_four/configs/c1.cfg": "e36c9202889bf7338d5548a16287d4c4b1b0cc8467d9fac351c45901bd096f53",
+    "web/backend/tests/fixtures/cisco_four/configs/c2.cfg": "543eb93c9250476c03ca93d49b9616647aa5978217298b9fc0eef5072ab9ab2e",
+    "web/backend/tests/fixtures/cisco_four/configs/c3.cfg": "6e5ee12d4058ba38a7da3189cc2006925782b68fd0a9f43714cbe8d0e05b6956",
+    "web/backend/tests/fixtures/cisco_four/configs/c4.cfg": "0b740a8f61e49018f74f8d1d676c4e52449079d43b6865aa8abdd3ed612604b3",
+    "web/backend/tests/fixtures/small_network/configs/r1.cfg": "90a95f41726139e8998461daf01acdba643fbbf53a0a22c2dc95613d62df17eb",
+    "web/backend/tests/fixtures/small_network/configs/r2.cfg": "fc19dcd4522b92ba2a262c617d1fdccede8da706d5173230a7e8f69eb1a4c1d0",
+    "web/backend/tests/integration/test_lab_topologies.py": "261921b4a8d50a54eb9fd073e0b0725b39d13c46e89f99c873ac697f7b3a6e21",
+    "web/backend/tests/integration/test_sdk_baseline.py": "abfda6d3e8a143a5bd7987b2151fb825a374f976493927e5dad06a3cef6b91ba",
+    "web/backend/tests/test_architecture.py": "2163f4e397085a9f5884fe86d6094baee02ceff15f58e28ba1619021c8aad8e9",
+    "web/backend/tests/test_auth.py": "70573d5dabb6d517313c89c7190572959e9aefb3379f12d75e00526722701e3f",
+    "web/backend/tests/test_foundation.py": "faf9d5cccd4c9908ff65e7bc0be604e0288e487a07118504c732c321fbde70b6",
+    "web/backend/tests/test_lab_inputs.py": "f414ba731498e9c723516558512d567c648c9ae905e5cacc2fb6a90907c863c9",
+    "web/backend/tests/test_multipart.py": "e6ea343ca124b0bd4c7837b99e7b3746aa0d96d090ed8da4a7cbd1e38ce68502",
+    "web/backend/tests/test_networks.py": "20c202ae4f43711cf95b18025e6a788724cecbb1839388a1ab3441186bfe53f0",
+    "web/backend/tests/test_persistence.py": "c247d1e0160d16af133056781612564b64b9244def9028313fea380d390b0950",
+    "web/backend/tests/test_storage.py": "624883775b2313ec0d7308bbc86a3ea6c62743507a8b821e00396a448e1d7f6f",
+    "web/backend/tests/test_upload_archives.py": "bfd1ee87e6080e793a34aba9d7fc5f571633655dcb9e522277d62a160688719d",
+    "web/backend/tests/test_uploads.py": "7e35e0e8a571c2e5e73ad9c568987bb54456bbe067a23f28bd875ab7f06edd8b",
+    "web/backend/tests/test_users.py": "c76f9116abba7ac61d92efc9dfad5028500b637474302d9b471c71b336a21425",
+    "web/backend/uv.lock": "56db7579a984ce318752db000857ee264446b478b5d4b92a8d1279db858e2a74",
+    "web/scripts/lab.py": "d8d4bb6ce0fece7e3591c4d30e71ac5e632bea2a6f1e51ebfaa98f98ec249cf4"
+  },
+  "suite": {
+    "name": "pytest",
+    "errors": "0",
+    "failures": "0",
+    "skipped": "0",
+    "tests": "159",
+    "time": "27.747",
+    "timestamp": "2026-09-25T17:00:01.020720+08:00",
+    "hostname": "gaorenjiedeMacBook-Air.local"
+  },
+  "tests": [
+    {
+      "classname": "tests.integration.test_lab_topologies",
+      "name": "test_real_api_and_database_smoke",
+      "time": "0.128"
+    },
+    {
+      "classname": "tests.integration.test_lab_topologies",
+      "name": "test_seeded_inventory[r1-r2]",
+      "time": "0.166"
+    },
+    {
+      "classname": "tests.integration.test_lab_topologies",
+      "name": "test_seeded_inventory[cisco-four]",
+      "time": "0.164"
+    },
+    {
+      "classname": "tests.integration.test_lab_topologies",
+      "name": "test_configuration_initialization_and_diagnostics[r1-r2]",
+      "time": "0.416"
+    },
+    {
+      "classname": "tests.integration.test_lab_topologies",
+      "name": "test_configuration_initialization_and_diagnostics[cisco-four]",
+      "time": "0.413"
+    },
+    {
+      "classname": "tests.integration.test_lab_topologies",
+      "name": "test_interface_route_and_lpm_queries[r1-r2]",
+      "time": "0.569"
+    },
+    {
+      "classname": "tests.integration.test_lab_topologies",
+      "name": "test_interface_route_and_lpm_queries[cisco-four]",
+      "time": "0.545"
+    },
+    {
+      "classname": "tests.integration.test_lab_topologies",
+      "name": "test_traceroute_query_returns_structured_paths[r1-r2]",
+      "time": "0.175"
+    },
+    {
+      "classname": "tests.integration.test_lab_topologies",
+      "name": "test_traceroute_query_returns_structured_paths[cisco-four]",
+      "time": "0.156"
+    },
+    {
+      "classname": "tests.integration.test_lab_topologies",
+      "name": "test_two_profiles_remain_isolated_when_interleaved",
+      "time": "0.545"
+    },
+    {
+      "classname": "tests.integration.test_lab_topologies",
+      "name": "test_real_authentication_smoke",
+      "time": "0.288"
+    },
+    {
+      "classname": "tests.integration.test_lab_topologies",
+      "name": "test_real_user_administration_smoke",
+      "time": "0.506"
+    },
+    {
+      "classname": "tests.integration.test_lab_topologies",
+      "name": "test_real_network_management_smoke",
+      "time": "0.180"
+    },
+    {
+      "classname": "tests.integration.test_lab_topologies",
+      "name": "test_real_configuration_upload_smoke[small_network-files]",
+      "time": "0.102"
+    },
+    {
+      "classname": "tests.integration.test_lab_topologies",
+      "name": "test_real_configuration_upload_smoke[cisco_four-archive]",
+      "time": "0.101"
+    },
+    {
+      "classname": "tests.integration.test_sdk_baseline",
+      "name": "test_versions_templates_and_public_methods",
+      "time": "0.098"
+    },
+    {
+      "classname": "tests.integration.test_sdk_baseline",
+      "name": "test_minimal_questions_match_expected",
+      "time": "1.213"
+    },
+    {
+      "classname": "tests.integration.test_sdk_baseline",
+      "name": "test_session_context_isolation",
+      "time": "0.506"
+    },
+    {
+      "classname": "tests.integration.test_sdk_baseline",
+      "name": "test_initialization_diagnostics_and_no_overwrite",
+      "time": "1.173"
+    },
+    {
+      "classname": "tests.integration.test_sdk_baseline",
+      "name": "test_unsupported_or_missing_question",
+      "time": "0.010"
+    },
+    {
+      "classname": "tests.integration.test_sdk_baseline",
+      "name": "test_public_work_handle_and_answer_recovery",
+      "time": "0.157"
+    },
+    {
+      "classname": "tests.integration.test_sdk_baseline",
+      "name": "test_request_timeout_is_not_a_total_work_budget",
+      "time": "2.184"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/api.py-import pybatfish.client.session]",
+      "time": "0.002"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/service.py-from pybatfish.client.session import Session as S]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/service.py-from app.infrastructure.sdk import factory]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/service.py-from app.modules.b.repository import Repository]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/service.py-from ..b import controller as adapter]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/service.py-from app.modules import b]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/api.py-from .controller import run]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/api.py-from . import repository]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/controller.py-from .service import Service]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/repository.py-from .controller import query]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/service.py-from fastapi import Request]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/archive.py-from .service import Service]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/api.py-from .archive import prepare]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/archive.py-from app.modules.b.repository import Repository]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/service.py-from app.composition import create_app]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/api.py-from app.modules.b.service import Service]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/contracts/models.py-from app.modules.a.service import Service]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/infrastructure/settings.py-from app.modules.a.repository import Repository]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/service.py-import importlib\\nsdk = importlib.import_module('pybatfish')]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_reject_violations[app/modules/a/service.py-sdk = __import__('pybatfish')]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_allow_expected_dependencies[app/modules/a/api.py-from .service import Service]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_allow_expected_dependencies[app/modules/a/repository.py-from .archive import prepare]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_allow_expected_dependencies[app/modules/a/archive.py-from .schemas import UploadInput]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_allow_expected_dependencies[app/modules/a/service.py-from app.modules.b.service import Service]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_allow_expected_dependencies[app/modules/a/service.py-from ..b import service as b_service]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_allow_expected_dependencies[app/modules/a/service.py-from . import controller, repository]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_allow_expected_dependencies[app/modules/a/controllers/routing.py-from pybatfish.client.session import Session]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_allow_expected_dependencies[app/modules/a/controller.py-from app.infrastructure.sdk.factory import SessionFactory]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_allow_expected_dependencies[app/infrastructure/sdk/factory.py-from pybatfish.client.session import Session]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_allow_expected_dependencies[app/composition.py-from app.modules.a.api import router\\nfrom app.modules.a.service import Service]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_allow_expected_dependencies[app/modules/a/schemas.py-from app.contracts.dto import Actor]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_allow_expected_dependencies[app/modules/a/service.py-# import pybatfish\\ntext = 'from .api import router']",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_cross_module_service_cycles_are_rejected",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_architecture",
+      "name": "test_import_boundaries_in_application",
+      "time": "0.049"
+    },
+    {
+      "classname": "tests.test_auth",
+      "name": "test_login_cookie_and_csrf",
+      "time": "0.366"
+    },
+    {
+      "classname": "tests.test_auth",
+      "name": "test_logout_and_password_revoke",
+      "time": "0.465"
+    },
+    {
+      "classname": "tests.test_auth",
+      "name": "test_initial_password_restriction",
+      "time": "0.350"
+    },
+    {
+      "classname": "tests.test_auth",
+      "name": "test_no_user_enumeration",
+      "time": "0.238"
+    },
+    {
+      "classname": "tests.test_auth",
+      "name": "test_failure_limit_shared_and_expiration",
+      "time": "0.446"
+    },
+    {
+      "classname": "tests.test_auth",
+      "name": "test_bootstrap_once_and_redaction",
+      "time": "0.235"
+    },
+    {
+      "classname": "tests.test_auth",
+      "name": "test_disabled_and_generation_revoked_sessions",
+      "time": "0.291"
+    },
+    {
+      "classname": "tests.test_auth",
+      "name": "test_concurrent_bootstrap_creates_one_admin",
+      "time": "0.176"
+    },
+    {
+      "classname": "tests.test_auth",
+      "name": "test_concurrent_failures_cannot_bypass_limit",
+      "time": "0.399"
+    },
+    {
+      "classname": "tests.test_auth",
+      "name": "test_cookie_from_logged_out_session_is_rejected",
+      "time": "0.186"
+    },
+    {
+      "classname": "tests.test_auth",
+      "name": "test_failure_limit_scoped_to_account_and_address_pair",
+      "time": "0.464"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_live_without_batfish",
+      "time": "0.006"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_readiness_requires_every_fresh_dependency[healthy-200]",
+      "time": "0.003"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_readiness_requires_every_fresh_dependency[missing-503]",
+      "time": "0.003"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_readiness_requires_every_fresh_dependency[stale-503]",
+      "time": "0.003"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_readiness_requires_every_fresh_dependency[failed-503]",
+      "time": "0.003"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_readiness_requires_every_fresh_dependency[future-503]",
+      "time": "0.003"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_readiness_requires_every_fresh_dependency[exception-503]",
+      "time": "0.045"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_error_shape[payload0]",
+      "time": "0.006"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_error_shape[payload1]",
+      "time": "0.004"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_error_shape[payload2]",
+      "time": "0.003"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_all_errors_are_sanitized_and_correlated[/missing-404-NOT_FOUND]",
+      "time": "0.003"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_all_errors_are_sanitized_and_correlated[/test-unhandled-500-INTERNAL_ERROR]",
+      "time": "0.004"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_all_errors_are_sanitized_and_correlated[/test-http-403-FORBIDDEN]",
+      "time": "0.004"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_all_errors_are_sanitized_and_correlated[/test-service-409-CONFLICT]",
+      "time": "0.004"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_request_ids_are_unique_and_openapi_declares_errors",
+      "time": "0.011"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_settings_are_validated_without_disclosing_secrets",
+      "time": "0.002"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_contracts_are_json_serializable_and_jobs_are_deeply_immutable",
+      "time": "0.002"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_contracts_reject_unknown_fields_invalid_json_and_naive_time",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_foundation",
+      "name": "test_empty_sdk_key_uses_default_and_rate_window_matches_operations",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_lab_inputs",
+      "name": "test_lab_uploads_contain_exact_config_bytes[r1-r2-2]",
+      "time": "0.002"
+    },
+    {
+      "classname": "tests.test_lab_inputs",
+      "name": "test_lab_uploads_contain_exact_config_bytes[cisco-four-4]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_lab_inputs",
+      "name": "test_snapshot_identity_changes_with_content_and_filename",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_lab_inputs",
+      "name": "test_lab_archive_rejects_symlinked_inputs",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_lab_inputs",
+      "name": "test_lab_operation_lock_prevents_overlapping_runs",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_multipart",
+      "name": "test_chunked_upload_counts_bytes_without_content_length",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_multipart",
+      "name": "test_truncated_multipart_is_rejected",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_networks",
+      "name": "test_team_shares_network",
+      "time": "0.650"
+    },
+    {
+      "classname": "tests.test_networks",
+      "name": "test_same_label_different_identity",
+      "time": "0.408"
+    },
+    {
+      "classname": "tests.test_networks",
+      "name": "test_network_idempotency_conflict_and_scope",
+      "time": "0.616"
+    },
+    {
+      "classname": "tests.test_networks",
+      "name": "test_engine_busy_preserves_pending_identity",
+      "time": "0.381"
+    },
+    {
+      "classname": "tests.test_networks",
+      "name": "test_create_writeback_failure",
+      "time": "0.400"
+    },
+    {
+      "classname": "tests.test_networks",
+      "name": "test_unknown_slot_cannot_be_reused",
+      "time": "0.368"
+    },
+    {
+      "classname": "tests.test_networks",
+      "name": "test_network_validation_rejects_context_overrides",
+      "time": "0.344"
+    },
+    {
+      "classname": "tests.test_networks",
+      "name": "test_engine_lock_released_if_initial_commit_fails",
+      "time": "0.397"
+    },
+    {
+      "classname": "tests.test_networks",
+      "name": "test_generated_idempotency_key_can_resume_busy_request",
+      "time": "0.411"
+    },
+    {
+      "classname": "tests.test_networks",
+      "name": "test_first_sdk_timeout_reports_unknown",
+      "time": "0.373"
+    },
+    {
+      "classname": "tests.test_persistence",
+      "name": "test_migration_from_empty",
+      "time": "0.212"
+    },
+    {
+      "classname": "tests.test_persistence",
+      "name": "test_transaction_rollback",
+      "time": "0.085"
+    },
+    {
+      "classname": "tests.test_persistence",
+      "name": "test_unique_foreign_key_and_state_constraints",
+      "time": "0.095"
+    },
+    {
+      "classname": "tests.test_persistence",
+      "name": "test_repository_values_and_result_publication",
+      "time": "0.120"
+    },
+    {
+      "classname": "tests.test_storage",
+      "name": "test_storage_key_boundary[]",
+      "time": "0.002"
+    },
+    {
+      "classname": "tests.test_storage",
+      "name": "test_storage_key_boundary[.]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_storage",
+      "name": "test_storage_key_boundary[..]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_storage",
+      "name": "test_storage_key_boundary[../escape]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_storage",
+      "name": "test_storage_key_boundary[/tmp/escape]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_storage",
+      "name": "test_storage_key_boundary[a/b]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_storage",
+      "name": "test_storage_key_boundary[a\\\\b]",
+      "time": "0.000"
+    },
+    {
+      "classname": "tests.test_storage",
+      "name": "test_storage_key_boundary[a\\x00b]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_storage",
+      "name": "test_storage_key_boundary[.tmp-x]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_storage",
+      "name": "test_atomic_publication_and_no_overwrite",
+      "time": "0.002"
+    },
+    {
+      "classname": "tests.test_storage",
+      "name": "test_failed_stage_cleanup",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_storage",
+      "name": "test_symlinks_cannot_escape",
+      "time": "0.002"
+    },
+    {
+      "classname": "tests.test_storage",
+      "name": "test_root_replacement_keeps_directory_boundary",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_storage",
+      "name": "test_pending_key_cannot_be_replaced",
+      "time": "0.002"
+    },
+    {
+      "classname": "tests.test_upload_archives",
+      "name": "test_traversal_rejected[../escape]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_upload_archives",
+      "name": "test_traversal_rejected[/etc/passwd]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_upload_archives",
+      "name": "test_traversal_rejected[root/configs/../../escape]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_upload_archives",
+      "name": "test_traversal_rejected[C:/configs/a]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_upload_archives",
+      "name": "test_traversal_rejected[root\\\\configs\\\\a]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_upload_archives",
+      "name": "test_traversal_rejected[root/configs/a\\x00hidden]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_upload_archives",
+      "name": "test_zip_roots_conflicts_and_nested_rejected[entries0]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_upload_archives",
+      "name": "test_zip_roots_conflicts_and_nested_rejected[entries1]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_upload_archives",
+      "name": "test_zip_roots_conflicts_and_nested_rejected[entries2]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_upload_archives",
+      "name": "test_zip_roots_conflicts_and_nested_rejected[entries3]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_upload_archives",
+      "name": "test_zip_roots_conflicts_and_nested_rejected[entries4]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_upload_archives",
+      "name": "test_zip_roots_conflicts_and_nested_rejected[entries5]",
+      "time": "0.002"
+    },
+    {
+      "classname": "tests.test_upload_archives",
+      "name": "test_symlink_and_encrypted_zip_rejected",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_upload_archives",
+      "name": "test_original_bytes_and_hash_preserved",
+      "time": "0.002"
+    },
+    {
+      "classname": "tests.test_upload_archives",
+      "name": "test_zip_actual_limits[limits0]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_upload_archives",
+      "name": "test_zip_actual_limits[limits1]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_upload_archives",
+      "name": "test_zip_actual_limits[limits2]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_upload_archives",
+      "name": "test_stream_bytes_not_declared_size_and_duplicate_names",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_upload_archives",
+      "name": "test_corrupt_deflate_is_validation_error",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_upload_archives",
+      "name": "test_unsupported_zip_algorithm_is_validation_error[12]",
+      "time": "0.001"
+    },
+    {
+      "classname": "tests.test_upload_archives",
+      "name": "test_unsupported_zip_algorithm_is_validation_error[14]",
+      "time": "0.003"
+    },
+    {
+      "classname": "tests.test_uploads",
+      "name": "test_upload_original_bytes_and_database_manifest",
+      "time": "0.381"
+    },
+    {
+      "classname": "tests.test_uploads",
+      "name": "test_upload_owner_and_network",
+      "time": "0.882"
+    },
+    {
+      "classname": "tests.test_uploads",
+      "name": "test_failed_archive_cleans_files_and_rejects_mixed_input",
+      "time": "0.371"
+    },
+    {
+      "classname": "tests.test_uploads",
+      "name": "test_upload_expiration_cleanup_preserves_consumed",
+      "time": "0.458"
+    },
+    {
+      "classname": "tests.test_uploads",
+      "name": "test_upload_database_failure_cleans_published_directory",
+      "time": "0.359"
+    },
+    {
+      "classname": "tests.test_uploads",
+      "name": "test_unauthenticated_upload_rejected_before_body",
+      "time": "0.369"
+    },
+    {
+      "classname": "tests.test_uploads",
+      "name": "test_concurrent_consume_only_one_wins",
+      "time": "0.397"
+    },
+    {
+      "classname": "tests.test_uploads",
+      "name": "test_cleanup_only_old_unreferenced_directories",
+      "time": "0.337"
+    },
+    {
+      "classname": "tests.test_uploads",
+      "name": "test_commit_failure_leaves_reconcilable_orphan",
+      "time": "0.387"
+    },
+    {
+      "classname": "tests.test_users",
+      "name": "test_member_cannot_administer",
+      "time": "0.590"
+    },
+    {
+      "classname": "tests.test_users",
+      "name": "test_creation_pagination_and_validation",
+      "time": "0.418"
+    },
+    {
+      "classname": "tests.test_users",
+      "name": "test_disable_revokes_sessions",
+      "time": "0.670"
+    },
+    {
+      "classname": "tests.test_users",
+      "name": "test_password_reset_and_role_immediate",
+      "time": "0.819"
+    },
+    {
+      "classname": "tests.test_users",
+      "name": "test_last_admin_guard[change0]",
+      "time": "0.760"
+    },
+    {
+      "classname": "tests.test_users",
+      "name": "test_last_admin_guard[change1]",
+      "time": "0.681"
+    },
+    {
+      "classname": "tests.test_users",
+      "name": "test_audit_redaction",
+      "time": "0.368"
+    },
+    {
+      "classname": "tests.test_users",
+      "name": "test_audit_failure_rolls_back_user_change",
+      "time": "0.458"
+    }
+  ],
+  "command": [
+    "/Users/gaorenjie/Documents/Coding/JAVA/batfish-dev/web/backend/.venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "--junitxml=/Users/gaorenjie/Documents/Coding/JAVA/batfish-dev/web/.runtime/test-lab/05c5b844e163/checks/0c40691be54a/pytest.xml"
+  ],
+  "cwd": "/Users/gaorenjie/Documents/Coding/JAVA/batfish-dev/web/backend",
+  "run_id": "05c5b844e163",
+  "raw_evidence": "web/.runtime/test-lab/05c5b844e163/checks/0c40691be54a",
+  "engine_revision": "7d0deeeac4a09973b3876327f6aef721ee12f955",
+  "jar_sha256": "0927de7c740bc72f999870e842605baad9a7cb6ea66e4b01fb9a6037bea00193",
+  "postgres_image": "postgres@sha256:67f624a4ad70edba8d65c82341124fab7054b277b4f7dea4b04be6f939ce2314",
+  "database_migration": "0003",
+  "fixture_sha256": {
+    "r1-r2": "f3a385cbf5901af2eecf667e0af36853f0a753ba573b23efa510ef3ea4695f24",
+    "cisco-four": "f63010f66ec700c625fe763905312b05225a597a37fabc9fb4552cefeeb91188"
+  },
+  "versions": {
+    "sqlalchemy": "2.0.54",
+    "alembic": "1.20.0",
+    "psycopg": "3.3.6",
+    "pybatfish": "2026.9.17.3748",
+    "argon2-cffi": "25.1.0",
+    "python-multipart": "0.0.32"
+  },
+  "checks": {
+    "ruff": "passed",
+    "uv_lock": "passed; 55 packages; python-multipart 0.0.32",
+    "local_markdown_links": "passed",
+    "git_diff_check": "passed",
+    "smoke": "8 passed; 151 intentionally deselected in smoke-only run; all159 passed in full run",
+    "smoke_evidence": "web/.runtime/test-lab/05c5b844e163/checks/a03326751bee",
+    "tdd": "archive import/red; upload404/red; corrupt DEFLATE red then controlled validation; PostgreSQL consume/cleanup/commit-uncertainty/concurrency coverage"
+  },
+  "review": "mvp07_review: independent read-only review found corrupt DEFLATE mapped500; fixed with regression and STORED/DEFLATED algorithm validation; followup57 local tests pass, no remaining blockers"
+}

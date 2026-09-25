@@ -92,7 +92,8 @@ def check_sources(sources: dict[str, str]) -> list[str]:
                         "api": {"api", "service", "schemas"},
                         "service": {"service", "controller", "repository", "schemas"},
                         "controller": {"controller", "schemas"},
-                        "repository": {"repository", "schemas", "models"},
+                        "repository": {"repository", "schemas", "models", "archive"},
+                        "archive": {"archive", "schemas"},
                         "schemas": {"schemas"},
                         "models": {"models"},
                     }

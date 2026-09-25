@@ -277,6 +277,7 @@ def serve(args):
                 "DATABASE_URL": connection_file.read_text().strip().split("=", 1)[1],
                 "AUTH_ALLOWED_ORIGINS": json.dumps([state["api_url"]]),
                 "AUTH_COOKIE_SECURE": "false",
+                "DATA_DIR": str(run / "data"),
             }
             processes.append(
                 subprocess.Popen(

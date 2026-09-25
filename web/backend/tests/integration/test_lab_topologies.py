@@ -341,3 +341,46 @@ def test_real_network_management_smoke(lab):
         }
         sdk = Session(host=lab["host"], port=lab["engine_port"], timeout=10, load_questions=False)
         assert network["engine_name"] in sdk.list_networks()
+
+
+@pytest.mark.smoke
+@pytest.mark.parametrize(
+    "fixture_name,mode", [("small_network", "files"), ("cisco_four", "archive")]
+)
+def test_real_configuration_upload_smoke(lab, fixture_name, mode):
+    import hashlib
+    import io
+    import zipfile
+
+    root = Path(__file__).resolve().parents[1] / "fixtures" / fixture_name
+    originals = {
+        f"configs/{file.name}": file.read_bytes() for file in sorted((root / "configs").iterdir())
+    }
+    with httpx.Client(base_url=lab["api_url"], timeout=20) as client:
+        headers = _ready_lab_admin(client, lab)
+        response = client.post(
+            "/api/v1/networks", json={"display_name": "Upload " + fixture_name}, headers=headers
+        )
+        assert response.status_code == 201
+        network = response.json()["id"]
+        if mode == "files":
+            parts = [("files", (name.split("/")[-1], data)) for name, data in originals.items()]
+        else:
+            stream = io.BytesIO()
+            with zipfile.ZipFile(stream, "w", zipfile.ZIP_DEFLATED) as archive:
+                for name, data in originals.items():
+                    archive.writestr("snapshot/" + name, data)
+            parts = [("archive", ("snapshot.zip", stream.getvalue(), "application/zip"))]
+        response = client.post(f"/api/v1/networks/{network}/uploads", files=parts, headers=headers)
+        assert response.status_code == 201
+        record = response.json()
+        assert len(record["manifest"]["files"]) == len(originals)
+        for entry in record["manifest"]["files"]:
+            assert entry["sha256"] == hashlib.sha256(originals[entry["path"]]).hexdigest()
+            assert (
+                Path(lab["run_directory"])
+                / "data"
+                / "uploads"
+                / record["storage_key"]
+                / entry["id"]
+            ).read_bytes() == originals[entry["path"]]

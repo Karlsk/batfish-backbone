@@ -19,6 +19,9 @@ from tests.architecture_rules import check_sources
         ("app/modules/a/controller.py", "from .service import Service"),
         ("app/modules/a/repository.py", "from .controller import query"),
         ("app/modules/a/service.py", "from fastapi import Request"),
+        ("app/modules/a/archive.py", "from .service import Service"),
+        ("app/modules/a/api.py", "from .archive import prepare"),
+        ("app/modules/a/archive.py", "from app.modules.b.repository import Repository"),
         ("app/modules/a/service.py", "from app.composition import create_app"),
         ("app/modules/a/api.py", "from app.modules.b.service import Service"),
         ("app/contracts/models.py", "from app.modules.a.service import Service"),
@@ -38,6 +41,8 @@ def test_import_boundaries_reject_violations(path, source):
     "path,source",
     [
         ("app/modules/a/api.py", "from .service import Service"),
+        ("app/modules/a/repository.py", "from .archive import prepare"),
+        ("app/modules/a/archive.py", "from .schemas import UploadInput"),
         ("app/modules/a/service.py", "from app.modules.b.service import Service"),
         ("app/modules/a/service.py", "from ..b import service as b_service"),
         ("app/modules/a/service.py", "from . import controller, repository"),

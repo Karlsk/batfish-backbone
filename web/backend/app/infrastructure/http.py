@@ -11,6 +11,7 @@ from starlette.types import ASGIApp, Message, Receive, Scope, Send
 from app.contracts.errors import ErrorCode, ErrorDetail, ErrorEnvelope, FieldError, ServiceError
 
 ERRORS = {
+    ErrorCode.UPLOAD_TOO_LARGE: (413, "Upload exceeds configured limits"),
     ErrorCode.VALIDATION_ERROR: (422, "Invalid request parameters"),
     ErrorCode.UNAUTHORIZED: (401, "Authentication required"),
     ErrorCode.FORBIDDEN: (403, "Permission denied"),

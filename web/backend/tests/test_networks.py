@@ -19,11 +19,12 @@ pytestmark = pytest.mark.integration
 
 
 @pytest.fixture
-def network_app(database):
+def network_app(database, tmp_path):
     migrate(database)
     manifest = json.loads(Path(os.environ["BATFISH_LAB_MANIFEST"]).read_text())
     UsersService(database).bootstrap_admin("admin", PASSWORD)
     settings = Settings(
+        data_dir=tmp_path / "data",
         auth_allowed_origins=(ORIGIN,),
         batfish_host=manifest["host"],
         batfish_port=manifest["engine_port"],

@@ -156,3 +156,7 @@ MVP-02 的 field_errors 为 `[{path: ["body", "options", "字段名"], message: 
 健康响应：live 返回 200 `{"status":"alive"}`；ready 仅在 database/worker/engine 三份观测均可用且时间不超过 READINESS_MAX_AGE_SECONDS 时返回 200 `{"status":"ready"}`。缺失、失败、过期、未来时间或状态源异常返回 503 NOT_READY，retryable=true。当前未接入观测生产者，默认 503；健康请求不构造 SDK Session。
 
 扩展参数类型错误定位为 options 字段路径；SDK 拒绝表达式返回 SDK_PARAMETER_REJECTED，不返回堆栈和凭证。后台失败写入 job.error；查询失败任务本身仍返回 HTTP 200 和失败状态。引擎状态不明时 error code 为 ENGINE_STATE_UNKNOWN，retryable=false，直到管理员完成对账。
+
+MVP-07 已实现上传：multipart重复字段 `files` 或单字段 `archive`，二选一且不接收其他字段；需要write身份和ready网络。UploadDTO.manifest为UploadManifest（upload_id、network_id、storage_key、files）；每项文件含id、path（逻辑相对路径）、sha256、size_bytes、encoding（utf-8/gb18030/binary）及line_count（按LF计数，binary为null）。content_hash按排序逻辑路径/文件SHA256/字节数计算，不依赖随机文件ID。storage_key是内部UUID，不是客户端可指定的路径。上传不使用幂等键，不初始化SDK快照。实际大小超限413 UPLOAD_TOO_LARGE；无效ZIP/路径/冲突422 VALIDATION_ERROR。内部consume校验网络、所有者或管理员、过期时间及单次消费；跨用户403、网络不匹配404、已消费/过期409。
+
+ZIP压缩算法支持 STORED/DEFLATED；其他算法及损坏压缩流受控返回422。

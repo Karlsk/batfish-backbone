@@ -15,6 +15,7 @@ class ErrorCode(StrEnum):
     HTTP_ERROR = "HTTP_ERROR"
     RATE_LIMITED = "RATE_LIMITED"
     ENGINE_STATE_UNKNOWN = "ENGINE_STATE_UNKNOWN"
+    UPLOAD_TOO_LARGE = "UPLOAD_TOO_LARGE"
 
 
 class FieldError(Contract):

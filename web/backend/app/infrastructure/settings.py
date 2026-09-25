@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import Literal
 from urllib.parse import urlsplit
 
@@ -19,6 +20,11 @@ class Settings(BaseSettings):
     sdk_request_timeout: float = Field(default=120, gt=0, allow_inf_nan=False)
     sdk_concurrency: Literal[1] = 1
     readiness_max_age_seconds: float = Field(default=60, gt=0, allow_inf_nan=False)
+    data_dir: Path = Path(__file__).resolve().parents[3] / ".runtime" / "data"
+    upload_max_bytes: int = Field(default=100 * 1024 * 1024, ge=1)
+    upload_max_expanded_bytes: int = Field(default=500 * 1024 * 1024, ge=1)
+    upload_max_files: int = Field(default=5000, ge=1, le=5000)
+    upload_ttl_seconds: int = Field(default=86400, ge=1)
     auth_allowed_origins: tuple[str, ...] = ()
     auth_cookie_secure: bool = True
     auth_failure_limit: int = Field(default=5, ge=1, le=100)

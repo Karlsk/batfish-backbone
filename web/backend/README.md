@@ -111,3 +111,17 @@ sync_error 仅包含安全错误码。SDK 成功但资源数据库写回失败�
 数据库级 advisory lock 与持久 engine_slot 约束所有应用 SDK 工作；每次新建独占 Session，任务间不共享上下文。SDK 结果未知时保留 unknown，返回503 ENGINE_STATE_UNKNOWN、retryable=false。锁已释放但遗留 busy 也转 unknown，不能据此自动重放远端工作。迁移0003提供槽位和网络诊断字段；worker 与管理员对账入口在 MVP-09 接入，本篇不提供强杀或自动解除未知状态。正常 SDK 完成后释放占用，资源写回失败不等于引擎仍在计算。
 
 MVP-06 在 jobs 模块增加最小幂等 service/repository，网络 service 通过其公共方法共享事务；任务队列与执行仍待 MVP-08/09，不把幂等记录误称为已实现后台任务。
+
+## 配置上传与清理
+
+`POST /api/v1/networks/{id}/uploads` 使用 multipart：多个 `files` 配置文件或一个 `archive` ZIP，二选一；带 Cookie、Origin 与 CSRF。返回201 UploadDTO及文件manifest，不初始化快照。网络必须ready，原始文件保持字节不变；文件ID、逻辑路径、SHA256、大小、编码与行数用于后续诊断。UTF-8/GB18030以外的内容保留并标记binary；不在日志/错误返回配置内容。
+
+ZIP需要一个包含configs文件的快照根，允许该根下其他Batfish输入目录；拒绝穿越、绝对路径、链接、加密、嵌套ZIP、重复/文件目录冲突和多个根。多个普通文件自动包装configs。文件名大小写或Unicode规范化后的冲突均拒绝，实际文件以UUID保存，不用上传路径写磁盘。
+
+服务端配置 `DATA_DIR`、`UPLOAD_MAX_BYTES`（100MiB）、`UPLOAD_MAX_EXPANDED_BYTES`（500MiB）、`UPLOAD_MAX_FILES`（5000）、`UPLOAD_TTL_SECONDS`（86400）。按实际流计数，multipart编码总开销另限1MiB。超字节上限413，格式/路径不合法422。上传目录0700、文件0600，默认开发数据目录为 `web/.runtime/data`；团队部署应指定专用持久卷。测试环境使用运行目录下的data。
+
+UploadsService.consume仅所有者/管理员可调用，绑定网络、未过期且只能消费一次；行锁防止并发重复消费。尚无公开消费API，后续由快照service调用。已消费文件不按上传TTL清理。
+
+在backend目录、注入DATABASE_URL与DATA_DIR后运行 `uv run --locked python -m app.cleanup_uploads`。它清理过期未消费记录及超过TTL的孤立暂存/发布目录，跳过已引用、新目录和链接。文件准备失败或DB flush失败清理暂存；DB提交结果未知时保留已发布文件，后续根据数据库引用清理，避免误删可能已提交的数据。文件卷与数据库无分布式事务，需按运行文档共同备份。
+
+ZIP压缩算法支持 STORED/DEFLATED；其他算法及损坏压缩流受控返回422。

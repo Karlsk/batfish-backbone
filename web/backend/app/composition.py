@@ -14,6 +14,8 @@ from app.modules.jobs.service import JobsService
 from app.modules.networks.api import create_router as create_networks_router
 from app.modules.networks.controller import NetworkController
 from app.modules.networks.service import NetworksService
+from app.modules.uploads.api import create_router as create_uploads_router
+from app.modules.uploads.service import UploadsService
 from app.modules.users.api import create_router as create_users_router
 from app.modules.users.service import UsersService
 
@@ -99,6 +101,11 @@ def create_app(
             create_networks_router(networks, read_actor=read_actor, write_actor=write_actor),
             prefix="/api/v1",
         )
+        uploads = UploadsService(db, auth, networks, settings)
+        app.state.uploads_service = uploads
+        app.include_router(
+            create_uploads_router(uploads, write_actor=write_actor), prefix="/api/v1"
+        )
     return app
 
 
@@ -107,5 +114,19 @@ def initialize_administrator(settings: Settings, username: str, password: str) -
     database = Database(settings.database_url)
     try:
         UsersService(database).bootstrap_admin(username, password)
+    finally:
+        database.close()
+
+
+def cleanup_uploads(settings: Settings) -> int:
+    database_metadata()
+    database = Database(settings.database_url)
+    try:
+        users = UsersService(database)
+        auth = AuthService(database, users, settings)
+        networks = NetworksService(
+            database, auth, JobsService(), NetworkController(database, settings)
+        )
+        return UploadsService(database, auth, networks, settings).cleanup_expired()
     finally:
         database.close()
