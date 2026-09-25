@@ -1,7 +1,7 @@
 import hashlib
 import json
 import re
-from contextlib import nullcontext
+from contextlib import contextmanager, nullcontext
 from datetime import UTC, datetime, timedelta
 from uuid import UUID, uuid4
 
@@ -204,6 +204,19 @@ class JobsService:
         if stored_hash != request_hash or stored_id is None:
             raise ServiceError(ErrorCode.CONFLICT)
         return ResourceReservation(stored_id, created)
+
+    @contextmanager
+    def resource_boundary(self):
+        """Serialize resource validation and admission with deletion and queue claim."""
+        with self._database.transaction() as transaction:
+            JobsRepository(transaction).lock_queue()
+            yield transaction
+
+    def require_no_active(self, network_id, snapshot_id=None, *, transaction):
+        if EngineGate(self._database).state(transaction=transaction) == "unknown" or JobsRepository(
+            transaction
+        ).has_active(network_id, snapshot_id):
+            raise ServiceError(ErrorCode.CONFLICT)
 
     def claim(self, worker_id: str) -> JobDTO | None:
         if not worker_id or len(worker_id) > 128:

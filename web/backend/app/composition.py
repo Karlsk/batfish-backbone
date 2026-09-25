@@ -22,6 +22,8 @@ from app.modules.health.schemas import DependencyStatus
 from app.modules.health.service import HealthService
 from app.modules.jobs.api import create_router as create_jobs_router
 from app.modules.jobs.service import JobsService
+from app.modules.lifecycle.api import create_router as create_lifecycle_router
+from app.modules.lifecycle.service import ResourceLifecycleService
 from app.modules.networks.api import create_router as create_networks_router
 from app.modules.networks.controller import NetworkController
 from app.modules.networks.service import NetworksService
@@ -149,11 +151,17 @@ def create_app(
             create_analysis_router(analysis, read_actor=read_actor, write_actor=write_actor),
             prefix="/api/v1",
         )
+        lifecycle = ResourceLifecycleService(auth, jobs, networks, snapshots)
+        app.state.lifecycle_service = lifecycle
+        app.include_router(
+            create_lifecycle_router(lifecycle, write_actor=write_actor), prefix="/api/v1"
+        )
         execution = ExecutionService(
             db,
             auth,
             jobs,
             handlers={
+                "deletion": Handler(lifecycle.execute),
                 "initialization": Handler(snapshots.execute, snapshots.retry),
                 "analysis": Handler(analysis.execute, analysis.retry, analysis.publish),
             },
@@ -209,7 +217,9 @@ def create_worker(settings: Settings, *, database=None, handlers=None):
     analysis = AnalysisService(
         auth, snapshots, jobs, results, AnalysisController(db, settings), Registry()
     )
+    lifecycle = ResourceLifecycleService(auth, jobs, networks, snapshots)
     registered = {
+        "deletion": Handler(lifecycle.execute),
         "initialization": Handler(snapshots.execute, snapshots.retry),
         "analysis": Handler(analysis.execute, analysis.retry, analysis.publish),
     }

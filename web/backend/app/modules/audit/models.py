@@ -19,5 +19,6 @@ class AuditEvent(Base):
     action: Mapped[str] = mapped_column(String(128))
     resource_id: Mapped[UUID | None]
     outcome: Mapped[str] = mapped_column(String(32))
+    note: Mapped[str | None] = mapped_column(String(1000))
     request_id: Mapped[UUID]
     timestamp: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())

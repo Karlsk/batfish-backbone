@@ -234,7 +234,8 @@ export interface paths {
     get: operations["get_network_api_v1_networks__network_id__get"];
     put?: never;
     post?: never;
-    delete?: never;
+    /** Delete Network */
+    delete: operations["delete_network_api_v1_networks__network_id__delete"];
     options?: never;
     head?: never;
     patch?: never;
@@ -303,7 +304,8 @@ export interface paths {
     get: operations["get_api_v1_networks__network_id__snapshots__snapshot_id__get"];
     put?: never;
     post?: never;
-    delete?: never;
+    /** Delete Snapshot */
+    delete: operations["delete_snapshot_api_v1_networks__network_id__snapshots__snapshot_id__delete"];
     options?: never;
     head?: never;
     patch?: never;
@@ -547,6 +549,23 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/admin/deletions/{job_id}/reconcile": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Reconcile */
+    post: operations["reconcile_api_v1_admin_deletions__job_id__reconcile_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/admin/engine": {
     parameters: {
       query?: never;
@@ -701,6 +720,19 @@ export interface components {
        * @enum {string}
        */
       role: "admin" | "member";
+    };
+    /** DeletionOutcome */
+    DeletionOutcome: {
+      /**
+       * Resource Id
+       * Format: uuid
+       */
+      resource_id: string;
+      /**
+       * State
+       * @enum {string}
+       */
+      state: "ready" | "ready_with_warnings" | "failed" | "deleted";
     };
     /** Diagnostic */
     Diagnostic: {
@@ -1143,6 +1175,8 @@ export interface components {
       sync_state: "pending" | "ready" | "failed" | "deleting" | "deleted";
       /** Sync Error */
       sync_error?: string | null;
+      /** Deletion Job Id */
+      deletion_job_id?: string | null;
       /**
        * Created By
        * Format: uuid
@@ -1237,6 +1271,11 @@ export interface components {
        * Format: password
        */
       new_password: string;
+    };
+    /** ReconcileDeletion */
+    ReconcileDeletion: {
+      /** Note */
+      note: string;
     };
     /** ReconcileRequest */
     ReconcileRequest: {
@@ -1437,6 +1476,8 @@ export interface components {
       engine_version: string | null;
       /** Sdk Version */
       sdk_version: string | null;
+      /** Deletion Job Id */
+      deletion_job_id?: string | null;
       /**
        * Created By
        * Format: uuid
@@ -2379,6 +2420,46 @@ export interface operations {
       };
     };
   };
+  delete_network_api_v1_networks__network_id__delete: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        network_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      202: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["JobDTO"];
+        };
+      };
+      /** @description Unprocessable Entity */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+    };
+  };
   limits_api_v1_upload_limits_get: {
     parameters: {
       query?: never;
@@ -2576,6 +2657,47 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["SnapshotDTO"];
+        };
+      };
+      /** @description Unprocessable Entity */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+    };
+  };
+  delete_snapshot_api_v1_networks__network_id__snapshots__snapshot_id__delete: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        network_id: string;
+        snapshot_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      202: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["JobDTO"];
         };
       };
       /** @description Unprocessable Entity */
@@ -3195,6 +3317,50 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["JobDTO"];
+        };
+      };
+      /** @description Unprocessable Entity */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+    };
+  };
+  reconcile_api_v1_admin_deletions__job_id__reconcile_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        job_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["ReconcileDeletion"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["DeletionOutcome"];
         };
       };
       /** @description Unprocessable Entity */

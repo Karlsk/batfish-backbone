@@ -128,7 +128,13 @@ class SnapshotsService:
             original = self._stored(actor, network_id, parent.resource_ids["snapshot_id"])
             if original.manifest is None:
                 raise ServiceError(ErrorCode.CONFLICT)
-        with self._database.transaction() as tx:
+        with self._jobs.resource_boundary() as tx:
+            network = self._networks.require_ready(actor, network_id)
+            if original is not None and self._stored(actor, network_id, original.id).status in {
+                "deleting",
+                "deleted",
+            }:
+                raise ServiceError(ErrorCode.CONFLICT)
             reservation = self._jobs.reserve_resource(
                 actor,
                 route="/snapshots" if retry_of is None else "/snapshots/retry",
@@ -164,6 +170,8 @@ class SnapshotsService:
 
     def retry(self, actor, job, *, idempotency_key=None):
         original = self._stored(actor, job.context.network_id, job.context.snapshot_id)
+        if original.status in {"deleting", "deleted"} or original.manifest is None:
+            raise ServiceError(ErrorCode.CONFLICT)
         request = CreateSnapshotRequest(
             display_name=original.display_name,
             upload_id=original.manifest.upload_id,
@@ -243,13 +251,15 @@ class SnapshotsService:
 
     def files(self, actor, network_id, snapshot_id):
         row = self._stored(actor, network_id, snapshot_id)
+        if row.status == "deleted":
+            raise ServiceError(ErrorCode.NOT_FOUND)
         return SnapshotFiles(
             items=self._uploads.describe_files(row.manifest) if row.manifest else ()
         )
 
     def read_file(self, actor, network_id, snapshot_id, file_id, *, offset=0, limit=50):
         row = self._stored(actor, network_id, snapshot_id)
-        if row.manifest is None:
+        if row.manifest is None or row.status == "deleted":
             raise ServiceError(ErrorCode.NOT_FOUND)
         return self._uploads.read_file(row.manifest, file_id, offset=offset, limit=limit)
 
@@ -334,3 +344,42 @@ class SnapshotsService:
             offset=offset,
             limit=limit,
         )
+
+    def require_empty_network(self, network_id, *, transaction):
+        if SnapshotsRepository(transaction).has_live(network_id):
+            raise ServiceError(ErrorCode.CONFLICT)
+
+    def mark_deleting(self, actor, network_id, identifier, job_id, *, transaction):
+        row = self._stored(actor, network_id, identifier)
+        if row.status in {"deleting", "deleted"}:
+            raise ServiceError(ErrorCode.CONFLICT)
+        SnapshotsRepository(transaction).begin_deletion(identifier, job_id)
+
+    def deletion_resource(self, job):
+        with self._database.transaction() as tx:
+            row = SnapshotsRepository(tx).get(job.context.snapshot_id)
+        if (
+            row is None
+            or row.deletion_job_id != job.id
+            or row.status not in {"deleting", "deleted"}
+        ):
+            raise ServiceError(ErrorCode.CONFLICT)
+        return row
+
+    def deletion_presence(self, job, *, remove=False):
+        self.deletion_resource(job)
+        return self._controller.deletion_presence(job.context, remove=remove)
+
+    def finish_deletion(self, job, *, state, transaction):
+        self.deletion_resource(job)
+        SnapshotsRepository(transaction).finish_deletion(job.context.snapshot_id, state=state)
+
+    def cleanup_deleted(self, job):
+        with self._jobs.resource_boundary() as tx:
+            row = self.deletion_resource(job)
+            if (
+                row.status == "deleted"
+                and row.manifest
+                and not SnapshotsRepository(tx).has_upload_reference(row.manifest.upload_id)
+            ):
+                self._uploads.release_deleted(row.manifest)

@@ -80,6 +80,10 @@ class UploadsService:
             repository.mark_consumed(upload_id, now)
             return row.manifest.model_copy(update={"content_hash": row.content_hash})
 
+    def release_deleted(self, manifest):
+        """Internal capability: caller has confirmed deletion and no live snapshot references."""
+        self._store.remove(manifest.storage_key)
+
     def materialize(self, manifest: UploadManifest):
         """Internal service capability: recreate verified logical paths for an SDK upload."""
         return self._store.materialize(manifest)

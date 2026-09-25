@@ -33,6 +33,7 @@ class Snapshot(Base):
     engine_version: Mapped[str | None] = mapped_column(String(128))
     sdk_version: Mapped[str | None] = mapped_column(String(128))
     base_snapshot_id: Mapped[UUID | None] = mapped_column(ForeignKey("snapshots.id"))
+    deletion_job_id: Mapped[UUID | None] = mapped_column(ForeignKey("jobs.id", use_alter=True))
     deleted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     created_by: Mapped[UUID] = mapped_column(ForeignKey("users.id"))
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())

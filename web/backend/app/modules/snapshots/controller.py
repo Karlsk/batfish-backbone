@@ -34,3 +34,17 @@ class SnapshotController:
                 engine_version=session.get_component_versions()["Batfish"],
                 sdk_version=version("pybatfish"),
             )
+
+    def deletion_presence(self, context, *, remove=False):
+        with self._sessions.exclusive(owner=str(context.snapshot_id)) as session:
+            if context.engine_network not in session.list_networks():
+                return False
+            # Public session context attribute avoids set_network's create-if-absent behavior.
+            session.network = context.engine_network
+            exists = context.engine_snapshot in session.list_snapshots()
+            if remove and exists:
+                session.delete_snapshot(context.engine_snapshot)
+                exists = context.engine_snapshot in session.list_snapshots()
+                if exists:
+                    raise RuntimeError("Remote deletion is not confirmed")
+            return exists

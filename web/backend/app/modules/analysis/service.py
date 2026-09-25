@@ -40,18 +40,26 @@ class AnalysisService:
     ):
         actor = self._auth.revalidate_actor(actor)
         model = self._registry.validate(operation, request)
-        context = self._snapshots.require_analyzable(actor, network_id, snapshot_id)
-        entry = self._registry.get(operation)
-        context = context.model_copy(update={"schema_version": entry.schema_version})
-        return self._jobs.submit(
-            actor,
-            "analysis",
-            context,
-            {"operation": operation, "request": model.model_dump(mode="json", exclude_unset=True)},
-            idempotency_key,
-            effective_parameters={"operation": operation, "request": model.model_dump(mode="json")},
-            retry_of=retry_of,
-        )
+        with self._jobs.resource_boundary() as transaction:
+            context = self._snapshots.require_analyzable(actor, network_id, snapshot_id)
+            entry = self._registry.get(operation)
+            context = context.model_copy(update={"schema_version": entry.schema_version})
+            return self._jobs.submit(
+                actor,
+                "analysis",
+                context,
+                {
+                    "operation": operation,
+                    "request": model.model_dump(mode="json", exclude_unset=True),
+                },
+                idempotency_key,
+                effective_parameters={
+                    "operation": operation,
+                    "request": model.model_dump(mode="json"),
+                },
+                retry_of=retry_of,
+                transaction=transaction,
+            )
 
     def execute(self, job):
         actor = self._auth.revalidate_actor(

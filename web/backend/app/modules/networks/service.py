@@ -82,23 +82,48 @@ class NetworksService:
             )
             if network is None:
                 raise ServiceError(ErrorCode.NOT_FOUND)
-        if network.sync_state == "ready":
-            return network
-        if network.sync_state not in {"pending", "failed"}:
+        with self._jobs.resource_boundary():
+            network = self.get(actor, network.id)
+            if network.sync_state == "ready":
+                return network
+            if network.sync_state not in {"pending", "failed"}:
+                raise ServiceError(ErrorCode.CONFLICT)
+            try:
+                self._controller.create(network.engine_name)
+            except NetworkUnavailable as error:
+                self._problem(network.id, error.reason, failed=error.failed)
+                unknown = error.reason == "ENGINE_UNKNOWN"
+                raise ServiceError(
+                    ErrorCode.ENGINE_STATE_UNKNOWN if unknown else ErrorCode.NOT_READY,
+                    retryable=not unknown,
+                ) from None
+            try:
+                with self._database.transaction() as transaction:
+                    NetworksRepository(transaction).mark_ready(network.id)
+            except Exception:
+                self._problem(network.id, "WRITEBACK_FAILED")
+                raise ServiceError(ErrorCode.NOT_READY, retryable=True) from None
+            return self.get(actor, network.id)
+
+    def mark_deleting(self, actor, identifier, job_id, *, transaction):
+        network = self.require_ready(actor, identifier)
+        NetworksRepository(transaction).begin_deletion(network.id, job_id)
+
+    def deletion_resource(self, job):
+        with self._database.transaction() as tx:
+            row = NetworksRepository(tx).lifecycle_get(job.context.network_id)
+        if (
+            row is None
+            or row.deletion_job_id != job.id
+            or row.sync_state not in {"deleting", "deleted"}
+        ):
             raise ServiceError(ErrorCode.CONFLICT)
-        try:
-            self._controller.create(network.engine_name)
-        except NetworkUnavailable as error:
-            self._problem(network.id, error.reason, failed=error.failed)
-            unknown = error.reason == "ENGINE_UNKNOWN"
-            raise ServiceError(
-                ErrorCode.ENGINE_STATE_UNKNOWN if unknown else ErrorCode.NOT_READY,
-                retryable=not unknown,
-            ) from None
-        try:
-            with self._database.transaction() as transaction:
-                NetworksRepository(transaction).mark_ready(network.id)
-        except Exception:
-            self._problem(network.id, "WRITEBACK_FAILED")
-            raise ServiceError(ErrorCode.NOT_READY, retryable=True) from None
-        return self.get(actor, network.id)
+        return row
+
+    def deletion_presence(self, job, *, remove=False):
+        row = self.deletion_resource(job)
+        return self._controller.deletion_presence(row.engine_name, remove=remove)
+
+    def finish_deletion(self, job, *, state, transaction):
+        self.deletion_resource(job)
+        NetworksRepository(transaction).finish_deletion(job.context.network_id, state=state)

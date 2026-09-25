@@ -15,6 +15,7 @@ class AuditService:
         resource_id: UUID | None,
         outcome: str,
         request_id: UUID,
+        note: str | None = None,
     ) -> None:
         record(
             transaction,
@@ -23,4 +24,5 @@ class AuditService:
             resource_id=resource_id,
             outcome=outcome,
             request_id=request_id,
+            note=note,
         )

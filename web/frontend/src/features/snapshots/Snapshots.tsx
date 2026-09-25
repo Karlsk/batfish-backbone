@@ -1,3 +1,4 @@
+import { DeleteResource } from "./DeleteResource";
 import { Button, Card, Space, Table, Tag, Typography } from "antd";
 import { Link } from "react-router-dom";
 import { useResourceContext } from "../../app/context";
@@ -91,6 +92,7 @@ export function SnapshotsPage() {
                         诊断
                       </Link>
                       <Button
+                        disabled={["deleting", "deleted"].includes(s.status)}
                         type="link"
                         onClick={() =>
                           void selectSnapshot({
@@ -102,6 +104,14 @@ export function SnapshotsPage() {
                       >
                         {snapshot?.id === s.id ? "当前快照" : "选择快照"}
                       </Button>
+                      <DeleteResource
+                        key={s.id}
+                        networkId={network.id}
+                        snapshotId={s.id}
+                        name={s.display_name}
+                        state={s.status}
+                        jobId={s.deletion_job_id}
+                      />
                       {s.initialization_job_id && (
                         <Link to={`/jobs/${s.initialization_job_id}`}>
                           任务

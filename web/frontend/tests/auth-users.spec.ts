@@ -66,6 +66,13 @@ test("real administrator and member lifecycle with session revocation", async ({
     await expect(
       member.getByRole("link", { name: "用户管理", exact: true }),
     ).toHaveCount(0);
+    await member.getByRole("link", { name: "网络与快照", exact: true }).click();
+    await expect(
+      member.getByRole("heading", { name: "网络与快照", exact: true }),
+    ).toBeVisible();
+    await expect(
+      member.getByRole("button", { name: "删除网络", exact: true }),
+    ).toHaveCount(0);
     await member.goto("/users");
     await expect(member.getByText("当前账号没有操作权限。")).toBeVisible();
     await row.getByRole("button", { name: "编辑权限" }).click();

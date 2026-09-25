@@ -2,7 +2,7 @@ import hashlib
 from datetime import UTC, datetime, timedelta
 from uuid import UUID
 
-from sqlalchemy import func, select, text, update
+from sqlalchemy import func, or_, select, text, update
 from sqlalchemy.orm import Session
 
 from app.contracts.dto import JobDTO
@@ -72,6 +72,19 @@ class JobsRepository:
 
     def lock_queue(self):
         self._transaction.execute(text("SELECT pg_advisory_xact_lock(4281082026)"))
+
+    def has_active(self, network_id, snapshot_id=None):
+        query = select(Job.id).where(
+            Job.network_id == network_id, Job.status.in_(("queued", "running"))
+        )
+        if snapshot_id is not None:
+            query = query.where(
+                or_(
+                    Job.snapshot_id == snapshot_id,
+                    Job.context["reference_snapshot_id"].astext == str(snapshot_id),
+                )
+            )
+        return self._transaction.scalar(query.limit(1)) is not None
 
     def queued_counts(self, actor_id):
 

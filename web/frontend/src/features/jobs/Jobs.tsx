@@ -1,3 +1,4 @@
+import { ReconcileDeletion } from "../snapshots/ReconcileDeletion";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Alert,
@@ -417,6 +418,7 @@ function JobView({ jobId }: { jobId: string }) {
           </Link>
         </Space>
       </Card>
+      <ReconcileDeletion key={job.id} job={job} />
       <DetailsDrawer
         open={details}
         title="任务参数与来源"

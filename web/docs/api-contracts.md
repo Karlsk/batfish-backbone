@@ -239,3 +239,11 @@ MVP-18 增加只读上传限额查询，来源为当前部署Settings而非前�
 GET `/results/{id}/export?format=json|csv` 默认json；登录且完成密码更新的团队成员可读取共享结果，沿用结果鉴权。JSON下载是 `{metadata: ResultEnvelope, data: {columns,rows,flows}}`，覆盖全部已保存结果（不是页面筛选/分页），保留原始JSON值与模型限制/截断。CSV只允许table，否则409 CONFLICT；未知format为422。文件名仅 `batfish-<UUID>.<format>`，不接受路径。响应private/no-store、nosniff，迭代输出，不执行SDK。
 
 CSV为UTF-8 BOM、标准引号与CRLF；表头 `record_type,metadata_json,data:<原始列key>...`。首个记录为metadata，第二字段包含完整ResultEnvelope JSON，其余空；后续record_type为data、metadata_json为空。对象/数组单元格采用紧凑JSON。公式前缀=+-@（包括前导空白/控制字符）和开头tab/CR/LF以单引号前缀保护，原始JSON导出不变。空表仍包含表头和metadata。当前加载有界保存文件（默认100MiB）后逐行/增量编码响应；不承诺超大文件常量内存。
+
+## MVP-23 资源删除与对账
+
+DELETE `/networks/{network_id}` 或 `/networks/{network_id}/snapshots/{snapshot_id}` 仅管理员，返回202 JobDTO。同一PostgreSQL队列事务边界内校验身份、资源状态及queued/running任务依赖（含reference_snapshot_id），标记deleting并入队；全局引擎unknown也返回409。网络必须已就绪且无未删除快照，不级联。网络创建重试、分析准入和快照初始化/重试同边界重读，防止迟到创建覆盖删除。NetworkDTO/SnapshotDTO增加可空deletion_job_id，固定当前删除任务。
+
+删除不可取消或重试；远端按服务端保存名称通过公开SDK删除并确认不存在后才写deleted。数据库写回失败保留deleting和源文件，原结果始终可读/导出，来源UUID映射保留墓碑。已删网络常规GET为404；网络尚在时已删快照GET返回deleted，列表不显示、源文件404、历史初始化重试409。输入文件只在提交删除标记后且无其他未删快照manifest引用时清理，重试快照共用输入不会被提前清除。
+
+POST `/admin/deletions/{job_id}/reconcile` 接受 `{note: 10..1000字符检查说明}`，仅管理员且原任务failed/interrupted。按当前deletion_job_id核对远端：存在则恢复原状态，不存在则补记deleted，无法确认保持deleting/引擎unknown；旧删除任务不能覆盖后续删除。检查不会重试删除。引擎unknown先按运行手册停旧worker、确认引擎空闲、完成全局引擎对账，再执行资源对账；历史interrupted记录保留。删除与资源对账写审计，说明保存到audit_events.note。对账返回 `{resource_id,state}`，原失败/中断任务保持历史状态。

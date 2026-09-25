@@ -23,6 +23,12 @@ export function useNetworks() {
         ? page.offset + page.items.length
         : undefined,
     enabled: !!session && !session.must_change_password,
+    refetchInterval: (query) =>
+      query.state.data?.pages.some((page) =>
+        page.items.some((n) => n.sync_state === "deleting"),
+      )
+        ? 2000
+        : false,
   });
 }
 export function useSnapshots(networkId: string | null) {
@@ -52,7 +58,10 @@ export function useSnapshots(networkId: string | null) {
     refetchInterval: (query) =>
       query.state.data?.pages.some((page) =>
         page.items.some(
-          (s) => s.status === "queued" || s.status === "initializing",
+          (s) =>
+            s.status === "queued" ||
+            s.status === "initializing" ||
+            s.status === "deleting",
         ),
       )
         ? 2000

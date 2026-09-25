@@ -1,3 +1,4 @@
+import { verifyDeletion } from "./deletion-helpers";
 import { verifyDownloads } from "./export-helpers";
 import { randomUUID } from "node:crypto";
 import { resolve } from "node:path";
@@ -194,5 +195,6 @@ for (const topology of ["small_network", "cisco_four"]) {
       fullPage: true,
       animations: "disabled",
     });
+    await verifyDeletion(page, testInfo, name, created.snapshot_id);
   });
 }

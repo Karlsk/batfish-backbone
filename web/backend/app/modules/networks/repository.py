@@ -1,3 +1,4 @@
+from datetime import UTC, datetime
 from uuid import UUID
 
 from sqlalchemy import func, select
@@ -59,3 +60,18 @@ class NetworksRepository:
             if failed:
                 network.sync_state = "failed"
             self._transaction.flush()
+
+    def lifecycle_get(self, identifier):
+        row = self._transaction.get(Network, identifier)
+        return _dto(row) if row else None
+
+    def begin_deletion(self, identifier, job_id):
+        row = self._transaction.get(Network, identifier, with_for_update=True)
+        row.sync_state, row.deletion_job_id = "deleting", job_id
+        self._transaction.flush()
+
+    def finish_deletion(self, identifier, *, state):
+        row = self._transaction.get(Network, identifier, with_for_update=True)
+        row.sync_state = state
+        row.deleted_at = datetime.now(UTC) if state == "deleted" else None
+        self._transaction.flush()

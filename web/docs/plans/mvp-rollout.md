@@ -6,8 +6,8 @@
 
 ## 当前进度
 
-- 当前阶段：MVP-22 validated；后端275/前端33/浏览器10通过，0skip。
-- 下一动作：提交 MVP-22，继续 MVP-23 资源删除。
+- 当前阶段：MVP-23 validated；后端286/前端37/浏览器10通过，0skip。
+- 下一动作：提交 MVP-23，继续 MVP-24 单机部署。
 - 环境观察：旧 API/JVM 已停止，保留了上一轮临时 PostgreSQL 容器；核对运行清单/标签后只停止该容器，重建测试环境。没有把历史证据当作本轮通过。
 - 当前无需求决策阻碍。所有新证据记录实际源码身份，运行凭证和完整日志留在忽略提交的 `.runtime/`。
 
@@ -34,8 +34,9 @@
 | MVP-19 | committed | 9570f67f48 | 3e3563c61ad3d3fea3fbcca65ad7baaa411d69dba4c21f67ea9f35594ba54d67 | 后端260/前端23/浏览器6；smoke12；静态检查通过 | [验收](../evidence/mvp-19-verification.json) | bb89f5bf6b |
 | MVP-20 | committed | bb89f5bf6b | a223a2e11e381511e2bb40776b1e7280f0f7b03ccb08356e07b764eb9c3a1642 | 后端260/前端28/浏览器8；smoke12 | [验收](../evidence/mvp-20-verification.json) | 937b4bfce2 |
 | MVP-21 | committed | 937b4bfce2 | 61658bee04e970fd66a4737db66ff3625e447c8e852728aa17b0e14dd12a9764 | 后端260/前端31/浏览器10；smoke12；静态检查通过 | [验收](../evidence/mvp-21-verification.json) | 6d8a79e489 |
-| MVP-22 | validated | 6d8a79e489 | adb58d88e981e6daaaca7cb48d872138717783f3ebdef4032582ad0b560d3474 | 后端275/前端33/浏览器10；smoke12；静态检查通过 | [验收](../evidence/mvp-22-verification.json) | 待提交 |
-| MVP-23～25 | pending | 各篇开工时记录 | 尚未生成 | 逐篇加入验收矩阵 | 尚未运行 | 尚未提交 |
+| MVP-22 | committed | 6d8a79e489 | adb58d88e981e6daaaca7cb48d872138717783f3ebdef4032582ad0b560d3474 | 后端275/前端33/浏览器10；smoke12；静态检查通过 | [验收](../evidence/mvp-22-verification.json) | af6b929722 |
+| MVP-23 | validated | af6b929722 | bd7108ad727c481fc50f3c62c279b5fbeb068ec412a08e7b082323c25e4b58b0 | 后端286/前端37/浏览器10；smoke12；静态检查通过 | [验收](../evidence/mvp-23-verification.json) | 待提交 |
+| MVP-24～25 | pending | 各篇开工时记录 | 尚未生成 | 逐篇加入验收矩阵 | 尚未运行 | 尚未提交 |
 
 可恢复状态：`web/.runtime/mvp-runner/checkpoint.json`。提交后的实际哈希先写 checkpoint，下一篇带入本文件；不为记录自己的哈希重复提交。
 

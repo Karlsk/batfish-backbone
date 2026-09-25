@@ -46,6 +46,7 @@ class SnapshotDTO(Contract):
     quality_summary: Mapping[str, JsonValue]
     engine_version: str | None
     sdk_version: str | None
+    deletion_job_id: UUID | None = None
     created_by: UUID
     created_at: AwareDatetime
 

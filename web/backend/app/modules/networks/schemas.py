@@ -23,6 +23,7 @@ class NetworkDTO(Contract):
     engine_name: str
     sync_state: Literal["pending", "ready", "failed", "deleting", "deleted"]
     sync_error: str | None = None
+    deletion_job_id: UUID | None = None
     created_by: UUID
     created_at: AwareDatetime
 

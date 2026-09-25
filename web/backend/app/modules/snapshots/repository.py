@@ -1,3 +1,5 @@
+from datetime import UTC, datetime
+
 from sqlalchemy import func, select
 
 from app.modules.snapshots.models import Snapshot
@@ -55,3 +57,37 @@ class SnapshotsRepository:
             .limit(limit)
         )
         return tuple(self.dto(row) for row in rows), total
+
+    def has_live(self, network_id):
+        return (
+            self.tx.scalar(
+                select(Snapshot.id)
+                .where(Snapshot.network_id == network_id, Snapshot.deleted_at.is_(None))
+                .limit(1)
+            )
+            is not None
+        )
+
+    def has_upload_reference(self, upload_id):
+        return (
+            self.tx.scalar(
+                select(Snapshot.id)
+                .where(
+                    Snapshot.deleted_at.is_(None),
+                    Snapshot.manifest["upload_id"].astext == str(upload_id),
+                )
+                .limit(1)
+            )
+            is not None
+        )
+
+    def begin_deletion(self, identifier, job_id):
+        row = self.tx.get(Snapshot, identifier, with_for_update=True)
+        row.status, row.deletion_job_id = "deleting", job_id
+        self.tx.flush()
+
+    def finish_deletion(self, identifier, *, state):
+        row = self.tx.get(Snapshot, identifier, with_for_update=True)
+        row.status = state
+        row.deleted_at = datetime.now(UTC) if state == "deleted" else None
+        self.tx.flush()

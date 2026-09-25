@@ -20,3 +20,13 @@ class NetworkController:
             raise NetworkUnavailable("ENGINE_UNKNOWN", failed=True) from None
         except Exception:
             raise NetworkUnavailable("ENGINE_UNAVAILABLE", failed=True) from None
+
+    def deletion_presence(self, engine_name, *, remove=False):
+        with self._sessions.exclusive(owner=engine_name) as session:
+            exists = engine_name in session.list_networks()
+            if remove and exists:
+                session.delete_network(engine_name)
+                exists = engine_name in session.list_networks()
+                if exists:
+                    raise RuntimeError("Remote deletion is not confirmed")
+            return exists

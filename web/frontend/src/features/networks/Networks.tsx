@@ -1,3 +1,4 @@
+import { DeleteResource } from "../snapshots/DeleteResource";
 import { useRef, useState, useEffect } from "react";
 import { Button, Card, Form, Input, Modal, Table, Tag, Typography } from "antd";
 import { useQueryClient } from "@tanstack/react-query";
@@ -99,18 +100,30 @@ export function NetworksPage() {
               {
                 title: "操作",
                 render: (_, n) => (
-                  <Button
-                    disabled={n.sync_state !== "ready"}
-                    type="link"
-                    onClick={async () => {
-                      if (
-                        await selectNetwork({ id: n.id, name: n.display_name })
-                      )
-                        navigate("/snapshots");
-                    }}
-                  >
-                    查看快照
-                  </Button>
+                  <>
+                    <Button
+                      disabled={n.sync_state !== "ready"}
+                      type="link"
+                      onClick={async () => {
+                        if (
+                          await selectNetwork({
+                            id: n.id,
+                            name: n.display_name,
+                          })
+                        )
+                          navigate("/snapshots");
+                      }}
+                    >
+                      查看快照
+                    </Button>
+                    <DeleteResource
+                      key={n.id}
+                      networkId={n.id}
+                      name={n.display_name}
+                      state={n.sync_state}
+                      jobId={n.deletion_job_id}
+                    />
+                  </>
                 ),
               },
             ]}
