@@ -1,3 +1,4 @@
+import { verifyDownloads } from "./export-helpers";
 import { randomUUID } from "node:crypto";
 import { resolve } from "node:path";
 import { readdirSync } from "node:fs";
@@ -150,6 +151,7 @@ for (const topology of ["small_network", "cisco_four"]) {
     await expect(
       page.getByText("没有匹配结果；这是有效的空结果，并非任务失败。"),
     ).toBeVisible();
+    await verifyDownloads(page, testInfo, "table");
     await page.getByRole("button", { name: "清除筛选", exact: true }).click();
     await expect(
       page.getByRole("cell", { name: node, exact: true }).first(),

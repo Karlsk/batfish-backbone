@@ -90,7 +90,15 @@ def check_sources(sources: dict[str, str]) -> list[str]:
                 else:
                     allowed = {
                         "api": {"api", "service", "schemas"},
-                        "service": {"service", "controller", "repository", "schemas", "registry"},
+                        "service": {
+                            "service",
+                            "controller",
+                            "repository",
+                            "schemas",
+                            "registry",
+                            "export",
+                        },
+                        "export": {"export", "schemas"},
                         "registry": {"registry", "schemas"},
                         "controller": {"controller", "schemas"},
                         "repository": {"repository", "schemas", "models", "archive"},

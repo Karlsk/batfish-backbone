@@ -1,6 +1,8 @@
+from typing import Literal
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, Query
+from fastapi.responses import StreamingResponse
 from pydantic import TypeAdapter, ValidationError
 
 from app.contracts.dto import Actor, ResultEnvelope
@@ -57,5 +59,33 @@ def create_router(service: ResultsService, *, read_actor):
         limit: int = Query(50, ge=1, le=200),
     ):
         return service.traces(actor, result_id, flow_id, offset=offset, limit=limit)
+
+    @router.get(
+        "/{result_id}/export",
+        response_class=StreamingResponse,
+        responses={
+            200: {
+                "content": {
+                    "application/json": {"schema": {"type": "string", "format": "binary"}},
+                    "text/csv": {"schema": {"type": "string", "format": "binary"}},
+                }
+            }
+        },
+    )
+    def export(
+        result_id: UUID,
+        format: Literal["json", "csv"] = "json",
+        actor: Actor = Depends(read_actor),
+    ):
+        result = service.export(actor, result_id, format=format)
+        return StreamingResponse(
+            result.chunks,
+            media_type=result.media_type,
+            headers={
+                "Content-Disposition": f'attachment; filename="{result.filename}"',
+                "Cache-Control": "private, no-store",
+                "X-Content-Type-Options": "nosniff",
+            },
+        )
 
     return router

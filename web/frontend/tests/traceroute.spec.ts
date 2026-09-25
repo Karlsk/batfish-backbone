@@ -1,3 +1,4 @@
+import { verifyDownloads } from "./export-helpers";
 import { randomUUID } from "node:crypto";
 import { resolve } from "node:path";
 import { readdirSync, readFileSync } from "node:fs";
@@ -136,6 +137,7 @@ for (const topology of ["small_network", "cisco_four"]) {
       fullPage: true,
       animations: "disabled",
     });
+    await verifyDownloads(page, testInfo, "traces");
     await run(page, node, "203.0.113.254");
     await expect(
       page.getByRole("radio", { name: /路径 .*NO_ROUTE/ }).first(),

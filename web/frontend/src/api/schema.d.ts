@@ -428,6 +428,23 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/results/{result_id}/export": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Export */
+    get: operations["export_api_v1_results__result_id__export_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/capabilities": {
     parameters: {
       query?: never;
@@ -2862,6 +2879,49 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["TracePage"];
+        };
+      };
+      /** @description Unprocessable Entity */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+    };
+  };
+  export_api_v1_results__result_id__export_get: {
+    parameters: {
+      query?: {
+        format?: "json" | "csv";
+      };
+      header?: never;
+      path: {
+        result_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": Blob;
+          "text/csv": Blob;
         };
       };
       /** @description Unprocessable Entity */

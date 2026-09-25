@@ -10,6 +10,7 @@ from app.contracts.errors import ErrorCode, ServiceError
 from app.contracts.results import FlowPage, TablePage, TraceFlow, TracePage
 from app.infrastructure.storage import FileStore
 from app.modules.auth.service import AuthService
+from app.modules.results.export import download
 from app.modules.results.repository import ResultsRepository
 
 
@@ -181,6 +182,15 @@ class ResultsService:
         with FileStore(self._root) as store:
             payload = json.loads(store.read(key))
         return result, payload
+
+    def export(self, actor, result_id, *, format="json"):
+        if format not in {"json", "csv"}:
+            raise ServiceError(ErrorCode.VALIDATION_ERROR)
+        result = self.get(actor, result_id)
+        if format == "csv" and result.kind != "table":
+            raise ServiceError(ErrorCode.CONFLICT)
+        result, payload = self._payload(actor, result_id, result.kind)
+        return download(result, payload, format)
 
     @staticmethod
     def _page(offset, limit):

@@ -233,3 +233,9 @@ summary.ignore_filters及警告明确标注已忽略ACL；摘要同时保留单�
 已知终态失败后，经公开get_answer读取有限诊断文本并映射固定安全提示：没有活动起点提示start_location；不能推导源地址提示options.source_ip。底层堆栈/完整配置不返回、不持久化到普通日志。诊断文本不参与是否释放引擎的判断，未知工作仍按MVP-09对账规则处理。
 
 MVP-18 增加只读上传限额查询，来源为当前部署Settings而非前端常量；身份经AuthService复验。OpenAPI二进制字段在前端生成时映射Blob，浏览器使用FormData携带实际文件并自动生成multipart boundary。
+
+## MVP-22 保存结果导出
+
+GET `/results/{id}/export?format=json|csv` 默认json；登录且完成密码更新的团队成员可读取共享结果，沿用结果鉴权。JSON下载是 `{metadata: ResultEnvelope, data: {columns,rows,flows}}`，覆盖全部已保存结果（不是页面筛选/分页），保留原始JSON值与模型限制/截断。CSV只允许table，否则409 CONFLICT；未知format为422。文件名仅 `batfish-<UUID>.<format>`，不接受路径。响应private/no-store、nosniff，迭代输出，不执行SDK。
+
+CSV为UTF-8 BOM、标准引号与CRLF；表头 `record_type,metadata_json,data:<原始列key>...`。首个记录为metadata，第二字段包含完整ResultEnvelope JSON，其余空；后续record_type为data、metadata_json为空。对象/数组单元格采用紧凑JSON。公式前缀=+-@（包括前导空白/控制字符）和开头tab/CR/LF以单引号前缀保护，原始JSON导出不变。空表仍包含表头和metadata。当前加载有界保存文件（默认100MiB）后逐行/增量编码响应；不承诺超大文件常量内存。

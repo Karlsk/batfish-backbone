@@ -297,6 +297,10 @@ def test_real_result_pipeline_and_cache_identity(result_app, fixture_name, monke
         assert cached.status == "succeeded" and cached.result_id == finished.result_id
         assert cached.id != finished.id and cached.created_by != finished.created_by
         assert other.get("/api/v1/results/" + str(cached.result_id)).status_code == 200
+    exported = client.get(f"/api/v1/results/{finished.result_id}/export").json()
+    assert exported["metadata"]["context"]["snapshot_id"] == created["snapshot_id"]
+    assert len(exported["data"]["rows"]) == rows["total"]
+    assert client.get(f"/api/v1/results/{finished.result_id}/export?format=csv").status_code == 200
     assert len(calls) == 1
     from pybatfish.datamodel import HeaderConstraints
 

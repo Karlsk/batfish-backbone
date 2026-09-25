@@ -1,6 +1,6 @@
 # 第一阶段：基础排障闭环
 
-状态：MVP-01～21 已完成，其余4份待开发。总计25份，预计40.0人天，单份≤2人天。
+状态：MVP-01～22 已完成，其余3份待开发。总计25份，预计40.0人天，单份≤2人天。
 
 阶段目标：内置账号、共享网络/快照、上传与解析诊断、设备/接口、路由/LPM、单向IPv4 traceroute、任务、导出及对应前端。不包含拓扑/BGP/ACL专页和变更验证。
 
@@ -27,7 +27,7 @@
 | [MVP-19 任务记录与解析诊断界面](mvp-19-frontend-jobs-diagnostics.md) | MVP-11、MVP-18 | 1.5 | 已完成 |
 | [MVP-20 设备、接口与路由界面](mvp-20-frontend-inventory-routing.md) | MVP-13、MVP-14、MVP-19 | 2.0 | 已完成 |
 | [MVP-21 连通性表单与逐跳路径界面](mvp-21-frontend-traceroute.md) | MVP-15、MVP-20 | 2.0 | 已完成 |
-| [MVP-22 结果导出与下载入口](mvp-22-result-export.md) | MVP-21 | 1.0 | 待开发 |
+| [MVP-22 结果导出与下载入口](mvp-22-result-export.md) | MVP-21 | 1.0 | 已完成 |
 | [MVP-23 管理员资源删除与任务互斥](mvp-23-resource-deletion.md) | MVP-22 | 1.5 | 待开发 |
 | [MVP-24 单机团队部署与运行手册](mvp-24-deployment.md) | MVP-23 | 1.5 | 待开发 |
 | [MVP-25 首版双用户验收与规模校准](mvp-25-mvp-acceptance.md) | MVP-24 | 1.5 | 待开发 |

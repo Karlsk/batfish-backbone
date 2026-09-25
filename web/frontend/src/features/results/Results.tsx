@@ -1,3 +1,4 @@
+import { ResultExport } from "../../components/ResultExport";
 import { TraceResults } from "../traceroute/TraceResults";
 import { useState } from "react";
 import {
@@ -56,6 +57,7 @@ function ResultView({ resultId }: { resultId: string }) {
         <Button onClick={() => setDetails(true)}>有效参数与来源</Button>
       </div>
       <ResultSummary result={result} />
+      <ResultExport key={result.id} result={result} />
       <p className="muted">
         此结果固定来自上述快照；切换顶部上下文仅影响后续查询。
       </p>
