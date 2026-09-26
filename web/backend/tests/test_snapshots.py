@@ -44,6 +44,23 @@ def test_snapshot_idempotency_and_overwrite_impossible(snapshot_app):
     assert all(r["status"] == "queued" for r in rows)
 
 
+def test_succeeded_job_does_not_make_earlier_queued_snapshot_read_look_failed(
+    snapshot_app, monkeypatch
+):
+    client, db, app, headers, network, source, actor = setup(snapshot_app)
+    created = create(client, headers, network, source).json()
+    service = app.state.snapshots_service
+    original_get = service._jobs.get
+
+    def completed_job(actor, job_id):
+        return original_get(actor, job_id).model_copy(update={"status": "succeeded"})
+
+    monkeypatch.setattr(service._jobs, "get", completed_job)
+    response = client.get(f"/api/v1/networks/{network}/snapshots/{created['snapshot_id']}")
+    assert response.status_code == 200
+    assert response.json()["status"] == "initializing"
+
+
 def test_upload_consumed_once_atomic(snapshot_app):
     from app.modules.snapshots.schemas import CreateSnapshotRequest
 

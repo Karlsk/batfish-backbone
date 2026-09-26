@@ -61,7 +61,7 @@ MVP-01～25 及双主题升级已通过全部当前门禁，详见[复验报告]
 
 已知未提交ADV-01属于本任务，核验后纳入本批；保留`.pnpm-store/`、`.superpowers/`无关内容。现有ADV-01源码指纹与上轮一致，先补齐批次部署恢复及累计检查后提交，不重复实现。
 
-当前篇：ADV-14；下一动作：本篇门槛全部通过，提交后推进ADV-15变更对比工作台。阻碍：无。
+当前篇：ADV-15；下一动作：本篇门槛全部通过，提交后推进ADV-16故障派生快照。阻碍：无。
 
 | spec | stage | base_commit | implementation_fingerprint | required_checks | evidence | commit |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -78,8 +78,8 @@ MVP-01～25 及双主题升级已通过全部当前门禁，详见[复验报告]
 | ADV-11 | committed | 198106e241 | d6b748bebaf68534c8a82ba95f4dca112613c2e13da098bbdb9bf8254be86f65 | MVP全部＋ADV-01～11 | [全部通过](../evidence/adv-11-verification.md) | cf52837b72 |
 | ADV-12 | committed | cf52837b72 | 5bc2ebfd6968992d25b96e0006510c31c75cef1d16d40ac26eb67bf1322332e0 | MVP全部＋ADV-01～12 | [全部通过](../evidence/adv-12-verification.md) | daffc4a41c |
 | ADV-13 | committed | daffc4a41c | 22415dcf943383d97714511b85dd6f2dd250eac6ed65141e7766d67135e4867c | MVP全部＋ADV-01～13 | [全部通过](../evidence/adv-13-verification.md) | 72ca4b2491 |
-| ADV-14 | validated | 72ca4b2491 | 21640faa2768e268c6c7451315dcd7face0af9f28b7a3dd8413c7c53e37ec084 | MVP全部＋ADV-01～14 | [全部通过](../evidence/adv-14-verification.md) | 提交后关联 |
-| ADV-15 | pending | — | 待本轮归档 | MVP全部＋ADV-01～15 | 待执行 | — |
+| ADV-14 | committed | 72ca4b2491 | 21640faa2768e268c6c7451315dcd7face0af9f28b7a3dd8413c7c53e37ec084 | MVP全部＋ADV-01～14 | [全部通过](../evidence/adv-14-verification.md) | 23e19dfe79 |
+| ADV-15 | validated | 23e19dfe79 | d9e8d61b23d555ad1ccdf64154a589fe9906e018af6d91e40a754f6c41d8ff97 | MVP全部＋ADV-01～15 | [全部通过](../evidence/adv-15-verification.md) | 提交后关联 |
 | ADV-16 | pending | — | 待本轮归档 | MVP全部＋ADV-01～16 | 待执行 | — |
 | ADV-17 | pending | — | 待本轮归档 | MVP全部＋ADV-01～17 | 待执行 | — |
 | ADV-18 | pending | — | 待本轮归档 | MVP全部＋ADV-01～18 | 待执行 | — |

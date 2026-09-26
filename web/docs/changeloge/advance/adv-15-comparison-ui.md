@@ -1,6 +1,6 @@
 # ADV-15 变更对比工作台
 
-- 状态：待开发
+- 状态：已完成
 - 阶段：3
 - 依赖：[ADV-14](../advance/adv-14-differential-reachability.md)
 - 预计工作量：2.0 人天（实现/验证 1.25 + 测试 0.5 + 文档/自检 0.25），依赖就绪后计；超过 2 人天先拆分。
@@ -28,10 +28,10 @@
 
 ## 实施步骤
 
-- [ ] 实现比较上下文创建/选择并固定两侧标签。
-- [ ] 复用表格/TraceSteps 展示路由与 flow，配置 diff 采用按文件按需加载。
-- [ ] 把覆盖不足/版本差异/截断放在摘要区域。
-- [ ] 运行下述验证，记录实际命令与结果，更新本文及索引状态。
+- [x] 实现比较上下文创建/选择并固定两侧标签。
+- [x] 复用表格/TraceSteps 展示路由与 flow，配置 diff 采用按文件按需加载。
+- [x] 把覆盖不足/版本差异/截断放在摘要区域。
+- [x] 运行下述验证，记录实际命令与结果，更新本文及索引状态。
 
 ## 测试与验收
 
@@ -49,4 +49,6 @@
 
 ## 完成记录
 
-当前尚未开发或运行本 spec 的产品测试。实施者完成后在本节记录实际文件、验证命令、结果、引擎/SDK版本（如涉及）和剩余限制；存在验收失败时保持未通过状态。
+2026-09-27 完成。新增 `web/frontend/src/features/changes/`、导航/样式、历史结果展示、`changes.test.tsx` 和 `tests/changes.spec.ts`。真实浏览器回归发现快照状态跨事务读偏斜，补充 `web/backend/tests/test_snapshots.py` 回归并修复 `app/modules/snapshots/service.py`，重新启动隔离服务后复验。
+
+实际验证与环境见 [ADV-15 完整验收](../../evidence/adv-15-verification.md)：`web/backend` 对应隔离运行 `lab.py verify` 358 passed、`lab.py smoke` 13 passed；`web/frontend` 运行 `pnpm test` 87 passed、`pnpm check:api`、`pnpm typecheck`、`pnpm build`、`pnpm format:check`，浏览器 24 passed；新 HTTPS 部署、恢复和恢复后深浅主题/双用户验收通过。Batfish revision `7d0deeeac4a09973b3876327f6aef721ee12f955`、Pybatfish `2026.9.17.3748`、Python `3.12.12`；源码身份见机器证据。没有必需检查未运行或失败。范围限制为模型及已选流量条件，不声明真实网络转发一致性；满足 ADV-16 前置门槛。

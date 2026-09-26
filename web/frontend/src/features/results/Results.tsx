@@ -7,6 +7,7 @@ import {
 } from "../acl/AdvancedResults";
 import { ResultExport } from "../../components/ResultExport";
 import { TraceResults } from "../traceroute/TraceResults";
+import { ChangeResults } from "../changes/ChangeResults";
 import { useState } from "react";
 import {
   Alert,
@@ -54,6 +55,12 @@ function ResultView({ resultId }: { resultId: string }) {
   if (query.isPending) return <LoadingState />;
   if (query.isError) return <ErrorState error={query.error} />;
   const result = query.data;
+  if (
+    ["config-diff", "routes-diff", "reachability-diff"].includes(
+      String(result.effective_parameters.operation),
+    )
+  )
+    return <ComparisonResult result={result} />;
   return (
     <>
       <div className="page-heading">
@@ -144,6 +151,47 @@ function ResultView({ resultId }: { resultId: string }) {
           schema_version: result.schema_version,
         })}
       />
+    </>
+  );
+}
+function ComparisonResult({
+  result,
+}: {
+  result: components["schemas"]["ResultEnvelope"];
+}) {
+  const comparisonId = result.effective_parameters.comparison_id;
+  if (typeof comparisonId !== "string")
+    return <EmptyState title="比较来源缺失" />;
+  const comparison = {
+    id: comparisonId,
+    coverage: (result.coverage === "limited" ? "limited" : "complete") as
+      | "limited"
+      | "complete",
+    coverage_notes: [],
+    baseline_snapshot_id: result.context.reference_snapshot_id,
+    candidate_snapshot_id: result.context.snapshot_id,
+  };
+  return (
+    <>
+      <div className="page-heading">
+        <div>
+          <Typography.Title level={2}>比较结果</Typography.Title>
+          <span className="record-id">结果编号：{result.id}</span>
+        </div>
+      </div>
+      <Card title="固定比较方向" className="comparison-direction">
+        <div className="change-sides">
+          <div>
+            <strong>基线（左）</strong>
+            <p>{comparison.baseline_snapshot_id}</p>
+          </div>
+          <div>
+            <strong>候选（右）</strong>
+            <p>{comparison.candidate_snapshot_id}</p>
+          </div>
+        </div>
+      </Card>
+      <ChangeResults comparison={comparison} result={result} />
     </>
   );
 }

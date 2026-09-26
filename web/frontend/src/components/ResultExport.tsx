@@ -72,7 +72,9 @@ export function ResultExport({
         包含来源快照、版本、有效参数及截断说明；导出全部已保存数据，不受当前表格筛选影响。
         {result.kind === "table"
           ? "JSON 保留原始结构；CSV 第二行为来源元数据，结构化单元格使用 JSON，公式前缀以单引号转义。"
-          : "路径结果仅支持 JSON，保留 Flow、全部已保存路径及逐跳动作。"}
+          : result.kind === "diff"
+            ? "配置差异仅支持 JSON，保留双侧哈希、文件摘要与已保存的行差异。"
+            : "路径结果仅支持 JSON，保留 Flow、全部已保存路径及逐跳动作。"}
       </p>
       {error !== undefined && <ErrorState error={error} />}
     </Card>

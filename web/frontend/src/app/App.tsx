@@ -75,6 +75,11 @@ const ExpertPage = lazy(() =>
     default: m.ExpertPage,
   })),
 );
+const ChangesPage = lazy(() =>
+  import("../features/changes/ChangesPage").then((m) => ({
+    default: m.ChangesPage,
+  })),
+);
 const AnalysisPage = lazy(() =>
   import("../features/inventory/Analysis").then((m) => ({
     default: m.AnalysisPage,
@@ -237,6 +242,11 @@ export function Shell({ children }: PropsWithChildren) {
               label: <Link to="/expert">专家查询</Link>,
             },
             {
+              key: "/changes",
+              icon: <BranchesOutlined />,
+              label: <Link to="/changes">变更对比</Link>,
+            },
+            {
               key: "/jobs",
               icon: <ClockCircleOutlined />,
               label: <Link to="/jobs">任务中心</Link>,
@@ -358,6 +368,7 @@ function WorkbenchRoutes() {
                 <Route path="/bgp" element={<BgpPage />} />
                 <Route path="/acl" element={<FilterTestPage />} />
                 <Route path="/expert" element={<ExpertPage />} />
+                <Route path="/changes" element={<ChangesPage />} />
                 <Route path="/traceroute" element={<TracePage />} />
                 <Route path="/analysis/:operation" element={<AnalysisPage />} />
                 <Route path="/analysis" element={<AnalysisPage />} />

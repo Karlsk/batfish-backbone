@@ -1,0 +1,57 @@
+{
+  "date": "2026-09-27",
+  "scope": "ADV-15 and cumulative MVP-01..25, ADV-01..15",
+  "base_commit": "23e19dfe79",
+  "source_sha256": "d9e8d61b23d555ad1ccdf64154a589fe9906e018af6d91e40a754f6c41d8ff97",
+  "source_fingerprint_method": "SHA-256 of compact, sorted JSON path-to-file-SHA256 map for Git cached/other nonignored files under web/backend, web/frontend, web/scripts, web/deploy",
+  "source_file_count": 321,
+  "environment": {
+    "lab_run": "c66c07011826",
+    "engine_revision": "7d0deeeac4a09973b3876327f6aef721ee12f955",
+    "jar_sha256": "0927de7c740bc72f999870e842605baad9a7cb6ea66e4b01fb9a6037bea00193",
+    "pybatfish": "2026.9.17.3748",
+    "python": "3.12.12",
+    "migration": "0009",
+    "topologies": ["small_network r1/r2", "cisco_four c1-c4", "controlled Cisco baseline/candidate"]
+  },
+  "backend": {
+    "passed": 358,
+    "skipped": 0,
+    "evidence": "web/.runtime/test-lab/c66c07011826/checks/bd8092e977de"
+  },
+  "smoke": {
+    "passed": 13,
+    "intentional_deselected": 345,
+    "evidence": "web/.runtime/test-lab/c66c07011826/checks/e8906bbc0fb3"
+  },
+  "frontend": {
+    "unit_passed": 87,
+    "build": "passed",
+    "typecheck": "passed",
+    "api_types": "passed",
+    "format": "passed"
+  },
+  "browser": {
+    "passed": 24,
+    "failed": 0,
+    "skipped": 0,
+    "lab_run": "c66c07011826",
+    "isolated_output": "web/frontend/test-results/adv15-final-rerun"
+  },
+  "deployment": "web/.runtime/deploy-adv15-batch/verification.json",
+  "restored": "web/.runtime/deploy-adv15-batch-restored",
+  "production_browser": {
+    "light_deployment": 3,
+    "dark_deployment": 3,
+    "light_acceptance": 1,
+    "dark_acceptance": 1,
+    "failed": 0,
+    "skipped": 0
+  },
+  "static_checks": {
+    "ruff_lint": "passed",
+    "ruff_format_changed_python": "passed",
+    "offline_lock": "passed",
+    "git_diff_check": "passed"
+  }
+}

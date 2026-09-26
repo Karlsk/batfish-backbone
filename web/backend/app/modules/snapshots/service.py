@@ -63,6 +63,11 @@ class SnapshotsService:
                 status = "queued"
             elif job.status == "running":
                 status = "initializing"
+            elif job.status == "succeeded" and status in {"queued", "initializing"}:
+                # Snapshot and job are read in separate transactions. A worker
+                # can commit between those reads; let clients poll rather than
+                # presenting a completed snapshot as a permanent failure.
+                status = "initializing"
             elif status not in {"ready", "ready_with_warnings"}:
                 status = "failed"
         return SnapshotDTO(
