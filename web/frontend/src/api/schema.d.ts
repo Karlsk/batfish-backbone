@@ -413,6 +413,40 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/results/{result_id}/diff/files": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Diff Files */
+    get: operations["diff_files_api_v1_results__result_id__diff_files_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/results/{result_id}/diff/files/{file_id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Diff File */
+    get: operations["diff_file_api_v1_results__result_id__diff_files__file_id__get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/results/{result_id}/flows": {
     parameters: {
       query?: never;
@@ -721,6 +755,23 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/comparisons/{comparison_id}/analyses/config-diff": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Submit Config Diff */
+    post: operations["submit_config_diff_api_v1_comparisons__comparison_id__analyses_config_diff_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/admin/deletions/{job_id}/reconcile": {
     parameters: {
       query?: never;
@@ -961,6 +1012,12 @@ export interface components {
       /** Total */
       total: number;
     };
+    /** ConfigDiffOptions */
+    ConfigDiffOptions: Record<string, never>;
+    /** ConfigDiffRequest */
+    ConfigDiffRequest: {
+      options?: components["schemas"]["ConfigDiffOptions"];
+    };
     /** CreateComparisonRequest */
     CreateComparisonRequest: {
       /**
@@ -1061,6 +1118,90 @@ export interface components {
       limit: number;
       /** Total */
       total: number;
+    };
+    /** DiffFileDetail */
+    DiffFileDetail: {
+      file: components["schemas"]["DiffFileSummary"];
+      /** Hunks */
+      hunks: components["schemas"]["DiffHunk"][];
+      /** Offset */
+      offset: number;
+      /** Limit */
+      limit: number;
+      /** Total */
+      total: number;
+      /** Truncated */
+      truncated: boolean;
+    };
+    /** DiffFilePage */
+    DiffFilePage: {
+      /** Items */
+      items: components["schemas"]["DiffFileSummary"][];
+      /** Offset */
+      offset: number;
+      /** Limit */
+      limit: number;
+      /** Total */
+      total: number;
+      /** Truncated */
+      truncated: boolean;
+    };
+    /** DiffFileSummary */
+    DiffFileSummary: {
+      /** File Id */
+      file_id: string;
+      /** Path */
+      path: string;
+      /**
+       * Change
+       * @enum {string}
+       */
+      change: "added" | "removed" | "changed";
+      /** Baseline Sha256 */
+      baseline_sha256: string | null;
+      /** Candidate Sha256 */
+      candidate_sha256: string | null;
+      /** Baseline Encoding */
+      baseline_encoding: string | null;
+      /** Candidate Encoding */
+      candidate_encoding: string | null;
+      /** Baseline Size Bytes */
+      baseline_size_bytes: number | null;
+      /** Candidate Size Bytes */
+      candidate_size_bytes: number | null;
+      /** Baseline Line Count */
+      baseline_line_count: number | null;
+      /** Candidate Line Count */
+      candidate_line_count: number | null;
+      /** Detail Truncated */
+      detail_truncated: boolean;
+      /** Hunk Count */
+      hunk_count: number;
+      /**
+       * Warnings
+       * @default []
+       */
+      warnings: string[];
+    };
+    /** DiffHunk */
+    DiffHunk: {
+      /**
+       * Tag
+       * @enum {string}
+       */
+      tag: "replace" | "insert" | "delete";
+      /** Baseline Start */
+      baseline_start: number;
+      /** Baseline End */
+      baseline_end: number;
+      /** Candidate Start */
+      candidate_start: number;
+      /** Candidate End */
+      candidate_end: number;
+      /** Baseline Lines */
+      baseline_lines: components["schemas"]["SourceLine"][];
+      /** Candidate Lines */
+      candidate_lines: components["schemas"]["SourceLine"][];
     };
     /** EmptyOptions */
     EmptyOptions: Record<string, never>;
@@ -3493,6 +3634,93 @@ export interface operations {
       };
     };
   };
+  diff_files_api_v1_results__result_id__diff_files_get: {
+    parameters: {
+      query?: {
+        offset?: number;
+        limit?: number;
+      };
+      header?: never;
+      path: {
+        result_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["DiffFilePage"];
+        };
+      };
+      /** @description Unprocessable Entity */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+    };
+  };
+  diff_file_api_v1_results__result_id__diff_files__file_id__get: {
+    parameters: {
+      query?: {
+        offset?: number;
+        limit?: number;
+      };
+      header?: never;
+      path: {
+        result_id: string;
+        file_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["DiffFileDetail"];
+        };
+      };
+      /** @description Unprocessable Entity */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+    };
+  };
   flows_api_v1_results__result_id__flows_get: {
     parameters: {
       query?: {
@@ -4369,6 +4597,52 @@ export interface operations {
           [name: string]: unknown;
         };
         content?: never;
+      };
+      /** @description Unprocessable Entity */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+    };
+  };
+  submit_config_diff_api_v1_comparisons__comparison_id__analyses_config_diff_post: {
+    parameters: {
+      query?: never;
+      header?: {
+        "idempotency-key"?: string | null;
+      };
+      path: {
+        comparison_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["ConfigDiffRequest"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      202: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["JobDTO"];
+        };
       };
       /** @description Unprocessable Entity */
       422: {

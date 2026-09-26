@@ -1,13 +1,21 @@
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Query, Request
+from fastapi import APIRouter, Depends, Header, Query, Request
 
-from app.contracts.dto import Actor
-from app.modules.changes.schemas import ComparisonDTO, ComparisonPage, CreateComparisonRequest
+from app.contracts.dto import Actor, JobDTO
+from app.modules.changes.analysis import ConfigDiffService
+from app.modules.changes.schemas import (
+    ComparisonDTO,
+    ComparisonPage,
+    ConfigDiffRequest,
+    CreateComparisonRequest,
+)
 from app.modules.changes.service import ChangesService
 
 
-def create_router(service: ChangesService, *, read_actor, write_actor):
+def create_router(
+    service: ChangesService, config_diff: ConfigDiffService, *, read_actor, write_actor
+):
     router = APIRouter(tags=["Changes"])
 
     @router.post(
@@ -37,5 +45,18 @@ def create_router(service: ChangesService, *, read_actor, write_actor):
     @router.delete("/comparisons/{comparison_id}", status_code=204)
     def delete(comparison_id: UUID, request: Request, actor: Actor = Depends(write_actor)):
         service.delete(actor, comparison_id, request_id=UUID(request.state.request_id))
+
+    @router.post(
+        "/comparisons/{comparison_id}/analyses/config-diff",
+        response_model=JobDTO,
+        status_code=202,
+    )
+    def submit_config_diff(
+        comparison_id: UUID,
+        body: ConfigDiffRequest,
+        actor: Actor = Depends(write_actor),
+        idempotency_key: str | None = Header(None, max_length=128),
+    ):
+        return config_diff.submit(actor, comparison_id, body, idempotency_key=idempotency_key)
 
     return router

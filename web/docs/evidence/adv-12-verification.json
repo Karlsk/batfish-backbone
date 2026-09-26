@@ -1,0 +1,106 @@
+{
+  "date": "2026-09-26T16:53:18.491853+00:00",
+  "scope": "ADV-12 and cumulative MVP-01..25, ADV-01..12",
+  "base_commit": "cf52837b72",
+  "source_sha256": "5bc2ebfd6968992d25b96e0006510c31c75cef1d16d40ac26eb67bf1322332e0",
+  "source_fingerprint_method": "SHA-256 of compact, sorted JSON path-to-file-SHA256 map for Git cached/other nonignored files under web/backend, web/frontend, web/scripts, web/deploy",
+  "source_file_count": 310,
+  "changed_source_files": {
+    "web/backend/app/composition.py": "7625525d3b7c680bdc63a3b01adae8bb3a20552cdd8e461041ded9e9e48dbba1",
+    "web/backend/app/modules/changes/api.py": "d380c0811e95ba0b03b8bf713d507090b0dd1742df6b8599d1cba05f1dbb0a87",
+    "web/backend/app/modules/changes/schemas.py": "bf3dd00fc6ce66cbd33e155abd76e5bd80c81196ec390d8c6c1047b2a11d4d43",
+    "web/backend/app/modules/results/api.py": "fdb821c76df6323dd9a153a0e0a1841507b45cee22a862a56a81c9290103d155",
+    "web/backend/app/modules/results/service.py": "a8aab796aefe138898fc9dbf51d3d81adbd847b9b411fb2d34a5db57a5e5dcd8",
+    "web/backend/tests/architecture_rules.py": "92c9a536fe7f9085431ee6a584bc6131ae9524afc98d5b3482271ee6fc79d2dc",
+    "web/backend/tests/integration/test_lab_topologies.py": "9456c513970a1daf1d3204244f990d273deaef040ef4eb9cae2d513bb9daddb4",
+    "web/backend/tests/test_architecture.py": "4cc27fe9f5c87225e167bbf200fd13c2945aa6c5b5861dd6cacd12e3725106a9",
+    "web/frontend/src/api/schema.d.ts": "3453caf7a0f56131c73bc6cb84de3c3fe090849bd26a86be130c92dc829d9b8b",
+    "web/backend/app/modules/changes/analysis.py": "e906826123d2ae6903574d651dcc75aeb30f711bc8d0837b42fbbd367fac5f6a",
+    "web/backend/app/modules/changes/config_diff.py": "baa30decd0de8b9f5de472fda2c11ae1df914d750949a2d6c03468b59ff35095",
+    "web/backend/app/modules/results/diff.py": "0bb0cf6098197e2b8c668a50581464567afd14dffcbbf67b198ca6721ab8edb7",
+    "web/backend/tests/test_config_diff.py": "6b2a432ee75f30e03024997c8521028661ea4eb0b35d521c8e213be3aa338bac"
+  },
+  "environment": {
+    "lab_run": "bb1cdce974dd",
+    "engine_revision": "7d0deeeac4a09973b3876327f6aef721ee12f955",
+    "jar_sha256": "0927de7c740bc72f999870e842605baad9a7cb6ea66e4b01fb9a6037bea00193",
+    "pybatfish": "2026.9.17.3748",
+    "python": "3.12.12",
+    "migration": "0009",
+    "topologies": [
+      "small_network r1/r2",
+      "cisco_four c1-c4"
+    ]
+  },
+  "backend": {
+    "passed": 345,
+    "skipped": 0,
+    "evidence": "web/.runtime/test-lab/bb1cdce974dd/checks/89f00799faba"
+  },
+  "smoke": {
+    "passed": 13,
+    "intentional_deselected": 332,
+    "evidence": "web/.runtime/test-lab/bb1cdce974dd/checks/dd89ab24731a"
+  },
+  "config_diff_integration": {
+    "candidate": "snapshot",
+    "baseline": "reference_snapshot",
+    "file_classes": [
+      "added",
+      "removed",
+      "changed"
+    ],
+    "raw_sha256": "preserved",
+    "detail_limits": {
+      "files": 200,
+      "total_bytes": 8388608,
+      "per_file_bytes": 1048576,
+      "per_file_lines": 2000,
+      "hunks": 200
+    },
+    "cache_and_deleted_history": "passed",
+    "live_worker_http": "passed"
+  },
+  "frontend": {
+    "unit_passed": 81,
+    "build": "passed",
+    "typecheck": "passed",
+    "api_types": "passed",
+    "format": "passed"
+  },
+  "browser": {
+    "passed": 23,
+    "failed": 0,
+    "skipped": 0,
+    "lab_run": "bb1cdce974dd",
+    "isolated_output": "web/frontend/test-results/adv12-isolated"
+  },
+  "deployment": "web/.runtime/deploy-adv12-batch/verification.json",
+  "restored": "web/.runtime/deploy-adv12-batch-restored",
+  "production_browser": {
+    "light_deployment": 3,
+    "dark_deployment": 3,
+    "light_acceptance": 1,
+    "dark_acceptance": 1,
+    "failed": 0,
+    "skipped": 0
+  },
+  "static_checks": {
+    "ruff_lint": "passed",
+    "ruff_format_changed_python": "passed",
+    "uv_lock_offline": "passed",
+    "git_diff_check": "passed"
+  },
+  "initial_failures": [
+    "New service imports initially exceeded the strict architecture alias map; the map was extended for the exact service and pure DTO/helper modules, then full 345/345 passed.",
+    "The first cumulative browser run overlapped a production browser run, which cleaned the shared Playwright test-results directory; an isolated-output rerun passed 23/23.",
+    "One candidate snapshot initialization failed intermittently in a diagnostic run; five consecutive focused reruns and the full backend suite passed without relaxing assertions."
+  ],
+  "review": "Self-reviewed API/service/controller layering, comparison-bound immutable direction and hashes, worker/CSRF/permission/retry/cache checks, bounded source lines and result bytes, explicit truncation, byte versus text identity, and OpenAPI contracts.",
+  "limits": [
+    "Raw configuration text changes are not equivalent to network behavior changes.",
+    "The generic frontend result view will render diff details in ADV-15; ADV-12 exposes typed backend list/detail APIs.",
+    "Synthetic configuration tests do not prove production forwarding fidelity or capacity.",
+    "Existing frontend shared chunk exceeds a 500 kB advisory; build/browser checks pass."
+  ]
+}

@@ -8,6 +8,7 @@ from pydantic import TypeAdapter, ValidationError
 from app.contracts.dto import Actor, ResultEnvelope
 from app.contracts.errors import ErrorCode, FieldError, ServiceError
 from app.contracts.results import FlowPage, GraphDTO, RowFilter, TablePage, TracePage
+from app.modules.results.diff import DiffFileDetail, DiffFilePage
 from app.modules.results.service import ResultsService
 
 
@@ -50,6 +51,25 @@ def create_router(service: ResultsService, *, read_actor):
         limit: int = Query(200, ge=1, le=200),
     ):
         return service.graph(actor, result_id, focus_node=focus_node, hops=hops, limit=limit)
+
+    @router.get("/{result_id}/diff/files", response_model=DiffFilePage)
+    def diff_files(
+        result_id: UUID,
+        actor: Actor = Depends(read_actor),
+        offset: int = Query(0, ge=0),
+        limit: int = Query(50, ge=1, le=200),
+    ):
+        return service.diff_files(actor, result_id, offset=offset, limit=limit)
+
+    @router.get("/{result_id}/diff/files/{file_id}", response_model=DiffFileDetail)
+    def diff_file(
+        result_id: UUID,
+        file_id: str,
+        actor: Actor = Depends(read_actor),
+        offset: int = Query(0, ge=0),
+        limit: int = Query(50, ge=1, le=200),
+    ):
+        return service.diff_file(actor, result_id, file_id, offset=offset, limit=limit)
 
     @router.get("/{result_id}/flows", response_model=FlowPage)
     def flows(

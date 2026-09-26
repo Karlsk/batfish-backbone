@@ -18,6 +18,11 @@ def business_module(name: str) -> tuple[str, str] | None:
         return None
     layer = parts[3] if len(parts) > 3 else ""
     layer = {"controllers": "controller", "repositories": "repository"}.get(layer, layer)
+    layer = {
+        ("changes", "analysis"): "service",
+        ("changes", "config_diff"): "graph",
+        ("results", "diff"): "schemas",
+    }.get((parts[2] if len(parts) > 2 else "", layer), layer)
     return (parts[2] if len(parts) > 2 else "", layer)
 
 

@@ -10,6 +10,7 @@ from app.contracts.errors import ErrorCode, ServiceError
 from app.contracts.results import FlowPage, GraphData, TablePage, TraceFlow, TracePage
 from app.infrastructure.storage import FileStore
 from app.modules.auth.service import AuthService
+from app.modules.results.diff import DiffFileDetail, DiffFilePage, DiffFileSummary
 from app.modules.results.export import download
 from app.modules.results.graph import bound_graph, select_graph
 from app.modules.results.repository import ResultsRepository
@@ -70,6 +71,79 @@ class ResultsService:
     def cached(self, key):
         with self._database.transaction() as tx:
             return ResultsRepository(tx).cached(key)
+
+    def publish_diff(
+        self,
+        context,
+        files,
+        *,
+        parameters,
+        cache_key,
+        coverage,
+        coverage_notes,
+        transaction,
+    ):
+        payload = {"files": []}
+        size = len(encoded(payload))
+        if size > self._settings.result_max_bytes:
+            raise ServiceError(ErrorCode.NOT_READY)
+        reasons = set()
+        for index, (summary, hunks) in enumerate(files):
+            if index >= min(self._settings.table_rows, 5000):
+                reasons.add("file_limit")
+                break
+            item = {"summary": dict(summary), "hunks": list(hunks)}
+            increment = len(encoded(item)) + (1 if payload["files"] else 0)
+            if size + increment > self._settings.result_max_bytes:
+                item["summary"]["detail_truncated"] = True
+                item["summary"]["warnings"] = list(
+                    dict.fromkeys((*item["summary"]["warnings"], "RESULT_BYTE_LIMIT"))
+                )
+                item["summary"]["hunk_count"] = 0
+                item["hunks"] = []
+                increment = len(encoded(item)) + (1 if payload["files"] else 0)
+                reasons.add("result_byte_limit")
+            if size + increment > self._settings.result_max_bytes:
+                break
+            payload["files"].append(item)
+            size += increment
+            if item["summary"]["detail_truncated"]:
+                reasons.update(item["summary"]["warnings"])
+        raw = encoded(payload)
+        assert len(raw) <= self._settings.result_max_bytes
+        if len(payload["files"]) < len(files):
+            reasons.add("result_byte_limit")
+        identifier = uuid4()
+        summary = {
+            "total_files": len(files),
+            "returned_files": len(payload["files"]),
+            "added": sum(item[0]["change"] == "added" for item in files),
+            "removed": sum(item[0]["change"] == "removed" for item in files),
+            "changed": sum(item[0]["change"] == "changed" for item in files),
+        }
+        envelope = ResultEnvelope(
+            id=identifier,
+            kind="diff",
+            schema_version=context.schema_version,
+            context=context,
+            effective_parameters=parameters,
+            summary=summary,
+            warnings=tuple(
+                dict.fromkeys(
+                    (*coverage_notes, "Text changes do not establish network behavior changes")
+                )
+            ),
+            coverage=coverage,
+            truncated=bool(reasons),
+            truncation_reason=",".join(sorted(reasons)) if reasons else None,
+            created_at=datetime.now(UTC),
+        )
+        with FileStore(self._root) as store, store.stage(str(identifier), raw) as pending:
+            ResultsRepository(transaction).add(
+                envelope, storage_key=pending.key, cache_key=cache_key
+            )
+            pending.publish()
+        return envelope
 
     def publish(self, context, answer, *, parameters, quality, cache_key, transaction):
         payload = {
@@ -218,6 +292,39 @@ class ResultsService:
     def _page(offset, limit):
         if offset < 0 or not 1 <= limit <= 200:
             raise ServiceError(ErrorCode.VALIDATION_ERROR)
+
+    def diff_files(self, actor, result_id, *, offset=0, limit=50):
+        self._page(offset, limit)
+        result, payload = self._payload(actor, result_id, "diff")
+        files = payload["files"]
+        return DiffFilePage(
+            items=tuple(
+                DiffFileSummary.model_validate(item["summary"])
+                for item in files[offset : offset + limit]
+            ),
+            offset=offset,
+            limit=limit,
+            total=len(files),
+            truncated=result.truncated,
+        )
+
+    def diff_file(self, actor, result_id, file_id, *, offset=0, limit=50):
+        self._page(offset, limit)
+        _, payload = self._payload(actor, result_id, "diff")
+        item = next(
+            (item for item in payload["files"] if item["summary"]["file_id"] == file_id), None
+        )
+        if item is None:
+            raise ServiceError(ErrorCode.NOT_FOUND)
+        hunks = item["hunks"]
+        return DiffFileDetail(
+            file=DiffFileSummary.model_validate(item["summary"]),
+            hunks=hunks[offset : offset + limit],
+            offset=offset,
+            limit=limit,
+            total=len(hunks),
+            truncated=item["summary"]["detail_truncated"],
+        )
 
     def rows(self, actor, result_id, *, offset=0, limit=50, sort=None, filters=()):
         self._page(offset, limit)

@@ -13,6 +13,7 @@ from app.modules.analysis.registry import Registry
 from app.modules.analysis.service import AnalysisService
 from app.modules.auth.api import create_router as create_auth_router
 from app.modules.auth.service import AuthService
+from app.modules.changes.analysis import ConfigDiffService
 from app.modules.changes.api import create_router as create_changes_router
 from app.modules.changes.service import ChangesService
 from app.modules.execution.api import create_router as create_execution_router
@@ -56,6 +57,24 @@ def database_metadata():
     from app.modules.users import models as users_models  # noqa: F401
 
     return Base.metadata
+
+
+def _analysis_handler(analysis: AnalysisService, config_diff: ConfigDiffService) -> Handler:
+    def service(job):
+        return (
+            config_diff if job.requested_parameters.get("operation") == "config-diff" else analysis
+        )
+
+    def execute(job):
+        return service(job).execute(job)
+
+    def retry(actor, job, *, idempotency_key=None):
+        return service(job).retry(actor, job, idempotency_key=idempotency_key)
+
+    def publish(job, value, *, transaction):
+        return service(job).publish(job, value, transaction=transaction)
+
+    return Handler(execute, retry, publish)
 
 
 def create_app(
@@ -156,8 +175,12 @@ def create_app(
         )
         changes = ChangesService(db, auth, networks, snapshots, jobs)
         app.state.changes_service = changes
+        config_diff = ConfigDiffService(auth, changes, snapshots, jobs, results)
+        app.state.config_diff_service = config_diff
         app.include_router(
-            create_changes_router(changes, read_actor=read_actor, write_actor=write_actor),
+            create_changes_router(
+                changes, config_diff, read_actor=read_actor, write_actor=write_actor
+            ),
             prefix="/api/v1",
         )
         lifecycle = ResourceLifecycleService(auth, jobs, networks, snapshots, changes)
@@ -172,7 +195,7 @@ def create_app(
             handlers={
                 "deletion": Handler(lifecycle.execute),
                 "initialization": Handler(snapshots.execute, snapshots.retry),
-                "analysis": Handler(analysis.execute, analysis.retry, analysis.publish),
+                "analysis": _analysis_handler(analysis, config_diff),
             },
             controller=ExecutionController(db, settings),
             settings=settings,
@@ -227,11 +250,12 @@ def create_worker(settings: Settings, *, database=None, handlers=None):
         auth, snapshots, jobs, results, AnalysisController(db, settings), Registry()
     )
     changes = ChangesService(db, auth, networks, snapshots, jobs)
+    config_diff = ConfigDiffService(auth, changes, snapshots, jobs, results)
     lifecycle = ResourceLifecycleService(auth, jobs, networks, snapshots, changes)
     registered = {
         "deletion": Handler(lifecycle.execute),
         "initialization": Handler(snapshots.execute, snapshots.retry),
-        "analysis": Handler(analysis.execute, analysis.retry, analysis.publish),
+        "analysis": _analysis_handler(analysis, config_diff),
     }
     registered.update(handlers or {})
     execution = ExecutionService(

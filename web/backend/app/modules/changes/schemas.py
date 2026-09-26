@@ -37,3 +37,11 @@ class ComparisonPage(Contract):
     offset: int
     limit: int
     total: int
+
+
+class ConfigDiffOptions(Contract):
+    pass
+
+
+class ConfigDiffRequest(Contract):
+    options: ConfigDiffOptions = Field(default_factory=ConfigDiffOptions)

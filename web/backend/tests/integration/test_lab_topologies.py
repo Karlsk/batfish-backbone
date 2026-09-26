@@ -682,3 +682,104 @@ def test_real_snapshot_worker_smoke(lab, fixture_name, expected_nodes):
             finally:
                 worker.terminate()
                 worker.wait(timeout=15)
+
+
+@pytest.mark.smoke
+def test_real_config_diff_worker_smoke(lab):
+    """The running API and separate worker publish a directional file diff."""
+    import time
+
+    run = Path(lab["run_directory"])
+    assert (run / "worker-paused.ack").exists()
+    fixture = Path(__file__).resolve().parents[1] / "fixtures/cisco_four/configs"
+    originals = [(path.name, path.read_bytes()) for path in sorted(fixture.iterdir())]
+    candidate_files = [
+        (name, content + b"\n! candidate config marker\n" if name == "c1.cfg" else content)
+        for name, content in originals
+    ]
+    env = os.environ | {
+        "DATABASE_URL": (run / "database.env").read_text().strip().removeprefix("DATABASE_URL="),
+        "BATFISH_HOST": lab["host"],
+        "BATFISH_PORT": str(lab["engine_port"]),
+        "BATFISH_API_KEY": "",
+        "BATFISH_TLS": "false",
+        "DATA_DIR": str(run / "data"),
+        "WORKER_HEARTBEAT_SECONDS": "0.2",
+        "WORKER_POLL_SECONDS": "0.1",
+        "ENGINE_PROBE_SECONDS": "30",
+    }
+    with httpx.Client(base_url=lab["api_url"], timeout=30) as client:
+        headers = _ready_lab_admin(client, lab)
+        response = client.post(
+            "/api/v1/networks", json={"display_name": "Config diff smoke"}, headers=headers
+        )
+        assert response.status_code == 201, response.text
+        network = response.json()["id"]
+
+        def create_snapshot(label, files):
+            uploaded = client.post(
+                f"/api/v1/networks/{network}/uploads",
+                headers=headers,
+                files=[("files", (name, content)) for name, content in files],
+            )
+            assert uploaded.status_code == 201, uploaded.text
+            created = client.post(
+                f"/api/v1/networks/{network}/snapshots",
+                json={"display_name": label, "upload_id": uploaded.json()["id"]},
+                headers=headers,
+            )
+            assert created.status_code == 202, created.text
+            return created.json()
+
+        baseline = create_snapshot("Baseline", originals)
+        candidate = create_snapshot("Candidate", candidate_files)
+        with (run / "config-diff-worker-smoke.log").open("a") as log:
+            worker = subprocess.Popen(
+                [os.sys.executable, "-m", "app.worker"],
+                cwd=Path(__file__).resolve().parents[2],
+                env=env,
+                stdout=log,
+                stderr=subprocess.STDOUT,
+            )
+            try:
+
+                def finished(job_id):
+                    deadline = time.monotonic() + 90
+                    while True:
+                        job = client.get(f"/api/v1/jobs/{job_id}").json()
+                        if job["status"] not in {"queued", "running"}:
+                            return job
+                        assert worker.poll() is None and time.monotonic() < deadline
+                        time.sleep(0.1)
+
+                for item in (baseline, candidate):
+                    job = finished(item["job_id"])
+                    assert job["status"] == "succeeded", job
+                comparison = client.post(
+                    f"/api/v1/networks/{network}/comparisons",
+                    headers=headers,
+                    json={
+                        "baseline_snapshot_id": baseline["snapshot_id"],
+                        "candidate_snapshot_id": candidate["snapshot_id"],
+                    },
+                )
+                assert comparison.status_code == 201, comparison.text
+                submitted = client.post(
+                    f"/api/v1/comparisons/{comparison.json()['id']}/analyses/config-diff",
+                    json={},
+                    headers=headers,
+                )
+                assert submitted.status_code == 202, submitted.text
+                job = finished(submitted.json()["id"])
+                assert job["status"] == "succeeded", job
+                result = client.get(f"/api/v1/results/{job['result_id']}").json()
+                assert result["kind"] == "diff"
+                assert result["context"]["snapshot_id"] == candidate["snapshot_id"]
+                assert result["context"]["reference_snapshot_id"] == baseline["snapshot_id"]
+                files = client.get(f"/api/v1/results/{job['result_id']}/diff/files").json()
+                assert files["total"] == 1
+                assert files["items"][0]["path"] == "configs/c1.cfg"
+                assert files["items"][0]["change"] == "changed"
+            finally:
+                worker.terminate()
+                worker.wait(timeout=15)
