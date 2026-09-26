@@ -634,6 +634,40 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/networks/{network_id}/snapshots/{snapshot_id}/analyses/search-filters": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Search Filters */
+    post: operations["search_filters_api_v1_networks__network_id__snapshots__snapshot_id__analyses_search_filters_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/networks/{network_id}/snapshots/{snapshot_id}/analyses/filter-line-reachability": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Filter Line Reachability */
+    post: operations["filter_line_reachability_api_v1_networks__network_id__snapshots__snapshot_id__analyses_filter_line_reachability_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/admin/deletions/{job_id}/reconcile": {
     parameters: {
       query?: never;
@@ -1038,6 +1072,12 @@ export interface components {
        * @default []
        */
       warnings: string[];
+    };
+    /** FilterLineReachabilityRequest */
+    FilterLineReachabilityRequest: {
+      nodes: components["schemas"]["ScopedFilters"];
+      filters: components["schemas"]["ScopedFilters"];
+      options?: components["schemas"]["ReachabilityOptions"];
     };
     /** FilterTestOptions */
     FilterTestOptions: {
@@ -1488,6 +1528,14 @@ export interface components {
        */
       new_password: string;
     };
+    /** ReachabilityOptions */
+    ReachabilityOptions: {
+      /**
+       * Ignore Composites
+       * @default true
+       */
+      ignore_composites: boolean;
+    };
     /** ReconcileDeletion */
     ReconcileDeletion: {
       /** Note */
@@ -1632,6 +1680,65 @@ export interface components {
        * @enum {string}
        */
       rib: "main" | "bgp";
+    };
+    /** ScopedFilters */
+    ScopedFilters: {
+      /**
+       * Mode
+       * @constant
+       */
+      mode: "literal";
+      /** Values */
+      values: string[];
+    };
+    /** SearchFilterOptions */
+    SearchFilterOptions: {
+      headers: components["schemas"]["SearchHeaders"];
+      /** Line Number */
+      line_number?: number | null;
+    };
+    /** SearchFiltersRequest */
+    SearchFiltersRequest: {
+      nodes: components["schemas"]["ScopedFilters"];
+      filters: components["schemas"]["ScopedFilters"];
+      /**
+       * Action
+       * @default permit
+       * @enum {string}
+       */
+      action: "permit" | "deny" | "match_line";
+      options: components["schemas"]["SearchFilterOptions"];
+    };
+    /** SearchHeaders */
+    SearchHeaders: {
+      /**
+       * Source Ip
+       * Format: ipv4
+       */
+      source_ip: string;
+      /**
+       * Destination Ip
+       * Format: ipv4
+       */
+      destination_ip: string;
+      /** Ip Protocols */
+      ip_protocols?:
+        | (
+            | "icmp"
+            | "tcp"
+            | "udp"
+            | "gre"
+            | "esp"
+            | "ah"
+            | "ospf"
+            | "sctp"
+            | "ipinip"
+          )[]
+        | null;
+      /** Source Ports */
+      source_ports?: number[] | null;
+      /** Destination Ports */
+      destination_ports?: number[] | null;
     };
     /** SessionInfo */
     SessionInfo: {
@@ -3795,6 +3902,100 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": components["schemas"]["ResolveFiltersRequest"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      202: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["JobDTO"];
+        };
+      };
+      /** @description Unprocessable Entity */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+    };
+  };
+  search_filters_api_v1_networks__network_id__snapshots__snapshot_id__analyses_search_filters_post: {
+    parameters: {
+      query?: never;
+      header?: {
+        "idempotency-key"?: string | null;
+      };
+      path: {
+        network_id: string;
+        snapshot_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["SearchFiltersRequest"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      202: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["JobDTO"];
+        };
+      };
+      /** @description Unprocessable Entity */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+    };
+  };
+  filter_line_reachability_api_v1_networks__network_id__snapshots__snapshot_id__analyses_filter_line_reachability_post: {
+    parameters: {
+      query?: never;
+      header?: {
+        "idempotency-key"?: string | null;
+      };
+      path: {
+        network_id: string;
+        snapshot_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["FilterLineReachabilityRequest"];
       };
     };
     responses: {

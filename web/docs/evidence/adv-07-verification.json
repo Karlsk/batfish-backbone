@@ -1,0 +1,80 @@
+{
+  "date": "2026-09-26T12:34:17.575067+00:00",
+  "scope": "ADV-07 and cumulative MVP-01..25, ADV-01..07",
+  "base_commit": "5499fa0a757674d97ec345c38c789f0d4051bc9a",
+  "source_sha256": "cdbedb84e64461f1f0733082e7ae0b9d7c080527a46143837957f9903dcfbbf9",
+  "source_file_count": 282,
+  "changed_source_files": {
+    "web/backend/app/modules/analysis/api.py": "6fc1084806ba94d77ecf89028333494d873bb57d784e36809a7fff3aa3492a3b",
+    "web/backend/app/modules/analysis/controller.py": "2f284b4668783481eb4fea355528d18cd3ad2e0584fdbe0e75740206ab8742c3",
+    "web/backend/app/modules/analysis/controllers/filters.py": "dbf257850da2aa11280cec019690bdb2ce2e4363e4d46520de53d8fb130d7105",
+    "web/backend/app/modules/analysis/registry.py": "8ecb76dcf92ca6117c4860393b21a73df259f3fadee2b7d384b708c7beb512af",
+    "web/backend/app/modules/analysis/schemas/filters.py": "a05b5cd585883ad4540935c48cd1d2b34078ad19892eb322311a460f796a2747",
+    "web/backend/app/modules/analysis/service.py": "582f42bc9ba056f60cb9e630913d734859cf079e01c4a5b9d6591952d83cd3aa",
+    "web/backend/tests/integration/test_lab_topologies.py": "57dfa535d5c531d45f269e93b45ece3cc4a9bef293726c7e95bb6f0d622d8fa4",
+    "web/backend/tests/test_filter_search.py": "b7874fa80035f13270a932a5ad2b03a9280d665fc6fbe8e097b5960bb90229e6",
+    "web/backend/tests/test_inventory.py": "ac0ee0edb4e7d34b3244ee37b2829e58f1df738807b528fb348a85ac215825e1",
+    "web/backend/tests/test_results.py": "1e171c6b9d52b2d6af580633d7b6e2c9f2515e569429e5a905b412b55ec474d8",
+    "web/frontend/src/api/schema.d.ts": "aca3ce94e0b59c3c27418a27feb8221ebb0cf76c1b651ebf1db3fe5919097571"
+  },
+  "backend": {
+    "passed": 325,
+    "skipped": 0,
+    "lab_run": "74e00ff42b56",
+    "evidence": "web/.runtime/test-lab/74e00ff42b56/checks/60affda8256b"
+  },
+  "smoke": {
+    "passed": 12,
+    "intentional_deselected": 313,
+    "evidence": "web/.runtime/test-lab/74e00ff42b56/checks/788a6ab91596"
+  },
+  "target_sdk": {
+    "passed": 7,
+    "file": "web/backend/tests/test_filter_search.py",
+    "witness_retested": true,
+    "reasons": [
+      "BLOCKING_LINES",
+      "INDEPENDENTLY_UNMATCHABLE"
+    ],
+    "no_witness_scoped": true
+  },
+  "frontend": {
+    "unit_passed": 70,
+    "build": "passed",
+    "api_types": "passed",
+    "format": "passed"
+  },
+  "browser": {
+    "passed": 20,
+    "failed": 0,
+    "skipped": 0,
+    "lab_run": "74e00ff42b56"
+  },
+  "deployment": "web/.runtime/deploy-adv07-batch/verification.json",
+  "restored": "web/.runtime/deploy-adv07-batch-restored",
+  "production_browser": {
+    "light_deployment": 3,
+    "dark_deployment": 3,
+    "light_acceptance": 1,
+    "dark_acceptance": 1,
+    "failed": 0,
+    "skipped": 0
+  },
+  "static_checks": {
+    "ruff_lint": "passed",
+    "ruff_format_changed_python": "passed",
+    "uv_lock_offline": "passed",
+    "api_types": "passed",
+    "git_diff_check": "passed"
+  },
+  "initial_failures": [
+    "First full backend run used stale ADV-06 API process; restarted owned lab and reran 325/325.",
+    "First frontend run timed out under concurrent load; isolated target and full 70/70 rerun passed.",
+    "First deployment/acceptance invocations omitted BFW_DEPLOYMENT_EVIDENCE; reran with correct deployment provenance."
+  ],
+  "review": "Self-reviewed typed bounded selectors, fixed SDK action/header mapping, raw SDK reason/blocking evidence, ACL vendor coverage, warnings and layer boundaries.",
+  "limits": [
+    "Exact IPv4 pair and at most 10 literal nodes/ACLs per request; no network-wide safety proof.",
+    "Configuration-only synthetic inputs; no device forwarding fidelity or 100-node capacity claim."
+  ]
+}

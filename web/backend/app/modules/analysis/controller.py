@@ -111,7 +111,7 @@ class AnalysisController:
             for item in element["metadata"]["columnMetadata"]
         ]
         rows = element.get("rows", [])
-        if question_id == "testFilters":
+        if question_id in {"testFilters", "searchFilters"}:
             rows = normalize_filter_rows(rows)
             columns.extend(
                 (
@@ -138,6 +138,27 @@ class AnalysisController:
                 + (
                     ("No filters matched; no allow/deny conclusion",)
                     if question_id == "testFilters" and not rows
+                    else ()
+                )
+                + (
+                    (
+                        "No witness for this ACL, action, and header scope; this is not a network-wide safety proof",
+                    )
+                    if question_id == "searchFilters" and not rows
+                    else ()
+                )
+                + (
+                    (
+                        "ACL search returns example flows under the selected scope, not all possible flows",
+                    )
+                    if question_id == "searchFilters"
+                    else ()
+                )
+                + (
+                    (
+                        "No unreachable lines found in the selected ACL scope; this is not a safety proof",
+                    )
+                    if question_id == "filterLineReachability" and not rows
                     else ()
                 )
             ),

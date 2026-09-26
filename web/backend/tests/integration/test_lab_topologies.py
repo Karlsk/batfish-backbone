@@ -676,6 +676,8 @@ def test_real_snapshot_worker_smoke(lab, fixture_name, expected_nodes):
                     "bgp-sessions",
                     "test-filters",
                     "resolve-filters",
+                    "search-filters",
+                    "filter-line-reachability",
                 }
             finally:
                 worker.terminate()

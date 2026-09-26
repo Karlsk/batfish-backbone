@@ -152,6 +152,10 @@ ADV-05 `POST S/analyses/test-filters` 必须提供 `source_ip`、`destination_ip
 
 `POST S/analyses/resolve-filters` 接受 `{}`（列出模型已解析 ACL）、可选 `nodes` 与 `filter_expression`，固定映射 `resolveFilterSpecifier`；默认过滤表达式为 `/.*/`。返回 SDK 结构化 `Node`、`Filter_Name` 表格及快照模型覆盖信息，仅用于选择，不用原始配置行猜测 ACL 列表。两个入口都经过任务/结果/缓存/身份/CSRF/版本约束。
 
+ADV-07 `POST S/analyses/search-filters` 必须提供 `nodes` 和 `filters` 两个**字面值**选择器（各1～10项），以及 `options.headers.source_ip`、`destination_ip` 两个精确 IPv4 地址；不接受表达式或省略范围。`action` 默认 `permit`，只允许 `permit`、`deny`、`match_line`。`match_line` 必须同时提供非负的 `options.line_number`，其他动作不能提供该字段；controller 固定转换为 SDK 的 `matchLine N`。headers 可选 `ip_protocols`、`source_ports`、`destination_ports`，端口仅适用于全为 TCP/UDP 的协议列表。不暴露 `startLocation`、`invertSearch`、任意问题名或引擎上下文。`searchFilters` 返回范围内的示例 Flow、Action、Line_Content、Trace 和真实来源引用；0 行只表示当前 ACL/动作/报头条件下未找到示例，不是全网安全证明。
+
+`POST S/analyses/filter-line-reachability` 同样要求 `nodes`、`filters` 字面值选择器各1～10项；`options.ignore_composites` 为严格布尔值，默认 `true`，固定映射 SDK `ignoreComposites`。结果原样保留 `Sources`、`Unreachable_Line`、`Unreachable_Line_Action`、`Blocking_Lines`、`Different_Action`、`Reason`、`Additional_Info`。`BLOCKING_LINES` 与 `INDEPENDENTLY_UNMATCHABLE` 含义不同，不把后者称为前序遮蔽；0 行不推导策略无风险。两个 ADV-07 操作均拒绝 Huawei/H3C ACL 模型验证，沿用任务、身份、版本、缓存、截断和结果读取约束。
+
 图读取 `focus_node` 可选，默认 `hops=1`（范围0～5），默认 `limit=200`（范围1～200），无focus时hops不参与筛选。邻域按双向邻接取距离，但输出边保留SDK方向；未知focus返回404，读取非graph结果返回409。优先focus、再按距离及节点id排序；limit分别限制节点数与边数，不返回悬空边。scope包含focus_node/hops/limit/neighbor_direction、stored_nodes/stored_edges、matched_nodes/matched_edges、returned_nodes/returned_edges及storage_truncated。主动聚焦本身不算截断；读取限额或持久化限额丢弃数据时truncated=true，ResultEnvelope另含存储截断原因。
 
 存储受table_rows（节点、边各自上限）与result_max_bytes限制；节点不足时同步排除相关边。计算过滤保存于effective_parameters，读取范围单独在scope返回，不改变缓存、不调用SDK。JSON导出包含完整已保存图与来源，graph不支持CSV。协议关系与会话健康不同；缺少边不能证明物理断线。

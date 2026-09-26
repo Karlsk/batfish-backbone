@@ -4,7 +4,12 @@ from app.contracts.base import thaw
 from app.contracts.errors import ErrorCode, FieldError, ServiceError
 from app.modules.analysis.schemas import Capability, Entry
 from app.modules.analysis.schemas.bgp import BgpRequest
-from app.modules.analysis.schemas.filters import FilterTestRequest, ResolveFiltersRequest
+from app.modules.analysis.schemas.filters import (
+    FilterLineReachabilityRequest,
+    FilterTestRequest,
+    ResolveFiltersRequest,
+    SearchFiltersRequest,
+)
 from app.modules.analysis.schemas.inventory import InterfacesRequest, NodesRequest
 from app.modules.analysis.schemas.routing import LpmRequest, RoutesRequest
 from app.modules.analysis.schemas.topology import TopologyRequest
@@ -31,6 +36,25 @@ class Registry:
                 request_model=ResolveFiltersRequest,
                 enabled=True,
                 question_id="resolveFilterSpecifier",
+                to_sdk=lambda request: request.model_dump(mode="json"),
+            ),
+            Entry(
+                "search-filters",
+                "ACL matching flow search",
+                stage=2,
+                request_model=SearchFiltersRequest,
+                enabled=True,
+                question_id="searchFilters",
+                requires_dataplane=True,
+                to_sdk=lambda request: request.model_dump(mode="json"),
+            ),
+            Entry(
+                "filter-line-reachability",
+                "ACL unreachable rules",
+                stage=2,
+                request_model=FilterLineReachabilityRequest,
+                enabled=True,
+                question_id="filterLineReachability",
                 to_sdk=lambda request: request.model_dump(mode="json"),
             ),
             Entry(

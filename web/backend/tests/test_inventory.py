@@ -24,6 +24,8 @@ def test_inventory_options_are_typed():
         "bgp-sessions",
         "test-filters",
         "resolve-filters",
+        "search-filters",
+        "filter-line-reachability",
     }
     for operation, request in [
         ("nodes", {"options": {"nodes": "r1"}}),

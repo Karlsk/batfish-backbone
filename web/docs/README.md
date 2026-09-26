@@ -1,6 +1,6 @@
 # Batfish Web 文档入口
 
-日期：2026-09-26。状态：MVP-01～25 已完成，第一阶段真实服务、两套配置、双用户浏览器与部署恢复验收通过。已交付认证、上传/初始化、诊断、设备/接口、路由/LPM、虚拟 traceroute、任务、导出、资源删除及前端；ADV-01～06 已完成（拓扑接口/页面、BGP模型会话接口/工作台及ACL流量测试接口/页面），ADV-07～18 待开发。详见 [首版验收报告](mvp-acceptance.md)。
+日期：2026-09-26。状态：MVP-01～25 已完成，第一阶段真实服务、两套配置、双用户浏览器与部署恢复验收通过。已交付认证、上传/初始化、诊断、设备/接口、路由/LPM、虚拟 traceroute、任务、导出、资源删除及前端；ADV-01～07 已完成（拓扑接口/页面、BGP模型会话接口/工作台及ACL流量测试、条件搜索与无效规则接口），ADV-08～18 待开发。详见 [首版验收报告](mvp-acceptance.md)。
 
 ## 已确认的需求
 
@@ -60,4 +60,4 @@ spec 是后续实施的需求、设计和验收单元，不是完成日志。所
 
 当前已完成设计/spec 文档、项目规范、项目级技能、MVP-01 集成测试与兼容性报告，以及 MVP-02 后端基础应用、MVP-03 数据库迁移与受控文件存储、MVP-04 登录与会话管理、MVP-05 账号管理与审计、MVP-06 共享网络管理、MVP-07 配置上传与安全校验、MVP-08 任务记录与排队取消、MVP-09 独立worker与保守恢复、MVP-10 不可变快照初始化、MVP-11 解析诊断与原始文件查看、MVP-12 能力目录与结果基础、MVP-13 设备与接口分析、MVP-14 路由与LPM、MVP-15 IPv4单向虚拟traceroute。启动方式见 [后端 README](../backend/README.md)。新锁文件已复验真实 SDK 基线，没有修改 Java 引擎；尚未实现具体前端业务页面、导出、清理与部署；整体交付仍以MVP-25验收为准。
 
-最新进阶交付：[ADV-01拓扑接口验收](evidence/adv-01-verification.md)、[ADV-02可交互拓扑验收](evidence/adv-02-verification.md)、[ADV-03 BGP接口验收](evidence/adv-03-verification.md)、[ADV-04 BGP页面验收](evidence/adv-04-verification.md)、[ADV-05 ACL接口验收](evidence/adv-05-verification.md)、[ADV-06 ACL页面验收](evidence/adv-06-verification.md)。
+最新进阶交付：[ADV-01拓扑接口验收](evidence/adv-01-verification.md)、[ADV-02可交互拓扑验收](evidence/adv-02-verification.md)、[ADV-03 BGP接口验收](evidence/adv-03-verification.md)、[ADV-04 BGP页面验收](evidence/adv-04-verification.md)、[ADV-05 ACL接口验收](evidence/adv-05-verification.md)、[ADV-06 ACL页面验收](evidence/adv-06-verification.md)、[ADV-07 ACL搜索接口验收](evidence/adv-07-verification.md)。

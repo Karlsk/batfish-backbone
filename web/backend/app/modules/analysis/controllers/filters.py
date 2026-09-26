@@ -29,6 +29,41 @@ def resolve_filters(session, parameters):
     return session.q.resolveFilterSpecifier(**kwargs)
 
 
+def search_filters(session, parameters):
+    options = parameters["options"]
+    supplied = options["headers"]
+    headers = HeaderConstraints(
+        srcIps=supplied["source_ip"],
+        dstIps=supplied["destination_ip"],
+        ipProtocols=["ahp" if item == "ah" else item for item in supplied["ip_protocols"]]
+        if supplied["ip_protocols"]
+        else None,
+        srcPorts=",".join(str(item) for item in supplied["source_ports"])
+        if supplied["source_ports"]
+        else None,
+        dstPorts=",".join(str(item) for item in supplied["destination_ports"])
+        if supplied["destination_ports"]
+        else None,
+    )
+    action = parameters["action"]
+    if action == "match_line":
+        action = f"matchLine {options['line_number']}"
+    return session.q.searchFilters(
+        nodes=selector(parameters["nodes"]),
+        filters=selector(parameters["filters"]),
+        action=action,
+        headers=headers,
+    )
+
+
+def filter_line_reachability(session, parameters):
+    return session.q.filterLineReachability(
+        nodes=selector(parameters["nodes"]),
+        filters=selector(parameters["filters"]),
+        ignoreComposites=parameters["options"]["ignore_composites"],
+    )
+
+
 def normalize_filter_rows(rows):
     normalized = []
     for row in rows:
@@ -57,4 +92,9 @@ def normalize_filter_rows(rows):
     return normalized
 
 
-QUERIES = {"testFilters": test_filters, "resolveFilterSpecifier": resolve_filters}
+QUERIES = {
+    "testFilters": test_filters,
+    "resolveFilterSpecifier": resolve_filters,
+    "searchFilters": search_filters,
+    "filterLineReachability": filter_line_reachability,
+}
