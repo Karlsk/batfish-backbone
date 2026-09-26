@@ -1,6 +1,6 @@
 # 第二、三阶段：进阶能力
 
-状态：ADV-01～15 已完成，第二阶段验收通过；ADV-16～18 待开发。先通过 [MVP-25](../mvp/mvp-25-mvp-acceptance.md)，再执行本目录。第二阶段结论见[验收报告](../../advance-phase2-acceptance.md)。
+状态：ADV-01～16 已完成，第二阶段验收通过；ADV-17～18 待开发。先通过 [MVP-25](../mvp/mvp-25-mvp-acceptance.md)，再执行本目录。第二阶段结论见[验收报告](../../advance-phase2-acceptance.md)。
 
 ## 第二阶段：日常排障增强
 
@@ -30,7 +30,7 @@
 | [ADV-13 路由差异分析接口](adv-13-routing-diff.md) | ADV-12 | 1.5 | 已完成 |
 | [ADV-14 差异可达性分析接口](adv-14-differential-reachability.md) | ADV-13 | 2.0 | 已完成 |
 | [ADV-15 变更对比工作台](adv-15-comparison-ui.md) | ADV-14 | 2.0 | 已完成 |
-| [ADV-16 节点与接口故障派生快照](adv-16-fault-simulation-api.md) | ADV-15 | 1.5 | 待开发 |
+| [ADV-16 节点与接口故障派生快照](adv-16-fault-simulation-api.md) | ADV-15 | 1.5 | 已完成 |
 | [ADV-17 故障方案向导与影响分析](adv-17-fault-simulation-ui.md) | ADV-16 | 1.5 | 待开发 |
 | [ADV-18 第三阶段整体验收](adv-18-phase-three-acceptance.md) | ADV-17 | 1.5 | 待开发 |
 

@@ -36,6 +36,32 @@ class SnapshotsRepository:
         self.tx.flush()
         return self.dto(row)
 
+    def add_derived(self, identifier, actor, base, display_name):
+        row = Snapshot(
+            id=identifier,
+            network_id=base.network_id,
+            engine_name="bfw-snapshot-" + identifier.hex,
+            display_name=display_name,
+            content_hash=base.content_hash,
+            manifest=base.manifest.model_dump(mode="json") if base.manifest else None,
+            initialization_options=base.initialization_options.model_dump(mode="json"),
+            base_snapshot_id=base.id,
+            created_by=actor.user_id,
+        )
+        self.tx.add(row)
+        self.tx.flush()
+        return self.dto(row)
+
+    def has_live_derived(self, identifier):
+        return (
+            self.tx.scalar(
+                select(Snapshot.id)
+                .where(Snapshot.base_snapshot_id == identifier, Snapshot.deleted_at.is_(None))
+                .limit(1)
+            )
+            is not None
+        )
+
     def attach_job(self, identifier, job_id):
         self.tx.get(Snapshot, identifier).initialization_job_id = job_id
         self.tx.flush()

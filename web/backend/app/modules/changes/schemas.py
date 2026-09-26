@@ -14,6 +14,31 @@ from pydantic import (
 from app.contracts.base import Contract
 
 
+class InterfaceTarget(Contract):
+    node: str = Field(min_length=1, max_length=255, pattern=r".*\S.*")
+    interface: str = Field(min_length=1, max_length=255, pattern=r".*\S.*")
+
+
+class FaultScenarioRequest(Contract):
+    display_name: str = Field(min_length=1, max_length=255, pattern=r".*\S.*")
+    deactivate_nodes: tuple[str, ...] = Field(default=(), max_length=100)
+    deactivate_interfaces: tuple[InterfaceTarget, ...] = Field(default=(), max_length=500)
+
+    @model_validator(mode="after")
+    def require_targets(self):
+        if not self.deactivate_nodes and not self.deactivate_interfaces:
+            raise ValueError("At least one node or interface is required")
+        if any(not name.strip() or len(name) > 255 for name in self.deactivate_nodes):
+            raise ValueError("Node names must be nonempty and at most 255 characters")
+        if len(set(self.deactivate_nodes)) != len(self.deactivate_nodes):
+            raise ValueError("Duplicate nodes are not allowed")
+        if len({(item.node, item.interface) for item in self.deactivate_interfaces}) != len(
+            self.deactivate_interfaces
+        ):
+            raise ValueError("Duplicate interfaces are not allowed")
+        return self
+
+
 class CreateComparisonRequest(Contract):
     baseline_snapshot_id: UUID
     candidate_snapshot_id: UUID

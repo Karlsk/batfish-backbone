@@ -40,6 +40,7 @@ class ResourceLifecycleService:
             self._jobs.require_no_active(network_id, snapshot_id, transaction=tx)
             if snapshot_id:
                 self._changes.require_unreferenced(snapshot_id, transaction=tx)
+                self._snapshots.require_no_derived(snapshot_id, transaction=tx)
                 resource = self._snapshots.get(actor, network_id, snapshot_id)
                 previous = resource.status
                 if previous in {"deleting", "deleted"}:

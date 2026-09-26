@@ -49,7 +49,7 @@ class ExecutionContext(AnalysisContext):
 
 class JobDTO(Contract):
     id: UUID
-    kind: Literal["upload", "initialization", "analysis", "deletion"]
+    kind: Literal["upload", "initialization", "analysis", "deletion", "fault_scenario"]
     resource_ids: Mapping[str, UUID]
     requested_parameters: Mapping[str, JsonValue]
     effective_parameters: Mapping[str, JsonValue]

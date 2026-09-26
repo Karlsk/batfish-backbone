@@ -13,6 +13,17 @@ class IdempotencyRepository:
     def __init__(self, transaction: Session):
         self._transaction = transaction
 
+    def find(self, *, actor_id: UUID, route: str, resource_key: str, key: str):
+        record = self._transaction.scalar(
+            select(IdempotencyRecord).where(
+                IdempotencyRecord.actor_id == actor_id,
+                IdempotencyRecord.route == route,
+                IdempotencyRecord.resource_key == resource_key,
+                IdempotencyRecord.key == key,
+            )
+        )
+        return (record.resource_id, record.request_hash) if record else None
+
     def reserve(
         self,
         *,

@@ -5,6 +5,12 @@ from uuid import UUID
 from pydantic import AwareDatetime, Field, JsonValue, StrictBool
 
 from app.contracts.base import Contract
+from app.contracts.snapshots import (
+    InitializationAnswer as InitializationAnswer,
+)
+from app.contracts.snapshots import (
+    SnapshotCreated as SnapshotCreated,
+)
 from app.contracts.uploads import FileEntry, UploadManifest
 
 
@@ -19,26 +25,13 @@ class CreateSnapshotRequest(Contract):
     options: InitializationOptions = Field(default_factory=InitializationOptions)
 
 
-class SnapshotCreated(Contract):
-    snapshot_id: UUID
-    job_id: UUID
-
-
-class InitializationAnswer(Contract):
-    parse_status: tuple[Mapping[str, JsonValue], ...]
-    issues: tuple[Mapping[str, JsonValue], ...]
-    engine_version: str
-    sdk_version: str
-    parse_warnings: tuple[Mapping[str, JsonValue], ...] = ()
-    conversion_warnings: tuple[Mapping[str, JsonValue], ...] = ()
-
-
 class SnapshotDTO(Contract):
     id: UUID
     network_id: UUID
     engine_name: str
     display_name: str
     content_hash: str
+    base_snapshot_id: UUID | None = None
     initialization_job_id: UUID | None
     status: Literal[
         "queued", "initializing", "ready", "ready_with_warnings", "failed", "deleting", "deleted"

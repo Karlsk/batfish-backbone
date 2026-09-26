@@ -4,7 +4,9 @@ from fastapi import APIRouter, Depends, Header, Query, Request
 
 from app.contracts.dto import Actor, JobDTO
 from app.contracts.routing import RoutesRequest
+from app.contracts.snapshots import SnapshotCreated
 from app.modules.changes.analysis import ConfigDiffService
+from app.modules.changes.fault_scenarios import FaultScenariosService
 from app.modules.changes.reachability_analysis import ReachabilityDiffService
 from app.modules.changes.route_analysis import RouteDiffService
 from app.modules.changes.schemas import (
@@ -12,6 +14,7 @@ from app.modules.changes.schemas import (
     ComparisonPage,
     ConfigDiffRequest,
     CreateComparisonRequest,
+    FaultScenarioRequest,
     ReachabilityDiffRequest,
 )
 from app.modules.changes.service import ChangesService
@@ -22,11 +25,28 @@ def create_router(
     config_diff: ConfigDiffService,
     route_diff: RouteDiffService,
     reachability_diff: ReachabilityDiffService,
+    fault_scenarios: FaultScenariosService,
     *,
     read_actor,
     write_actor,
 ):
     router = APIRouter(tags=["Changes"])
+
+    @router.post(
+        "/networks/{network_id}/snapshots/{snapshot_id}/fault-scenarios",
+        response_model=SnapshotCreated,
+        status_code=202,
+    )
+    def create_fault_scenario(
+        network_id: UUID,
+        snapshot_id: UUID,
+        body: FaultScenarioRequest,
+        actor: Actor = Depends(write_actor),
+        idempotency_key: str | None = Header(None, max_length=128),
+    ):
+        return fault_scenarios.create(
+            actor, network_id, snapshot_id, body, idempotency_key=idempotency_key
+        )
 
     @router.post(
         "/networks/{network_id}/comparisons", response_model=ComparisonDTO, status_code=201

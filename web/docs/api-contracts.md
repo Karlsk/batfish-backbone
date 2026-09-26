@@ -110,7 +110,7 @@ Idempotency-Key 用于上传之外的任务提交和网络创建：服务端按�
 
 数据库保存 UUID 外键与已删除资源的来源摘要。上传消费、快照及任务创建和结果发布可共享基础设施事务句柄，业务模块不共享 ORM 实体；事务由基础设施提供，service 仍通过其他模块的公共方法协作。
 
-MVP-02 DTO 位于 `backend/app/contracts/dto.py`：所有字段拒绝未知项；模型及嵌套 JSON 参数不可变，序列化后仍是标准对象/数组。AnalysisContext 的内部名称字段为 engine_network、engine_snapshot、engine_reference_snapshot；引用快照 ID 和内部名必须同时有值或同时为空。JobDTO.kind 为 upload/initialization/analysis/deletion；status 为 queued/running/succeeded/failed/cancelled/interrupted；engine_state 为 idle/busy/unknown。nullable 字段默认空，created_at 必填，所有日期必须有时区并归一为 UTC。ResultEnvelope 的 truncated=true 必须同时提供非空 truncation_reason。DTO 结构校验不替代 service 的可信身份、任务状态迁移和权限判断。
+MVP-02 DTO 位于 `backend/app/contracts/dto.py`：所有字段拒绝未知项；模型及嵌套 JSON 参数不可变，序列化后仍是标准对象/数组。AnalysisContext 的内部名称字段为 engine_network、engine_snapshot、engine_reference_snapshot；引用快照 ID 和内部名必须同时有值或同时为空。JobDTO.kind 为 upload/initialization/analysis/deletion/fault_scenario；status 为 queued/running/succeeded/failed/cancelled/interrupted；engine_state 为 idle/busy/unknown。nullable 字段默认空，created_at 必填，所有日期必须有时区并归一为 UTC。ResultEnvelope 的 truncated=true 必须同时提供非空 truncation_reason。DTO 结构校验不替代 service 的可信身份、任务状态迁移和权限判断。
 
 模块间固定服务入口：`AuthService.require_actor(session_token) → Actor`；`UsersService.get_identity(user_id) → UserIdentity`；`NetworksService.require_ready(actor, network_id) → NetworkDTO`；`UploadsService.consume(actor, network_id, upload_id) → UploadManifest`；`SnapshotsService.require_analyzable(actor, network_id, snapshot_id) → AnalysisContext`；`JobsService.submit(actor, kind, context, parameters, idempotency_key) → JobDTO`；`JobsService.claim(worker_id) → JobDTO | None`；`ResultsService.publish(context, payload) → ResultEnvelope`；`AnalysisService.submit(actor, context_ids, kind, request) → JobDTO`；`AnalysisService.execute(job) → ResultEnvelope`。诊断读取与配置查看不要求 require_analyzable，使用快照存在性校验。
 
@@ -140,7 +140,9 @@ SDK 边界方法：`SessionFactory.for_job(context)` 返回任务独占上下文
 | GET /results/{id}/diff/files/{file_id} | 两侧行号与变更块，分页及截断说明 | ADV-12 |
 | POST /comparisons/{id}/analyses/routes-diff | 复用 routes 的 nodes 与 options，返回 job；结果为 table，可分页/导出 | ADV-13 |
 | POST /comparisons/{id}/analyses/reachability-diff | destination_ips、start_location；options 流量范围及 max_traces | ADV-14 |
-| POST S/fault-scenarios | display_name；deactivate_nodes/deactivate_interfaces 至少一项 | ADV-16 |
+| POST S/fault-scenarios | display_name；deactivate_nodes/deactivate_interfaces 至少一项；返回202 `{snapshot_id,job_id}` | ADV-16 |
+
+ADV-16 的 `deactivate_nodes` 是精确设备名数组，`deactivate_interfaces` 是 `{node,interface}` 数组；空目标、重复目标或不存在的节点/接口返回422。可选 `Idempotency-Key` 限定同一用户、网络和基线下的重复创建；相同键及请求返回同一快照/任务，不同请求返回409。派生快照的 `base_snapshot_id` 指向不可变基线，内部名称全新；SDK `fork_snapshot(overwrite=false)` 在独立 worker 执行，任务完成并通过与普通初始化相同的质量门后才能用于 comparison。任务失败时快照显示 failed，任务保留错误代码；任何未删除派生快照都会阻止删除基线。接口只模拟配置快照故障，不操作设备。
 
 GraphDTO 为 nodes[{id,label,properties}]、edges[{id,source,target,source_interface,target_interface,edge_type,properties}]、edge_type、source（SDK问题名）、scope、truncated。properties保留对应SDK原始行；节点id为快照内主机名，边id为视图与完整原始行规范JSON的SHA-256，方向、接口、IP与AS不同不合并。
 

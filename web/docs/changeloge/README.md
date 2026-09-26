@@ -1,6 +1,6 @@
 # 分阶段研发规格索引
 
-日期：2026-09-27。MVP-01～25、ADV-01～14 已完成，ADV-15～18 待开发。以下为分阶段 RDP spec；“RDP”沿用用户称呼，不额外假定某种公司模板。每份规格包含需求、设计/接口、改动位置、实施步骤、测试与验收、非目标和完成记录。
+日期：2026-09-27。MVP-01～25、ADV-01～16 已完成，ADV-17～18 待开发。以下为分阶段 RDP spec；“RDP”沿用用户称呼，不额外假定某种公司模板。每份规格包含需求、设计/接口、改动位置、实施步骤、测试与验收、非目标和完成记录。
 
 ## 阶段门槛与顺序
 
@@ -64,8 +64,8 @@ MVP 只包含阶段1，不能因为 advance spec 已写好就提前实现其功�
 | [ADV-12 配置文件差异分析](advance/adv-12-configuration-diff.md) | ADV-11 | 2.0 | 已完成 |
 | [ADV-13 路由差异分析接口](advance/adv-13-routing-diff.md) | ADV-12 | 1.5 | 已完成 |
 | [ADV-14 差异可达性分析接口](advance/adv-14-differential-reachability.md) | ADV-13 | 2.0 | 已完成 |
-| [ADV-15 变更对比工作台](advance/adv-15-comparison-ui.md) | ADV-14 | 2.0 | 待开发 |
-| [ADV-16 节点与接口故障派生快照](advance/adv-16-fault-simulation-api.md) | ADV-15 | 1.5 | 待开发 |
+| [ADV-15 变更对比工作台](advance/adv-15-comparison-ui.md) | ADV-14 | 2.0 | 已完成 |
+| [ADV-16 节点与接口故障派生快照](advance/adv-16-fault-simulation-api.md) | ADV-15 | 1.5 | 已完成 |
 | [ADV-17 故障方案向导与影响分析](advance/adv-17-fault-simulation-ui.md) | ADV-16 | 1.5 | 待开发 |
 | [ADV-18 第三阶段整体验收](advance/adv-18-phase-three-acceptance.md) | ADV-17 | 1.5 | 待开发 |
 

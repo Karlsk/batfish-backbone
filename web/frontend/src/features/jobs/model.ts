@@ -15,6 +15,7 @@ export const jobLabels: Record<Job["status"], string> = {
 export const kindLabels: Record<Job["kind"], string> = {
   upload: "上传",
   initialization: "初始化",
+  fault_scenario: "故障方案",
   analysis: "分析",
   deletion: "删除",
 };

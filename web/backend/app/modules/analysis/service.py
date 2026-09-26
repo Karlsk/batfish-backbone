@@ -11,6 +11,26 @@ from app.modules.snapshots.service import SnapshotsService
 
 
 class AnalysisService:
+    def fault_targets(self, actor, network_id, snapshot_id):
+        """Read exact modeled names through the analysis service for fault validation."""
+        actor = self._auth.revalidate_actor(actor)
+        context = self._snapshots.require_analyzable(actor, network_id, snapshot_id)
+        nodes = self._controller.run(
+            context, "nodeProperties", {"options": {"properties": ["Hostname"], "nodes": None}}
+        )
+        interfaces = self._controller.run(
+            context,
+            "interfaceProperties",
+            {"nodes": None, "options": {"properties": ["Active"], "interfaces": None}},
+        )
+        return (
+            frozenset(row["Node"]["name"] for row in nodes.rows),
+            frozenset(
+                (row["Interface"]["hostname"], row["Interface"]["interface"])
+                for row in interfaces.rows
+            ),
+        )
+
     @staticmethod
     def _require_acl_model(snapshot):
         quality = thaw(snapshot.quality_summary)

@@ -254,6 +254,29 @@ class SnapshotsService:
             raise ServiceError(ErrorCode.NOT_READY)
         return AnalysisContext(**self._context(network, snapshot).model_dump())
 
+    def register_derived(
+        self, actor, network_id, base_snapshot_id, identifier, display_name, *, transaction
+    ):
+        self.require_analyzable(actor, network_id, base_snapshot_id)
+        base = SnapshotsRepository(transaction).get(base_snapshot_id)
+        if base is None or base.network_id != network_id or base.manifest is None:
+            raise ServiceError(ErrorCode.CONFLICT)
+        return SnapshotsRepository(transaction).add_derived(identifier, actor, base, display_name)
+
+    def attach_derived_job(self, identifier, job_id, *, transaction):
+        SnapshotsRepository(transaction).attach_job(identifier, job_id)
+
+    def complete_derived(self, job, answer):
+        status, quality = self.quality(answer)
+        with self._database.transaction() as tx:
+            SnapshotsRepository(tx).complete(job.context.snapshot_id, answer, status, quality)
+        if status == "failed":
+            raise ServiceError(ErrorCode.NOT_READY)
+
+    def require_no_derived(self, snapshot_id, *, transaction):
+        if SnapshotsRepository(transaction).has_live_derived(snapshot_id):
+            raise ServiceError(ErrorCode.CONFLICT)
+
     def files(self, actor, network_id, snapshot_id):
         row = self._stored(actor, network_id, snapshot_id)
         if row.status == "deleted":

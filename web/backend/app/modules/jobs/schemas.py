@@ -18,7 +18,7 @@ TRANSITIONS = {
 
 
 class JobInput(Contract):
-    kind: Literal["upload", "initialization", "analysis", "deletion"]
+    kind: Literal["upload", "initialization", "analysis", "deletion", "fault_scenario"]
     context: ExecutionContext
     requested_parameters: Mapping[str, JsonValue]
     effective_parameters: Mapping[str, JsonValue]

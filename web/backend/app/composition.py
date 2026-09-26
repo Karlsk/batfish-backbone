@@ -15,6 +15,8 @@ from app.modules.auth.api import create_router as create_auth_router
 from app.modules.auth.service import AuthService
 from app.modules.changes.analysis import ConfigDiffService
 from app.modules.changes.api import create_router as create_changes_router
+from app.modules.changes.controller import FaultScenarioController
+from app.modules.changes.fault_scenarios import FaultScenariosService
 from app.modules.changes.reachability_analysis import ReachabilityDiffService
 from app.modules.changes.route_analysis import RouteDiffService
 from app.modules.changes.service import ChangesService
@@ -187,6 +189,10 @@ def create_app(
         )
         changes = ChangesService(db, auth, networks, snapshots, jobs)
         app.state.changes_service = changes
+        fault_scenarios = FaultScenariosService(
+            auth, networks, snapshots, jobs, analysis, FaultScenarioController(db, settings)
+        )
+        app.state.fault_scenarios_service = fault_scenarios
         config_diff = ConfigDiffService(auth, changes, snapshots, jobs, results)
         app.state.config_diff_service = config_diff
         route_diff = RouteDiffService(auth, changes, snapshots, jobs, results, analysis)
@@ -201,6 +207,7 @@ def create_app(
                 config_diff,
                 route_diff,
                 reachability_diff,
+                fault_scenarios,
                 read_actor=read_actor,
                 write_actor=write_actor,
             ),
@@ -218,6 +225,7 @@ def create_app(
             handlers={
                 "deletion": Handler(lifecycle.execute),
                 "initialization": Handler(snapshots.execute, snapshots.retry),
+                "fault_scenario": Handler(fault_scenarios.execute),
                 "analysis": _analysis_handler(analysis, config_diff, route_diff, reachability_diff),
             },
             controller=ExecutionController(db, settings),
@@ -273,6 +281,9 @@ def create_worker(settings: Settings, *, database=None, handlers=None):
         auth, snapshots, jobs, results, AnalysisController(db, settings), Registry()
     )
     changes = ChangesService(db, auth, networks, snapshots, jobs)
+    fault_scenarios = FaultScenariosService(
+        auth, networks, snapshots, jobs, analysis, FaultScenarioController(db, settings)
+    )
     config_diff = ConfigDiffService(auth, changes, snapshots, jobs, results)
     route_diff = RouteDiffService(auth, changes, snapshots, jobs, results, analysis)
     reachability_diff = ReachabilityDiffService(auth, changes, snapshots, jobs, results, analysis)
@@ -280,6 +291,7 @@ def create_worker(settings: Settings, *, database=None, handlers=None):
     registered = {
         "deletion": Handler(lifecycle.execute),
         "initialization": Handler(snapshots.execute, snapshots.retry),
+        "fault_scenario": Handler(fault_scenarios.execute),
         "analysis": _analysis_handler(analysis, config_diff, route_diff, reachability_diff),
     }
     registered.update(handlers or {})

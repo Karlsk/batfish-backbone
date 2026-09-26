@@ -1,6 +1,6 @@
 # ADV-16 节点与接口故障派生快照
 
-- 状态：待开发
+- 状态：已完成
 - 阶段：3
 - 依赖：[ADV-15](../advance/adv-15-comparison-ui.md)
 - 预计工作量：1.5 人天（实现/验证 1.0 + 测试 0.25 + 文档/自检 0.25），依赖就绪后计；超过 2 人天先拆分。
@@ -32,10 +32,10 @@
 
 ## 实施步骤
 
-- [ ] 登记故障方案请求和派生关系，使用全新内部名称。
-- [ ] 调用 SDK fork，处理返回 None/异常/未知状态，不标假成功。
-- [ ] 复用初始化质量与引擎占用语义，新增基线引用删除保护。
-- [ ] 运行下述验证，记录实际命令与结果，更新本文及索引状态。
+- [x] 登记故障方案请求和派生关系，使用全新内部名称。
+- [x] 调用 SDK fork，处理返回 None/异常/未知状态，不标假成功。
+- [x] 复用初始化质量与引擎占用语义，新增基线引用删除保护。
+- [x] 运行下述验证，记录实际命令与结果，更新本文及索引状态。
 
 ## 测试与验收
 
@@ -53,4 +53,8 @@
 
 ## 完成记录
 
-当前尚未开发或运行本 spec 的产品测试。实施者完成后在本节记录实际文件、验证命令、结果、引擎/SDK版本（如涉及）和剩余限制；存在验收失败时保持未通过状态。
+2026-09-27 已完成。实现改动：`app/modules/changes/{api,schemas,controller,fault_scenarios}.py` 接收严格目标、查询建模清单、登记方案并在 worker 中调用 SDK；`app/modules/snapshots/{service,repository,schemas}.py`、`app/contracts/snapshots.py` 保存派生关系与质量门；`app/modules/jobs/{service,repository,schemas,models}.py`、`app/contracts/dto.py`、`migrations/versions/0010_fault_scenarios.py` 登记持久任务及幂等恢复；`app/modules/lifecycle/service.py` 在共享锁内保护基线；`app/composition.py` 装配 API 与独立 worker；生成前端 OpenAPI 类型和任务标签。测试覆盖新增 `tests/test_fault_scenarios.py`、分层检查规则及空库迁移。
+
+验收：[ADV-16 全量证据](../../evidence/adv-16-verification.md)和[机器记录](../../evidence/adv-16-verification.json)。`web/backend` 执行真实 SDK 故障与架构目标用例 62 passed；仓库根 `web/backend/.venv/bin/python web/scripts/lab.py verify` 为 368 passed、0 skip，`seed` 生成 r1/r2 与 Cisco 四设备，`smoke` 为 13 passed；独立 HTTP/API/worker 故障流程通过。`web/frontend` 执行 87 单测、类型/构建/OpenAPI/格式检查及 24 项 Chromium 累计浏览器检查；新 HTTPS 部署、重启/失联对账、备份恢复、浅色/深色部署及双用户验收通过。Ruff、离线锁文件、Git 空白检查通过。环境：Python 3.12.12、Pybatfish 2026.9.17.3748、Batfish revision `7d0deeeac4a09973b3876327f6aef721ee12f955`、迁移 0010。
+
+依赖结论：ADV-17 可以使用已就绪的派生快照进入比较；初始化失败、取消或引擎未知时保留任务错误而不创建比较。此功能只验证模型快照操作，不验证现场设备转发一致性。

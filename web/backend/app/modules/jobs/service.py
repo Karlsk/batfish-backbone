@@ -205,6 +205,23 @@ class JobsService:
             raise ServiceError(ErrorCode.CONFLICT)
         return ResourceReservation(stored_id, created)
 
+    def find_reserved_resource(
+        self, actor, *, route: str, resource_key: str, key: str, request_hash: str
+    ) -> UUID | None:
+        actor = self._actor(actor)
+        if not 1 <= len(key) <= 128:
+            raise ServiceError(ErrorCode.VALIDATION_ERROR)
+        with self._database.transaction() as tx:
+            record = IdempotencyRepository(tx).find(
+                actor_id=actor.user_id, route=route, resource_key=resource_key, key=key
+            )
+        if record is None:
+            return None
+        resource_id, stored_hash = record
+        if stored_hash != request_hash or resource_id is None:
+            raise ServiceError(ErrorCode.CONFLICT)
+        return resource_id
+
     @contextmanager
     def resource_boundary(self):
         """Serialize resource validation and admission with deletion and queue claim."""

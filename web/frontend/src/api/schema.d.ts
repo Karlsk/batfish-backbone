@@ -719,6 +719,23 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/networks/{network_id}/snapshots/{snapshot_id}/fault-scenarios": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Create Fault Scenario */
+    post: operations["create_fault_scenario_api_v1_networks__network_id__snapshots__snapshot_id__fault_scenarios_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/networks/{network_id}/comparisons": {
     parameters: {
       query?: never;
@@ -1342,6 +1359,21 @@ export interface components {
       /** Expression */
       expression: string;
     };
+    /** FaultScenarioRequest */
+    FaultScenarioRequest: {
+      /** Display Name */
+      display_name: string;
+      /**
+       * Deactivate Nodes
+       * @default []
+       */
+      deactivate_nodes: string[];
+      /**
+       * Deactivate Interfaces
+       * @default []
+       */
+      deactivate_interfaces: components["schemas"]["InterfaceTarget"][];
+    };
     /** FieldError */
     FieldError: {
       /** Path */
@@ -1598,6 +1630,13 @@ export interface components {
         | "Zone_Name"
       )[];
     };
+    /** InterfaceTarget */
+    InterfaceTarget: {
+      /** Node */
+      node: string;
+      /** Interface */
+      interface: string;
+    };
     /** InterfacesRequest */
     InterfacesRequest: {
       /** Nodes */
@@ -1620,7 +1659,12 @@ export interface components {
        * Kind
        * @enum {string}
        */
-      kind: "upload" | "initialization" | "analysis" | "deletion";
+      kind:
+        | "upload"
+        | "initialization"
+        | "analysis"
+        | "deletion"
+        | "fault_scenario";
       /** Resource Ids */
       resource_ids: {
         [key: string]: string;
@@ -2152,6 +2196,8 @@ export interface components {
       display_name: string;
       /** Content Hash */
       content_hash: string;
+      /** Base Snapshot Id */
+      base_snapshot_id?: string | null;
       /** Initialization Job Id */
       initialization_job_id: string | null;
       /**
@@ -4502,6 +4548,53 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["JobDTO"];
+        };
+      };
+      /** @description Unprocessable Entity */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+    };
+  };
+  create_fault_scenario_api_v1_networks__network_id__snapshots__snapshot_id__fault_scenarios_post: {
+    parameters: {
+      query?: never;
+      header?: {
+        "idempotency-key"?: string | null;
+      };
+      path: {
+        network_id: string;
+        snapshot_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["FaultScenarioRequest"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      202: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["SnapshotCreated"];
         };
       };
       /** @description Unprocessable Entity */

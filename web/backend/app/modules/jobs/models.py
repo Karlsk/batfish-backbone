@@ -44,7 +44,8 @@ class Job(Base):
     retry_of: Mapped[UUID | None] = mapped_column(ForeignKey("jobs.id"))
     __table_args__ = (
         CheckConstraint(
-            "kind IN ('upload', 'initialization', 'analysis', 'deletion')", name="kind"
+            "kind IN ('upload', 'initialization', 'analysis', 'deletion', 'fault_scenario')",
+            name="kind",
         ),
         CheckConstraint(
             "status IN ('queued', 'running', 'succeeded', 'failed', 'cancelled', 'interrupted')",
