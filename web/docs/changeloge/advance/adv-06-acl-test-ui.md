@@ -1,6 +1,6 @@
 # ADV-06 ACL 流量测试页面
 
-- 状态：待开发
+- 状态：已完成
 - 阶段：2
 - 依赖：[ADV-05](../advance/adv-05-acl-test-api.md)
 - 预计工作量：1.5 人天（实现/验证 1.0 + 测试 0.25 + 文档/自检 0.25），依赖就绪后计；超过 2 人天先拆分。
@@ -28,10 +28,10 @@
 
 ## 实施步骤
 
-- [ ] 实现最小输入和规则选择，选项绑定快照。
-- [ ] 显示动作与命中摘要，详情展开规则、实际 flow 和来源。
-- [ ] 提供跳转连通性分析入口，传递流量参数但要求选择起点。
-- [ ] 运行下述验证，记录实际命令与结果，更新本文及索引状态。
+- [x] 实现最小输入和规则选择，选项绑定快照。
+- [x] 显示动作与命中摘要，详情展开规则、实际 flow 和来源。
+- [x] 提供跳转连通性分析入口，传递流量参数但要求选择起点。
+- [x] 运行下述验证，记录实际命令与结果，更新本文及索引状态。
 
 ## 测试与验收
 
@@ -49,4 +49,6 @@
 
 ## 完成记录
 
-当前尚未开发或运行本 spec 的产品测试。实施者完成后在本节记录实际文件、验证命令、结果、引擎/SDK版本（如涉及）和剩余限制；存在验收失败时保持未通过状态。
+2026-09-26：新增 `web/frontend/src/features/acl/` 的流量表单、已解析 ACL 候选、局部动作与分级证据；在 `App.tsx` 增加独立入口，`Results.tsx` 接入专用结果视图。基础输入为当前快照的设备、ACL、源/目的 IPv4；专家表达式、协议、端口在折叠高级区且保留值。结果首层区分放行、显式/隐式拒绝、无匹配、模型不支持和分页/截断不确定；详情只显示实际 SDK Flow、Trace 与来源引用，没有虚构规则号。路径分析入口恢复结果固定快照并预填流量，`TraceForm.tsx` 仍要求用户选择起点。补充单元和真实浏览器测试；修复既有分析浏览器脚本点击导航后未等待目标页面的竞态，不改变原有业务行为。
+
+在 `web/frontend` 执行 `pnpm exec vitest run src/features/acl/filter-test.test.tsx src/features/acl/filter-result.test.tsx src/features/traceroute/traceroute.test.tsx`、全量 `pnpm test`、`pnpm build`、`pnpm check:api`、`pnpm format:check` 和全量 Playwright；在仓库根目录执行 `web/backend/.venv/bin/python web/scripts/lab.py verify`、`smoke`、Ruff lint、离线锁文件检查及隔离 HTTPS 部署恢复。结果：前端70项、真实浏览器20项、后端318项、冒烟12项、恢复后的浅/深主题各3项部署及各1项双用户验收，均通过且0必需skip。Cisco 合成配置实测候选、放行、隐式拒绝、原始来源及路径预填；Huawei/H3C 配置实测拒绝绿色结论，截图人工检查两套主题。原始证据和源码指纹见[ADV-06验收](../../evidence/adv-06-verification.md)。固定引擎 revision `7d0deeeac4a09973b3876327f6aef721ee12f955`，JAR SHA-256 `0927de7c740bc72f999870e842605baad9a7cb6ea66e4b01fb9a6037bea00193`，Pybatfish `2026.9.17.3748`，Python `3.12.12`，迁移0008。ADV-07 依赖已满足。只验证配置模型 Web 功能，不证明现场策略或端到端可达。

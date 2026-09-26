@@ -61,7 +61,7 @@ MVP-01～25 及双主题升级已通过全部当前门禁，详见[复验报告]
 
 已知未提交ADV-01属于本任务，核验后纳入本批；保留`.pnpm-store/`、`.superpowers/`无关内容。现有ADV-01源码指纹与上轮一致，先补齐批次部署恢复及累计检查后提交，不重复实现。
 
-当前篇：ADV-05；下一动作：本篇门槛全部通过，提交后推进ADV-06。阻碍：无。
+当前篇：ADV-06；下一动作：本篇门槛全部通过，提交后推进ADV-07。阻碍：无。
 
 | spec | stage | base_commit | implementation_fingerprint | required_checks | evidence | commit |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -69,8 +69,8 @@ MVP-01～25 及双主题升级已通过全部当前门禁，详见[复验报告]
 | ADV-02 | committed | ec0289a663 | b2decba904875901cd9560a64c233b5e75da15f1a04dc08f80502e3d976ce50a | MVP全部＋ADV-01～02 | [全部通过](../evidence/adv-02-verification.md) | fdf2bb443d |
 | ADV-03 | committed | fdf2bb443d | 94d9e7a25d753950d232de1c8cc9c467b6cb444a2b064209d18b47f230ea2887 | MVP全部＋ADV-01～03 | [全部通过](../evidence/adv-03-verification.md) | a12256d55d |
 | ADV-04 | committed | a12256d55d | c0e6dd772dc1ec8b6f266be4d94c1e9518cf18fd33e85d85bbac948e81ff8e62 | MVP全部＋ADV-01～04 | [全部通过](../evidence/adv-04-verification.md) | 4fc9780e92 |
-| ADV-05 | validated | 4fc9780e92 | 1f466de74787e7a0ab6c128fd47008b621ea67f8728e8bbfdbc7ab084d843ace | MVP全部＋ADV-01～05 | [全部通过](../evidence/adv-05-verification.md) | 提交后关联 |
-| ADV-06 | pending | — | 待本轮归档 | MVP全部＋ADV-01～06 | 待执行 | — |
+| ADV-05 | committed | 4fc9780e92 | 1f466de74787e7a0ab6c128fd47008b621ea67f8728e8bbfdbc7ab084d843ace | MVP全部＋ADV-01～05 | [全部通过](../evidence/adv-05-verification.md) | 3cb6198900 |
+| ADV-06 | validated | 3cb6198900 | 0921b327b9062959dd782118a558b310adc55f3c94d8262f1d36c0a842f76be7 | MVP全部＋ADV-01～06 | [全部通过](../evidence/adv-06-verification.md) | 提交后关联 |
 | ADV-07 | pending | — | 待本轮归档 | MVP全部＋ADV-01～07 | 待执行 | — |
 | ADV-08 | pending | — | 待本轮归档 | MVP全部＋ADV-01～08 | 待执行 | — |
 | ADV-09 | pending | — | 待本轮归档 | MVP全部＋ADV-01～09 | 待执行 | — |

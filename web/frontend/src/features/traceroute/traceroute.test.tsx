@@ -1,5 +1,10 @@
 import { it, expect } from "vitest";
-import { buildTrace, defaultTrace, literalLocation } from "./requests";
+import {
+  buildTrace,
+  defaultTrace,
+  literalLocation,
+  traceFromAcl,
+} from "./requests";
 it("validates destination, protocol ports and max traces before submitting", () => {
   const draft = { ...defaultTrace(), node: "r1", destination: "10.0.0.2" };
   expect(buildTrace(draft).destination_ip).toBe("10.0.0.2");
@@ -16,6 +21,31 @@ it("validates destination, protocol ports and max traces before submitting", () 
   ).toMatchObject({
     options: { destination_ports: [443], ignore_filters: true },
   });
+});
+
+it("prefills ACL flow only for the same snapshot and still requires a start device", () => {
+  const preset = {
+    networkId: "network",
+    snapshotId: "snapshot",
+    source: "10.64.0.1",
+    destination: "10.64.0.2",
+    options: {
+      ip_protocols: ["tcp"],
+      source_ports: [12345],
+      destination_ports: [443],
+    },
+  };
+  const draft = traceFromAcl(preset, "network", "snapshot");
+  expect(draft).toMatchObject({
+    node: "",
+    source: "10.64.0.1",
+    destination: "10.64.0.2",
+    protocols: ["tcp"],
+    sourcePorts: "12345",
+    ports: "443",
+  });
+  expect(() => buildTrace(draft)).toThrow("起点设备");
+  expect(traceFromAcl(preset, "other", "snapshot")).toEqual(defaultTrace());
 });
 it("keeps literal node/interface distinct from expert location", () => {
   expect(literalLocation("a.*", "Eth0")).toContain("\\x{2a}");

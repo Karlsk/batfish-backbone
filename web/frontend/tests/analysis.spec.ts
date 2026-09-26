@@ -13,7 +13,19 @@ async function query(
   screenshot?: string,
 ) {
   await page.getByRole("link", { name: "网络分析", exact: true }).click();
+  await expect(page).toHaveURL(/\/analysis\/nodes$/);
+  await expect(page.getByText("设备查询", { exact: true })).toBeVisible();
   await page.getByRole("link", { name: label, exact: true }).click();
+  const operation = (
+    {
+      设备: "nodes",
+      接口: "interfaces",
+      路由前缀: "routes",
+      最长前缀匹配: "lpm-routes",
+    } as Record<string, string>
+  )[label];
+  await expect(page).toHaveURL(new RegExp(`/analysis/${operation}$`));
+  await expect(page.getByText(`${label}查询`, { exact: true })).toBeVisible();
   if (node) {
     await page
       .getByRole("button", { name: "加载设备与接口候选", exact: true })
@@ -63,10 +75,12 @@ async function query(
       })
       .fill(ip);
   await page.getByRole("button", { name: "执行查询", exact: true }).click();
+  await expect(page).toHaveURL(/\/jobs\/[0-9a-f-]+$/);
   await expect(page.getByText("已完成", { exact: true })).toBeVisible({
     timeout: 90000,
   });
   await page.getByRole("button", { name: "查看分析结果", exact: true }).click();
+  await expect(page).toHaveURL(/\/results\/[0-9a-f-]+$/);
   await expect(
     page.getByRole("heading", { name: "分析结果", exact: true }),
   ).toBeVisible();

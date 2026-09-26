@@ -1,6 +1,6 @@
 import type { components } from "../../api/schema";
 import { ipv4 } from "../routing/requests";
-import { traceDefaults } from "../inventory/catalog";
+import { traceDefaults, traceProtocols } from "../inventory/catalog";
 export type TraceDraft = {
   mode: "literal" | "expression";
   node: string;
@@ -27,6 +27,49 @@ export const defaultTrace = (): TraceDraft => ({
   maxTraces: traceDefaults.max_traces,
   ignoreFilters: traceDefaults.ignore_filters,
 });
+
+export function traceFromAcl(
+  value: unknown,
+  networkId: string,
+  snapshotId: string,
+): TraceDraft {
+  const draft = defaultTrace();
+  if (!value || typeof value !== "object" || Array.isArray(value)) return draft;
+  const preset = value as Record<string, unknown>;
+  if (preset.networkId !== networkId || preset.snapshotId !== snapshotId)
+    return draft;
+  if (
+    typeof preset.source !== "string" ||
+    !ipv4(preset.source) ||
+    typeof preset.destination !== "string" ||
+    !ipv4(preset.destination)
+  )
+    return draft;
+  draft.source = preset.source;
+  draft.destination = preset.destination;
+  const options = preset.options;
+  if (!options || typeof options !== "object" || Array.isArray(options))
+    return draft;
+  const typed = options as Record<string, unknown>;
+  if (
+    Array.isArray(typed.ip_protocols) &&
+    typed.ip_protocols.length &&
+    typed.ip_protocols.every((item) => traceProtocols.includes(item))
+  )
+    draft.protocols = typed.ip_protocols;
+  function portText(value: unknown) {
+    return Array.isArray(value) &&
+      value.length <= 100 &&
+      value.every(
+        (item) => Number.isInteger(item) && item >= 0 && item <= 65535,
+      )
+      ? value.join(",")
+      : "";
+  }
+  draft.sourcePorts = portText(typed.source_ports);
+  draft.ports = portText(typed.destination_ports);
+  return draft;
+}
 function literal(name: string) {
   return `/^(?:${Array.from(name)
     .map((c) => `\\x{${c.codePointAt(0)!.toString(16)}}`)

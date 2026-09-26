@@ -12,7 +12,7 @@ import {
   Space,
   Typography,
 } from "antd";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useResourceContext } from "../../app/context";
 import { api, ApiError, unwrap } from "../../api/client";
 import { useDraftGuard } from "../../components/useDraftGuard";
@@ -20,9 +20,15 @@ import { AdvancedOptions } from "../../components/AdvancedOptions";
 import { EmptyState, ErrorState } from "../../components/States";
 import { useCandidates } from "../inventory/useCandidates";
 import { traceProtocols, traceDefaults } from "../inventory/catalog";
-import { buildTrace, defaultTrace, type TraceDraft } from "./requests";
+import {
+  buildTrace,
+  defaultTrace,
+  traceFromAcl,
+  type TraceDraft,
+} from "./requests";
 export function TracePage() {
   const { network, snapshot } = useResourceContext();
+  const location = useLocation();
   if (!network || !snapshot)
     return (
       <EmptyState
@@ -40,6 +46,9 @@ export function TracePage() {
       networkId={network.id}
       snapshotId={snapshot.id}
       name={snapshot.name}
+      presetFlow={
+        (location.state as { presetFlow?: unknown } | null)?.presetFlow
+      }
     />
   );
 }
@@ -47,12 +56,16 @@ function TraceForm({
   networkId,
   snapshotId,
   name,
+  presetFlow,
 }: {
   networkId: string;
   snapshotId: string;
   name: string;
+  presetFlow?: unknown;
 }) {
-  const [draft, setDraft] = useState(defaultTrace),
+  const [draft, setDraft] = useState(() =>
+      traceFromAcl(presetFlow, networkId, snapshotId),
+    ),
     [busy, setBusy] = useState(false),
     [attempted, setAttempted] = useState(false),
     [error, setError] = useState<unknown>(),

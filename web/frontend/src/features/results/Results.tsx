@@ -1,5 +1,6 @@
 import { GraphResult } from "../topology/GraphResult";
 import { BgpResult } from "../bgp/BgpResult";
+import { FilterResult } from "../acl/FilterResult";
 import { ResultExport } from "../../components/ResultExport";
 import { TraceResults } from "../traceroute/TraceResults";
 import { useState } from "react";
@@ -67,6 +68,9 @@ function ResultView({ resultId }: { resultId: string }) {
           {result.kind === "table" &&
           result.effective_parameters.operation === "bgp-sessions" ? (
             <BgpResult key={result.id} result={result} />
+          ) : result.kind === "table" &&
+            result.effective_parameters.operation === "test-filters" ? (
+            <FilterResult key={result.id} result={result} />
           ) : result.kind === "table" ? (
             <ResultTable result={result} />
           ) : result.kind === "traces" ? (
