@@ -713,6 +713,21 @@ def test_real_config_and_route_diff_worker_smoke(lab):
         )
         for name, content in originals
     ]
+    candidate_files = [
+        (
+            name,
+            content.replace(
+                b"end",
+                b"ip access-list extended BLOCK-TO-C4\n deny ip any host 10.64.0.4\n"
+                b" permit ip any any\n!\ninterface GigabitEthernet0/0\n"
+                b" ip access-group BLOCK-TO-C4 out\n!\ninterface GigabitEthernet0/1\n"
+                b" ip access-group BLOCK-TO-C4 out\n!\nend",
+            )
+            if name == "c1.cfg"
+            else content,
+        )
+        for name, content in candidate_files
+    ]
     env = os.environ | {
         "DATABASE_URL": (run / "database.env").read_text().strip().removeprefix("DATABASE_URL="),
         "BATFISH_HOST": lab["host"],
@@ -816,6 +831,23 @@ def test_real_config_and_route_diff_worker_smoke(lab):
                     "198.51.100.0/24": "removed",
                     "203.0.113.0/24": "added",
                 }
+                submitted = client.post(
+                    f"/api/v1/comparisons/{comparison.json()['id']}/analyses/reachability-diff",
+                    json={
+                        "destination_ips": "10.64.0.4",
+                        "start_location": "c1",
+                        "options": {"source_ips": "10.64.0.1", "max_traces": 20},
+                    },
+                    headers=headers,
+                )
+                assert submitted.status_code == 202, submitted.text
+                job = finished(submitted.json()["id"])
+                assert job["status"] == "succeeded", job
+                result = client.get(f"/api/v1/results/{job['result_id']}").json()
+                assert result["summary"]["count_scope"] == "sdk_witness_rows_not_all_business_flows"
+                rows = client.get(f"/api/v1/results/{job['result_id']}/rows").json()["rows"]
+                assert len(rows) == 1 and rows[0]["Change"] == "removed"
+                assert rows[0]["Flow"]["dstIp"] == "10.64.0.4"
             finally:
                 worker.terminate()
                 worker.wait(timeout=15)

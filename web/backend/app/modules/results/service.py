@@ -200,6 +200,10 @@ class ResultsService:
             )
             truncated = bool(reasons)
             entries = payload["edges"]
+        if parameters.get("operation") == "reachability-diff":
+            if any(row["Evidence_Truncated"] for row in entries):
+                truncated = True
+                reasons.append("trace_limit")
         raw = encoded(payload)
         assert len(raw) <= self._settings.result_max_bytes
         identifier = uuid4()
@@ -219,6 +223,13 @@ class ResultsService:
                 total_rows=len(answer.graph.edges),
                 edge_type=answer.graph.edge_type,
                 source=answer.graph.source,
+            )
+        if parameters.get("operation") == "reachability-diff":
+            summary.update(
+                returned_examples=len(entries),
+                sdk_witness_rows=len(answer.rows),
+                count_scope="sdk_witness_rows_not_all_business_flows",
+                changes=dict(Counter(row["Change"] for row in entries)),
             )
         warnings = [*answer.warnings, *model_warnings]
         if answer.kind == "traces":

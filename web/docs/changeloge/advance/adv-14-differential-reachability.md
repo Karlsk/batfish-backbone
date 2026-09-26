@@ -1,6 +1,6 @@
 # ADV-14 差异可达性分析接口
 
-- 状态：待开发
+- 状态：已完成
 - 阶段：3
 - 依赖：[ADV-13](../advance/adv-13-routing-diff.md)
 - 预计工作量：2.0 人天（实现/验证 1.25 + 测试 0.5 + 文档/自检 0.25），依赖就绪后计；超过 2 人天先拆分。
@@ -31,10 +31,10 @@
 
 ## 实施步骤
 
-- [ ] 验证真实 SDK 双侧 Trace 结构与差异语义，加入 schema/适配。
-- [ ] 构造 HeaderConstraints/PathConstraints，受限范围下运行并保留有效条件。
-- [ ] 输出 flow 示例、两侧结果、覆盖限制和截断信息。
-- [ ] 运行下述验证，记录实际命令与结果，更新本文及索引状态。
+- [x] 验证真实 SDK 双侧 Trace 结构与差异语义，加入 schema/适配。
+- [x] 构造 HeaderConstraints/PathConstraints，受限范围下运行并保留有效条件。
+- [x] 输出 flow 示例、两侧结果、覆盖限制和截断信息。
+- [x] 运行下述验证，记录实际命令与结果，更新本文及索引状态。
 
 ## 测试与验收
 
@@ -53,4 +53,8 @@
 
 ## 完成记录
 
-当前尚未开发或运行本 spec 的产品测试。实施者完成后在本节记录实际文件、验证命令、结果、引擎/SDK版本（如涉及）和剩余限制；存在验收失败时保持未通过状态。
+2026-09-27 完成。`changes/schemas.py` 定义必填目的 IPv4 范围和起点、受控专家选项；`changes/reachability_analysis.py` 将分析绑定不可变比较上下文并按两侧摘要缓存；`analysis/controllers/reachability.py` 经公开 SDK 调用差异可达性并保留候选/基线两侧 Flow 与 Trace。结果追加方向、三态可达性和证据截断；只在证据完整时断言不可达。OpenAPI 生成类型与 API 契约已同步。测试覆盖候选新增/消失、路径变化但可达性不变、限定范围空结果、路径证据截断、无效起点、参数白名单、缓存/导出/删除后历史及真实 HTTP/独立 worker。
+
+仓库根运行 `web/backend/.venv/bin/python web/scripts/lab.py smoke`（13 passed）和 `verify`（357 passed）、Ruff/格式、离线锁文件、Git 空白检查；`web/frontend` 运行 `pnpm generate:api/check:api/typecheck/test/build/format:check`（81 项单测）、全量 Playwright（23 passed）。本机独立 HTTPS `web/scripts/verify_deployment.py` 完成启动、失联对账、离线备份与新卷恢复；恢复后明暗主题分别 3 项部署检查和 1 项双用户验收通过。固定 Batfish revision `7d0deeeac4a09973b3876327f6aef721ee12f955`，JAR SHA-256 `0927de7c740bc72f999870e842605baad9a7cb6ea66e4b01fb9a6037bea00193`，Pybatfish `2026.9.17.3748`、Python `3.12.12`、迁移 0009。完整证据见[ADV-14 验收](../../evidence/adv-14-verification.md)。ADV-15 依赖已满足。
+
+限制：SDK witness 是当前条件下的示例，不是所有受影响业务流；证据截断时方向可能不确定。模型结果不证明现场转发或回程。初次浏览器全回归的两项超时在隔离复跑后均通过，整套随后 23/23 通过；首次 HTTPS 演练遇本机 Docker 服务瞬时失联，重试完整通过，均在验收报告保留原始失败记录。

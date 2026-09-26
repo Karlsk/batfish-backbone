@@ -115,4 +115,4 @@
 
 MVP-01 报告需至少列出 SDK 版本、引擎 revision、模板加载、参数 schema、结果列与嵌套类型、公开任务句柄/超时行为的实测结论。新引擎缺失问题时将 capability.enabled=false 并给 disabled_reason；不能到用户运行时才以无解释的500失败。
 
-问题声明支持 differential 并不自动变成 Web 对比功能。ADV-13 在锁定引擎与 Pybatfish 上实测 `routes` 双快照调用：虽然仓库 `questions/stable/routes.json` 的静态 `differential` 字段为 `false`，Java `RoutesAnswerer.answerDiff` 与当前 SDK 调用实际返回 `Entry_Presence`、`Snapshot_*`、`Reference_*`；可控 Cisco 路由增删/属性变化/ECMP 样例证明方向。此事实仅针对锁定版本，版本改变须复验。ADV-14 的可达性差异仍待验证。配置文本 diff 是 Web 层对不可变原始文件的比较，不是虚构的 SDK 问题。
+问题声明支持 differential 并不自动变成 Web 对比功能。ADV-13 在锁定引擎与 Pybatfish 上实测 `routes` 双快照调用：虽然仓库 `questions/stable/routes.json` 的静态 `differential` 字段为 `false`，Java `RoutesAnswerer.answerDiff` 与当前 SDK 调用实际返回 `Entry_Presence`、`Snapshot_*`、`Reference_*`；可控 Cisco 路由增删/属性变化/ECMP 样例证明方向。ADV-14 实测 `differentialReachability` 的 `Flow`、`Snapshot_Traces`、`Reference_Traces` 与两侧 trace count：ACL 变更产生候选新增或消失的可达示例，单纯路径成本变化而仍可达时不返回可达性变化；证据被截断时不能据未见可达路径判定不可达。这些事实仅针对锁定版本，版本改变须复验。配置文本 diff 是 Web 层对不可变原始文件的比较，不是虚构的 SDK 问题。

@@ -166,6 +166,10 @@ ADV-12 `POST /comparisons/{id}/analyses/config-diff` 接受 `{}` 或 `{"options"
 
 ADV-13 `POST /comparisons/{id}/analyses/routes-diff` 使用与单快照 routes 完全相同的有类型请求：`nodes` 可选，`options.vrfs/network/protocols/prefix_match_type/rib` 均可选；不允许传入 snapshot/reference、未知 SDK kwargs 或未登记的 RIB。任务固定候选→SDK snapshot、基线→SDK reference_snapshot，提交和执行时均复核比较上下文；幂等、缓存键包含两侧内容摘要及过滤条件。结果 `kind=table`，原有分页、过滤和 JSON/CSV 导出适用，`effective_parameters.comparison_id` 与两侧 ID 可追溯。每条结果保留 SDK `Entry_Presence` 以及 `Snapshot_*`（候选）/`Reference_*`（基线）原始字段，新增 `Change`：当前引擎实测 `Only in Snapshot`→`added`、`Only in Reference`→`removed`、`Changed`→`changed`；SDK 差异回答中附带的 `Unchanged` 行不列入变化结果。同一前缀的多条下一跳逐行保留，不按前缀覆盖。空结果仅表示所选节点/VRF/前缀/协议/RIB 范围内无模型路由差异，不构成策略等价或现场转发结论。结果仍受通用行数与字节上限约束。
 
+ADV-14 `POST /comparisons/{id}/analyses/reachability-diff` 的最小请求为 `{"destination_ips":"10.64.0.4","start_location":"c1"}`。两个字段都必填；`destination_ips` 接受至多 16 个逗号分隔的规范 IPv4 地址或前缀，拒绝 `/0`，不能以空范围启动全网搜索。`options` 白名单为 `source_ips`（同样的 IPv4 范围）、`ip_protocols`（默认 ICMP，支持 ICMP/TCP/UDP/GRE/ESP/AH/OSPF/SCTP/IPINIP）、`destination_ports`（仅 TCP/UDP，0～65535）、`max_traces`（1～20，默认 5）；未知字段、快照/引擎上下文覆盖和非法类型返回 422。起点使用 SDK `PathConstraints.startLocation` 选择器语法；无效选择器在实际执行时返回有明确错误的失败任务，不解释成零影响。任务、缓存和历史沿用双快照比较约束。
+
+结果为可分页、过滤、JSON/CSV 导出的 table。`Flow` 与 `Snapshot_Traces`/`Reference_Traces`、两侧 `TraceCount` 保留 SDK 原始证据；Snapshot 表示候选，Reference 表示基线。新增 `Candidate_Reachable`、`Baseline_Reachable`、两侧 dispositions、`Evidence_Truncated` 和 `Change`（`added`/`removed`/`undetermined`）。可达集合为 ACCEPTED、DELIVERED_TO_SUBNET、EXITS_NETWORK；若全部 trace 已返回且均非可达，才判不可达。截断且未见可达路径的一侧为 null，方向标 `undetermined`，结果 `truncated=true`、`truncation_reason=trace_limit`。`summary.count_scope=sdk_witness_rows_not_all_business_flows`，示例数及方向计数仅针对已存储的 SDK witness，不能推算全部业务流。空结果仅表示提交范围内未找到可达性差异；模型判断不是现场探测、回程证明或全网安全证明。
+
 故障派生关系在 SnapshotDTO.base_snapshot_id 保存。删除仍被有效 comparison 或未删除派生快照引用的基线返回409；先删除比较记录/派生快照再删除基线。ResourceLifecycleService 通过各模块service执行引用检查和删除，不引入 snapshots→changes→snapshots 循环。删除历史不会重写旧结果。
 
 ## 错误约定

@@ -61,6 +61,19 @@ class AnalysisService:
             )
         return answer
 
+    def run_reachability_diff(self, context, request):
+        if context.reference_snapshot_id is None or context.engine_reference_snapshot is None:
+            raise ServiceError(ErrorCode.CONFLICT)
+        versions = self._controller.runtime_versions()
+        if versions != {
+            "engine_version": context.engine_version,
+            "sdk_version": context.sdk_version,
+        }:
+            raise ServiceError(ErrorCode.CONFLICT)
+        return self._controller.run(
+            context, "differentialReachability", request.model_dump(mode="json")
+        )
+
     def submit(
         self,
         actor,

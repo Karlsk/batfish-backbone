@@ -21,6 +21,7 @@ def business_module(name: str) -> tuple[str, str] | None:
     layer = {
         ("changes", "analysis"): "service",
         ("changes", "route_analysis"): "service",
+        ("changes", "reachability_analysis"): "service",
         ("changes", "config_diff"): "graph",
         ("results", "diff"): "schemas",
     }.get((parts[2] if len(parts) > 2 else "", layer), layer)

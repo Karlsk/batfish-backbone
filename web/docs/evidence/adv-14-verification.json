@@ -1,0 +1,99 @@
+{
+  "date": "2026-09-26T19:01:21.451278+00:00",
+  "scope": "ADV-14 and cumulative MVP-01..25, ADV-01..14",
+  "base_commit": "72ca4b2491",
+  "source_sha256": "21640faa2768e268c6c7451315dcd7face0af9f28b7a3dd8413c7c53e37ec084",
+  "source_fingerprint_method": "SHA-256 of compact, sorted JSON path-to-file-SHA256 map for Git cached/other nonignored files under web/backend, web/frontend, web/scripts, web/deploy",
+  "source_file_count": 317,
+  "changed_source_files": {
+    "web/backend/app/composition.py": "438ac9436534d7a46400687420202a4838ad93dd1fc09869adc1fd1c61fe9f27",
+    "web/backend/app/modules/analysis/controller.py": "89aa136dde10bced6639c5ce2356ad17f8e3fc2ba5bfb3ec92d1c733f83681ac",
+    "web/backend/app/modules/analysis/controllers/reachability.py": "65f3bee08f6b1e3f4b0b11b4686760dedd25d8c6631d9345945e74c3b1098028",
+    "web/backend/app/modules/analysis/service.py": "30e0b522f6377d5600bd876a4806b20f7ce817adc298267be92cbd1c4164e6b5",
+    "web/backend/app/modules/changes/api.py": "17daa583cedda9efa9b64f40904f04de7cbcce5129bc65fc2681a7edbb27bad5",
+    "web/backend/app/modules/changes/reachability_analysis.py": "8514246d5a296dd92057b44c410dd2a63ecae2f5fb8e688b11aafe6136122726",
+    "web/backend/app/modules/changes/schemas.py": "60f0a84ae5e7493f346645dc0c493cecd534e6b3370f9f787c986999ca300d38",
+    "web/backend/app/modules/results/service.py": "cf9dbe9e8d96153af9ba75176bd6ba700d1985243174b051d31572cc4381cb68",
+    "web/backend/tests/architecture_rules.py": "4853a924df60cc3030deb6a81de06532694b17477989b5e10e4b8ea4884485cb",
+    "web/backend/tests/integration/test_lab_topologies.py": "417c7b251e1fdb0ee1013ff25430d24e6db9faba19c34452447b1e5388fafeb5",
+    "web/backend/tests/test_reachability_diff.py": "13cadef2f5b2f988be8f95bfc80090c4042098444e10a5a7eb5e284ff66a45c7",
+    "web/frontend/src/api/schema.d.ts": "b8cb194920abf6ec7da14a3123db6249213c94639e20a0492f5d0912558913e8"
+  },
+  "environment": {
+    "lab_run": "351638977894",
+    "engine_revision": "7d0deeeac4a09973b3876327f6aef721ee12f955",
+    "jar_sha256": "0927de7c740bc72f999870e842605baad9a7cb6ea66e4b01fb9a6037bea00193",
+    "pybatfish": "2026.9.17.3748",
+    "python": "3.12.12",
+    "migration": "0009",
+    "topologies": [
+      "small_network r1/r2",
+      "cisco_four c1-c4",
+      "controlled Cisco ACL baseline/candidate"
+    ]
+  },
+  "backend": {
+    "passed": 357,
+    "skipped": 0,
+    "evidence": "web/.runtime/test-lab/351638977894/checks/fc2eb15ffd92"
+  },
+  "smoke": {
+    "passed": 13,
+    "intentional_deselected": 343,
+    "evidence": "web/.runtime/test-lab/351638977894/checks/e9712118c8a9"
+  },
+  "reachability_integration": {
+    "candidate": "snapshot",
+    "baseline": "reference_snapshot",
+    "directions": [
+      "added",
+      "removed",
+      "undetermined"
+    ],
+    "path_only_no_change": "passed",
+    "truncated_trace_conservative": "passed",
+    "invalid_start_fails": "passed",
+    "scope_validation_cache_export_history": "passed",
+    "live_worker_http": "passed"
+  },
+  "frontend": {
+    "unit_passed": 81,
+    "build": "passed",
+    "typecheck": "passed",
+    "api_types": "passed",
+    "format": "passed"
+  },
+  "browser": {
+    "passed": 23,
+    "failed": 0,
+    "skipped": 0,
+    "lab_run": "351638977894",
+    "isolated_output": "web/frontend/test-results/adv14-final"
+  },
+  "deployment": "web/.runtime/deploy-adv14-batch/verification.json",
+  "restored": "web/.runtime/deploy-adv14-batch-restored",
+  "production_browser": {
+    "light_deployment": 3,
+    "dark_deployment": 3,
+    "light_acceptance": 1,
+    "dark_acceptance": 1,
+    "failed": 0,
+    "skipped": 0
+  },
+  "static_checks": {
+    "ruff_lint": "passed",
+    "ruff_format_changed_python": "passed",
+    "uv_lock_offline": "passed",
+    "git_diff_check": "passed"
+  },
+  "initial_failures": [
+    "First full browser run had two timeouts; both isolated reruns passed and full rerun passed 23/23.",
+    "First HTTPS verification lost the local Docker daemon during compose startup; retry completed the full recovery exercise."
+  ],
+  "review": "Self-reviewed typed bounded scope, API/service/controller boundaries, frozen comparison direction and hashes, SDK dual traces, conservative three-state direction, trace and result truncation, auth/cache/export/history and isolated worker.",
+  "limits": [
+    "SDK witness rows are examples under submitted constraints, not a count of all affected business flows.",
+    "Truncated trace evidence can leave direction undetermined.",
+    "Synthetic configuration tests do not prove production forwarding fidelity or capacity."
+  ]
+}

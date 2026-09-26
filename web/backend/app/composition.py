@@ -15,6 +15,7 @@ from app.modules.auth.api import create_router as create_auth_router
 from app.modules.auth.service import AuthService
 from app.modules.changes.analysis import ConfigDiffService
 from app.modules.changes.api import create_router as create_changes_router
+from app.modules.changes.reachability_analysis import ReachabilityDiffService
 from app.modules.changes.route_analysis import RouteDiffService
 from app.modules.changes.service import ChangesService
 from app.modules.execution.api import create_router as create_execution_router
@@ -61,7 +62,10 @@ def database_metadata():
 
 
 def _analysis_handler(
-    analysis: AnalysisService, config_diff: ConfigDiffService, route_diff: RouteDiffService
+    analysis: AnalysisService,
+    config_diff: ConfigDiffService,
+    route_diff: RouteDiffService,
+    reachability_diff: ReachabilityDiffService,
 ) -> Handler:
     def service(job):
         operation = job.requested_parameters.get("operation")
@@ -69,6 +73,8 @@ def _analysis_handler(
             return config_diff
         if operation == "routes-diff":
             return route_diff
+        if operation == "reachability-diff":
+            return reachability_diff
         return analysis
 
     def execute(job):
@@ -185,9 +191,18 @@ def create_app(
         app.state.config_diff_service = config_diff
         route_diff = RouteDiffService(auth, changes, snapshots, jobs, results, analysis)
         app.state.route_diff_service = route_diff
+        reachability_diff = ReachabilityDiffService(
+            auth, changes, snapshots, jobs, results, analysis
+        )
+        app.state.reachability_diff_service = reachability_diff
         app.include_router(
             create_changes_router(
-                changes, config_diff, route_diff, read_actor=read_actor, write_actor=write_actor
+                changes,
+                config_diff,
+                route_diff,
+                reachability_diff,
+                read_actor=read_actor,
+                write_actor=write_actor,
             ),
             prefix="/api/v1",
         )
@@ -203,7 +218,7 @@ def create_app(
             handlers={
                 "deletion": Handler(lifecycle.execute),
                 "initialization": Handler(snapshots.execute, snapshots.retry),
-                "analysis": _analysis_handler(analysis, config_diff, route_diff),
+                "analysis": _analysis_handler(analysis, config_diff, route_diff, reachability_diff),
             },
             controller=ExecutionController(db, settings),
             settings=settings,
@@ -260,11 +275,12 @@ def create_worker(settings: Settings, *, database=None, handlers=None):
     changes = ChangesService(db, auth, networks, snapshots, jobs)
     config_diff = ConfigDiffService(auth, changes, snapshots, jobs, results)
     route_diff = RouteDiffService(auth, changes, snapshots, jobs, results, analysis)
+    reachability_diff = ReachabilityDiffService(auth, changes, snapshots, jobs, results, analysis)
     lifecycle = ResourceLifecycleService(auth, jobs, networks, snapshots, changes)
     registered = {
         "deletion": Handler(lifecycle.execute),
         "initialization": Handler(snapshots.execute, snapshots.retry),
-        "analysis": _analysis_handler(analysis, config_diff, route_diff),
+        "analysis": _analysis_handler(analysis, config_diff, route_diff, reachability_diff),
     }
     registered.update(handlers or {})
     execution = ExecutionService(

@@ -18,6 +18,8 @@ from app.modules.analysis.controllers.bgp import question_name as bgp_question_n
 from app.modules.analysis.controllers.filters import QUERIES as FILTER_QUERIES
 from app.modules.analysis.controllers.filters import normalize_filter_rows
 from app.modules.analysis.controllers.inventory import QUERIES as INVENTORY_QUERIES
+from app.modules.analysis.controllers.reachability import QUERIES as REACHABILITY_QUERIES
+from app.modules.analysis.controllers.reachability import normalize_reachability_rows
 from app.modules.analysis.controllers.routing import QUERIES as ROUTING_QUERIES
 from app.modules.analysis.controllers.routing import normalize_route_diff_rows
 from app.modules.analysis.controllers.topology import QUERIES as TOPOLOGY_QUERIES
@@ -57,6 +59,7 @@ class AnalysisController:
                 | TOPOLOGY_QUERIES
                 | BGP_QUERIES
                 | FILTER_QUERIES
+                | REACHABILITY_QUERIES
             )
             if queries is None
             else queries
@@ -115,6 +118,24 @@ class AnalysisController:
         if question_id == "routes" and context.reference_snapshot_id is not None:
             rows = normalize_route_diff_rows(rows)
             columns.append(Column(key="Change", label="Candidate change", type="String"))
+        if question_id == "differentialReachability":
+            rows = normalize_reachability_rows(rows)
+            columns.extend(
+                (
+                    Column(key="Change", label="Candidate change", type="String"),
+                    Column(key="Candidate_Reachable", label="Candidate reachable", type="Boolean"),
+                    Column(key="Baseline_Reachable", label="Baseline reachable", type="Boolean"),
+                    Column(
+                        key="Evidence_Truncated", label="Trace evidence truncated", type="Boolean"
+                    ),
+                    Column(
+                        key="Candidate_Dispositions", label="Candidate dispositions", type="Object"
+                    ),
+                    Column(
+                        key="Baseline_Dispositions", label="Baseline dispositions", type="Object"
+                    ),
+                )
+            )
         if question_id in {"testFilters", "searchFilters"}:
             rows = normalize_filter_rows(rows)
             columns.extend(
@@ -163,6 +184,11 @@ class AnalysisController:
                         "No unreachable lines found in the selected ACL scope; this is not a safety proof",
                     )
                     if question_id == "filterLineReachability" and not rows
+                    else ()
+                )
+                + (
+                    ("No reachability difference witnesses in the selected scope",)
+                    if question_id == "differentialReachability" and not rows
                     else ()
                 )
             ),
