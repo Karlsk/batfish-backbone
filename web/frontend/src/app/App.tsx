@@ -70,6 +70,11 @@ const FilterTestPage = lazy(() =>
     default: m.FilterTestPage,
   })),
 );
+const ExpertPage = lazy(() =>
+  import("../features/expert/ExpertForm").then((m) => ({
+    default: m.ExpertPage,
+  })),
+);
 const AnalysisPage = lazy(() =>
   import("../features/inventory/Analysis").then((m) => ({
     default: m.AnalysisPage,
@@ -227,6 +232,11 @@ export function Shell({ children }: PropsWithChildren) {
               label: <Link to="/acl">ACL 流量测试</Link>,
             },
             {
+              key: "/expert",
+              icon: <QuestionCircleOutlined />,
+              label: <Link to="/expert">专家查询</Link>,
+            },
+            {
               key: "/jobs",
               icon: <ClockCircleOutlined />,
               label: <Link to="/jobs">任务中心</Link>,
@@ -347,6 +357,7 @@ function WorkbenchRoutes() {
                 <Route path="/topology" element={<TopologyPage />} />
                 <Route path="/bgp" element={<BgpPage />} />
                 <Route path="/acl" element={<FilterTestPage />} />
+                <Route path="/expert" element={<ExpertPage />} />
                 <Route path="/traceroute" element={<TracePage />} />
                 <Route path="/analysis/:operation" element={<AnalysisPage />} />
                 <Route path="/analysis" element={<AnalysisPage />} />

@@ -51,9 +51,10 @@ class AnalysisService:
         *,
         idempotency_key=None,
         retry_of=None,
+        path_prefix=("body",),
     ):
         actor = self._auth.revalidate_actor(actor)
-        model = self._registry.validate(operation, request)
+        model = self._registry.validate(operation, request, path_prefix=path_prefix)
         with self._jobs.resource_boundary() as transaction:
             context = self._snapshots.require_analyzable(actor, network_id, snapshot_id)
             if operation in {"test-filters", "search-filters", "filter-line-reachability"}:
@@ -76,6 +77,19 @@ class AnalysisService:
                 retry_of=retry_of,
                 transaction=transaction,
             )
+
+    def submit_query(
+        self, actor, network_id, snapshot_id, question_id, parameters, *, idempotency_key=None
+    ):
+        return self.submit(
+            actor,
+            network_id,
+            snapshot_id,
+            question_id,
+            parameters,
+            idempotency_key=idempotency_key,
+            path_prefix=("body", "parameters"),
+        )
 
     def execute(self, job):
         actor = self._auth.revalidate_actor(

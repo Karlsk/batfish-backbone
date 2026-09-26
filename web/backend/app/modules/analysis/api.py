@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends, Header
 from app.contracts.dto import Actor, JobDTO
 from app.modules.analysis.schemas import Capability
 from app.modules.analysis.schemas.bgp import BgpRequest
+from app.modules.analysis.schemas.expert import ExpertQueryRequest
 from app.modules.analysis.schemas.filters import (
     FilterLineReachabilityRequest,
     FilterTestRequest,
@@ -26,6 +27,23 @@ def create_router(service: AnalysisService, *, read_actor, write_actor):
         return service.capabilities(actor)
 
     base = "/networks/{network_id}/snapshots/{snapshot_id}/analyses"
+
+    @router.post(base + "/query", response_model=JobDTO, status_code=202)
+    def query(
+        network_id: UUID,
+        snapshot_id: UUID,
+        body: ExpertQueryRequest,
+        actor: Actor = Depends(write_actor),
+        idempotency_key: str | None = Header(None, max_length=128),
+    ):
+        return service.submit_query(
+            actor,
+            network_id,
+            snapshot_id,
+            body.question_id,
+            body.parameters,
+            idempotency_key=idempotency_key,
+        )
 
     @router.post(base + "/nodes", response_model=JobDTO, status_code=202)
     def nodes(

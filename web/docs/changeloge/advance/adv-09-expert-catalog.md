@@ -1,6 +1,6 @@
 # ADV-09 登记式专家查询入口
 
-- 状态：待开发
+- 状态：已完成
 - 阶段：2
 - 依赖：[ADV-08](../advance/adv-08-acl-search-ui.md)
 - 预计工作量：1.5 人天（实现/验证 1.0 + 测试 0.25 + 文档/自检 0.25），依赖就绪后计；超过 2 人天先拆分。
@@ -32,10 +32,10 @@
 
 ## 实施步骤
 
-- [ ] 实现目录查询与注册表分派，对 disabled/未知问题返回明确错误。
-- [ ] 生成基础参数/高级 options 表单，JSON 编辑支持错误路径展示。
-- [ ] 验证专用入口和专家入口对等，不扩大本阶段问题集合。
-- [ ] 运行下述验证，记录实际命令与结果，更新本文及索引状态。
+- [x] 实现目录查询与注册表分派，对 disabled/未知问题返回明确错误。
+- [x] 生成基础参数/高级 options 表单，JSON 编辑支持错误路径展示。
+- [x] 验证专用入口和专家入口对等，不扩大本阶段问题集合。
+- [x] 运行下述验证，记录实际命令与结果，更新本文及索引状态。
 
 ## 测试与验收
 
@@ -55,4 +55,6 @@
 
 ## 完成记录
 
-当前尚未开发或运行本 spec 的产品测试。实施者完成后在本节记录实际文件、验证命令、结果、引擎/SDK版本（如涉及）和剩余限制；存在验收失败时保持未通过状态。
+2026-09-26 已完成：`analysis/api.py` 增加严格外层 `ExpertQueryRequest` 的 `POST S/analyses/query`；`AnalysisService.submit_query` 调用同一个注册表校验、资源权限、任务与结果路径，不增加 controller 的 SDK 分派。能力目录增加对应请求模型完整 `parameters_schema`，与已有 `options_schema`、默认值和启用状态共同驱动 `features/expert/` 页面。基础字段按 JSON Schema 顶层生成，复杂对象用 JSON 字段输入，高级 options 折叠编辑；错误保留输入并显示 `body.parameters...` 路径，基础视图可查看包含默认值的预期有效参数。未知、禁用及未登记问题不会进入 SDK。
+
+真实 Cisco 四设备快照上，专家 `nodes` 查询与专用 `nodes` 查询命中同一规范化结果；`host`、上下文覆盖和任意问题名被拒绝。后端 `test_expert_query.py`、前端 `expert.test.tsx`、真实浏览器 `tests/expert.spec.ts` 通过。本篇及此前 MVP-01～25、ADV-01～09 累计回归：后端329项、真实服务冒烟12项、前端81项、浏览器22项；全新 HTTPS 部署、worker 失联对账、离线备份/新卷恢复及恢复后的明暗主题、双用户验收均通过。运行 `lab.py verify/smoke`、`pnpm test/build/check:api/format:check`、`pnpm exec playwright test`、`verify_deployment.py` 和生产浏览器配置。固定 Batfish revision `7d0deeeac4a09973b3876327f6aef721ee12f955`、JAR SHA-256 `0927de7c740bc72f999870e842605baad9a7cb6ea66e4b01fb9a6037bea00193`、Pybatfish `2026.9.17.3748`、Python `3.12.12`，迁移0008。详见[ADV-09验收](../../evidence/adv-09-verification.md)。仅登记当前已有 11 项分析能力；复杂嵌套字段仍需专家输入 JSON，不承诺完整 SDK 自动表单或现场转发一致性。ADV-10 的依赖已满足。

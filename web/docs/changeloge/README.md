@@ -1,6 +1,6 @@
 # 分阶段研发规格索引
 
-日期：2026-09-26。MVP-01～25 已完成，ADV-01～08 已完成，ADV-09～18 待开发。以下为分阶段 RDP spec；“RDP”沿用用户称呼，不额外假定某种公司模板。每份规格包含需求、设计/接口、改动位置、实施步骤、测试与验收、非目标和完成记录。
+日期：2026-09-26。MVP-01～25 已完成，ADV-01～09 已完成，ADV-10～18 待开发。以下为分阶段 RDP spec；“RDP”沿用用户称呼，不额外假定某种公司模板。每份规格包含需求、设计/接口、改动位置、实施步骤、测试与验收、非目标和完成记录。
 
 ## 阶段门槛与顺序
 
@@ -58,7 +58,7 @@ MVP 只包含阶段1，不能因为 advance spec 已写好就提前实现其功�
 | [ADV-06 ACL 流量测试页面](advance/adv-06-acl-test-ui.md) | ADV-05 | 1.5 | 已完成 |
 | [ADV-07 ACL 条件搜索与无效规则接口](advance/adv-07-acl-search-api.md) | ADV-06 | 2.0 | 已完成 |
 | [ADV-08 ACL 高级诊断与证据分层](advance/adv-08-acl-search-ui.md) | ADV-07 | 1.5 | 已完成 |
-| [ADV-09 登记式专家查询入口](advance/adv-09-expert-catalog.md) | ADV-08 | 1.5 | 待开发 |
+| [ADV-09 登记式专家查询入口](advance/adv-09-expert-catalog.md) | ADV-08 | 1.5 | 已完成 |
 | [ADV-10 第二阶段整体验收](advance/adv-10-phase-two-acceptance.md) | ADV-09 | 1.0 | 待开发 |
 | [ADV-11 双快照对比上下文与记录](advance/adv-11-comparison-context.md) | ADV-10 | 1.0 | 待开发 |
 | [ADV-12 配置文件差异分析](advance/adv-12-configuration-diff.md) | ADV-11 | 2.0 | 待开发 |

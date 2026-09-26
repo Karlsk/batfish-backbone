@@ -25,6 +25,7 @@ class Capability(Contract):
     enabled: bool
     disabled_reason: str | None
     required_fields: tuple[str, ...]
+    parameters_schema: Mapping[str, JsonValue]
     options_schema: Mapping[str, JsonValue]
     defaults: Mapping[str, JsonValue]
     result_kind: Literal["table", "traces", "graph"]

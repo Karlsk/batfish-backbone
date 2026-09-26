@@ -206,6 +206,8 @@ FileEntry.line_policy区分lf-v0旧清单及crlf-v1新清单。旧清单读取�
 
 GET /capabilities 要求登录，返回已登记能力数组；本篇 nodes/interfaces/routes/lpm-routes/traceroute 均disabled，专用接口在MVP-13～15逐项启用。options_schema来自对应严格Pydantic options模型，未知字段带安全字段路径返回422；仅装配登记的query callable，不接受调用者提供SDK方法或连接信息。
 
+ADV-09 起每项能力还返回 `parameters_schema`，即该能力完整严格 Pydantic 请求模型的 JSON Schema；`required_fields` 与 `defaults` 供表单显示必要字段及预期有效默认值，`options_schema` 保留为高级选项子集。`POST S/analyses/query` 的请求为 `{question_id, parameters}`，其中 `question_id` 是 `/capabilities` 的能力 ID，而不是任意 SDK 问题或 Python 方法名。API 只校验外层结构；AnalysisService 将 `parameters` 送入同一 Registry 请求模型，沿用专用入口的快照权限、模型限制、任务幂等、结果缓存与 controller。未知/禁用能力分别明确拒绝；字段错误路径在专家入口以 `body.parameters...` 返回。客户端 JSON Schema 仅帮助填写，服务端严格复核始终生效。
+
 GET /results/{id}返回ResultEnvelope；/rows返回columns/rows/offset/limit/total/truncated；/flows返回Flow摘要items；/flows/{flow_id}/traces返回结构化路径items、total（实际已存路径数）、trace_count（SDK报告总数）及truncated。分页默认50/最大200，稳定保留原始顺序；sort为登记列名，前缀“-”降序，数字按数值、文本按文本、嵌套值按规范JSON排序。filters是JSON编码数组，每项column/op/value，op只接受eq或contains，未知列/非法结构422。
 
 RESULT_MAX_BYTES默认100MiB、TABLE_ROWS默认100000；持久化上限触发row_limit/byte_limit，SDK路径返回数不足总数标trace_limit。分页total表示已保存且筛选后的数量；原始行数在summary.total_rows，不能把输出截断解释为引擎计算受限。NaN/无穷转null，集合排序稳定，Flow/Trace/NextHop嵌套结构不字符串化。原始质量说明及厂商限制附着结果来源。

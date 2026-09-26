@@ -128,7 +128,14 @@ class Registry:
     def get(self, identifier):
         entry = self._entries.get(identifier)
         if entry is None:
-            raise ServiceError(ErrorCode.VALIDATION_ERROR)
+            raise ServiceError(
+                ErrorCode.VALIDATION_ERROR,
+                field_errors=(
+                    FieldError(
+                        path=("body", "question_id"), message="Unknown registered capability"
+                    ),
+                ),
+            )
         return entry
 
     def capabilities(self):
@@ -153,6 +160,7 @@ class Registry:
                     enabled=entry.enabled,
                     disabled_reason=entry.disabled_reason if not entry.enabled else None,
                     required_fields=tuple(schema.get("required", [])),
+                    parameters_schema=schema,
                     options_schema=options_schema,
                     defaults=defaults,
                     result_kind=entry.result_kind,
@@ -162,7 +170,7 @@ class Registry:
             )
         return tuple(results)
 
-    def validate(self, identifier, request, *, require_enabled=True):
+    def validate(self, identifier, request, *, require_enabled=True, path_prefix=("body",)):
         entry = self.get(identifier)
         try:
             model = entry.request_model.model_validate(thaw(request))
@@ -170,10 +178,15 @@ class Registry:
             raise ServiceError(
                 ErrorCode.VALIDATION_ERROR,
                 field_errors=tuple(
-                    FieldError(path=("body", *item["loc"]), message="Invalid value")
+                    FieldError(path=(*path_prefix, *item["loc"]), message="Invalid value")
                     for item in error.errors()
                 ),
             ) from None
         if require_enabled and not entry.enabled:
-            raise ServiceError(ErrorCode.CONFLICT)
+            raise ServiceError(
+                ErrorCode.CONFLICT,
+                field_errors=(
+                    FieldError(path=("body", "question_id"), message="Capability is disabled"),
+                ),
+            )
         return model
