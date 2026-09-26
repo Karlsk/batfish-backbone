@@ -1,4 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 import {
   Alert,
   Button,
@@ -7,10 +13,11 @@ import {
   Input,
   Radio,
   Select,
+  Tabs,
   Typography,
 } from "antd";
 import { useQuery } from "@tanstack/react-query";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import type { components } from "../../api/schema";
 import { api, ApiError, unwrap } from "../../api/client";
 import { resourceKey, useResourceContext } from "../../app/context";
@@ -26,6 +33,13 @@ import {
   defaultFilterDraft,
   type FilterDraft,
 } from "./requests";
+import {
+  defaultSearchDraft,
+  defaultReachabilityDraft,
+  filterDraftFromWitness,
+} from "./advanced-requests";
+import { FilterSearch } from "./FilterSearch";
+import { RuleReachability } from "./RuleReachability";
 
 type Request = components["schemas"]["FilterTestRequest"];
 
@@ -41,14 +55,24 @@ export function isUnsupportedAcl(error: unknown) {
 
 export function FilterTestPage() {
   const { network, snapshot } = useResourceContext();
+  const location = useLocation();
+  const preset =
+    network && snapshot
+      ? filterDraftFromWitness(
+          (location.state as { presetAcl?: unknown } | null)?.presetAcl,
+          network.id,
+          snapshot.id,
+        )
+      : null;
   return (
     <>
       <Typography.Title level={2}>ACL 流量测试</Typography.Title>
       {network && snapshot ? (
-        <FilterTestForm
-          key={`${network.id}:${snapshot.id}`}
+        <AclWorkspace
+          key={network.id + ":" + snapshot.id}
           networkId={network.id}
           snapshotId={snapshot.id}
+          preset={preset}
         />
       ) : (
         <EmptyState
@@ -64,17 +88,100 @@ export function FilterTestPage() {
   );
 }
 
-export function FilterTestForm({
+function AclWorkspace({
   networkId,
   snapshotId,
+  preset,
 }: {
   networkId: string;
   snapshotId: string;
+  preset: FilterDraft | null;
+}) {
+  const [activeTab, setActiveTab] = useState("test");
+  const [testDraft, setTestDraft] = useState(
+    () => preset ?? defaultFilterDraft(),
+  );
+  const [searchDraft, setSearchDraft] = useState(defaultSearchDraft);
+  const [reachDraft, setReachDraft] = useState(defaultReachabilityDraft);
+  const [tabLocked, setTabLocked] = useState(false);
+  return (
+    <Tabs
+      activeKey={activeTab}
+      onChange={(key) => {
+        if (!tabLocked) setActiveTab(key);
+      }}
+      destroyOnHidden
+      items={[
+        {
+          key: "test",
+          label: "流量测试",
+          disabled: tabLocked && activeTab !== "test",
+          children: (
+            <FilterTestForm
+              networkId={networkId}
+              snapshotId={snapshotId}
+              draftValue={testDraft}
+              onDraftChange={setTestDraft}
+              onLockChange={setTabLocked}
+            />
+          ),
+        },
+        {
+          key: "search",
+          label: "条件搜索",
+          disabled: tabLocked && activeTab !== "search",
+          children: (
+            <FilterSearch
+              networkId={networkId}
+              snapshotId={snapshotId}
+              draftValue={searchDraft}
+              onDraftChange={setSearchDraft}
+              onLockChange={setTabLocked}
+            />
+          ),
+        },
+        {
+          key: "reachability",
+          label: "规则诊断",
+          disabled: tabLocked && activeTab !== "reachability",
+          children: (
+            <RuleReachability
+              networkId={networkId}
+              snapshotId={snapshotId}
+              draftValue={reachDraft}
+              onDraftChange={setReachDraft}
+              onLockChange={setTabLocked}
+            />
+          ),
+        },
+      ]}
+    />
+  );
+}
+
+export function FilterTestForm({
+  networkId,
+  snapshotId,
+  initialDraft,
+  draftValue,
+  onDraftChange,
+  onLockChange,
+}: {
+  networkId: string;
+  snapshotId: string;
+  initialDraft?: FilterDraft | null;
+  draftValue?: FilterDraft;
+  onDraftChange?: Dispatch<SetStateAction<FilterDraft>>;
+  onLockChange?: (locked: boolean) => void;
 }) {
   const navigate = useNavigate();
   const session = useSession();
   const candidates = useCandidates(networkId, snapshotId);
-  const [draft, setDraft] = useState(defaultFilterDraft);
+  const [ownDraft, setOwnDraft] = useState(
+    () => initialDraft ?? defaultFilterDraft(),
+  );
+  const draft = draftValue ?? ownDraft;
+  const setDraft = onDraftChange ?? setOwnDraft;
   const [resolverJobId, setResolverJobId] = useState<string>();
   const [resolverError, setResolverError] = useState<unknown>();
   const [loadingFilters, setLoadingFilters] = useState(false);
@@ -221,6 +328,7 @@ export function FilterTestForm({
     flight.current = true;
     setBusy(true);
     setLocked(true);
+    onLockChange?.(true);
     setError(undefined);
     try {
       const job = await unwrap(
@@ -255,6 +363,7 @@ export function FilterTestForm({
         ) {
           attempt.current = null;
           setLocked(false);
+          onLockChange?.(false);
         }
       }
     } finally {

@@ -1,6 +1,10 @@
 import { GraphResult } from "../topology/GraphResult";
 import { BgpResult } from "../bgp/BgpResult";
 import { FilterResult } from "../acl/FilterResult";
+import {
+  FilterSearchResult,
+  RuleReachabilityResult,
+} from "../acl/AdvancedResults";
 import { ResultExport } from "../../components/ResultExport";
 import { TraceResults } from "../traceroute/TraceResults";
 import { useState } from "react";
@@ -71,6 +75,13 @@ function ResultView({ resultId }: { resultId: string }) {
           ) : result.kind === "table" &&
             result.effective_parameters.operation === "test-filters" ? (
             <FilterResult key={result.id} result={result} />
+          ) : result.kind === "table" &&
+            result.effective_parameters.operation === "search-filters" ? (
+            <FilterSearchResult key={result.id} result={result} />
+          ) : result.kind === "table" &&
+            result.effective_parameters.operation ===
+              "filter-line-reachability" ? (
+            <RuleReachabilityResult key={result.id} result={result} />
           ) : result.kind === "table" ? (
             <ResultTable result={result} />
           ) : result.kind === "traces" ? (

@@ -1,6 +1,6 @@
 # MVP 累计验收矩阵
 
-下表记录MVP复验基线提交b59995435c；最新ADV-07增量及MVP累计回归见[ADV-07验收](evidence/adv-07-verification.md)（后端325、前端70、浏览器20通过）。
+下表记录MVP复验基线提交b59995435c；最新ADV-08增量及MVP累计回归见[ADV-08验收](evidence/adv-08-verification.md)（后端325、前端78、浏览器21通过）。
 
 每轮运行 MVP-01～当前篇的必需检查；同一完整测试命令可以覆盖多行，但计数不重复累加。新增能力在所属篇实现时补充行为和实际命令，future 不等于通过。
 
@@ -49,3 +49,4 @@
 | ADV-05 | ACL放行/显式拒绝/隐式拒绝与SDK对照、过滤器解析、无匹配无结论、厂商模型拒绝、严格参数、真实API/worker | test_filters.py、lab.py verify/smoke、全部前端/浏览器/HTTPS恢复 | [本轮全通过](evidence/adv-05-verification.md)：后端318、冒烟12、前端58、浏览器18、部署3×2、双用户1×2 |
 | ADV-06 | 设备/ACL候选、基础/高级参数、动作与证据分级、隐式拒绝、无匹配/厂商限制、路径预填、深浅主题 | filter-test.test.tsx、filter-result.test.tsx、acl.spec.ts、lab.py verify/smoke、全部前端/浏览器/HTTPS恢复 | [本轮全通过](evidence/adv-06-verification.md)：后端318、冒烟12、前端70、浏览器20、部署3×2、双用户1×2 |
 | ADV-07 | 有界ACL/设备范围、固定搜索动作与headers、示例Flow可复核、遮蔽/空条件原因区分、无示例不推断安全、厂商模型拒绝 | test_filter_search.py、lab.py verify/smoke、全部前端/浏览器/HTTPS恢复 | [本轮全通过](evidence/adv-07-verification.md)：后端325、冒烟12、前端70、浏览器20、部署3×2、双用户1×2 |
+| ADV-08 | 搜索/规则诊断独立草稿、能力目录默认与开关、示例Flow按原协议/IP/端口回测、阻挡/不可匹配证据分层、空或部分结果不推断安全 | acl-advanced.test.tsx、advanced-results.test.tsx、acl-advanced.spec.ts及累计全部门槛 | [本轮全通过](evidence/adv-08-verification.md)：后端325、冒烟12、前端78、浏览器21、部署3×2、双用户1×2 |
