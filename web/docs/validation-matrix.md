@@ -42,4 +42,5 @@
 
 | spec | 验收行为 | 命令/环境 | 当前状态 |
 | --- | --- | --- | --- |
-| ADV-01 | 四视图SDK对照、节点/边/邻域/截断、缓存隔离、同Session/失败预算、真实HTTP worker | lab.py verify/smoke + 全部前端/浏览器/HTTPS部署恢复 | 后端307/冒烟12/前端47/浏览器14/部署3×2/双用户1×2及全新恢复通过 |
+| ADV-01 | 四视图SDK对照、节点/边/邻域/截断、缓存隔离、同Session/失败预算、真实HTTP worker | lab.py verify/smoke + 全部前端/浏览器/HTTPS部署恢复 | 本轮累计后端307/冒烟12/前端55/浏览器16/部署3×2/双用户1×2及全新恢复通过 |
+| ADV-02 | 聚焦/一跳、四视图、接口和路由入口、固定来源、旧响应隔离/清理/重试、双主题与键盘入口 | topology.test.tsx、submission.test.tsx、topology.spec.ts及累计全部门槛 | [本轮全通过](evidence/adv-02-verification.md)：后端307、前端55、浏览器16、部署3×2、双用户1×2 |

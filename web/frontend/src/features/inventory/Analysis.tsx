@@ -10,7 +10,7 @@ import {
   Typography,
   Form,
 } from "antd";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams, useLocation } from "react-router-dom";
 import { api, unwrap, ApiError } from "../../api/client";
 import { useResourceContext } from "../../app/context";
 import { AdvancedOptions } from "../../components/AdvancedOptions";
@@ -83,8 +83,19 @@ function AnalysisForm({
   operation: Operation;
 }) {
   const navigate = useNavigate();
+  const location = useLocation();
   const candidates = useCandidates(networkId, snapshotId);
-  const [draft, setDraft] = useState(defaultDraft);
+  const [draft, setDraft] = useState(() => {
+    const preset = location.state?.presetNode;
+    return {
+      ...defaultDraft(),
+      ...(preset?.networkId === networkId &&
+      preset?.snapshotId === snapshotId &&
+      typeof preset.node === "string"
+        ? { names: [preset.node] }
+        : {}),
+    };
+  });
   const [busy, setBusy] = useState(false);
   const [attempted, setAttempted] = useState(false);
   const [error, setError] = useState<unknown>();

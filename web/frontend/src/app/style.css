@@ -724,3 +724,11 @@ input:focus-visible {
     scroll-behavior: auto !important;
   }
 }
+
+.topology-canvas {
+  height: 440px;
+  width: 100%;
+  background: var(--app-panel);
+  border: 1px solid var(--app-border);
+  border-radius: 12px;
+}

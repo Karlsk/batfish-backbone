@@ -1,6 +1,6 @@
 # 第二、三阶段：进阶能力
 
-状态：ADV-01 已完成，其余待开发。先通过 [MVP-25](../mvp/mvp-25-mvp-acceptance.md)，再执行本目录。
+状态：ADV-01～02 已完成，其余待开发。先通过 [MVP-25](../mvp/mvp-25-mvp-acceptance.md)，再执行本目录。
 
 ## 第二阶段：日常排障增强
 
@@ -9,7 +9,7 @@
 | Spec | 依赖 | 工作量（人天） | 状态 |
 | --- | --- | ---: | --- |
 | [ADV-01 三层与协议拓扑分析接口](adv-01-topology-api.md) | MVP-25 | 1.5 | 已完成 |
-| [ADV-02 可交互拓扑与设备联动](adv-02-topology-ui.md) | ADV-01 | 2.0 | 待开发 |
+| [ADV-02 可交互拓扑与设备联动](adv-02-topology-ui.md) | ADV-01 | 2.0 | 已完成 |
 | [ADV-03 BGP 模型状态与兼容性接口](adv-03-bgp-api.md) | ADV-02 | 1.0 | 待开发 |
 | [ADV-04 BGP 状态列表与异常详情](adv-04-bgp-ui.md) | ADV-03 | 1.0 | 待开发 |
 | [ADV-05 ACL 流量测试接口](adv-05-acl-test-api.md) | ADV-04 | 1.5 | 待开发 |

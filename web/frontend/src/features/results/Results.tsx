@@ -1,3 +1,4 @@
+import { GraphResult } from "../topology/GraphResult";
 import { ResultExport } from "../../components/ResultExport";
 import { TraceResults } from "../traceroute/TraceResults";
 import { useState } from "react";
@@ -66,6 +67,8 @@ function ResultView({ resultId }: { resultId: string }) {
             <ResultTable result={result} />
           ) : result.kind === "traces" ? (
             <TraceResults result={result} />
+          ) : result.kind === "graph" ? (
+            <GraphResult key={result.id} result={result} />
           ) : (
             <EmptyState title="此结果请通过对应分析视图查看" />
           )}

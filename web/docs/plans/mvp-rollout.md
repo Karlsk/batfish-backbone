@@ -61,12 +61,12 @@ MVP-01～25 及双主题升级已通过全部当前门禁，详见[复验报告]
 
 已知未提交ADV-01属于本任务，核验后纳入本批；保留`.pnpm-store/`、`.superpowers/`无关内容。现有ADV-01源码指纹与上轮一致，先补齐批次部署恢复及累计检查后提交，不重复实现。
 
-当前篇：ADV-01；下一动作：本篇门槛全部通过，提交后推进ADV-02。阻碍：无。
+当前篇：ADV-02；下一动作：本篇门槛全部通过，提交后推进ADV-03。阻碍：无。
 
 | spec | stage | base_commit | implementation_fingerprint | required_checks | evidence | commit |
 | --- | --- | --- | --- | --- | --- | --- |
-| ADV-01 | validated | b59995435c | d523077df603903b7a4980c7518ccb76fe56b3417925d27ca085911133826d76 | MVP全部＋ADV-01 | [全部通过](../evidence/adv-01-verification.md) | 提交后关联 |
-| ADV-02 | pending | — | 待本轮归档 | MVP全部＋ADV-01～02 | 待执行 | — |
+| ADV-01 | committed | b59995435c | d523077df603903b7a4980c7518ccb76fe56b3417925d27ca085911133826d76 | MVP全部＋ADV-01 | [全部通过](../evidence/adv-01-verification.md) | ec0289a663 |
+| ADV-02 | validated | ec0289a663 | b2decba904875901cd9560a64c233b5e75da15f1a04dc08f80502e3d976ce50a | MVP全部＋ADV-01～02 | [全部通过](../evidence/adv-02-verification.md) | 提交后关联 |
 | ADV-03 | pending | — | 待本轮归档 | MVP全部＋ADV-01～03 | 待执行 | — |
 | ADV-04 | pending | — | 待本轮归档 | MVP全部＋ADV-01～04 | 待执行 | — |
 | ADV-05 | pending | — | 待本轮归档 | MVP全部＋ADV-01～05 | 待执行 | — |

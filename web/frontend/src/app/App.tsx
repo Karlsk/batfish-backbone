@@ -57,6 +57,11 @@ const TracePage = lazy(() =>
     default: m.TracePage,
   })),
 );
+const TopologyPage = lazy(() =>
+  import("../features/topology/TopologyPage").then((m) => ({
+    default: m.TopologyPage,
+  })),
+);
 const AnalysisPage = lazy(() =>
   import("../features/inventory/Analysis").then((m) => ({
     default: m.AnalysisPage,
@@ -199,6 +204,11 @@ export function Shell({ children }: PropsWithChildren) {
               label: <Link to="/analysis/nodes">网络分析</Link>,
             },
             {
+              key: "/topology",
+              icon: <ApartmentOutlined />,
+              label: <Link to="/topology">网络拓扑</Link>,
+            },
+            {
               key: "/jobs",
               icon: <ClockCircleOutlined />,
               label: <Link to="/jobs">任务中心</Link>,
@@ -316,6 +326,7 @@ function WorkbenchRoutes() {
           <Shell>
             <Suspense fallback={<LoadingState />}>
               <Routes>
+                <Route path="/topology" element={<TopologyPage />} />
                 <Route path="/traceroute" element={<TracePage />} />
                 <Route path="/analysis/:operation" element={<AnalysisPage />} />
                 <Route path="/analysis" element={<AnalysisPage />} />
