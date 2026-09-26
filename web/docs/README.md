@@ -1,6 +1,6 @@
 # Batfish Web 文档入口
 
-日期：2026-09-26。状态：MVP-01～25 已完成，第一阶段真实服务、两套配置、双用户浏览器与部署恢复验收通过。已交付认证、上传/初始化、诊断、设备/接口、路由/LPM、虚拟 traceroute、任务、导出、资源删除及前端；ADV-01～18 待开发。详见 [首版验收报告](mvp-acceptance.md)。
+日期：2026-09-26。状态：MVP-01～25 已完成，第一阶段真实服务、两套配置、双用户浏览器与部署恢复验收通过。已交付认证、上传/初始化、诊断、设备/接口、路由/LPM、虚拟 traceroute、任务、导出、资源删除及前端；ADV-01 已完成（三层/BGP/OSPF/ISIS关系图接口），ADV-02～18 待开发。详见 [首版验收报告](mvp-acceptance.md)。
 
 ## 已确认的需求
 
@@ -27,7 +27,7 @@
 9. [开发工作流](development-workflow.md)：项目级 spec-dev、Superpowers 与 grill-me 的分工及调用方式。
 10. [SDK 兼容性实测报告](sdk-compatibility.md)：MVP-01 版本、契约、测试证据和复现步骤。
 11. [本机功能测试环境](test-lab.md)：真实服务启动、r1/r2 与 Cisco 四设备配置快照、冒烟和累计回归入口。
-12. [技术工作台双主题设计](plans/2026-09-26-technical-workbench-design.md)：已完成现有前端深浅主题升级；[实施计划](plans/2026-09-26-technical-workbench-implementation.md)与[验收记录](evidence/technical-workbench-theme-2026-09-26.md)。ADV 和领导端暂不实施。
+12. [技术工作台双主题设计](plans/2026-09-26-technical-workbench-design.md)：已完成现有前端深浅主题升级；[实施计划](plans/2026-09-26-technical-workbench-implementation.md)与[验收记录](evidence/technical-workbench-theme-2026-09-26.md)。本次双主题范围已完成；用户后续已授权进入 ADV，领导端另行安排。
 
 ## 目录与实施方式
 
@@ -59,3 +59,5 @@ spec 是后续实施的需求、设计和验收单元，不是完成日志。所
 工作量是熟悉项目的开发者在依赖就绪后的估算，1 人天按 8 小时计算，不是日历工期承诺。若某项评估超过 2 人天，应先拆成有独立验收标准的子 spec，再编码；不能通过省略测试、恢复语义或权限检查压缩估算。
 
 当前已完成设计/spec 文档、项目规范、项目级技能、MVP-01 集成测试与兼容性报告，以及 MVP-02 后端基础应用、MVP-03 数据库迁移与受控文件存储、MVP-04 登录与会话管理、MVP-05 账号管理与审计、MVP-06 共享网络管理、MVP-07 配置上传与安全校验、MVP-08 任务记录与排队取消、MVP-09 独立worker与保守恢复、MVP-10 不可变快照初始化、MVP-11 解析诊断与原始文件查看、MVP-12 能力目录与结果基础、MVP-13 设备与接口分析、MVP-14 路由与LPM、MVP-15 IPv4单向虚拟traceroute。启动方式见 [后端 README](../backend/README.md)。新锁文件已复验真实 SDK 基线，没有修改 Java 引擎；尚未实现具体前端业务页面、导出、清理与部署；整体交付仍以MVP-25验收为准。
+
+最新进阶交付：[ADV-01拓扑接口验收](evidence/adv-01-verification.md)，图形页面在ADV-02。

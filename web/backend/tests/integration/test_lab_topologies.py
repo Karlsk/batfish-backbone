@@ -597,7 +597,14 @@ def test_real_snapshot_worker_smoke(lab, fixture_name, expected_nodes):
                 if fixture_name == "small_network":
                     assert detail["quality_summary"]["coverage"] == "limited"
                     assert detail["quality_summary"]["model_limits"]
-                for operation in ("nodes", "interfaces", "routes", "lpm-routes", "traceroute"):
+                for operation in (
+                    "nodes",
+                    "interfaces",
+                    "routes",
+                    "lpm-routes",
+                    "traceroute",
+                    "topology",
+                ):
                     body = (
                         {"ip": "10.0.0.2" if fixture_name == "small_network" else "10.64.0.4"}
                         if operation == "lpm-routes"
@@ -624,6 +631,11 @@ def test_real_snapshot_worker_smoke(lab, fixture_name, expected_nodes):
                     assert finished["status"] == "succeeded", finished
                     result_url = "/api/v1/results/" + finished["result_id"]
                     assert client.get(result_url).status_code == 200
+                    if operation == "topology":
+                        graph = client.get(result_url + "/graph").json()
+                        assert len(graph["nodes"]) == expected_nodes and graph["edges"]
+                        assert graph["source"] == "layer3Edges" and not graph["truncated"]
+                        continue
                     if operation == "traceroute":
                         flows = client.get(result_url + "/flows").json()["items"]
                         assert flows
@@ -652,6 +664,7 @@ def test_real_snapshot_worker_smoke(lab, fixture_name, expected_nodes):
                     "routes",
                     "lpm-routes",
                     "traceroute",
+                    "topology",
                 }
             finally:
                 worker.terminate()

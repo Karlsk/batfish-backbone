@@ -7,10 +7,11 @@ from uuid import uuid4
 from app.contracts.base import thaw
 from app.contracts.dto import ResultEnvelope
 from app.contracts.errors import ErrorCode, ServiceError
-from app.contracts.results import FlowPage, TablePage, TraceFlow, TracePage
+from app.contracts.results import FlowPage, GraphData, TablePage, TraceFlow, TracePage
 from app.infrastructure.storage import FileStore
 from app.modules.auth.service import AuthService
 from app.modules.results.export import download
+from app.modules.results.graph import bound_graph, select_graph
 from app.modules.results.repository import ResultsRepository
 
 
@@ -115,6 +116,16 @@ class ResultsService:
                 break
             entries.append(row)
             size += increment
+        if answer.kind == "graph":
+            if answer.graph is None:
+                raise ValueError("Graph answer requires graph data")
+            payload, reasons = bound_graph(
+                answer.graph,
+                max_items=self._settings.table_rows,
+                max_bytes=self._settings.result_max_bytes,
+            )
+            truncated = bool(reasons)
+            entries = payload["edges"]
         raw = encoded(payload)
         assert len(raw) <= self._settings.result_max_bytes
         identifier = uuid4()
@@ -124,6 +135,17 @@ class ResultsService:
             "total_rows": len(answer.rows),
             "quality": quality,
         }
+        if answer.kind == "graph":
+            summary.update(
+                returned_nodes=len(payload["nodes"]),
+                total_nodes=len(answer.graph.nodes),
+                returned_edges=len(entries),
+                total_edges=len(answer.graph.edges),
+                returned_rows=len(entries),
+                total_rows=len(answer.graph.edges),
+                edge_type=answer.graph.edge_type,
+                source=answer.graph.source,
+            )
         warnings = [*answer.warnings, *model_warnings]
         if answer.kind == "traces":
             dispositions = Counter()
@@ -232,6 +254,16 @@ class ResultsService:
             limit=limit,
             total=len(rows),
             truncated=result.truncated,
+        )
+
+    def graph(self, actor, result_id, *, focus_node=None, hops=1, limit=200):
+        result, payload = self._payload(actor, result_id, "graph")
+        return select_graph(
+            GraphData.model_validate(payload),
+            focus_node=focus_node,
+            hops=hops,
+            limit=limit,
+            stored_truncated=result.truncated,
         )
 
     def flows(self, actor, result_id, *, offset=0, limit=50):

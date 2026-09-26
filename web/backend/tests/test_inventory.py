@@ -20,6 +20,7 @@ def test_inventory_options_are_typed():
         "routes",
         "lpm-routes",
         "traceroute",
+        "topology",
     }
     for operation, request in [
         ("nodes", {"options": {"nodes": "r1"}}),

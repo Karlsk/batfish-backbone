@@ -27,7 +27,7 @@ class Capability(Contract):
     required_fields: tuple[str, ...]
     options_schema: Mapping[str, JsonValue]
     defaults: Mapping[str, JsonValue]
-    result_kind: Literal["table", "traces"]
+    result_kind: Literal["table", "traces", "graph"]
     requires_dataplane: bool
     schema_version: str
 
@@ -39,6 +39,7 @@ class Entry:
     request_model: type[BaseModel] = BaseAnalysisRequest
     enabled: bool = False
     disabled_reason: str | None = "Not implemented in this milestone"
+    stage: int = 1
     result_kind: str = "table"
     requires_dataplane: bool = False
     schema_version: str = "1"

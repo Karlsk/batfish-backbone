@@ -54,3 +54,32 @@
 ### 2026-09-26 累计复验通过
 
 MVP-01～25 及双主题升级已通过全部当前门禁，详见[复验报告](../evidence/mvp-recheck-2026-09-26.md)。完成本批提交后按用户授权进入 ADV-01，后续 ADV 状态独立记录。
+
+## ADV-01～18 连续批次（2026-09-26）
+
+用户明确调用 `$mvp-runner ADV-01..ADV-18`，授权沿用逐篇实现→审查→MVP全部及此前ADV累计验收→回写→commit→继续。此明确范围覆盖旧skill的默认MVP限制；不包含push、merge或共享部署。复用当前分支codex/mvp-integration-lab和现有验收矩阵。ADV-10通过才进入ADV-11，ADV-18为最终截止。
+
+已知未提交ADV-01属于本任务，核验后纳入本批；保留`.pnpm-store/`、`.superpowers/`无关内容。现有ADV-01源码指纹与上轮一致，先补齐批次部署恢复及累计检查后提交，不重复实现。
+
+当前篇：ADV-01；下一动作：本篇门槛全部通过，提交后推进ADV-02。阻碍：无。
+
+| spec | stage | base_commit | implementation_fingerprint | required_checks | evidence | commit |
+| --- | --- | --- | --- | --- | --- | --- |
+| ADV-01 | validated | b59995435c | d523077df603903b7a4980c7518ccb76fe56b3417925d27ca085911133826d76 | MVP全部＋ADV-01 | [全部通过](../evidence/adv-01-verification.md) | 提交后关联 |
+| ADV-02 | pending | — | 待本轮归档 | MVP全部＋ADV-01～02 | 待执行 | — |
+| ADV-03 | pending | — | 待本轮归档 | MVP全部＋ADV-01～03 | 待执行 | — |
+| ADV-04 | pending | — | 待本轮归档 | MVP全部＋ADV-01～04 | 待执行 | — |
+| ADV-05 | pending | — | 待本轮归档 | MVP全部＋ADV-01～05 | 待执行 | — |
+| ADV-06 | pending | — | 待本轮归档 | MVP全部＋ADV-01～06 | 待执行 | — |
+| ADV-07 | pending | — | 待本轮归档 | MVP全部＋ADV-01～07 | 待执行 | — |
+| ADV-08 | pending | — | 待本轮归档 | MVP全部＋ADV-01～08 | 待执行 | — |
+| ADV-09 | pending | — | 待本轮归档 | MVP全部＋ADV-01～09 | 待执行 | — |
+| ADV-10 | pending | — | 待本轮归档 | MVP全部＋ADV-01～10 | 待执行 | — |
+| ADV-11 | pending | — | 待本轮归档 | MVP全部＋ADV-01～11 | 待执行 | — |
+| ADV-12 | pending | — | 待本轮归档 | MVP全部＋ADV-01～12 | 待执行 | — |
+| ADV-13 | pending | — | 待本轮归档 | MVP全部＋ADV-01～13 | 待执行 | — |
+| ADV-14 | pending | — | 待本轮归档 | MVP全部＋ADV-01～14 | 待执行 | — |
+| ADV-15 | pending | — | 待本轮归档 | MVP全部＋ADV-01～15 | 待执行 | — |
+| ADV-16 | pending | — | 待本轮归档 | MVP全部＋ADV-01～16 | 待执行 | — |
+| ADV-17 | pending | — | 待本轮归档 | MVP全部＋ADV-01～17 | 待执行 | — |
+| ADV-18 | pending | — | 待本轮归档 | MVP全部＋ADV-01～18 | 待执行 | — |

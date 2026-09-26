@@ -142,7 +142,13 @@ SDK 边界方法：`SessionFactory.for_job(context)` 返回任务独占上下文
 | POST /comparisons/{id}/analyses/reachability-diff | destination_ips、start_location；options 流量范围及 max_traces | ADV-14 |
 | POST S/fault-scenarios | display_name；deactivate_nodes/deactivate_interfaces 至少一项 | ADV-16 |
 
-GraphDTO 为 nodes[{id,label,properties}]、edges[{id,source,target,source_interface,target_interface,edge_type}]、scope、truncated；图读取过滤范围与计算问题范围分别保存。
+GraphDTO 为 nodes[{id,label,properties}]、edges[{id,source,target,source_interface,target_interface,edge_type,properties}]、edge_type、source（SDK问题名）、scope、truncated。properties保留对应SDK原始行；节点id为快照内主机名，边id为视图与完整原始行规范JSON的SHA-256，方向、接口、IP与AS不同不合并。
+
+ADV-01计算参数：`view` 默认 `layer3`，仅允许 `layer3/bgp/ospf/isis`；options仅 `nodes/remote_nodes`，复用 literal/expression 选择器。节点清单取两侧选择集合并集，任一侧未限制即包括所有节点，保留孤立节点。POST只入队，沿用身份/CSRF/幂等/上下文冻结/版本缓存规则；一个任务内顺序调用节点与边问题并复用同一Session。当前四视图统一标记requires_dataplane=true。
+
+图读取 `focus_node` 可选，默认 `hops=1`（范围0～5），默认 `limit=200`（范围1～200），无focus时hops不参与筛选。邻域按双向邻接取距离，但输出边保留SDK方向；未知focus返回404，读取非graph结果返回409。优先focus、再按距离及节点id排序；limit分别限制节点数与边数，不返回悬空边。scope包含focus_node/hops/limit/neighbor_direction、stored_nodes/stored_edges、matched_nodes/matched_edges、returned_nodes/returned_edges及storage_truncated。主动聚焦本身不算截断；读取限额或持久化限额丢弃数据时truncated=true，ResultEnvelope另含存储截断原因。
+
+存储受table_rows（节点、边各自上限）与result_max_bytes限制；节点不足时同步排除相关边。计算过滤保存于effective_parameters，读取范围单独在scope返回，不改变缓存、不调用SDK。JSON导出包含完整已保存图与来源，graph不支持CSV。协议关系与会话健康不同；缺少边不能证明物理断线。
 
 ComparisonDTO 为 id、network_id、baseline_snapshot_id、candidate_snapshot_id、baseline/candidate 内容摘要与引擎版本、display_name、created_by、created_at、deleted_at。比较创建不触发计算。DiffResult 的 source 始终带 baseline/candidate，不用模糊的 before/after 位置替代真实 ID。配置 diff 包含文件变化种类与两侧行号；路由 diff 保留两侧值及 SDK 原始标记；可达性 diff 按 flow 保存两侧 disposition/traces 及新增/消失方向。
 

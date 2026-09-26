@@ -12,10 +12,39 @@ class Column(Contract):
     type: str
 
 
+class GraphNode(Contract):
+    id: str
+    label: str
+    properties: Mapping[str, JsonValue] = Field(default_factory=dict)
+
+
+class GraphEdge(Contract):
+    id: str
+    source: str
+    target: str
+    source_interface: str | None = None
+    target_interface: str | None = None
+    edge_type: Literal["layer3", "bgp", "ospf", "isis"]
+    properties: Mapping[str, JsonValue] = Field(default_factory=dict)
+
+
+class GraphData(Contract):
+    nodes: tuple[GraphNode, ...]
+    edges: tuple[GraphEdge, ...]
+    edge_type: Literal["layer3", "bgp", "ospf", "isis"]
+    source: str
+
+
+class GraphDTO(GraphData):
+    scope: Mapping[str, JsonValue]
+    truncated: bool
+
+
 class StructuredAnswer(Contract):
-    kind: Literal["table", "traces"]
-    columns: tuple[Column, ...]
-    rows: tuple[Mapping[str, JsonValue], ...]
+    kind: Literal["table", "traces", "graph"]
+    columns: tuple[Column, ...] = ()
+    rows: tuple[Mapping[str, JsonValue], ...] = ()
+    graph: GraphData | None = None
     warnings: tuple[str, ...] = ()
 
 

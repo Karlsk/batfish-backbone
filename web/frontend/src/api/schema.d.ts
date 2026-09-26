@@ -396,6 +396,23 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/results/{result_id}/graph": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Graph */
+    get: operations["graph_api_v1_results__result_id__graph_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/results/{result_id}/flows": {
     parameters: {
       query?: never;
@@ -549,6 +566,23 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/networks/{network_id}/snapshots/{snapshot_id}/analyses/topology": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Topology */
+    post: operations["topology_api_v1_networks__network_id__snapshots__snapshot_id__analyses_topology_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/admin/deletions/{job_id}/reconcile": {
     parameters: {
       query?: never;
@@ -674,7 +708,7 @@ export interface components {
        * Result Kind
        * @enum {string}
        */
-      result_kind: "table" | "traces";
+      result_kind: "table" | "traces" | "graph";
       /** Requires Dataplane */
       requires_dataplane: boolean;
       /** Schema Version */
@@ -937,6 +971,59 @@ export interface components {
       total: number;
       /** Truncated */
       truncated: boolean;
+    };
+    /** GraphDTO */
+    GraphDTO: {
+      /** Nodes */
+      nodes: components["schemas"]["GraphNode"][];
+      /** Edges */
+      edges: components["schemas"]["GraphEdge"][];
+      /**
+       * Edge Type
+       * @enum {string}
+       */
+      edge_type: "layer3" | "bgp" | "ospf" | "isis";
+      /** Source */
+      source: string;
+      /** Scope */
+      scope: {
+        [key: string]: components["schemas"]["JsonValue"];
+      };
+      /** Truncated */
+      truncated: boolean;
+    };
+    /** GraphEdge */
+    GraphEdge: {
+      /** Id */
+      id: string;
+      /** Source */
+      source: string;
+      /** Target */
+      target: string;
+      /** Source Interface */
+      source_interface?: string | null;
+      /** Target Interface */
+      target_interface?: string | null;
+      /**
+       * Edge Type
+       * @enum {string}
+       */
+      edge_type: "layer3" | "bgp" | "ospf" | "isis";
+      /** Properties */
+      properties?: {
+        [key: string]: components["schemas"]["JsonValue"];
+      };
+    };
+    /** GraphNode */
+    GraphNode: {
+      /** Id */
+      id: string;
+      /** Label */
+      label: string;
+      /** Properties */
+      properties?: {
+        [key: string]: components["schemas"]["JsonValue"];
+      };
     };
     /** HealthResponse */
     HealthResponse: {
@@ -1545,6 +1632,33 @@ export interface components {
       total: number;
       /** Truncated */
       truncated: boolean;
+    };
+    /** TopologyOptions */
+    TopologyOptions: {
+      /** Nodes */
+      nodes?:
+        | (
+            | components["schemas"]["LiteralSelector"]
+            | components["schemas"]["ExpressionSelector"]
+          )
+        | null;
+      /** Remote Nodes */
+      remote_nodes?:
+        | (
+            | components["schemas"]["LiteralSelector"]
+            | components["schemas"]["ExpressionSelector"]
+          )
+        | null;
+    };
+    /** TopologyRequest */
+    TopologyRequest: {
+      /**
+       * View
+       * @default layer3
+       * @enum {string}
+       */
+      view: "layer3" | "bgp" | "ospf" | "isis";
+      options?: components["schemas"]["TopologyOptions"];
     };
     /** TraceFlow */
     TraceFlow: {
@@ -2936,6 +3050,50 @@ export interface operations {
       };
     };
   };
+  graph_api_v1_results__result_id__graph_get: {
+    parameters: {
+      query?: {
+        focus_node?: string | null;
+        hops?: number;
+        limit?: number;
+      };
+      header?: never;
+      path: {
+        result_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["GraphDTO"];
+        };
+      };
+      /** @description Unprocessable Entity */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+    };
+  };
   flows_api_v1_results__result_id__flows_get: {
     parameters: {
       query?: {
@@ -3307,6 +3465,53 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": components["schemas"]["TraceRequest"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      202: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["JobDTO"];
+        };
+      };
+      /** @description Unprocessable Entity */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+    };
+  };
+  topology_api_v1_networks__network_id__snapshots__snapshot_id__analyses_topology_post: {
+    parameters: {
+      query?: never;
+      header?: {
+        "idempotency-key"?: string | null;
+      };
+      path: {
+        network_id: string;
+        snapshot_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["TopologyRequest"];
       };
     };
     responses: {

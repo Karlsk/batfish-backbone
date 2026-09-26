@@ -5,12 +5,24 @@ from app.contracts.errors import ErrorCode, FieldError, ServiceError
 from app.modules.analysis.schemas import Capability, Entry
 from app.modules.analysis.schemas.inventory import InterfacesRequest, NodesRequest
 from app.modules.analysis.schemas.routing import LpmRequest, RoutesRequest
+from app.modules.analysis.schemas.topology import TopologyRequest
 from app.modules.analysis.schemas.traceroute import TraceRequest
 
 
 class Registry:
     def __init__(self, entries=None):
         defaults = [
+            Entry(
+                "topology",
+                "Topology relations",
+                stage=2,
+                request_model=TopologyRequest,
+                enabled=True,
+                question_id="topology",
+                result_kind="graph",
+                requires_dataplane=True,
+                to_sdk=lambda request: request.model_dump(mode="json"),
+            ),
             Entry(
                 "nodes",
                 "Devices",
@@ -82,7 +94,7 @@ class Registry:
                 Capability(
                     id=entry.id,
                     label=entry.label,
-                    stage=1,
+                    stage=entry.stage,
                     enabled=entry.enabled,
                     disabled_reason=entry.disabled_reason if not entry.enabled else None,
                     required_fields=tuple(schema.get("required", [])),

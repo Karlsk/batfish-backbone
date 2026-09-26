@@ -42,6 +42,7 @@ def test_registry_rejects_unknown_and_context_options():
         "routes",
         "lpm-routes",
         "traceroute",
+        "topology",
     }
     for request in [
         {"options": {"host": "elsewhere"}},
@@ -336,12 +337,13 @@ def test_real_result_pipeline_and_cache_identity(result_app, fixture_name, monke
     traces = app.state.results_service.traces(actor, trace_result.id, flows.items[0].flow_id)
     assert isinstance(traces.items[0]["hops"], tuple)
     capabilities = client.get("/api/v1/capabilities").json()
-    assert len(capabilities) == 5 and {item["id"] for item in capabilities if item["enabled"]} == {
+    assert len(capabilities) == 6 and {item["id"] for item in capabilities if item["enabled"]} == {
         "nodes",
         "interfaces",
         "routes",
         "lpm-routes",
         "traceroute",
+        "topology",
     }
     changed = {"engine_version": "0.36.0", "sdk_version": "2026.9.17.3748"}
     changed["engine_version" if fixture_name == "small_network" else "sdk_version"] = "upgraded"

@@ -7,7 +7,7 @@ from pydantic import TypeAdapter, ValidationError
 
 from app.contracts.dto import Actor, ResultEnvelope
 from app.contracts.errors import ErrorCode, FieldError, ServiceError
-from app.contracts.results import FlowPage, RowFilter, TablePage, TracePage
+from app.contracts.results import FlowPage, GraphDTO, RowFilter, TablePage, TracePage
 from app.modules.results.service import ResultsService
 
 
@@ -40,6 +40,16 @@ def create_router(service: ResultsService, *, read_actor):
                 ),
             ) from None
         return service.rows(actor, result_id, offset=offset, limit=limit, sort=sort, filters=parsed)
+
+    @router.get("/{result_id}/graph", response_model=GraphDTO)
+    def graph(
+        result_id: UUID,
+        actor: Actor = Depends(read_actor),
+        focus_node: str | None = Query(None, min_length=1, max_length=255),
+        hops: int = Query(1, ge=0, le=5),
+        limit: int = Query(200, ge=1, le=200),
+    ):
+        return service.graph(actor, result_id, focus_node=focus_node, hops=hops, limit=limit)
 
     @router.get("/{result_id}/flows", response_model=FlowPage)
     def flows(
