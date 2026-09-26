@@ -1,3 +1,4 @@
+import { ThemeControl } from "../../app/theme";
 import { useEffect, useState, type PropsWithChildren } from "react";
 import { Alert, Button, Card, Form, Input, Typography } from "antd";
 import { useQueryClient } from "@tanstack/react-query";
@@ -53,6 +54,9 @@ export function SessionBootstrap({ children }: PropsWithChildren) {
   if (error)
     return (
       <div className="auth-screen">
+        <div className="auth-appearance">
+          <ThemeControl />
+        </div>
         <ErrorState error={error} retry={() => window.location.reload()} />
       </div>
     );
@@ -72,6 +76,9 @@ export function LoginPage() {
   const navigate = useNavigate();
   return (
     <div className="auth-screen">
+      <div className="auth-appearance">
+        <ThemeControl />
+      </div>
       <Card className="auth-card">
         <div className="eyebrow">BATFISH WORKSPACE</div>
         <Typography.Title level={2}>登录工作台</Typography.Title>
@@ -216,7 +223,16 @@ export function PasswordPage({ forced = false }: { forced?: boolean }) {
       {forced ? <LogoutButton /> : <Link to="/">返回概览</Link>}
     </Card>
   );
-  return forced ? <div className="auth-screen">{content}</div> : content;
+  return forced ? (
+    <div className="auth-screen">
+      <div className="auth-appearance">
+        <ThemeControl />
+      </div>
+      {content}
+    </div>
+  ) : (
+    content
+  );
 }
 export function LogoutButton() {
   const client = useQueryClient();

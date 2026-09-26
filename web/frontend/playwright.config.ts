@@ -7,6 +7,7 @@ export default defineConfig({
   reporter: [["list"], ["json", { outputFile: "test-results/results.json" }]],
   use: {
     actionTimeout: 15000,
+    colorScheme: process.env.BFW_TEST_THEME === "dark" ? "dark" : "light",
     baseURL: "http://127.0.0.1:15173",
     trace: "retain-on-failure",
   },

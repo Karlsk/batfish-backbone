@@ -188,6 +188,7 @@ test("two independent users interleave snapshots, queries, refresh and revocatio
   const context = await browser.newContext({
     baseURL: info.project.use.baseURL,
     ignoreHTTPSErrors: info.project.use.ignoreHTTPSErrors,
+    colorScheme: info.project.use.colorScheme,
     viewport: { width: 1280, height: 1000 },
   });
   try {

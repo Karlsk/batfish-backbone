@@ -12,7 +12,7 @@
     "generate:api": "node scripts/generate-api.mjs",
     "check:api": "node scripts/generate-api.mjs --check",
     "test:e2e": "playwright test",
-    "format:check": "prettier --check src tests e2e scripts/*.mjs *.ts *.json *.html"
+    "format:check": "prettier --check public src tests e2e scripts/*.mjs *.ts *.json *.html"
   },
   "dependencies": {
     "@ant-design/icons": "6.3.4",

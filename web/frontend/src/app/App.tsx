@@ -6,7 +6,6 @@ import {
   type PropsWithChildren,
 } from "react";
 import {
-  ConfigProvider,
   Layout,
   Menu,
   Typography,
@@ -18,7 +17,7 @@ import {
   Steps,
   Button,
 } from "antd";
-import zhCN from "antd/locale/zh_CN";
+import { ThemeProvider, ThemeControl } from "./theme";
 import {
   ApartmentOutlined,
   DashboardOutlined,
@@ -95,22 +94,6 @@ const UsersPage = lazy(() =>
   })),
 );
 import "./style.css";
-export const theme = {
-  token: {
-    colorPrimary: "#2563eb",
-    colorBgLayout: "#f4f6fa",
-    colorText: "#202c40",
-    colorTextSecondary: "#66758b",
-    borderRadius: 8,
-    fontSize: 14,
-    fontFamily:
-      'Inter, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif',
-  },
-  components: {
-    Layout: { headerBg: "#ffffff", siderBg: "#ffffff" },
-    Menu: { itemBorderRadius: 8, itemHeight: 44 },
-  },
-};
 export function Providers({ children }: PropsWithChildren) {
   const [client] = useState(
     () =>
@@ -123,17 +106,13 @@ export function Providers({ children }: PropsWithChildren) {
   useEffect(() => onIdentityChange(() => client.clear()), [client]);
   const session = useSession();
   return (
-    <ConfigProvider
-      locale={zhCN}
-      theme={theme}
-      button={{ autoInsertSpace: false }}
-    >
+    <ThemeProvider>
       <QueryClientProvider client={client}>
         <ContextProvider key={session?.user_id ?? "anonymous"}>
           {children}
         </ContextProvider>
       </QueryClientProvider>
-    </ConfigProvider>
+    </ThemeProvider>
   );
 }
 function ServiceStatus() {
@@ -182,7 +161,18 @@ export function Shell({ children }: PropsWithChildren) {
         </Link>
         <div className="nav-caption">工作空间</div>
         <Menu
-          selectedKeys={[location.pathname]}
+          selectedKeys={[
+            location.pathname.startsWith("/analysis") ||
+            location.pathname === "/traceroute" ||
+            location.pathname.startsWith("/results/")
+              ? "/analysis"
+              : location.pathname.startsWith("/jobs/")
+                ? "/jobs"
+                : location.pathname === "/snapshots" ||
+                    location.pathname.includes("/diagnostics")
+                  ? "/networks"
+                  : location.pathname,
+          ]}
           items={[
             ...(session?.role === "admin"
               ? [
@@ -224,7 +214,8 @@ export function Shell({ children }: PropsWithChildren) {
       <Layout className="main-layout">
         <Layout.Header className="topbar">
           <ContextPicker />
-          <Space>
+          <Space className="account-controls">
+            <ThemeControl />
             <ServiceStatus />
             {session && (
               <>

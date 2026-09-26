@@ -57,17 +57,51 @@ function ResultView({ resultId }: { resultId: string }) {
         <Button onClick={() => setDetails(true)}>有效参数与来源</Button>
       </div>
       <ResultSummary result={result} />
-      <ResultExport key={result.id} result={result} />
       <p className="muted">
         此结果固定来自上述快照；切换顶部上下文仅影响后续查询。
       </p>
-      {result.kind === "table" ? (
-        <ResultTable result={result} />
-      ) : result.kind === "traces" ? (
-        <TraceResults result={result} />
-      ) : (
-        <EmptyState title="此结果请通过对应分析视图查看" />
-      )}
+      <div className="results-layout">
+        <section className="results-evidence" aria-label="分析证据">
+          {result.kind === "table" ? (
+            <ResultTable result={result} />
+          ) : result.kind === "traces" ? (
+            <TraceResults result={result} />
+          ) : (
+            <EmptyState title="此结果请通过对应分析视图查看" />
+          )}
+        </section>
+        <aside className="results-aside" aria-label="结果来源与导出">
+          <Card title="固定来源">
+            <dl className="source-list">
+              <div>
+                <dt>网络编号</dt>
+                <dd>
+                  <code>{result.context.network_id}</code>
+                </dd>
+              </div>
+              <div>
+                <dt>快照编号</dt>
+                <dd>
+                  <code>{result.context.snapshot_id}</code>
+                </dd>
+              </div>
+              <div>
+                <dt>引擎版本</dt>
+                <dd>
+                  <code>{result.context.engine_version}</code>
+                </dd>
+              </div>
+              <div>
+                <dt>SDK 版本</dt>
+                <dd>
+                  <code>{result.context.sdk_version}</code>
+                </dd>
+              </div>
+            </dl>
+          </Card>
+          <ResultExport key={result.id} result={result} />
+        </aside>
+      </div>
       <DetailsDrawer
         open={details}
         onClose={() => setDetails(false)}

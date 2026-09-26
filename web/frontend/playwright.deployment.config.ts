@@ -14,6 +14,7 @@ export default defineConfig({
   ],
   use: {
     baseURL: state.origin,
+    colorScheme: process.env.BFW_TEST_THEME === "dark" ? "dark" : "light",
     ignoreHTTPSErrors: true, // Local self-signed certificate; HTTP verifier checks its CA and host.
     browserName: "chromium",
     trace: "retain-on-failure",

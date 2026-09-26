@@ -27,6 +27,7 @@
 9. [开发工作流](development-workflow.md)：项目级 spec-dev、Superpowers 与 grill-me 的分工及调用方式。
 10. [SDK 兼容性实测报告](sdk-compatibility.md)：MVP-01 版本、契约、测试证据和复现步骤。
 11. [本机功能测试环境](test-lab.md)：真实服务启动、r1/r2 与 Cisco 四设备配置快照、冒烟和累计回归入口。
+12. [技术工作台双主题设计](plans/2026-09-26-technical-workbench-design.md)：已完成现有前端深浅主题升级；[实施计划](plans/2026-09-26-technical-workbench-implementation.md)与[验收记录](evidence/technical-workbench-theme-2026-09-26.md)。ADV 和领导端暂不实施。
 
 ## 目录与实施方式
 

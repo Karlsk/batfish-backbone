@@ -24,6 +24,22 @@ async function query(
     await page.getByRole("combobox", { name: "设备名称", exact: true }).click();
     await page.getByRole("option", { name: node, exact: true }).click();
     await page.keyboard.press("Escape");
+    const initialTheme = await page.locator("html").getAttribute("data-theme");
+    await page
+      .getByRole("button", {
+        name: initialTheme === "dark" ? "浅色主题" : "深色主题",
+      })
+      .click();
+    await expect(
+      page
+        .locator(".selector-field .ant-select-selection-item")
+        .filter({ hasText: node }),
+    ).toBeVisible();
+    await page.getByRole("button", { name: "跟随系统" }).click();
+    await expect(page.locator("html")).toHaveAttribute(
+      "data-theme",
+      initialTheme!,
+    );
     await page.getByRole("link", { name: "接口", exact: true }).click();
     await expect(
       page.getByRole("dialog", { name: "放弃尚未提交的分析条件？" }),

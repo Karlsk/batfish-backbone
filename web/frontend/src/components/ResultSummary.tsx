@@ -1,4 +1,4 @@
-import { Alert, Card, Space, Tag, Typography } from "antd";
+import { Alert, Card, Tag } from "antd";
 import type { components } from "../api/schema";
 export function ResultSummary({
   result,
@@ -30,16 +30,26 @@ export function ResultSummary({
   if (result.summary.ignore_filters === true)
     warnings.push("本次推演忽略了 ACL 过滤规则。");
   return (
-    <Card title="结果摘要">
-      <Space wrap>
-        <Tag color="blue">
-          {result.kind === "traces" ? "路径推演" : "分析结果"}
-        </Tag>
-        <span>已返回 {String(result.summary.returned_rows ?? 0)} 项</span>
-        <Typography.Text type="secondary">
-          {new Date(result.created_at).toLocaleString("zh-CN")}
-        </Typography.Text>
-      </Space>
+    <Card title="结果摘要" className="result-summary">
+      <div className="summary-metrics">
+        <div className="summary-metric">
+          <span className="summary-label">已返回记录</span>
+          <strong className="summary-value">
+            {String(result.summary.returned_rows ?? 0)}
+            <small>项</small>
+          </strong>
+        </div>
+        <div className="summary-metric">
+          <span className="summary-label">结果类型</span>
+          <Tag color="blue">
+            {result.kind === "traces" ? "路径推演" : "分析结果"}
+          </Tag>
+        </div>
+        <div className="summary-metric">
+          <span className="summary-label">生成时间</span>
+          <span>{new Date(result.created_at).toLocaleString("zh-CN")}</span>
+        </div>
+      </div>
       <p className="result-source">来源快照：{result.context.snapshot_id}</p>
       {[...new Set(warnings)].map((warning) => (
         <Alert

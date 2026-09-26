@@ -1,4 +1,20 @@
 import { expect, type Page, type TestInfo } from "@playwright/test";
+async function loadNetwork(page: Page, name: string) {
+  const row = page.getByRole("row").filter({ hasText: name });
+  await expect(
+    page.getByRole("heading", { name: "网络与快照", exact: true }),
+  ).toBeVisible();
+  await expect(page.locator(".ant-spin-spinning")).toHaveCount(0);
+  const more = page.getByRole("button", { name: "加载更多网络", exact: true });
+  while (!(await row.count()) && (await more.isVisible())) {
+    const count = await page.getByRole("row").count();
+    await more.click();
+    await expect
+      .poll(() => page.getByRole("row").count())
+      .toBeGreaterThan(count);
+  }
+  await expect(row).toBeVisible();
+}
 export async function verifyDeletion(
   page: Page,
   testInfo: TestInfo,
@@ -7,6 +23,7 @@ export async function verifyDeletion(
 ) {
   const resultUrl = page.url();
   await page.getByRole("link", { name: "网络与快照", exact: true }).click();
+  await loadNetwork(page, networkName);
   const networkRow = page.getByRole("row").filter({ hasText: networkName });
   await networkRow
     .getByRole("button", { name: "删除网络", exact: true })
@@ -51,6 +68,7 @@ export async function verifyDeletion(
   await page.reload();
   await expect(page.getByText("已完成", { exact: true })).toBeVisible();
   await page.getByRole("link", { name: "网络与快照", exact: true }).click();
+  await loadNetwork(page, networkName);
   await networkRow
     .getByRole("button", { name: "查看快照", exact: true })
     .click();

@@ -6,8 +6,8 @@
 
 ## 当前进度
 
-- 当前阶段：MVP-25 validated；MVP-01～25累计验收通过，后端289/前端37/浏览器10+1+1，0skip。
-- 下一动作：提交MVP-25，记录实际哈希后结束本批次；不自动进入ADV。
+- 当前阶段：MVP-25 已于 `80652f6922` 提交；2026-09-26 恢复后正在对 MVP-01～25 做新一轮规格审查及累计验收。
+- 下一动作：本轮 MVP 复验通过后提交双主题升级与复验记录，再按用户明确授权开始 ADV-01。ADV 属于独立 spec-dev 阶段，不扩张 MVP runner 默认范围。
 - 环境观察：旧 API/JVM 已停止，保留了上一轮临时 PostgreSQL 容器；核对运行清单/标签后只停止该容器，重建测试环境。没有把历史证据当作本轮通过。
 - 当前无需求决策阻碍。所有新证据记录实际源码身份，运行凭证和完整日志留在忽略提交的 `.runtime/`。
 
@@ -37,7 +37,7 @@
 | MVP-22 | committed | 6d8a79e489 | adb58d88e981e6daaaca7cb48d872138717783f3ebdef4032582ad0b560d3474 | 后端275/前端33/浏览器10；smoke12；静态检查通过 | [验收](../evidence/mvp-22-verification.json) | af6b929722 |
 | MVP-23 | committed | af6b929722 | bd7108ad727c481fc50f3c62c279b5fbeb068ec412a08e7b082323c25e4b58b0 | 后端286/前端37/浏览器10；smoke12；静态检查通过 | [验收](../evidence/mvp-23-verification.json) | 5ddfb9272a |
 | MVP-24 | committed | 5ddfb9272a | a7b79b7cef9669dae84341de6a20e13f6206d5cc4cfb39a7b86e04f537abb360 | 后端287/前端37/浏览器10+部署1；smoke12；完整恢复通过 | [验收](../evidence/mvp-24-verification.json) | 9cbc173354 |
-| MVP-25 | validated | 9cbc173354 | d5441784ef129d015d19c067df19804df488e4e31892d7dbbab6cd64cb3a746b | 后端289/前端37/浏览器10+1+1；smoke12；完整部署恢复/SDK对照/双用户通过 | [验收](../evidence/mvp-25-verification.json) | 待提交；最终以Git/checkpoint为准 |
+| MVP-25 | committed | 9cbc173354 | d5441784ef129d015d19c067df19804df488e4e31892d7dbbab6cd64cb3a746b | 后端289/前端37/浏览器10+1+1；smoke12；完整部署恢复/SDK对照/双用户通过 | [验收](../evidence/mvp-25-verification.json) | 80652f6922 |
 
 可恢复状态：`web/.runtime/mvp-runner/checkpoint.json`。提交后的实际哈希先写 checkpoint，下一篇带入本文件；不为记录自己的哈希重复提交。
 
@@ -46,3 +46,11 @@
 沿用现有 spec 与共享契约，不生成平行需求；按 writing-plans / executing-plans / TDD 方法逐篇推进。本篇所需表、测试及最小基础设施可建立，后续业务行为留给所属 spec。每篇使用一个只读审查者，主流程串行实现。
 
 使用实际本机 Batfish、PostgreSQL、API 与逐步实现的 worker/前端；设备仅使用配置。运行旧代码的服务必须刷新，数据库环境重建后重新迁移并 seed。已有前端/浏览器/部署验证不能被后端 pytest 代替。失败修复后复验，不降低验收标准。
+
+## 2026-09-26 恢复授权
+
+用户明确要求“先检查下mvp的所有spec，然后commit，最后开始实施adv”。先对25篇规格、代码和当前全套验收复核，再提交已知归属的技术工作台双主题及必要修复/记录；保留 `.pnpm-store/`、`.superpowers/`。通过并提交后从 ADV-01 开始，按每篇规范完成实现与真实验证；本次不推送、合并或发布到共享环境。
+
+### 2026-09-26 累计复验通过
+
+MVP-01～25 及双主题升级已通过全部当前门禁，详见[复验报告](../evidence/mvp-recheck-2026-09-26.md)。完成本批提交后按用户授权进入 ADV-01，后续 ADV 状态独立记录。

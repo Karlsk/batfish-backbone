@@ -76,6 +76,7 @@ export function TraceResults({ result }: { result: Result }) {
         ) : (
           <Table<Flow>
             rowKey="flow_id"
+            scroll={{ x: 900 }}
             loading={query.isPending}
             dataSource={flows}
             rowSelection={{

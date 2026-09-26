@@ -58,3 +58,7 @@ Flow和路径分别分页，保留所有已保存路径的disposition、报告/�
 实际文件：frontend/features/traceroute、components/TraceSteps、结果/路由入口、契约目录生成脚本及tests/traceroute.spec.ts。独立只读审查无阻塞项，补充两套配置的真实起点接口选择。组件测试覆盖多Flow/混合结论/未知动作及请求边界；浏览器在Cisco配置副本c2入方向加入合成ACL，验证ACCEPTED与DENIED_IN路径切换、max_traces=1截断、ignore_filters和多Flow；两套配置均验证正常路径及NO_ROUTE。未修改标准fixture。
 
 累计验证：`lab.py smoke/verify` 为12项冒烟、260项后端全部通过；前端31项单测、10项真实Chromium测试全部通过，均0skip。OpenAPI、类型、构建、格式、Ruff、锁文件检查通过。见 [验收证据](../../evidence/mvp-21-verification.json)。已查看两套真实结果截图；共享UI包816.53kB体积提示仍保留。未做真实设备仿真精度或容量验证。满足MVP-22依赖。
+
+### 2026-09-26 累计复验
+
+已完成全25篇复核及实际环境累计验收。修正分析/路径表单429队列拒绝后的恢复行为，未知提交仍保留原幂等键。后端289、前端47、双主题浏览器各14、生产部署各3及双用户各1通过。详见[本轮证据](../../evidence/mvp-recheck-2026-09-26.md)。

@@ -113,9 +113,12 @@ function TraceForm({
         setError(e);
         if (
           e instanceof ApiError &&
-          ["VALIDATION_ERROR", "FORBIDDEN", "NOT_READY", "QUEUE_FULL"].includes(
-            e.code,
-          )
+          [
+            "VALIDATION_ERROR",
+            "FORBIDDEN",
+            "NOT_READY",
+            "RATE_LIMITED",
+          ].includes(e.code)
         ) {
           attempt.current = null;
           setAttempted(false);

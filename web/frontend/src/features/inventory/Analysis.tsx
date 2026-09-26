@@ -49,7 +49,7 @@ export function AnalysisPage() {
   return (
     <>
       <Typography.Title level={2}>网络分析</Typography.Title>
-      <Space wrap className="filter-bar">
+      <Space wrap className="filter-bar analysis-tabs">
         {Object.entries(operationLabels).map(([key, label]) => (
           <Link key={key} to={`/analysis/${key}`}>
             <Button type={key === operation ? "primary" : "default"}>
@@ -182,9 +182,12 @@ function AnalysisForm({
         setError(e);
         if (
           e instanceof ApiError &&
-          ["VALIDATION_ERROR", "FORBIDDEN", "NOT_READY", "QUEUE_FULL"].includes(
-            e.code,
-          )
+          [
+            "VALIDATION_ERROR",
+            "FORBIDDEN",
+            "NOT_READY",
+            "RATE_LIMITED",
+          ].includes(e.code)
         ) {
           attempt.current = null;
           setAttempted(false);
@@ -196,7 +199,7 @@ function AnalysisForm({
     }
   }
   return (
-    <Card title={`${operationLabels[operation]}查询`}>
+    <Card className="analysis-form" title={`${operationLabels[operation]}查询`}>
       {guard.holder}
       <p className="record-id">
         来源快照：{name} · {snapshotId}
