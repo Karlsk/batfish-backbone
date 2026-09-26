@@ -148,6 +148,10 @@ ADV-01计算参数：`view` 默认 `layer3`，仅允许 `layer3/bgp/ospf/isis`�
 
 ADV-03 `POST S/analyses/bgp-sessions` 接受 `{}`；`options.mode` 默认 `status`，只允许 `status/compatibility`，分别固定映射公开问题 `bgpSessionStatus/bgpSessionCompatibility`。高级 `options.nodes/remote_nodes` 复用显式节点选择器，拒绝未列出的 status/type/context kwargs。结果为表格，列名、状态枚举及本地/远端节点、接口、VRF、AS、地址和其余 SDK 字段原样保留；模型推演的 `ESTABLISHED` 不等于现场会话健康。对 Huawei/H3C 输入额外标明 IPv6 BGP 会话未建模，空行或模型成功均不能证明该地址族状态。
 
+ADV-05 `POST S/analyses/test-filters` 必须提供 `source_ip`、`destination_ip`（单个 IPv4 地址）及 `filters` 字面/表达式选择器；`nodes` 可选。`options.ip_protocols` 默认 `icmp`，仅开放 traceroute 已登记协议；`source_ports/destination_ports` 仅在协议全为 TCP/UDP 时可用。controller 固定调用 `testFilters` 和 `HeaderConstraints`，不接受任意 SDK 方法、起点、过滤器行为或上下文覆盖。结果保留 SDK `Action`、`Line_Content`、`Flow`、`Trace` 原始字段，另外标明 `Implicit_Deny`（仅对当前固定 SDK 的 `DENY + no-match + 空Trace` 判定）及 `Source_References`（仅收集 Trace 中真实的 vendorStructureId，不臆测行号）。未匹配过滤器返回空结果和“无放行/拒绝结论”，不解释为许可；Huawei/H3C 配置的 ACL 验证拒绝提交。ACL 局部动作不代表端到端可达。
+
+`POST S/analyses/resolve-filters` 接受 `{}`（列出模型已解析 ACL）、可选 `nodes` 与 `filter_expression`，固定映射 `resolveFilterSpecifier`；默认过滤表达式为 `/.*/`。返回 SDK 结构化 `Node`、`Filter_Name` 表格及快照模型覆盖信息，仅用于选择，不用原始配置行猜测 ACL 列表。两个入口都经过任务/结果/缓存/身份/CSRF/版本约束。
+
 图读取 `focus_node` 可选，默认 `hops=1`（范围0～5），默认 `limit=200`（范围1～200），无focus时hops不参与筛选。邻域按双向邻接取距离，但输出边保留SDK方向；未知focus返回404，读取非graph结果返回409。优先focus、再按距离及节点id排序；limit分别限制节点数与边数，不返回悬空边。scope包含focus_node/hops/limit/neighbor_direction、stored_nodes/stored_edges、matched_nodes/matched_edges、returned_nodes/returned_edges及storage_truncated。主动聚焦本身不算截断；读取限额或持久化限额丢弃数据时truncated=true，ResultEnvelope另含存储截断原因。
 
 存储受table_rows（节点、边各自上限）与result_max_bytes限制；节点不足时同步排除相关边。计算过滤保存于effective_parameters，读取范围单独在scope返回，不改变缓存、不调用SDK。JSON导出包含完整已保存图与来源，graph不支持CSV。协议关系与会话健康不同；缺少边不能证明物理断线。

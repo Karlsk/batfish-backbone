@@ -1,6 +1,6 @@
 # ADV-05 ACL 流量测试接口
 
-- 状态：待开发
+- 状态：已完成
 - 阶段：2
 - 依赖：[ADV-04](../advance/adv-04-bgp-ui.md)
 - 预计工作量：1.5 人天（实现/验证 1.0 + 测试 0.25 + 文档/自检 0.25），依赖就绪后计；超过 2 人天先拆分。
@@ -31,10 +31,10 @@
 
 ## 实施步骤
 
-- [ ] 登记最小流量条件及 options，复用 HeaderConstraints 转换。
-- [ ] 增加过滤器选择数据来源和 testFilters 结果适配。
-- [ ] 归一化命中规则、动作、隐式拒绝和可用源引用。
-- [ ] 运行下述验证，记录实际命令与结果，更新本文及索引状态。
+- [x] 登记最小流量条件及 options，复用 HeaderConstraints 转换。
+- [x] 增加过滤器选择数据来源和 testFilters 结果适配。
+- [x] 归一化命中规则、动作、隐式拒绝和可用源引用。
+- [x] 运行下述验证，记录实际命令与结果，更新本文及索引状态。
 
 ## 测试与验收
 
@@ -52,4 +52,6 @@
 
 ## 完成记录
 
-当前尚未开发或运行本 spec 的产品测试。实施者完成后在本节记录实际文件、验证命令、结果、引擎/SDK版本（如涉及）和剩余限制；存在验收失败时保持未通过状态。
+2026-09-26：在 `web/backend/app/modules/analysis/` 新增 ACL 请求模型、固定 SDK 适配与两个 API/能力登记；生成 `web/frontend/src/api/schema.d.ts`。`testFilters` 必填源/目的 IPv4 与 ACL 选择器，节点可选，高级参数限制协议与 TCP/UDP 端口；`resolveFilterSpecifier` 提供已解析 ACL 列表。结果保留 SDK 原始 Action、Line_Content、Flow、Trace，仅依据实际 Trace 补来源引用，固定 SDK 的 `DENY + no-match + 空 Trace` 标记为隐式拒绝，不猜行号。未匹配返回空结果及无结论提示，Huawei/H3C ACL 验证以 409 拒绝。补充 `web/backend/tests/test_filters.py` 和能力目录预期，后端 README/API 契约同步。
+
+在仓库根目录执行 `web/backend/.venv/bin/python web/scripts/lab.py verify`、`smoke`、Ruff 检查与格式检查、离线 `uv lock --check`、`web/backend/.venv/bin/python web/scripts/verify_deployment.py --state web/.runtime/deploy-adv05-batch`；在 `web/frontend` 执行 `pnpm test`、`pnpm build`、`pnpm check:api`、`pnpm format:check`、全量 Playwright，以及恢复后生产构建明暗两主题的部署与双用户验收。后端 318 项、冒烟 12 项、前端 58 项、浏览器 18 项、生产浏览器每主题 3+1 项均通过，0 必需 skip。固定引擎 revision `7d0deeeac4a09973b3876327f6aef721ee12f955`，JAR SHA-256 `0927de7c740bc72f999870e842605baad9a7cb6ea66e4b01fb9a6037bea00193`，Pybatfish `2026.9.17.3748`，Python `3.12.12`，迁移0008。真实 API 与独立 worker 另验证 Cisco ACL DENY 和来源引用；详情见[ADV-05验收](../../evidence/adv-05-verification.md)。ADV-06 依赖已满足。结果只代表配置模型的 ACL 局部计算，不证明端到端可达或现场转发。

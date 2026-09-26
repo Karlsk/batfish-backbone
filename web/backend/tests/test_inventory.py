@@ -22,6 +22,8 @@ def test_inventory_options_are_typed():
         "traceroute",
         "topology",
         "bgp-sessions",
+        "test-filters",
+        "resolve-filters",
     }
     for operation, request in [
         ("nodes", {"options": {"nodes": "r1"}}),

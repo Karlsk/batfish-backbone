@@ -15,6 +15,8 @@ from app.contracts.results import Column, StructuredAnswer
 from app.infrastructure.sdk import SessionFactory
 from app.modules.analysis.controllers.bgp import QUERIES as BGP_QUERIES
 from app.modules.analysis.controllers.bgp import question_name as bgp_question_name
+from app.modules.analysis.controllers.filters import QUERIES as FILTER_QUERIES
+from app.modules.analysis.controllers.filters import normalize_filter_rows
 from app.modules.analysis.controllers.inventory import QUERIES as INVENTORY_QUERIES
 from app.modules.analysis.controllers.routing import QUERIES as ROUTING_QUERIES
 from app.modules.analysis.controllers.topology import QUERIES as TOPOLOGY_QUERIES
@@ -47,7 +49,14 @@ class AnalysisController:
         self._sessions = SessionFactory(database, settings)
         self._wait_budget = settings.job_wait_budget_seconds
         self._queries = dict(
-            (INVENTORY_QUERIES | ROUTING_QUERIES | TRACE_QUERIES | TOPOLOGY_QUERIES | BGP_QUERIES)
+            (
+                INVENTORY_QUERIES
+                | ROUTING_QUERIES
+                | TRACE_QUERIES
+                | TOPOLOGY_QUERIES
+                | BGP_QUERIES
+                | FILTER_QUERIES
+            )
             if queries is None
             else queries
         )
@@ -93,22 +102,42 @@ class AnalysisController:
                 ),
             )
         element = raw["answerElements"][0]
+        columns = [
+            Column(
+                key=item["name"],
+                label=item.get("description") or item["name"],
+                type=str(item["schema"]),
+            )
+            for item in element["metadata"]["columnMetadata"]
+        ]
+        rows = element.get("rows", [])
+        if question_id == "testFilters":
+            rows = normalize_filter_rows(rows)
+            columns.extend(
+                (
+                    Column(key="Implicit_Deny", label="Implicit deny", type="Boolean"),
+                    Column(key="Source_References", label="Source references", type="List<Object>"),
+                )
+            )
         return StructuredAnswer(
             kind=kind,
-            columns=tuple(
-                Column(
-                    key=item["name"],
-                    label=item.get("description") or item["name"],
-                    type=str(item["schema"]),
-                )
-                for item in element["metadata"]["columnMetadata"]
-            ),
-            rows=tuple(element.get("rows", [])),
+            columns=tuple(columns),
+            rows=tuple(rows),
             warnings=(
-                (("No matching rows",) if not element.get("rows") else ())
+                (("No matching rows",) if not rows else ())
                 + (
                     ("BGP session state is model-predicted, not live device health",)
                     if question_id == "bgp-sessions"
+                    else ()
+                )
+                + (
+                    ("Local ACL model evaluation, not end-to-end reachability",)
+                    if question_id == "testFilters"
+                    else ()
+                )
+                + (
+                    ("No filters matched; no allow/deny conclusion",)
+                    if question_id == "testFilters" and not rows
                     else ()
                 )
             ),

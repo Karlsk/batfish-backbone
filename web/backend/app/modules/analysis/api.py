@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends, Header
 from app.contracts.dto import Actor, JobDTO
 from app.modules.analysis.schemas import Capability
 from app.modules.analysis.schemas.bgp import BgpRequest
+from app.modules.analysis.schemas.filters import FilterTestRequest, ResolveFiltersRequest
 from app.modules.analysis.schemas.inventory import InterfacesRequest, NodesRequest
 from app.modules.analysis.schemas.routing import LpmRequest, RoutesRequest
 from app.modules.analysis.schemas.topology import TopologyRequest
@@ -136,6 +137,40 @@ def create_router(service: AnalysisService, *, read_actor, write_actor):
             network_id,
             snapshot_id,
             "bgp-sessions",
+            body.model_dump(mode="json", exclude_unset=True),
+            idempotency_key=idempotency_key,
+        )
+
+    @router.post(base + "/test-filters", response_model=JobDTO, status_code=202)
+    def test_filters(
+        network_id: UUID,
+        snapshot_id: UUID,
+        body: FilterTestRequest,
+        actor: Actor = Depends(write_actor),
+        idempotency_key: str | None = Header(None, max_length=128),
+    ):
+        return service.submit(
+            actor,
+            network_id,
+            snapshot_id,
+            "test-filters",
+            body.model_dump(mode="json", exclude_unset=True),
+            idempotency_key=idempotency_key,
+        )
+
+    @router.post(base + "/resolve-filters", response_model=JobDTO, status_code=202)
+    def resolve_filters(
+        network_id: UUID,
+        snapshot_id: UUID,
+        body: ResolveFiltersRequest,
+        actor: Actor = Depends(write_actor),
+        idempotency_key: str | None = Header(None, max_length=128),
+    ):
+        return service.submit(
+            actor,
+            network_id,
+            snapshot_id,
+            "resolve-filters",
             body.model_dump(mode="json", exclude_unset=True),
             idempotency_key=idempotency_key,
         )

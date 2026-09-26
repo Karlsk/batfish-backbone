@@ -1,6 +1,6 @@
 # 分阶段研发规格索引
 
-日期：2026-09-26。MVP-01～25 已完成，ADV-01～04 已完成，ADV-05～18 待开发。以下为分阶段 RDP spec；“RDP”沿用用户称呼，不额外假定某种公司模板。每份规格包含需求、设计/接口、改动位置、实施步骤、测试与验收、非目标和完成记录。
+日期：2026-09-26。MVP-01～25 已完成，ADV-01～05 已完成，ADV-06～18 待开发。以下为分阶段 RDP spec；“RDP”沿用用户称呼，不额外假定某种公司模板。每份规格包含需求、设计/接口、改动位置、实施步骤、测试与验收、非目标和完成记录。
 
 ## 阶段门槛与顺序
 
@@ -54,7 +54,7 @@ MVP 只包含阶段1，不能因为 advance spec 已写好就提前实现其功�
 | [ADV-02 可交互拓扑与设备联动](advance/adv-02-topology-ui.md) | ADV-01 | 2.0 | 已完成 |
 | [ADV-03 BGP 模型状态与兼容性接口](advance/adv-03-bgp-api.md) | ADV-02 | 1.0 | 已完成 |
 | [ADV-04 BGP 状态列表与异常详情](advance/adv-04-bgp-ui.md) | ADV-03 | 1.0 | 已完成 |
-| [ADV-05 ACL 流量测试接口](advance/adv-05-acl-test-api.md) | ADV-04 | 1.5 | 待开发 |
+| [ADV-05 ACL 流量测试接口](advance/adv-05-acl-test-api.md) | ADV-04 | 1.5 | 已完成 |
 | [ADV-06 ACL 流量测试页面](advance/adv-06-acl-test-ui.md) | ADV-05 | 1.5 | 待开发 |
 | [ADV-07 ACL 条件搜索与无效规则接口](advance/adv-07-acl-search-api.md) | ADV-06 | 2.0 | 待开发 |
 | [ADV-08 ACL 高级诊断与证据分层](advance/adv-08-acl-search-ui.md) | ADV-07 | 1.5 | 待开发 |

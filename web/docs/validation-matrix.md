@@ -1,6 +1,6 @@
 # MVP 累计验收矩阵
 
-下表记录MVP复验基线提交b59995435c；最新ADV-04增量及MVP累计回归见[ADV-04验收](evidence/adv-04-verification.md)（后端314、前端58、浏览器18通过）。
+下表记录MVP复验基线提交b59995435c；最新ADV-05增量及MVP累计回归见[ADV-05验收](evidence/adv-05-verification.md)（后端318、前端58、浏览器18通过）。
 
 每轮运行 MVP-01～当前篇的必需检查；同一完整测试命令可以覆盖多行，但计数不重复累加。新增能力在所属篇实现时补充行为和实际命令，future 不等于通过。
 
@@ -46,3 +46,4 @@
 | ADV-02 | 聚焦/一跳、四视图、接口和路由入口、固定来源、旧响应隔离/清理/重试、双主题与键盘入口 | topology.test.tsx、submission.test.tsx、topology.spec.ts及累计全部门槛 | [本轮全通过](evidence/adv-02-verification.md)：后端307、前端55、浏览器16、部署3×2、双用户1×2 |
 | ADV-03 | 固定BGP两问题、AS错配/模型成功/IPv6限制、原始列和筛选、幂等/上下文/缓存 | test_bgp.py，lab.py verify/smoke，全部前端/浏览器/HTTPS恢复 | [本轮全通过](evidence/adv-03-verification.md)：后端314、冒烟12、前端55、浏览器16、部署3×2、双用户1×2 |
 | ADV-04 | BGP双模式独立结果、状态精确筛选、未知远端/详情/路由入口、双主题及空结果 | bgp.test.tsx、bgp.spec.ts、lab.py verify/smoke、全部前端/浏览器/HTTPS恢复 | [本轮全通过](evidence/adv-04-verification.md)：后端314、冒烟12、前端58、浏览器18、部署3×2、双用户1×2 |
+| ADV-05 | ACL放行/显式拒绝/隐式拒绝与SDK对照、过滤器解析、无匹配无结论、厂商模型拒绝、严格参数、真实API/worker | test_filters.py、lab.py verify/smoke、全部前端/浏览器/HTTPS恢复 | [本轮全通过](evidence/adv-05-verification.md)：后端318、冒烟12、前端58、浏览器18、部署3×2、双用户1×2 |

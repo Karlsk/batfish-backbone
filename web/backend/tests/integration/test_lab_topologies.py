@@ -674,6 +674,8 @@ def test_real_snapshot_worker_smoke(lab, fixture_name, expected_nodes):
                     "traceroute",
                     "topology",
                     "bgp-sessions",
+                    "test-filters",
+                    "resolve-filters",
                 }
             finally:
                 worker.terminate()

@@ -4,6 +4,7 @@ from app.contracts.base import thaw
 from app.contracts.errors import ErrorCode, FieldError, ServiceError
 from app.modules.analysis.schemas import Capability, Entry
 from app.modules.analysis.schemas.bgp import BgpRequest
+from app.modules.analysis.schemas.filters import FilterTestRequest, ResolveFiltersRequest
 from app.modules.analysis.schemas.inventory import InterfacesRequest, NodesRequest
 from app.modules.analysis.schemas.routing import LpmRequest, RoutesRequest
 from app.modules.analysis.schemas.topology import TopologyRequest
@@ -13,6 +14,25 @@ from app.modules.analysis.schemas.traceroute import TraceRequest
 class Registry:
     def __init__(self, entries=None):
         defaults = [
+            Entry(
+                "test-filters",
+                "Local ACL flow test",
+                stage=2,
+                request_model=FilterTestRequest,
+                enabled=True,
+                question_id="testFilters",
+                requires_dataplane=True,
+                to_sdk=lambda request: request.model_dump(mode="json"),
+            ),
+            Entry(
+                "resolve-filters",
+                "Available ACL filters",
+                stage=2,
+                request_model=ResolveFiltersRequest,
+                enabled=True,
+                question_id="resolveFilterSpecifier",
+                to_sdk=lambda request: request.model_dump(mode="json"),
+            ),
             Entry(
                 "bgp-sessions",
                 "BGP model sessions",

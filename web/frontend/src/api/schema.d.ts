@@ -600,6 +600,40 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/networks/{network_id}/snapshots/{snapshot_id}/analyses/test-filters": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Test Filters */
+    post: operations["test_filters_api_v1_networks__network_id__snapshots__snapshot_id__analyses_test_filters_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/networks/{network_id}/snapshots/{snapshot_id}/analyses/resolve-filters": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Resolve Filters */
+    post: operations["resolve_filters_api_v1_networks__network_id__snapshots__snapshot_id__analyses_resolve_filters_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/admin/deletions/{job_id}/reconcile": {
     parameters: {
       query?: never;
@@ -853,6 +887,8 @@ export interface components {
       /** Total */
       total: number;
     };
+    /** EmptyOptions */
+    EmptyOptions: Record<string, never>;
     /** EngineStatus */
     EngineStatus: {
       /**
@@ -1002,6 +1038,55 @@ export interface components {
        * @default []
        */
       warnings: string[];
+    };
+    /** FilterTestOptions */
+    FilterTestOptions: {
+      /**
+       * Ip Protocols
+       * @default [
+       *       "icmp"
+       *     ]
+       */
+      ip_protocols: (
+        | "icmp"
+        | "tcp"
+        | "udp"
+        | "gre"
+        | "esp"
+        | "ah"
+        | "ospf"
+        | "sctp"
+        | "ipinip"
+      )[];
+      /** Source Ports */
+      source_ports?: number[] | null;
+      /** Destination Ports */
+      destination_ports?: number[] | null;
+    };
+    /** FilterTestRequest */
+    FilterTestRequest: {
+      /**
+       * Source Ip
+       * Format: ipv4
+       */
+      source_ip: string;
+      /**
+       * Destination Ip
+       * Format: ipv4
+       */
+      destination_ip: string;
+      /** Filters */
+      filters:
+        | components["schemas"]["LiteralSelector"]
+        | components["schemas"]["ExpressionSelector"];
+      /** Nodes */
+      nodes?:
+        | (
+            | components["schemas"]["LiteralSelector"]
+            | components["schemas"]["ExpressionSelector"]
+          )
+        | null;
+      options?: components["schemas"]["FilterTestOptions"];
     };
     /** FlowPage */
     FlowPage: {
@@ -1425,6 +1510,19 @@ export interface components {
        * Format: password
        */
       temporary_password: string;
+    };
+    /** ResolveFiltersRequest */
+    ResolveFiltersRequest: {
+      /** Nodes */
+      nodes?:
+        | (
+            | components["schemas"]["LiteralSelector"]
+            | components["schemas"]["ExpressionSelector"]
+          )
+        | null;
+      /** Filter Expression */
+      filter_expression?: string | null;
+      options?: components["schemas"]["EmptyOptions"];
     };
     /** ResultEnvelope */
     ResultEnvelope: {
@@ -3603,6 +3701,100 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": components["schemas"]["BgpRequest"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      202: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["JobDTO"];
+        };
+      };
+      /** @description Unprocessable Entity */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+    };
+  };
+  test_filters_api_v1_networks__network_id__snapshots__snapshot_id__analyses_test_filters_post: {
+    parameters: {
+      query?: never;
+      header?: {
+        "idempotency-key"?: string | null;
+      };
+      path: {
+        network_id: string;
+        snapshot_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["FilterTestRequest"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      202: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["JobDTO"];
+        };
+      };
+      /** @description Unprocessable Entity */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+    };
+  };
+  resolve_filters_api_v1_networks__network_id__snapshots__snapshot_id__analyses_resolve_filters_post: {
+    parameters: {
+      query?: never;
+      header?: {
+        "idempotency-key"?: string | null;
+      };
+      path: {
+        network_id: string;
+        snapshot_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["ResolveFiltersRequest"];
       };
     };
     responses: {

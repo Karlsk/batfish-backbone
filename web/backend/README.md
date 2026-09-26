@@ -161,3 +161,5 @@ analysis handler支持执行和发布两个阶段；结果元数据、缓存和�
 ## 当前进阶分析接口
 
 已登记的 `POST /api/v1/networks/{network_id}/snapshots/{snapshot_id}/analyses/bgp-sessions` 接受 `{}`（默认模型状态）或 `{"options":{"mode":"compatibility"}}`。可选 `options.nodes/remote_nodes` 为现有字面/表达式节点选择器；不接受任意 SDK 方法、状态或类型参数。结果沿用任务轮询和 `/results/{id}/rows`，完整保留 SDK 原始列与状态，并标注这是配置模型推演。Huawei/H3C 输入额外提示 IPv6 BGP 会话未建模；空表及模型 `ESTABLISHED` 均不证明现场会话情况。
+
+ADV-05 增加 `POST /api/v1/networks/{network_id}/snapshots/{snapshot_id}/analyses/test-filters`（必需源/目标 IPv4、过滤器选择器，可选节点和有类型协议/端口）与同作用域 `resolve-filters`（可选节点/过滤器表达式）。前者仅评估局部 ACL，保留 SDK 原始动作、命中行、Flow 与 Trace，并额外提供隐式拒绝和实际可用的来源引用；找不到过滤器绝不当作放行。Huawei/H3C ACL 转换未验证，测试接口返回409及字段解释；辅助列表仍带模型覆盖标记。两者都返回任务，结果沿用现有分页 API，不向浏览器公开 SDK 会话。

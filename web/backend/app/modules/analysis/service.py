@@ -11,6 +11,20 @@ from app.modules.snapshots.service import SnapshotsService
 
 
 class AnalysisService:
+    @staticmethod
+    def _require_acl_model(snapshot):
+        quality = thaw(snapshot.quality_summary)
+        if set(quality.get("file_formats", ())) & {"HUAWEI_VRP", "H3C_COMWARE"}:
+            raise ServiceError(
+                ErrorCode.CONFLICT,
+                field_errors=(
+                    FieldError(
+                        path=("snapshot_id",),
+                        message="ACL verification is unsupported for Huawei/H3C in this model",
+                    ),
+                ),
+            )
+
     def __init__(
         self,
         auth: AuthService,
@@ -42,6 +56,8 @@ class AnalysisService:
         model = self._registry.validate(operation, request)
         with self._jobs.resource_boundary() as transaction:
             context = self._snapshots.require_analyzable(actor, network_id, snapshot_id)
+            if operation == "test-filters":
+                self._require_acl_model(self._snapshots.get(actor, network_id, snapshot_id))
             entry = self._registry.get(operation)
             context = context.model_copy(update={"schema_version": entry.schema_version})
             return self._jobs.submit(
@@ -90,6 +106,8 @@ class AnalysisService:
                 ),
             )
         snapshot = self._snapshots.get(actor, context.network_id, context.snapshot_id)
+        if operation == "test-filters":
+            self._require_acl_model(snapshot)
         parameters = {"operation": operation, "request": model.model_dump(mode="json")}
         key = self._results.cache_key(
             context,
