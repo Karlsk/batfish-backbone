@@ -62,6 +62,9 @@ const TopologyPage = lazy(() =>
     default: m.TopologyPage,
   })),
 );
+const BgpPage = lazy(() =>
+  import("../features/bgp/BgpPage").then((m) => ({ default: m.BgpPage })),
+);
 const AnalysisPage = lazy(() =>
   import("../features/inventory/Analysis").then((m) => ({
     default: m.AnalysisPage,
@@ -209,6 +212,11 @@ export function Shell({ children }: PropsWithChildren) {
               label: <Link to="/topology">网络拓扑</Link>,
             },
             {
+              key: "/bgp",
+              icon: <BranchesOutlined />,
+              label: <Link to="/bgp">BGP 会话</Link>,
+            },
+            {
               key: "/jobs",
               icon: <ClockCircleOutlined />,
               label: <Link to="/jobs">任务中心</Link>,
@@ -327,6 +335,7 @@ function WorkbenchRoutes() {
             <Suspense fallback={<LoadingState />}>
               <Routes>
                 <Route path="/topology" element={<TopologyPage />} />
+                <Route path="/bgp" element={<BgpPage />} />
                 <Route path="/traceroute" element={<TracePage />} />
                 <Route path="/analysis/:operation" element={<AnalysisPage />} />
                 <Route path="/analysis" element={<AnalysisPage />} />

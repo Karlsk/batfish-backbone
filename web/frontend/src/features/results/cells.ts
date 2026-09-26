@@ -4,6 +4,7 @@ export function cellText(value: unknown): string {
   if (Array.isArray(value)) return value.map(cellText).join("，");
   if (typeof value !== "object") return String(value);
   const v = value as Record<string, unknown>;
+  if (v.schema === "Ip" && typeof v.value === "string") return v.value;
   if (v.type === "ip") return String(v.ip ?? "未提供地址");
   if (v.type === "interface")
     return `${v.interface ?? "未提供接口"}${v.ip ? ` → ${v.ip}` : ""}`;

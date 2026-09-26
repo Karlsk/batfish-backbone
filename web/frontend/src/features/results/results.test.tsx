@@ -75,4 +75,5 @@ it("renders next-hop variants without inventing an IP or hiding unknown types", 
   ).toBe("Eth0 → 192.0.2.1");
   expect(cellText({ type: "vrf", vrf: "BLUE" })).toBe("转入 VRF BLUE");
   expect(cellText({ type: "future", data: 3 })).toContain("future");
+  expect(cellText({ schema: "Ip", value: "172.20.12.2" })).toBe("172.20.12.2");
 });

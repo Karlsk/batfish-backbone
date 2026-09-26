@@ -1,4 +1,5 @@
 import { GraphResult } from "../topology/GraphResult";
+import { BgpResult } from "../bgp/BgpResult";
 import { ResultExport } from "../../components/ResultExport";
 import { TraceResults } from "../traceroute/TraceResults";
 import { useState } from "react";
@@ -63,7 +64,10 @@ function ResultView({ resultId }: { resultId: string }) {
       </p>
       <div className="results-layout">
         <section className="results-evidence" aria-label="分析证据">
-          {result.kind === "table" ? (
+          {result.kind === "table" &&
+          result.effective_parameters.operation === "bgp-sessions" ? (
+            <BgpResult key={result.id} result={result} />
+          ) : result.kind === "table" ? (
             <ResultTable result={result} />
           ) : result.kind === "traces" ? (
             <TraceResults result={result} />
