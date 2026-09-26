@@ -3,7 +3,7 @@ from typing import Literal
 from pydantic import Field
 
 from app.contracts.base import Contract
-from app.modules.analysis.schemas.inventory import Selector
+from app.contracts.selection import Selector
 
 
 class BgpOptions(Contract):

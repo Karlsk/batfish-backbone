@@ -2,6 +2,7 @@ from pydantic import ValidationError
 
 from app.contracts.base import thaw
 from app.contracts.errors import ErrorCode, FieldError, ServiceError
+from app.contracts.routing import RoutesRequest
 from app.modules.analysis.schemas import Capability, Entry
 from app.modules.analysis.schemas.bgp import BgpRequest
 from app.modules.analysis.schemas.filters import (
@@ -11,7 +12,7 @@ from app.modules.analysis.schemas.filters import (
     SearchFiltersRequest,
 )
 from app.modules.analysis.schemas.inventory import InterfacesRequest, NodesRequest
-from app.modules.analysis.schemas.routing import LpmRequest, RoutesRequest
+from app.modules.analysis.schemas.routing import LpmRequest
 from app.modules.analysis.schemas.topology import TopologyRequest
 from app.modules.analysis.schemas.traceroute import TraceRequest
 

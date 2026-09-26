@@ -19,6 +19,7 @@ from app.modules.analysis.controllers.filters import QUERIES as FILTER_QUERIES
 from app.modules.analysis.controllers.filters import normalize_filter_rows
 from app.modules.analysis.controllers.inventory import QUERIES as INVENTORY_QUERIES
 from app.modules.analysis.controllers.routing import QUERIES as ROUTING_QUERIES
+from app.modules.analysis.controllers.routing import normalize_route_diff_rows
 from app.modules.analysis.controllers.topology import QUERIES as TOPOLOGY_QUERIES
 from app.modules.analysis.controllers.topology import normalize_graph, query_plan
 from app.modules.analysis.controllers.traceroute import QUERIES as TRACE_QUERIES
@@ -111,6 +112,9 @@ class AnalysisController:
             for item in element["metadata"]["columnMetadata"]
         ]
         rows = element.get("rows", [])
+        if question_id == "routes" and context.reference_snapshot_id is not None:
+            rows = normalize_route_diff_rows(rows)
+            columns.append(Column(key="Change", label="Candidate change", type="String"))
         if question_id in {"testFilters", "searchFilters"}:
             rows = normalize_filter_rows(rows)
             columns.extend(

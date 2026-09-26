@@ -772,6 +772,23 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/comparisons/{comparison_id}/analyses/routes-diff": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Submit Routes Diff */
+    post: operations["submit_routes_diff_api_v1_comparisons__comparison_id__analyses_routes_diff_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/admin/deletions/{job_id}/reconcile": {
     parameters: {
       query?: never;
@@ -4632,6 +4649,52 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": components["schemas"]["ConfigDiffRequest"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      202: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["JobDTO"];
+        };
+      };
+      /** @description Unprocessable Entity */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+    };
+  };
+  submit_routes_diff_api_v1_comparisons__comparison_id__analyses_routes_diff_post: {
+    parameters: {
+      query?: never;
+      header?: {
+        "idempotency-key"?: string | null;
+      };
+      path: {
+        comparison_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["RoutesRequest"];
       };
     };
     responses: {

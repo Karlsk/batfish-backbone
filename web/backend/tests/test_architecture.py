@@ -56,6 +56,7 @@ def test_import_boundaries_reject_violations(path, source):
         ("app/modules/a/service.py", "from .export import download"),
         ("app/modules/a/service.py", "from .graph import select_graph"),
         ("app/modules/changes/analysis.py", "from app.modules.b.service import Service"),
+        ("app/modules/changes/route_analysis.py", "from app.modules.b.service import Service"),
         ("app/modules/changes/analysis.py", "from .config_diff import file_difference"),
         ("app/modules/changes/api.py", "from .analysis import ConfigDiffService"),
         ("app/modules/results/service.py", "from .diff import DiffFilePage"),

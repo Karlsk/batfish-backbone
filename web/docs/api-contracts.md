@@ -138,7 +138,7 @@ SDK 边界方法：`SessionFactory.for_job(context)` 返回任务独占上下文
 | POST /comparisons/{id}/analyses/config-diff | options 可选，首版该 options 无扩展字段 | ADV-12 |
 | GET /results/{id}/diff/files | 分页文件变化摘要 | ADV-12 |
 | GET /results/{id}/diff/files/{file_id} | 两侧行号与变更块，分页及截断说明 | ADV-12 |
-| POST /comparisons/{id}/analyses/routes-diff | 复用 routes 请求字段 | ADV-13 |
+| POST /comparisons/{id}/analyses/routes-diff | 复用 routes 的 nodes 与 options，返回 job；结果为 table，可分页/导出 | ADV-13 |
 | POST /comparisons/{id}/analyses/reachability-diff | destination_ips、start_location；options 流量范围及 max_traces | ADV-14 |
 | POST S/fault-scenarios | display_name；deactivate_nodes/deactivate_interfaces 至少一项 | ADV-16 |
 
@@ -163,6 +163,8 @@ ADV-07 `POST S/analyses/search-filters` 必须提供 `nodes` 和 `filters` 两�
 ComparisonDTO 包含 id、network_id、baseline_snapshot_id、candidate_snapshot_id、两侧内容摘要、引擎与 SDK 版本、统一的 engine_version/sdk_version、display_name、coverage、coverage_notes、created_by、created_at。比较创建不触发计算。两侧必须属于同一网络、不同且可分析，引擎或 SDK 版本不同返回409；解析警告、模型限制或配置格式差异使 coverage=limited，并明确提示。删除仅标记内部 deleted_at，已删除记录在列表/详情中不可见；仍保留审计和历史结果来源。后续差异分析中 candidate 映射 SDK snapshot，baseline 映射 reference_snapshot，提交时复核两侧摘要及版本。DiffResult 的 source 始终带 baseline/candidate，不用模糊的 before/after 位置代替真实 ID。路由 diff 保留两侧值及 SDK 原始标记；可达性 diff 按 flow 保存两侧 disposition/traces 及新增/消失方向。
 
 ADV-12 `POST /comparisons/{id}/analyses/config-diff` 接受 `{}` 或 `{"options":{}}`，未知 options 拒绝；返回既有 JobDTO，支持幂等键、取消和重试。worker 仅比较已验证的原始上传文件，不调用 Batfish 问题；提交与执行均复核 comparison 的方向、摘要、版本和状态，缓存键包含两侧摘要及限额。结果 `kind=diff` 的 context.snapshot_id 是候选，context.reference_snapshot_id 是基线，effective_parameters.comparison_id 保留比较来源。`GET /results/{id}/diff/files` 按路径分页列出 added/removed/changed 的摘要：稳定 file_id、两侧 SHA-256/编码/字节数/行数、hunk_count、detail_truncated、warnings。`GET /results/{id}/diff/files/{file_id}` 分页返回差异块，`baseline_start/end` 与 `candidate_start/end` 是从 1 开始、结束位置不包含在内的行号区间，变更行各保留本侧原始行号与展示文本。相同路径匹配；不推断改名。同 SHA 文件不列出；原始字节不同即使标准化行结束后展示行相同也标 changed，并附 `DISPLAY_LINES_EQUAL_RAW_BYTES_DIFFER`。二进制、不可解码、超长行或限额情况以 `warnings`、`detail_truncated` 和结果级 `truncation_reason` 告知，不把缺失差异块解释为无变化。每侧文本详情最多 1 MiB/2000 行，每份结果最多处理 200 个文件及 8 MiB 文本详情，单文件最多 200 个变更块；结果存储还受通用行数/字节上限约束。文本差异不证明网络行为改变。
+
+ADV-13 `POST /comparisons/{id}/analyses/routes-diff` 使用与单快照 routes 完全相同的有类型请求：`nodes` 可选，`options.vrfs/network/protocols/prefix_match_type/rib` 均可选；不允许传入 snapshot/reference、未知 SDK kwargs 或未登记的 RIB。任务固定候选→SDK snapshot、基线→SDK reference_snapshot，提交和执行时均复核比较上下文；幂等、缓存键包含两侧内容摘要及过滤条件。结果 `kind=table`，原有分页、过滤和 JSON/CSV 导出适用，`effective_parameters.comparison_id` 与两侧 ID 可追溯。每条结果保留 SDK `Entry_Presence` 以及 `Snapshot_*`（候选）/`Reference_*`（基线）原始字段，新增 `Change`：当前引擎实测 `Only in Snapshot`→`added`、`Only in Reference`→`removed`、`Changed`→`changed`；SDK 差异回答中附带的 `Unchanged` 行不列入变化结果。同一前缀的多条下一跳逐行保留，不按前缀覆盖。空结果仅表示所选节点/VRF/前缀/协议/RIB 范围内无模型路由差异，不构成策略等价或现场转发结论。结果仍受通用行数与字节上限约束。
 
 故障派生关系在 SnapshotDTO.base_snapshot_id 保存。删除仍被有效 comparison 或未删除派生快照引用的基线返回409；先删除比较记录/派生快照再删除基线。ResourceLifecycleService 通过各模块service执行引用检查和删除，不引入 snapshots→changes→snapshots 循环。删除历史不会重写旧结果。
 

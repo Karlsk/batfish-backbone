@@ -4,8 +4,8 @@ from typing import Literal
 from pydantic import Field, StrictBool, StrictInt, field_validator, model_validator
 
 from app.contracts.base import Contract
+from app.contracts.selection import Expression, LiteralSelector, Name, Selector
 from app.modules.analysis.schemas import EmptyOptions
-from app.modules.analysis.schemas.inventory import Expression, LiteralSelector, Name, Selector
 from app.modules.analysis.schemas.traceroute import Port, Protocol
 
 

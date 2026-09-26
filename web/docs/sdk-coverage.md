@@ -1,6 +1,6 @@
 # Pybatfish / 引擎能力覆盖表
 
-日期：2026-09-27。MVP-01～25 和 ADV-01～12 已完成；登记式专家入口仅开放已有能力。ADV-11 建立比较上下文，ADV-12 在 Web 层比较受控配置原文，不增加 SDK 问题；路由和可达性差异仍待开发。固定 Pybatfish 2026.9.17.3748，与当前分支引擎的 75 个模板已核验，核心查询已实测；结论、参数与公开方法清单见 [兼容性报告](sdk-compatibility.md) 和 [证据](evidence/mvp-01-sdk-baseline.json)。Web 只开放已经登记并单独适配的能力，其余模板保持范围外。
+日期：2026-09-27。MVP-01～25 和 ADV-01～13 已完成；登记式专家入口仅开放已有能力。ADV-11 建立比较上下文，ADV-12 在 Web 层比较受控配置原文，ADV-13 复用已登记 routes 问题的真实双快照回答；可达性差异仍待开发。固定 Pybatfish 2026.9.17.3748，与当前分支引擎的 75 个模板已核验，核心查询已实测；结论、参数与公开方法清单见 [兼容性报告](sdk-compatibility.md) 和 [证据](evidence/mvp-01-sdk-baseline.json)。Web 只开放已经登记并单独适配的能力，其余模板保持范围外。
 
 ## 适配原则
 
@@ -115,4 +115,4 @@
 
 MVP-01 报告需至少列出 SDK 版本、引擎 revision、模板加载、参数 schema、结果列与嵌套类型、公开任务句柄/超时行为的实测结论。新引擎缺失问题时将 capability.enabled=false 并给 disabled_reason；不能到用户运行时才以无解释的500失败。
 
-问题声明支持 differential 并不自动变成 Web 对比功能。ADV-13/14 明确验证方向、结果结构和模型覆盖后才开放。配置文本 diff 是 Web 层对不可变原始文件的比较，不是虚构的 SDK 问题。
+问题声明支持 differential 并不自动变成 Web 对比功能。ADV-13 在锁定引擎与 Pybatfish 上实测 `routes` 双快照调用：虽然仓库 `questions/stable/routes.json` 的静态 `differential` 字段为 `false`，Java `RoutesAnswerer.answerDiff` 与当前 SDK 调用实际返回 `Entry_Presence`、`Snapshot_*`、`Reference_*`；可控 Cisco 路由增删/属性变化/ECMP 样例证明方向。此事实仅针对锁定版本，版本改变须复验。ADV-14 的可达性差异仍待验证。配置文本 diff 是 Web 层对不可变原始文件的比较，不是虚构的 SDK 问题。

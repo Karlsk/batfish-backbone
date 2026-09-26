@@ -3,7 +3,9 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, Header, Query, Request
 
 from app.contracts.dto import Actor, JobDTO
+from app.contracts.routing import RoutesRequest
 from app.modules.changes.analysis import ConfigDiffService
+from app.modules.changes.route_analysis import RouteDiffService
 from app.modules.changes.schemas import (
     ComparisonDTO,
     ComparisonPage,
@@ -14,7 +16,12 @@ from app.modules.changes.service import ChangesService
 
 
 def create_router(
-    service: ChangesService, config_diff: ConfigDiffService, *, read_actor, write_actor
+    service: ChangesService,
+    config_diff: ConfigDiffService,
+    route_diff: RouteDiffService,
+    *,
+    read_actor,
+    write_actor,
 ):
     router = APIRouter(tags=["Changes"])
 
@@ -58,5 +65,18 @@ def create_router(
         idempotency_key: str | None = Header(None, max_length=128),
     ):
         return config_diff.submit(actor, comparison_id, body, idempotency_key=idempotency_key)
+
+    @router.post(
+        "/comparisons/{comparison_id}/analyses/routes-diff",
+        response_model=JobDTO,
+        status_code=202,
+    )
+    def submit_routes_diff(
+        comparison_id: UUID,
+        body: RoutesRequest,
+        actor: Actor = Depends(write_actor),
+        idempotency_key: str | None = Header(None, max_length=128),
+    ):
+        return route_diff.submit(actor, comparison_id, body, idempotency_key=idempotency_key)
 
     return router

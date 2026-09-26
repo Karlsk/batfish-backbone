@@ -1,6 +1,6 @@
 # ADV-13 路由差异分析接口
 
-- 状态：待开发
+- 状态：已完成（累计验收通过，待提交）
 - 阶段：3
 - 依赖：[ADV-12](../advance/adv-12-configuration-diff.md)
 - 预计工作量：1.5 人天（实现/验证 1.0 + 测试 0.25 + 文档/自检 0.25），依赖就绪后计；超过 2 人天先拆分。
@@ -30,10 +30,10 @@
 
 ## 实施步骤
 
-- [ ] 登记差异 routes 能力，将比较上下文传给独占 Session。
-- [ ] 以完整路由键处理多路径，不用简单的前缀字典覆盖。
-- [ ] 保存两侧值与原始差异字段，复用分页/导出。
-- [ ] 运行下述验证，记录实际命令与结果，更新本文及索引状态。
+- [x] 登记比较限定的 routes 差异入口，将比较上下文传给独占 Session。
+- [x] 逐条保留 SDK 路由行及多路径，不用简单的前缀字典覆盖。
+- [x] 保存两侧值与原始差异字段，复用分页/导出。
+- [x] 运行下述验证，记录实际命令与结果，更新本文及索引状态。
 
 ## 测试与验收
 
@@ -51,4 +51,6 @@
 
 ## 完成记录
 
-当前尚未开发或运行本 spec 的产品测试。实施者完成后在本节记录实际文件、验证命令、结果、引擎/SDK版本（如涉及）和剩余限制；存在验收失败时保持未通过状态。
+基于 `daffc4a41c` 实现。变更位于公共有类型选择器与 routes 请求契约、`analysis` 的注册路由 service/controller、`changes/route_analysis.py` 与比较 API、composition 分派，以及 `test_route_diff.py` 和真实 API/独立 worker 冒烟。单快照 routes 与双快照 routes-diff 复用同一请求模型；后者固定候选为 SDK snapshot、基线为 reference_snapshot。结果为现有 table，保留 `Entry_Presence`、`Snapshot_*`/`Reference_*` 原始列，新增 `Change`；按行保留 ECMP，不覆盖相同前缀。直接 SDK 实测方向：`Only in Snapshot`=added，`Only in Reference`=removed，`Changed`=changed；混入的 `Unchanged` 行从变化列表过滤。虽然本仓库静态 routes 问题模板的 `differential` 字段为 false，锁定 SDK+引擎的双快照调用实际返回上述列；升级版本需要复验。
+
+真实 Batfish/PostgreSQL 环境累计后端 351 项、冒烟 13 项、前端 81 项、浏览器 23 项、新 HTTPS 部署恢复及浅色/深色双用户验收均通过；Ruff、锁文件、类型、构建、格式和 OpenAPI 类型检查通过。引擎 revision `7d0deeeac4a09973b3876327f6aef721ee12f955`，JAR SHA-256 `0927de7c740bc72f999870e842605baad9a7cb6ea66e4b01fb9a6037bea00193`，Pybatfish `2026.9.17.3748`，迁移 0009。实际命令与证据见[ADV-13 验收](../../evidence/adv-13-verification.md)。空结果仅针对所选范围；路由变化不证明配置策略等价或现场转发效果。第三阶段下一依赖 ADV-14 已可开始。

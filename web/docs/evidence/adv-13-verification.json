@@ -1,0 +1,117 @@
+{
+  "date": "2026-09-26T17:43:27.773245+00:00",
+  "scope": "ADV-13 and cumulative MVP-01..25, ADV-01..13",
+  "base_commit": "daffc4a41c",
+  "source_sha256": "22415dcf943383d97714511b85dd6f2dd250eac6ed65141e7766d67135e4867c",
+  "source_fingerprint_method": "SHA-256 of compact, sorted JSON path-to-file-SHA256 map for Git cached/other nonignored files under web/backend, web/frontend, web/scripts, web/deploy",
+  "source_file_count": 314,
+  "changed_source_files": {
+    "web/backend/app/composition.py": "d2e60bc531760e7824079c39f68ccf187cda4aa2d0ba941cac5bf5c34133cddc",
+    "web/backend/app/modules/analysis/api.py": "b8270b4971198c227a50fcc54ef8b06ee6635fd7713ff1b2db806c9d5b6c5911",
+    "web/backend/app/modules/analysis/controller.py": "86150a9dcbc82c37774a1ba8e1c4687336631b3c860994750800e2daadcd3883",
+    "web/backend/app/modules/analysis/controllers/routing.py": "42001153278ce662b5f815fc89326aa88987e603e61adab056fd29949dced232",
+    "web/backend/app/modules/analysis/registry.py": "051caa7027a0222d1958857c31e3c68208a2379dd56b78048bab617c749a7079",
+    "web/backend/app/modules/analysis/schemas/bgp.py": "a39b4dfb1f6c8d7b6d023c73a556b32aa3d20788f06400b648dbd9458013779d",
+    "web/backend/app/modules/analysis/schemas/filters.py": "5e78ea7a5218231ca05de9f70d57b777ce8e946b5ec3326b097ace973582a919",
+    "web/backend/app/modules/analysis/schemas/inventory.py": "0be90bdb5a188ebd2c53c7e14086fc0581dd1440e277f584dc6ce663eb7ce215",
+    "web/backend/app/modules/analysis/schemas/routing.py": "9a7d281efdc31ccaf13e70846ce21bab33ef3b05848b4e8677b46d0978a40306",
+    "web/backend/app/modules/analysis/schemas/topology.py": "429b9f0b633b9e12eb29bde23b44ff5baa9e8ad84950277ef40470386ace2365",
+    "web/backend/app/modules/analysis/service.py": "c73b1df1b8ff313a0ebdbdfc3000d1a14446ce9bda45f0d5600c250b9d28e50b",
+    "web/backend/app/modules/changes/api.py": "732449604dcb9bdb0a56d7b47bf7fca1c9813bb7d937c967c3edea4474aa667b",
+    "web/backend/tests/architecture_rules.py": "a4ccdedc02b16be8339717d822700ef22f5a8a046b820f8fa95bdb5699b27289",
+    "web/backend/tests/integration/test_lab_topologies.py": "9a394ab7852508e1989cbd7d34af731a6d5edd2814a4f217548f89bf2da8405f",
+    "web/backend/tests/test_architecture.py": "ade252b9a96d25074d4ee9d933191338b5e61aa65a38384e6133d011a2d14d28",
+    "web/frontend/src/api/schema.d.ts": "ba5566b86e32b9abd8d45105e7101567ce38f9b214e049bcc5290d8767f449ec",
+    "web/backend/app/contracts/routing.py": "9aea9f1d56eede7d9ffccc8b1f2250c70059a72cb903ed4e48c69be5d05a27a8",
+    "web/backend/app/contracts/selection.py": "f203b67e0da6f59d46e0c8de2c1281b25122740abc812dc8a147d1e931fec316",
+    "web/backend/app/modules/changes/route_analysis.py": "e1dd6b75d5c451274400cad19f9d56b81d991965e70fb16fe826cd2cec3c5029",
+    "web/backend/tests/test_route_diff.py": "3ee161accc6bf24d3c806dd96ea7dc20944667a56de1b5d09081cf40a30bcdc0"
+  },
+  "environment": {
+    "lab_run": "a5a2de95986c",
+    "engine_revision": "7d0deeeac4a09973b3876327f6aef721ee12f955",
+    "jar_sha256": "0927de7c740bc72f999870e842605baad9a7cb6ea66e4b01fb9a6037bea00193",
+    "pybatfish": "2026.9.17.3748",
+    "python": "3.12.12",
+    "migration": "0009",
+    "topologies": [
+      "small_network r1/r2",
+      "cisco_four c1-c4",
+      "controlled Cisco baseline/candidate static routes and ECMP"
+    ]
+  },
+  "backend": {
+    "passed": 351,
+    "skipped": 0,
+    "evidence": "web/.runtime/test-lab/a5a2de95986c/checks/29ba58d0f7eb"
+  },
+  "smoke": {
+    "passed": 13,
+    "intentional_deselected": 338,
+    "evidence": "web/.runtime/test-lab/a5a2de95986c/checks/0b2a0c41b7bf"
+  },
+  "route_diff_integration": {
+    "candidate": "snapshot",
+    "baseline": "reference_snapshot",
+    "sdk_markers": {
+      "Only in Snapshot": "added",
+      "Only in Reference": "removed",
+      "Changed": "changed",
+      "Unchanged": "omitted"
+    },
+    "raw_columns": [
+      "Entry_Presence",
+      "Snapshot_*",
+      "Reference_*"
+    ],
+    "ecmp": "two changed rows retained for one prefix; unchanged companion omitted",
+    "scoped_empty": "passed",
+    "cache_export_history": "passed",
+    "live_worker_http": "passed",
+    "routes_template_differential": false,
+    "locked_runtime_differential": "verified"
+  },
+  "frontend": {
+    "unit_passed": 81,
+    "build": "passed",
+    "typecheck": "passed",
+    "api_types": "passed",
+    "format": "passed"
+  },
+  "browser": {
+    "passed": 23,
+    "failed": 0,
+    "skipped": 0,
+    "lab_run": "a5a2de95986c",
+    "isolated_output": "web/frontend/test-results/adv13-isolated"
+  },
+  "deployment": "web/.runtime/deploy-adv13-batch/verification.json",
+  "restored": "web/.runtime/deploy-adv13-batch-restored",
+  "production_browser": {
+    "light_deployment": 3,
+    "dark_deployment": 3,
+    "light_acceptance": 1,
+    "dark_acceptance": 1,
+    "failed": 0,
+    "skipped": 0
+  },
+  "static_checks": {
+    "ruff_lint": "passed",
+    "ruff_format_changed_python": "passed",
+    "uv_lock_offline": "passed",
+    "git_diff_check": "passed"
+  },
+  "initial_failures": [
+    "The first focused test attempt could not reach the isolated PostgreSQL loopback due to the default sandbox; the authorized local run passed.",
+    "A direct invocation of the live smoke test lacked the lab harness worker-paused acknowledgement; lab.py smoke passed 13/13 on a fresh lab.",
+    "An export assertion initially expected a top-level context, but the existing contract stores it under metadata; the test was corrected and all route-diff tests passed."
+  ],
+  "review": "Self-reviewed shared typed selector/routes contract, API/service/controller boundaries, comparison identity and frozen direction, runtime version, SDK marker mapping including unchanged ECMP companion, raw columns, cache/reference hash, result truncation and export.",
+  "limits": [
+    "The static routes question template says differential=false, but the locked SDK and engine return a verified differential answer; any version upgrade requires revalidation.",
+    "Empty route differences are limited to the submitted selectors and modeled routes; they do not prove policy equivalence or live forwarding.",
+    "Comparison UI is planned for ADV-15; ADV-13 exposes the backend result and existing generic table APIs.",
+    "Synthetic configuration tests do not prove production forwarding fidelity or capacity.",
+    "Existing frontend shared chunk exceeds a 500 kB advisory while build/browser checks pass."
+  ]
+}

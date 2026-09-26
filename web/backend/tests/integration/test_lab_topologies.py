@@ -685,16 +685,32 @@ def test_real_snapshot_worker_smoke(lab, fixture_name, expected_nodes):
 
 
 @pytest.mark.smoke
-def test_real_config_diff_worker_smoke(lab):
-    """The running API and separate worker publish a directional file diff."""
+def test_real_config_and_route_diff_worker_smoke(lab):
+    """The running API and separate worker publish both directional comparisons."""
     import time
 
     run = Path(lab["run_directory"])
     assert (run / "worker-paused.ack").exists()
     fixture = Path(__file__).resolve().parents[1] / "fixtures/cisco_four/configs"
-    originals = [(path.name, path.read_bytes()) for path in sorted(fixture.iterdir())]
+    originals = [
+        (
+            path.name,
+            path.read_bytes().replace(b"end", b"ip route 198.51.100.0 255.255.255.0 Null0\nend")
+            if path.name == "c1.cfg"
+            else path.read_bytes(),
+        )
+        for path in sorted(fixture.iterdir())
+    ]
     candidate_files = [
-        (name, content + b"\n! candidate config marker\n" if name == "c1.cfg" else content)
+        (
+            name,
+            content.replace(
+                b"ip route 198.51.100.0 255.255.255.0 Null0",
+                b"ip route 203.0.113.0 255.255.255.0 Null0",
+            )
+            if name == "c1.cfg"
+            else content,
+        )
         for name, content in originals
     ]
     env = os.environ | {
@@ -780,6 +796,26 @@ def test_real_config_diff_worker_smoke(lab):
                 assert files["total"] == 1
                 assert files["items"][0]["path"] == "configs/c1.cfg"
                 assert files["items"][0]["change"] == "changed"
+                submitted = client.post(
+                    f"/api/v1/comparisons/{comparison.json()['id']}/analyses/routes-diff",
+                    json={
+                        "nodes": {"mode": "literal", "values": ["c1"]},
+                        "options": {"protocols": ["static"]},
+                    },
+                    headers=headers,
+                )
+                assert submitted.status_code == 202, submitted.text
+                job = finished(submitted.json()["id"])
+                assert job["status"] == "succeeded", job
+                result = client.get(f"/api/v1/results/{job['result_id']}").json()
+                assert result["kind"] == "table"
+                assert result["context"]["snapshot_id"] == candidate["snapshot_id"]
+                assert result["context"]["reference_snapshot_id"] == baseline["snapshot_id"]
+                rows = client.get(f"/api/v1/results/{job['result_id']}/rows").json()["rows"]
+                assert {row["Network"]: row["Change"] for row in rows} == {
+                    "198.51.100.0/24": "removed",
+                    "203.0.113.0/24": "added",
+                }
             finally:
                 worker.terminate()
                 worker.wait(timeout=15)

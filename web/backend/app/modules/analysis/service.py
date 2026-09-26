@@ -41,6 +41,26 @@ class AnalysisService:
         self._auth.revalidate_actor(actor)
         return self._registry.capabilities()
 
+    def run_routes_diff(self, context, request):
+        """Validate shared routes parameters and use the frozen two-snapshot SDK context."""
+        if context.reference_snapshot_id is None or context.engine_reference_snapshot is None:
+            raise ServiceError(ErrorCode.CONFLICT)
+        model = self._registry.validate("routes", request)
+        versions = self._controller.runtime_versions()
+        if versions != {
+            "engine_version": context.engine_version,
+            "sdk_version": context.sdk_version,
+        }:
+            raise ServiceError(ErrorCode.CONFLICT)
+        answer = self._controller.run(context, "routes", self._registry.get("routes").to_sdk(model))
+        if not answer.rows:
+            return answer.model_copy(
+                update={
+                    "warnings": answer.warnings + ("No route differences in the selected scope",)
+                }
+            )
+        return answer
+
     def submit(
         self,
         actor,

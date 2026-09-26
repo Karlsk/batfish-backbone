@@ -3,6 +3,7 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, Header
 
 from app.contracts.dto import Actor, JobDTO
+from app.contracts.routing import RoutesRequest
 from app.modules.analysis.schemas import Capability
 from app.modules.analysis.schemas.bgp import BgpRequest
 from app.modules.analysis.schemas.expert import ExpertQueryRequest
@@ -13,7 +14,7 @@ from app.modules.analysis.schemas.filters import (
     SearchFiltersRequest,
 )
 from app.modules.analysis.schemas.inventory import InterfacesRequest, NodesRequest
-from app.modules.analysis.schemas.routing import LpmRequest, RoutesRequest
+from app.modules.analysis.schemas.routing import LpmRequest
 from app.modules.analysis.schemas.topology import TopologyRequest
 from app.modules.analysis.schemas.traceroute import TraceRequest
 from app.modules.analysis.service import AnalysisService

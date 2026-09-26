@@ -1,6 +1,6 @@
 # MVP 累计验收矩阵
 
-下表记录MVP复验基线提交b59995435c；最新ADV-12及MVP累计回归见[ADV-12验收](evidence/adv-12-verification.md)（后端345、冒烟13、前端81、浏览器23通过）。
+下表记录MVP复验基线提交b59995435c；最新ADV-13及MVP累计回归见[ADV-13验收](evidence/adv-13-verification.md)（后端351、冒烟13、前端81、浏览器23通过）。
 
 每轮运行 MVP-01～当前篇的必需检查；同一完整测试命令可以覆盖多行，但计数不重复累加。新增能力在所属篇实现时补充行为和实际命令，future 不等于通过。
 
@@ -54,3 +54,4 @@
 | ADV-10 | 同一快照跨拓扑/BGP/ACL/专家，直接SDK边与会话对照，AS错配/孤立节点/permit与两类deny/遮蔽与空匹配，阶段1双用户不回退 | test_advance_phase2.py、advance-phase2.spec.ts及全部累计后端/前端/浏览器/HTTPS恢复门槛 | [第二阶段全通过](evidence/adv-10-verification.md)：后端330、冒烟12、前端81、浏览器23、部署3×2、双用户1×2 |
 | ADV-11 | 固定基线/候选方向、同网络/状态/版本/覆盖、软删除权限、在途任务与快照删除竞态 | test_comparisons.py、迁移测试及全部累计后端/前端/浏览器/HTTPS恢复门槛 | [本轮全通过](evidence/adv-11-verification.md)：后端336、冒烟12、前端81、浏览器23、部署3×2、双用户1×2 |
 | ADV-12 | 文件新增/删除/修改、原始字节摘要与编码/换行、行号/截断、对比方向、任务缓存和历史、真实worker API | test_config_diff.py、真实配置冒烟及全部累计后端/前端/浏览器/HTTPS恢复门槛 | [本轮全通过](evidence/adv-12-verification.md)：后端345、冒烟13、前端81、浏览器23、部署3×2、双用户1×2 |
+| ADV-13 | 真实SDK增删/Changed方向、ECMP逐行与Unchanged过滤、范围内空结果、有类型参数、缓存/导出/历史、独立worker API | test_route_diff.py、真实配置冒烟及全部累计后端/前端/浏览器/HTTPS恢复门槛 | [本轮全通过](evidence/adv-13-verification.md)：后端351、冒烟13、前端81、浏览器23、部署3×2、双用户1×2 |
