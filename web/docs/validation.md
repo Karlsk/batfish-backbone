@@ -1,6 +1,6 @@
 # 验证与阶段验收
 
-MVP-01 已执行真实 SDK 基线验证，见 [兼容性报告](sdk-compatibility.md)。应用各篇当前证据见 [累计矩阵](validation-matrix.md)，阶段1已通过MVP-25完整验收，见[首版报告](mvp-acceptance.md)；仍只对实际2/4台配置样本作结论。
+MVP-01 已执行真实 SDK 基线验证，见 [兼容性报告](sdk-compatibility.md)。应用各篇当前证据见 [累计矩阵](validation-matrix.md)；阶段1已通过MVP-25完整验收，见[首版报告](mvp-acceptance.md)；阶段2已通过ADV-10整体验收，见[第二阶段报告](advance-phase2-acceptance.md)。结论仍只针对实际2/4台及派生小规模配置样本。
 
 当前已有 [本机功能测试环境](test-lab.md)：实际运行本仓库 Batfish、API 与隔离 PostgreSQL；使用 r1/r2 与 Cisco 四设备合成配置。Web 开发阶段以功能链路、错误行为和上下文隔离为目标，不对照真实设备的路由或转发行为，不将这些结果宣称为 Java 核心仿真精度验证。已实现应用/API与浏览器的实际检查入口和结果列于累计矩阵；尚未完成的阶段条目不能引用旧结果放行。
 

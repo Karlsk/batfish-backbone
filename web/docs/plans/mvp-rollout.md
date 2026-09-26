@@ -61,7 +61,7 @@ MVP-01～25 及双主题升级已通过全部当前门禁，详见[复验报告]
 
 已知未提交ADV-01属于本任务，核验后纳入本批；保留`.pnpm-store/`、`.superpowers/`无关内容。现有ADV-01源码指纹与上轮一致，先补齐批次部署恢复及累计检查后提交，不重复实现。
 
-当前篇：ADV-09；下一动作：本篇门槛全部通过，提交后推进ADV-10阶段验收。阻碍：无。
+当前篇：ADV-10；下一动作：本篇门槛全部通过，提交后推进ADV-11双快照对比上下文。阻碍：无。
 
 | spec | stage | base_commit | implementation_fingerprint | required_checks | evidence | commit |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -73,8 +73,8 @@ MVP-01～25 及双主题升级已通过全部当前门禁，详见[复验报告]
 | ADV-06 | committed | 3cb6198900 | 0921b327b9062959dd782118a558b310adc55f3c94d8262f1d36c0a842f76be7 | MVP全部＋ADV-01～06 | [全部通过](../evidence/adv-06-verification.md) | 5499fa0a75 |
 | ADV-07 | committed | 5499fa0a75 | cdbedb84e64461f1f0733082e7ae0b9d7c080527a46143837957f9903dcfbbf9 | MVP全部＋ADV-01～07 | [全部通过](../evidence/adv-07-verification.md) | ad36950fd8 |
 | ADV-08 | committed | ad36950fd8 | 1b8083300d8b7f7c2d15974981c1f50f5de84d1031efbbe57a98031677b79057 | MVP全部＋ADV-01～08 | [全部通过](../evidence/adv-08-verification.md) | 65c0a9afde |
-| ADV-09 | validated | 65c0a9afde | 261d9e604c029c237f01368c86d056683b12b3082384babea21595b0cfb72ff2 | MVP全部＋ADV-01～09 | [全部通过](../evidence/adv-09-verification.md) | 提交后关联 |
-| ADV-10 | pending | — | 待本轮归档 | MVP全部＋ADV-01～10 | 待执行 | — |
+| ADV-09 | committed | 65c0a9afde | 8cb8d8257155ff0fa65661022c49c33a34dd6e66e00de30c313b3392afe2d37c | MVP全部＋ADV-01～09 | [全部通过](../evidence/adv-09-verification.md) | 2350107f51 |
+| ADV-10 | validated | 2350107f51 | 77396cb09d913c0c1797c1b0ec27ddc734403d9d0f3bcac5bf455a851348535c | MVP全部＋ADV-01～10 | [全部通过](../evidence/adv-10-verification.md) | 提交后关联 |
 | ADV-11 | pending | — | 待本轮归档 | MVP全部＋ADV-01～11 | 待执行 | — |
 | ADV-12 | pending | — | 待本轮归档 | MVP全部＋ADV-01～12 | 待执行 | — |
 | ADV-13 | pending | — | 待本轮归档 | MVP全部＋ADV-01～13 | 待执行 | — |

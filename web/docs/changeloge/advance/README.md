@@ -1,6 +1,6 @@
 # 第二、三阶段：进阶能力
 
-状态：ADV-01～09 已完成，其余待开发。先通过 [MVP-25](../mvp/mvp-25-mvp-acceptance.md)，再执行本目录。
+状态：ADV-01～10 已完成，第二阶段验收通过；ADV-11～18 待开发。先通过 [MVP-25](../mvp/mvp-25-mvp-acceptance.md)，再执行本目录。第二阶段结论见[验收报告](../../advance-phase2-acceptance.md)。
 
 ## 第二阶段：日常排障增强
 
@@ -17,7 +17,7 @@
 | [ADV-07 ACL 条件搜索与无效规则接口](adv-07-acl-search-api.md) | ADV-06 | 2.0 | 已完成 |
 | [ADV-08 ACL 高级诊断与证据分层](adv-08-acl-search-ui.md) | ADV-07 | 1.5 | 已完成 |
 | [ADV-09 登记式专家查询入口](adv-09-expert-catalog.md) | ADV-08 | 1.5 | 已完成 |
-| [ADV-10 第二阶段整体验收](adv-10-phase-two-acceptance.md) | ADV-09 | 1.0 | 待开发 |
+| [ADV-10 第二阶段整体验收](adv-10-phase-two-acceptance.md) | ADV-09 | 1.0 | 已完成 |
 
 ## 第三阶段：变更验证
 

@@ -1,0 +1,87 @@
+{
+  "date": "2026-09-26T14:57:10.037302+00:00",
+  "scope": "ADV-10 phase-two acceptance and cumulative MVP-01..25, ADV-01..10",
+  "base_commit": "2350107f51",
+  "source_sha256": "77396cb09d913c0c1797c1b0ec27ddc734403d9d0f3bcac5bf455a851348535c",
+  "source_fingerprint_method": "SHA-256 of compact, sorted JSON path-to-file-SHA256 map for Git cached/other nonignored files under web/backend, web/frontend, web/scripts, web/deploy",
+  "source_file_count": 298,
+  "changed_source_files": {
+    "web/backend/tests/integration/test_advance_phase2.py": "460b95c6741064e9008db5dcd7304f5728bbeff44972c26d35aaf199636f6326",
+    "web/frontend/tests/advance-phase2.spec.ts": "e7922c7b23028dc56a33bd43a034594d681b3511fa30cbd0f925d14a8289bd1b"
+  },
+  "environment": {
+    "lab_run": "27c57a46ecac",
+    "engine_revision": "7d0deeeac4a09973b3876327f6aef721ee12f955",
+    "jar_sha256": "0927de7c740bc72f999870e842605baad9a7cb6ea66e4b01fb9a6037bea00193",
+    "pybatfish": "2026.9.17.3748",
+    "python": "3.12.12",
+    "migration": "0008",
+    "topologies": [
+      "small_network r1/r2",
+      "cisco_four c1-c4",
+      "phase-two derived Cisco with isolated/BGP mismatch/ACL"
+    ]
+  },
+  "backend": {
+    "passed": 330,
+    "skipped": 0,
+    "evidence": "web/.runtime/test-lab/27c57a46ecac/checks/30b90814d266"
+  },
+  "smoke": {
+    "passed": 12,
+    "intentional_deselected": 318,
+    "evidence": "web/.runtime/test-lab/27c57a46ecac/checks/37eb967f949b"
+  },
+  "phase_two_integration": {
+    "same_snapshot_graph_sdk_edges": "equal",
+    "isolated_node": "present without fabricated edge",
+    "bgp_sdk_rows": "equal",
+    "as_mismatch": "NOT_COMPATIBLE",
+    "acl_actions": [
+      "PERMIT",
+      "explicit DENY",
+      "implicit DENY"
+    ],
+    "unreachable_reasons": [
+      "BLOCKING_LINES",
+      "INDEPENDENTLY_UNMATCHABLE"
+    ],
+    "expert_dedicated": "same result_id and effective_parameters",
+    "unregistered_question": "HTTP 422"
+  },
+  "frontend": {
+    "unit_passed": 81,
+    "build": "passed",
+    "typecheck": "passed",
+    "api_types": "passed",
+    "format": "passed"
+  },
+  "browser": {
+    "passed": 23,
+    "failed": 0,
+    "skipped": 0,
+    "phase_two": "passed"
+  },
+  "deployment": "web/.runtime/deploy-adv10-batch/verification.json",
+  "restored": "web/.runtime/deploy-adv10-batch-restored",
+  "production_browser": {
+    "light_deployment": 3,
+    "dark_deployment": 3,
+    "light_acceptance": 1,
+    "dark_acceptance": 1,
+    "failed": 0,
+    "skipped": 0
+  },
+  "static_checks": {
+    "ruff_lint": "passed",
+    "ruff_format_changed_python": "passed",
+    "uv_lock_offline": "passed",
+    "git_diff_check": "passed"
+  },
+  "review": "Self-reviewed cumulative phase-two scope, direct SDK comparison, result provenance, unsupported vendor warnings, registered expert boundary, cross-page context, access and layering; no product code changes.",
+  "limits": [
+    "Only configuration-based two/four/five-device synthetic networks; no forwarding-fidelity or capacity claim.",
+    "Topology/BGP are modeled, not live state; ACL conclusions are bounded to selected filters and flows.",
+    "Existing frontend shared chunk exceeds 500 kB advisory while build and browser checks pass."
+  ]
+}
