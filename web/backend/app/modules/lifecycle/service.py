@@ -5,6 +5,7 @@ from app.contracts.errors import ErrorCode, ServiceError
 from app.infrastructure.engine import EngineBusy, EngineOutcomeUnknown
 from app.modules.audit.service import AuditService
 from app.modules.auth.service import AuthService
+from app.modules.changes.service import ChangesService
 from app.modules.jobs.service import JobsService
 from app.modules.lifecycle.schemas import DeletionOutcome
 from app.modules.networks.service import NetworksService
@@ -18,8 +19,10 @@ class ResourceLifecycleService:
         jobs: JobsService,
         networks: NetworksService,
         snapshots: SnapshotsService,
+        changes: ChangesService,
     ):
         self._auth, self._jobs, self._networks, self._snapshots = auth, jobs, networks, snapshots
+        self._changes = changes
 
     def _admin(self, actor):
         actor = self._auth.revalidate_actor(actor)
@@ -36,6 +39,7 @@ class ResourceLifecycleService:
             network = self._networks.require_ready(actor, network_id)
             self._jobs.require_no_active(network_id, snapshot_id, transaction=tx)
             if snapshot_id:
+                self._changes.require_unreferenced(snapshot_id, transaction=tx)
                 resource = self._snapshots.get(actor, network_id, snapshot_id)
                 previous = resource.status
                 if previous in {"deleting", "deleted"}:

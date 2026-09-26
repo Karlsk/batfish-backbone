@@ -27,7 +27,7 @@ controller 的职责是 SDK 适配，并非 HTTP controller。无 SDK 操作的�
 
 ## 代码结构与实施状态
 
-MVP-02 已实现 main/composition、公共 DTO、配置/HTTP 基础设施和 health 模块；MVP-03 增加按模块归属的初始表、迁移和文件存储；MVP-04 增加 auth、最小 UsersService 与初始化审计，MVP-05 增加账号管理与变更审计；MVP-06 增加网络三层模块、最小 JobsService 幂等入口及独占 SDK factory。其余业务及前端仍为目标结构。实际启动与测试见 [后端 README](../backend/README.md)。
+MVP-01～25 与 ADV-01～10 已完成；ADV-11 增加比较记录、双快照上下文及删除引用保护。配置、路由和可达性差异仍由后续规格实施。实际启动与测试见 [后端 README](../backend/README.md)。
 
 ```text
 web/backend/app/
@@ -46,7 +46,7 @@ web/backend/app/
     results/           # 不可变结果、分页、导出
     analysis/          # 能力目录、参数映射、专用分析
     lifecycle/         # 跨资源删除编排；二/三阶段追加引用保护
-    changes/           # 三阶段才创建
+    changes/           # 双快照比较记录与上下文；后续扩展差异分析
   worker.py
 web/frontend/src/
   app/                 # 路由、主题、全局网络/快照上下文

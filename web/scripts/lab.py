@@ -24,6 +24,9 @@ from datetime import UTC, datetime
 from pathlib import Path
 from uuid import uuid4
 
+from alembic.config import Config
+from alembic.script import ScriptDirectory
+
 WEB = Path(__file__).resolve().parents[1]
 ROOT = WEB.parent
 BACKEND = WEB / "backend"
@@ -276,7 +279,9 @@ def serve(args):
                 "BATFISH_API_KEY": "",
                 "BATFISH_TLS": "false",
                 "DATABASE_URL": connection_file.read_text().strip().split("=", 1)[1],
-                "AUTH_ALLOWED_ORIGINS": json.dumps([state["api_url"], "http://127.0.0.1:15173"]),
+                "AUTH_ALLOWED_ORIGINS": json.dumps(
+                    [state["api_url"], "http://127.0.0.1:15173"]
+                ),
                 "AUTH_COOKIE_SECURE": "false",
                 "DATA_DIR": str(run / "data"),
             }
@@ -330,7 +335,9 @@ def serve(args):
                 check=True,
                 timeout=60,
             )
-        state["database_migration"] = "0008"
+        state["database_migration"] = ScriptDirectory.from_config(
+            Config(str(BACKEND / "alembic.ini"))
+        ).get_current_head()
         auth_password = secrets.token_urlsafe(24)
         auth_file = run / "auth.json"
         with open(

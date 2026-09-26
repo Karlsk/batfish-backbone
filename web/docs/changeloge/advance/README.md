@@ -1,6 +1,6 @@
 # 第二、三阶段：进阶能力
 
-状态：ADV-01～10 已完成，第二阶段验收通过；ADV-11～18 待开发。先通过 [MVP-25](../mvp/mvp-25-mvp-acceptance.md)，再执行本目录。第二阶段结论见[验收报告](../../advance-phase2-acceptance.md)。
+状态：ADV-01～11 已完成，第二阶段验收通过；ADV-12～18 待开发。先通过 [MVP-25](../mvp/mvp-25-mvp-acceptance.md)，再执行本目录。第二阶段结论见[验收报告](../../advance-phase2-acceptance.md)。
 
 ## 第二阶段：日常排障增强
 
@@ -25,7 +25,7 @@
 
 | Spec | 依赖 | 工作量（人天） | 状态 |
 | --- | --- | ---: | --- |
-| [ADV-11 双快照对比上下文与记录](adv-11-comparison-context.md) | ADV-10 | 1.0 | 待开发 |
+| [ADV-11 双快照对比上下文与记录](adv-11-comparison-context.md) | ADV-10 | 1.0 | 已完成 |
 | [ADV-12 配置文件差异分析](adv-12-configuration-diff.md) | ADV-11 | 2.0 | 待开发 |
 | [ADV-13 路由差异分析接口](adv-13-routing-diff.md) | ADV-12 | 1.5 | 待开发 |
 | [ADV-14 差异可达性分析接口](adv-14-differential-reachability.md) | ADV-13 | 2.0 | 待开发 |

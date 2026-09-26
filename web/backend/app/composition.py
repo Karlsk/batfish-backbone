@@ -13,6 +13,8 @@ from app.modules.analysis.registry import Registry
 from app.modules.analysis.service import AnalysisService
 from app.modules.auth.api import create_router as create_auth_router
 from app.modules.auth.service import AuthService
+from app.modules.changes.api import create_router as create_changes_router
+from app.modules.changes.service import ChangesService
 from app.modules.execution.api import create_router as create_execution_router
 from app.modules.execution.controller import ExecutionController
 from app.modules.execution.schemas import Handler
@@ -44,6 +46,7 @@ def database_metadata():
     from app.infrastructure.engine import EngineSlot  # noqa: F401
     from app.modules.audit import models as audit_models  # noqa: F401
     from app.modules.auth import models as auth_models  # noqa: F401
+    from app.modules.changes import models as changes_models  # noqa: F401
     from app.modules.execution import models as execution_models  # noqa: F401
     from app.modules.jobs import models as jobs_models  # noqa: F401
     from app.modules.networks import models as networks_models  # noqa: F401
@@ -151,7 +154,13 @@ def create_app(
             create_analysis_router(analysis, read_actor=read_actor, write_actor=write_actor),
             prefix="/api/v1",
         )
-        lifecycle = ResourceLifecycleService(auth, jobs, networks, snapshots)
+        changes = ChangesService(db, auth, networks, snapshots, jobs)
+        app.state.changes_service = changes
+        app.include_router(
+            create_changes_router(changes, read_actor=read_actor, write_actor=write_actor),
+            prefix="/api/v1",
+        )
+        lifecycle = ResourceLifecycleService(auth, jobs, networks, snapshots, changes)
         app.state.lifecycle_service = lifecycle
         app.include_router(
             create_lifecycle_router(lifecycle, write_actor=write_actor), prefix="/api/v1"
@@ -217,7 +226,8 @@ def create_worker(settings: Settings, *, database=None, handlers=None):
     analysis = AnalysisService(
         auth, snapshots, jobs, results, AnalysisController(db, settings), Registry()
     )
-    lifecycle = ResourceLifecycleService(auth, jobs, networks, snapshots)
+    changes = ChangesService(db, auth, networks, snapshots, jobs)
+    lifecycle = ResourceLifecycleService(auth, jobs, networks, snapshots, changes)
     registered = {
         "deletion": Handler(lifecycle.execute),
         "initialization": Handler(snapshots.execute, snapshots.retry),

@@ -160,7 +160,7 @@ ADV-07 `POST S/analyses/search-filters` 必须提供 `nodes` 和 `filters` 两�
 
 存储受table_rows（节点、边各自上限）与result_max_bytes限制；节点不足时同步排除相关边。计算过滤保存于effective_parameters，读取范围单独在scope返回，不改变缓存、不调用SDK。JSON导出包含完整已保存图与来源，graph不支持CSV。协议关系与会话健康不同；缺少边不能证明物理断线。
 
-ComparisonDTO 为 id、network_id、baseline_snapshot_id、candidate_snapshot_id、baseline/candidate 内容摘要与引擎版本、display_name、created_by、created_at、deleted_at。比较创建不触发计算。DiffResult 的 source 始终带 baseline/candidate，不用模糊的 before/after 位置替代真实 ID。配置 diff 包含文件变化种类与两侧行号；路由 diff 保留两侧值及 SDK 原始标记；可达性 diff 按 flow 保存两侧 disposition/traces 及新增/消失方向。
+ComparisonDTO 包含 id、network_id、baseline_snapshot_id、candidate_snapshot_id、两侧内容摘要、引擎与 SDK 版本、统一的 engine_version/sdk_version、display_name、coverage、coverage_notes、created_by、created_at。比较创建不触发计算。两侧必须属于同一网络、不同且可分析，引擎或 SDK 版本不同返回409；解析警告、模型限制或配置格式差异使 coverage=limited，并明确提示。删除仅标记内部 deleted_at，已删除记录在列表/详情中不可见；仍保留审计和历史结果来源。后续差异分析中 candidate 映射 SDK snapshot，baseline 映射 reference_snapshot，提交时复核两侧摘要及版本。DiffResult 的 source 始终带 baseline/candidate，不用模糊的 before/after 位置替代真实 ID。配置 diff 包含文件变化种类与两侧行号；路由 diff 保留两侧值及 SDK 原始标记；可达性 diff 按 flow 保存两侧 disposition/traces 及新增/消失方向。
 
 故障派生关系在 SnapshotDTO.base_snapshot_id 保存。删除仍被有效 comparison 或未删除派生快照引用的基线返回409；先删除比较记录/派生快照再删除基线。ResourceLifecycleService 通过各模块service执行引用检查和删除，不引入 snapshots→changes→snapshots 循环。删除历史不会重写旧结果。
 

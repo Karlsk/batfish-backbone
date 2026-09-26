@@ -1,6 +1,6 @@
 # ADV-11 双快照对比上下文与记录
 
-- 状态：待开发
+- 状态：已完成
 - 阶段：3
 - 依赖：[ADV-10](../advance/adv-10-phase-two-acceptance.md)
 - 预计工作量：1.0 人天（实现/验证 0.5 + 测试 0.25 + 文档/自检 0.25），依赖就绪后计；超过 2 人天先拆分。
@@ -23,7 +23,7 @@
 
 ## 预期改动位置
 
-以下是实现时的目标路径，本次文档编写不创建代码文件：
+实际实现位置：
 
 - `web/backend/app/modules/changes/api.py`
 - `web/backend/app/modules/changes/service.py`
@@ -34,10 +34,10 @@
 
 ## 实施步骤
 
-- [ ] 增加 ComparisonDTO/表/索引，记录两侧内容摘要与版本。
-- [ ] 通过 snapshots.service 取上下文，不直接查快照 repository。
-- [ ] 扩展删除依赖检查：被 comparison 引用的快照不得删除，先由管理员删除比较记录（保留历史结果来源）。
-- [ ] 运行下述验证，记录实际命令与结果，更新本文及索引状态。
+- [x] 增加 ComparisonDTO/表/索引，记录两侧内容摘要与版本。
+- [x] 通过 snapshots.service 取上下文，不直接查快照 repository。
+- [x] 扩展删除依赖检查：被 comparison 引用的快照不得删除，先由管理员删除比较记录（保留历史结果来源）。
+- [x] 运行下述验证，记录实际命令与结果，更新本文及索引状态。
 
 ## 测试与验收
 
@@ -55,4 +55,8 @@
 
 ## 完成记录
 
-当前尚未开发或运行本 spec 的产品测试。实施者完成后在本节记录实际文件、验证命令、结果、引擎/SDK版本（如涉及）和剩余限制；存在验收失败时保持未通过状态。
+2026-09-26 已完成。新增 changes 模块（API、service、repository、DTO、ORM）、Alembic 0009、生命周期引用检查及 OpenAPI 类型；真实 PostgreSQL 与 Cisco 四设备快照验证方向、跨网络与同快照拒绝、版本冲突、管理员权限、软删除、在途任务、并发创建/删除和删除后 worker 清理。比较不触发计算；候选映射 SDK snapshot，基线映射 reference_snapshot。新增结果中的 coverage 提示反映模型限制或格式差异，不把文本差异当作转发结论。
+
+仓库根执行 `web/backend/.venv/bin/python web/scripts/lab.py smoke`（12 passed）与 `verify`（336 passed）、Ruff lint/变更文件格式、离线 uv 锁文件及 Git 空白检查。`web/frontend` 执行 `pnpm generate:api`、`pnpm check:api`、`pnpm typecheck`、`pnpm test`（81 passed）、`pnpm build`、`pnpm format:check`、`pnpm exec playwright test`（23 passed）。本机独立 HTTPS 部署通过重启、失联对账、备份与新卷恢复；恢复后的生产构建浅色/深色各 3 项部署页与 1 项双用户验收通过。环境为引擎 revision `7d0deeeac4a09973b3876327f6aef721ee12f955`、Pybatfish `2026.9.17.3748`、Python `3.12.12`、迁移 0009，使用 r1/r2 与 Cisco 四设备配置。完整命令、源码身份与证据见[验收记录](../../evidence/adv-11-verification.md)。
+
+限制：本篇仅记录比较上下文，文件、路由、可达性差异分别由 ADV-12～14 实现。配置样例证明功能路径，不证明仿真与真实设备一致或规模容量。ADV-12 的依赖已满足。

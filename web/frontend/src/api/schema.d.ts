@@ -685,6 +685,42 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/networks/{network_id}/comparisons": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List Comparisons */
+    get: operations["list_comparisons_api_v1_networks__network_id__comparisons_get"];
+    put?: never;
+    /** Create */
+    post: operations["create_api_v1_networks__network_id__comparisons_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/comparisons/{comparison_id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get */
+    get: operations["get_api_v1_comparisons__comparison_id__get"];
+    put?: never;
+    post?: never;
+    /** Delete */
+    delete: operations["delete_api_v1_comparisons__comparison_id__delete"];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/admin/deletions/{job_id}/reconcile": {
     parameters: {
       query?: never;
@@ -855,6 +891,90 @@ export interface components {
       label: string;
       /** Type */
       type: string;
+    };
+    /** ComparisonDTO */
+    ComparisonDTO: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * Network Id
+       * Format: uuid
+       */
+      network_id: string;
+      /**
+       * Baseline Snapshot Id
+       * Format: uuid
+       */
+      baseline_snapshot_id: string;
+      /**
+       * Candidate Snapshot Id
+       * Format: uuid
+       */
+      candidate_snapshot_id: string;
+      /** Display Name */
+      display_name: string;
+      /** Baseline Content Hash */
+      baseline_content_hash: string;
+      /** Candidate Content Hash */
+      candidate_content_hash: string;
+      /** Baseline Engine Version */
+      baseline_engine_version: string;
+      /** Candidate Engine Version */
+      candidate_engine_version: string;
+      /** Baseline Sdk Version */
+      baseline_sdk_version: string;
+      /** Candidate Sdk Version */
+      candidate_sdk_version: string;
+      /** Engine Version */
+      engine_version: string;
+      /** Sdk Version */
+      sdk_version: string;
+      /**
+       * Coverage
+       * @enum {string}
+       */
+      coverage: "complete" | "limited";
+      /** Coverage Notes */
+      coverage_notes: string[];
+      /**
+       * Created By
+       * Format: uuid
+       */
+      created_by: string;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+    };
+    /** ComparisonPage */
+    ComparisonPage: {
+      /** Items */
+      items: components["schemas"]["ComparisonDTO"][];
+      /** Offset */
+      offset: number;
+      /** Limit */
+      limit: number;
+      /** Total */
+      total: number;
+    };
+    /** CreateComparisonRequest */
+    CreateComparisonRequest: {
+      /**
+       * Baseline Snapshot Id
+       * Format: uuid
+       */
+      baseline_snapshot_id: string;
+      /**
+       * Candidate Snapshot Id
+       * Format: uuid
+       */
+      candidate_snapshot_id: string;
+      /** Display Name */
+      display_name?: string | null;
     };
     /** CreateNetworkRequest */
     CreateNetworkRequest: {
@@ -4084,6 +4204,171 @@ export interface operations {
         content: {
           "application/json": components["schemas"]["JobDTO"];
         };
+      };
+      /** @description Unprocessable Entity */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+    };
+  };
+  list_comparisons_api_v1_networks__network_id__comparisons_get: {
+    parameters: {
+      query?: {
+        offset?: number;
+        limit?: number;
+      };
+      header?: never;
+      path: {
+        network_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ComparisonPage"];
+        };
+      };
+      /** @description Unprocessable Entity */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+    };
+  };
+  create_api_v1_networks__network_id__comparisons_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        network_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateComparisonRequest"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ComparisonDTO"];
+        };
+      };
+      /** @description Unprocessable Entity */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+    };
+  };
+  get_api_v1_comparisons__comparison_id__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        comparison_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ComparisonDTO"];
+        };
+      };
+      /** @description Unprocessable Entity */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+    };
+  };
+  delete_api_v1_comparisons__comparison_id__delete: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        comparison_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
       };
       /** @description Unprocessable Entity */
       422: {

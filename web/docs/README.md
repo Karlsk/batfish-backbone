@@ -1,6 +1,6 @@
 # Batfish Web 文档入口
 
-日期：2026-09-26。状态：MVP-01～25 已完成，第一阶段真实服务、两套配置、双用户浏览器与部署恢复验收通过。已交付认证、上传/初始化、诊断、设备/接口、路由/LPM、虚拟 traceroute、任务、导出、资源删除及前端；ADV-01～10 已完成（拓扑、BGP、ACL、专家查询及第二阶段验收），ADV-11～18 待开发。详见 [首版验收报告](mvp-acceptance.md)。
+日期：2026-09-26。状态：MVP-01～25 已完成，第一阶段真实服务、两套配置、双用户浏览器与部署恢复验收通过。已交付认证、上传/初始化、诊断、设备/接口、路由/LPM、虚拟 traceroute、任务、导出、资源删除及前端；ADV-01～10 已完成（拓扑、BGP、ACL、专家查询及第二阶段验收），ADV-11 已实现双快照比较上下文，ADV-12～18 待开发。详见 [首版验收报告](mvp-acceptance.md)。
 
 ## 已确认的需求
 
@@ -58,6 +58,6 @@ spec 是后续实施的需求、设计和验收单元，不是完成日志。所
 
 工作量是熟悉项目的开发者在依赖就绪后的估算，1 人天按 8 小时计算，不是日历工期承诺。若某项评估超过 2 人天，应先拆成有独立验收标准的子 spec，再编码；不能通过省略测试、恢复语义或权限检查压缩估算。
 
-MVP-01～25 已完成真实引擎兼容性、后端与前端工作台、导出清理、部署恢复及双用户验收；ADV-01～10 已完成拓扑、BGP、ACL、登记式专家查询及第二阶段验收。启动方式见 [后端 README](../backend/README.md) 与 [前端 README](../frontend/README.md)。Java 引擎未修改；第二阶段已按 ADV-10 完成整体验收；第三阶段从 ADV-11 开始。
+MVP-01～25 已完成真实引擎兼容性、后端与前端工作台、导出清理、部署恢复及双用户验收；ADV-01～10 已完成拓扑、BGP、ACL、登记式专家查询及第二阶段验收；ADV-11 提供不可变比较记录和后续差异分析上下文。启动方式见 [后端 README](../backend/README.md) 与 [前端 README](../frontend/README.md)。Java 引擎未修改；第二阶段已按 ADV-10 完成整体验收；第三阶段正在推进。
 
-最新进阶交付：[ADV-01拓扑接口验收](evidence/adv-01-verification.md)、[ADV-02可交互拓扑验收](evidence/adv-02-verification.md)、[ADV-03 BGP接口验收](evidence/adv-03-verification.md)、[ADV-04 BGP页面验收](evidence/adv-04-verification.md)、[ADV-05 ACL接口验收](evidence/adv-05-verification.md)、[ADV-06 ACL页面验收](evidence/adv-06-verification.md)、[ADV-07 ACL搜索接口验收](evidence/adv-07-verification.md)、[ADV-08 ACL高级诊断验收](evidence/adv-08-verification.md)、[ADV-09专家查询验收](evidence/adv-09-verification.md)、[ADV-10第二阶段验收](advance-phase2-acceptance.md)。
+最新进阶交付：[ADV-01拓扑接口验收](evidence/adv-01-verification.md)、[ADV-02可交互拓扑验收](evidence/adv-02-verification.md)、[ADV-03 BGP接口验收](evidence/adv-03-verification.md)、[ADV-04 BGP页面验收](evidence/adv-04-verification.md)、[ADV-05 ACL接口验收](evidence/adv-05-verification.md)、[ADV-06 ACL页面验收](evidence/adv-06-verification.md)、[ADV-07 ACL搜索接口验收](evidence/adv-07-verification.md)、[ADV-08 ACL高级诊断验收](evidence/adv-08-verification.md)、[ADV-09专家查询验收](evidence/adv-09-verification.md)、[ADV-10第二阶段验收](advance-phase2-acceptance.md)、[ADV-11比较上下文验收](evidence/adv-11-verification.md)。
