@@ -1,6 +1,6 @@
 # MVP 累计验收矩阵
 
-下表记录MVP复验基线提交b59995435c；后续ADV-01增量及再次累计回归见[ADV-01验收](evidence/adv-01-verification.md)（后端307、前端47、浏览器14通过）。
+下表记录MVP复验基线提交b59995435c；最新ADV-03增量及MVP累计回归见[ADV-03验收](evidence/adv-03-verification.md)（后端314、前端55、浏览器16通过）。
 
 每轮运行 MVP-01～当前篇的必需检查；同一完整测试命令可以覆盖多行，但计数不重复累加。新增能力在所属篇实现时补充行为和实际命令，future 不等于通过。
 
@@ -44,3 +44,4 @@
 | --- | --- | --- | --- |
 | ADV-01 | 四视图SDK对照、节点/边/邻域/截断、缓存隔离、同Session/失败预算、真实HTTP worker | lab.py verify/smoke + 全部前端/浏览器/HTTPS部署恢复 | 本轮累计后端307/冒烟12/前端55/浏览器16/部署3×2/双用户1×2及全新恢复通过 |
 | ADV-02 | 聚焦/一跳、四视图、接口和路由入口、固定来源、旧响应隔离/清理/重试、双主题与键盘入口 | topology.test.tsx、submission.test.tsx、topology.spec.ts及累计全部门槛 | [本轮全通过](evidence/adv-02-verification.md)：后端307、前端55、浏览器16、部署3×2、双用户1×2 |
+| ADV-03 | 固定BGP两问题、AS错配/模型成功/IPv6限制、原始列和筛选、幂等/上下文/缓存 | test_bgp.py，lab.py verify/smoke，全部前端/浏览器/HTTPS恢复 | [本轮全通过](evidence/adv-03-verification.md)：后端314、冒烟12、前端55、浏览器16、部署3×2、双用户1×2 |

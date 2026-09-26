@@ -98,6 +98,6 @@ serve现在启动独立worker并迁移0005，manifest记录worker_pid。seed/smo
 
 ## 前端累计验证
 
-后端verify结束且worker恢复后，在 `web/frontend` 执行 `pnpm test`、`pnpm check:api`、`pnpm typecheck`、`pnpm build`、`pnpm format:check`、`pnpm test:e2e`。Playwright自启动15173开发服务器并在结束后关闭；不要同时手动占用该端口。初次运行先 `pnpm exec playwright install chromium`。浏览器读取当前实验清单下的auth.json，不在文档/仓库写密码；失败trace可能含测试凭证，必须留在忽略提交的运行目录。
+后端verify结束且worker恢复后，在 `web/frontend` 执行 `pnpm test`、`pnpm check:api`、`pnpm typecheck`、`pnpm build`、`pnpm format:check`、`pnpm test:e2e`。新启动的 `serve` 仅完成管理员初始设置；只执行 `seed` 后账号仍要求首次改密。浏览器测试前须先运行 `smoke` 或 `verify`，它们会完成改密并更新当前实验清单的 `auth.json`。Playwright自启动15173开发服务器并在结束后关闭；不要同时手动占用该端口。初次运行先 `pnpm exec playwright install chromium`。浏览器读取当前实验清单下的auth.json，不在文档/仓库写密码；失败trace可能含测试凭证，必须留在忽略提交的运行目录。
 
 MVP-18起浏览器将向真实worker提交两套配置的初始化任务，因此浏览器验收与直接SDK/后端累计测试串行执行，避免争用单引擎。

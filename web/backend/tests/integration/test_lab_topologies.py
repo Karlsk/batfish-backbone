@@ -604,6 +604,7 @@ def test_real_snapshot_worker_smoke(lab, fixture_name, expected_nodes):
                     "lpm-routes",
                     "traceroute",
                     "topology",
+                    "bgp-sessions",
                 ):
                     body = (
                         {"ip": "10.0.0.2" if fixture_name == "small_network" else "10.64.0.4"}
@@ -651,11 +652,18 @@ def test_real_snapshot_worker_smoke(lab, fixture_name, expected_nodes):
                             )
                         continue
                     rows = client.get(result_url + "/rows").json()
-                    assert (
-                        rows["total"] == expected_nodes
-                        if operation == "nodes"
-                        else rows["total"] >= expected_nodes
-                    )
+                    if operation == "bgp-sessions":
+                        assert rows["total"] == 0
+                        assert any(
+                            "model" in warning.lower()
+                            for warning in client.get(result_url).json()["warnings"]
+                        )
+                    else:
+                        assert (
+                            rows["total"] == expected_nodes
+                            if operation == "nodes"
+                            else rows["total"] >= expected_nodes
+                        )
                 capabilities = client.get("/api/v1/capabilities")
                 assert capabilities.status_code == 200
                 assert {item["id"] for item in capabilities.json() if item["enabled"]} == {
@@ -665,6 +673,7 @@ def test_real_snapshot_worker_smoke(lab, fixture_name, expected_nodes):
                     "lpm-routes",
                     "traceroute",
                     "topology",
+                    "bgp-sessions",
                 }
             finally:
                 worker.terminate()

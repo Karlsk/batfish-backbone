@@ -120,7 +120,7 @@ SDK 边界方法：`SessionFactory.for_job(context)` 返回任务独占上下文
 
 ## 第二、三阶段接口增量
 
-此表定义 advance spec 的对接契约；首版不注册这些路由。所有 analyses 路由返回 202 JobDTO，并共用幂等、权限和结果读取规则。
+此表定义 advance spec 的对接契约；路由随对应 spec 验收后开放。所有 analyses 路由返回 202 JobDTO，并共用幂等、权限和结果读取规则。
 
 | 接口 | 参数/结果 | 归属 |
 | --- | --- | --- |
@@ -145,6 +145,8 @@ SDK 边界方法：`SessionFactory.for_job(context)` 返回任务独占上下文
 GraphDTO 为 nodes[{id,label,properties}]、edges[{id,source,target,source_interface,target_interface,edge_type,properties}]、edge_type、source（SDK问题名）、scope、truncated。properties保留对应SDK原始行；节点id为快照内主机名，边id为视图与完整原始行规范JSON的SHA-256，方向、接口、IP与AS不同不合并。
 
 ADV-01计算参数：`view` 默认 `layer3`，仅允许 `layer3/bgp/ospf/isis`；options仅 `nodes/remote_nodes`，复用 literal/expression 选择器。节点清单取两侧选择集合并集，任一侧未限制即包括所有节点，保留孤立节点。POST只入队，沿用身份/CSRF/幂等/上下文冻结/版本缓存规则；一个任务内顺序调用节点与边问题并复用同一Session。当前四视图统一标记requires_dataplane=true。
+
+ADV-03 `POST S/analyses/bgp-sessions` 接受 `{}`；`options.mode` 默认 `status`，只允许 `status/compatibility`，分别固定映射公开问题 `bgpSessionStatus/bgpSessionCompatibility`。高级 `options.nodes/remote_nodes` 复用显式节点选择器，拒绝未列出的 status/type/context kwargs。结果为表格，列名、状态枚举及本地/远端节点、接口、VRF、AS、地址和其余 SDK 字段原样保留；模型推演的 `ESTABLISHED` 不等于现场会话健康。对 Huawei/H3C 输入额外标明 IPv6 BGP 会话未建模，空行或模型成功均不能证明该地址族状态。
 
 图读取 `focus_node` 可选，默认 `hops=1`（范围0～5），默认 `limit=200`（范围1～200），无focus时hops不参与筛选。邻域按双向邻接取距离，但输出边保留SDK方向；未知focus返回404，读取非graph结果返回409。优先focus、再按距离及节点id排序；limit分别限制节点数与边数，不返回悬空边。scope包含focus_node/hops/limit/neighbor_direction、stored_nodes/stored_edges、matched_nodes/matched_edges、returned_nodes/returned_edges及storage_truncated。主动聚焦本身不算截断；读取限额或持久化限额丢弃数据时truncated=true，ResultEnvelope另含存储截断原因。
 

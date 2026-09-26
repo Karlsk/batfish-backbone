@@ -114,11 +114,25 @@ class AnalysisService:
                 context, entry.question_id, entry.to_sdk(model), kind=entry.result_kind
             )
         )
+        quality = thaw(snapshot.quality_summary)
+        if (
+            answer is not None
+            and operation == "bgp-sessions"
+            and set(quality.get("file_formats", ())) & {"HUAWEI_VRP", "H3C_COMWARE"}
+        ):
+            answer = answer.model_copy(
+                update={
+                    "warnings": answer.warnings
+                    + (
+                        "Huawei/H3C IPv6 BGP session behavior is not modeled; absent or ESTABLISHED rows do not establish IPv6 health",
+                    ),
+                }
+            )
         return PreparedAnalysis(
             context,
             parameters,
             key,
-            thaw(snapshot.quality_summary),
+            quality,
             answer=answer,
             cached_result_id=cached,
         )

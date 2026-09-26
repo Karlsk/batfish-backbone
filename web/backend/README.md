@@ -157,3 +157,7 @@ ready现读取真实数据库和最近worker/引擎观测；停止worker、观�
 迁移0007增加版本化结果缓存；`GET /api/v1/capabilities` 显示已登记能力及开关，本篇具体查询仍禁用。`GET /api/v1/results/{id}`、`/rows`、`/flows`、`/flows/{flow_id}/traces` 提供已存结果及分页，默认50/最大200。嵌套Flow/Trace/NextHop保留结构，空结果、截断、模型限制分别表达。`RESULT_MAX_BYTES` 默认100MiB、`TABLE_ROWS` 默认100000，仅限制Web持久化输出。
 
 analysis handler支持执行和发布两个阶段；结果元数据、缓存和任务成功共同事务提交，发布失败/中断不暴露新结果。缓存命中仍生成当前用户的任务。执行前核对实际SDK/引擎版本，与快照初始化版本不同则要求重新初始化；旧结果保持可读。原子文件发布后数据库提交不确定可能保留未引用文件，需要按备份/清理设计核对，不能直接当作有效结果。
+
+## 当前进阶分析接口
+
+已登记的 `POST /api/v1/networks/{network_id}/snapshots/{snapshot_id}/analyses/bgp-sessions` 接受 `{}`（默认模型状态）或 `{"options":{"mode":"compatibility"}}`。可选 `options.nodes/remote_nodes` 为现有字面/表达式节点选择器；不接受任意 SDK 方法、状态或类型参数。结果沿用任务轮询和 `/results/{id}/rows`，完整保留 SDK 原始列与状态，并标注这是配置模型推演。Huawei/H3C 输入额外提示 IPv6 BGP 会话未建模；空表及模型 `ESTABLISHED` 均不证明现场会话情况。

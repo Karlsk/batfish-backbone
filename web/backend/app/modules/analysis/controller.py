@@ -13,6 +13,8 @@ from requests.exceptions import HTTPError
 from app.contracts.errors import ErrorCode, FieldError, ServiceError
 from app.contracts.results import Column, StructuredAnswer
 from app.infrastructure.sdk import SessionFactory
+from app.modules.analysis.controllers.bgp import QUERIES as BGP_QUERIES
+from app.modules.analysis.controllers.bgp import question_name as bgp_question_name
 from app.modules.analysis.controllers.inventory import QUERIES as INVENTORY_QUERIES
 from app.modules.analysis.controllers.routing import QUERIES as ROUTING_QUERIES
 from app.modules.analysis.controllers.topology import QUERIES as TOPOLOGY_QUERIES
@@ -45,7 +47,7 @@ class AnalysisController:
         self._sessions = SessionFactory(database, settings)
         self._wait_budget = settings.job_wait_budget_seconds
         self._queries = dict(
-            (INVENTORY_QUERIES | ROUTING_QUERIES | TRACE_QUERIES | TOPOLOGY_QUERIES)
+            (INVENTORY_QUERIES | ROUTING_QUERIES | TRACE_QUERIES | TOPOLOGY_QUERIES | BGP_QUERIES)
             if queries is None
             else queries
         )
@@ -60,6 +62,8 @@ class AnalysisController:
     def run(self, context, question_id, sdk_parameters, *, kind="table"):
         if question_id == "topology":
             plan = query_plan(sdk_parameters)
+        elif question_id == "bgp-sessions":
+            plan = [(bgp_question_name(sdk_parameters), sdk_parameters)]
         else:
             plan = [(question_id, sdk_parameters)]
         answers, failure = [], None
@@ -100,7 +104,14 @@ class AnalysisController:
                 for item in element["metadata"]["columnMetadata"]
             ),
             rows=tuple(element.get("rows", [])),
-            warnings=("No matching rows",) if not element.get("rows") else (),
+            warnings=(
+                (("No matching rows",) if not element.get("rows") else ())
+                + (
+                    ("BGP session state is model-predicted, not live device health",)
+                    if question_id == "bgp-sessions"
+                    else ()
+                )
+            ),
         )
 
     def _answer(self, session, context, question_id, sdk_parameters, deadline):

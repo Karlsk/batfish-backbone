@@ -21,6 +21,7 @@ def test_inventory_options_are_typed():
         "lpm-routes",
         "traceroute",
         "topology",
+        "bgp-sessions",
     }
     for operation, request in [
         ("nodes", {"options": {"nodes": "r1"}}),

@@ -3,6 +3,7 @@ from pydantic import ValidationError
 from app.contracts.base import thaw
 from app.contracts.errors import ErrorCode, FieldError, ServiceError
 from app.modules.analysis.schemas import Capability, Entry
+from app.modules.analysis.schemas.bgp import BgpRequest
 from app.modules.analysis.schemas.inventory import InterfacesRequest, NodesRequest
 from app.modules.analysis.schemas.routing import LpmRequest, RoutesRequest
 from app.modules.analysis.schemas.topology import TopologyRequest
@@ -12,6 +13,16 @@ from app.modules.analysis.schemas.traceroute import TraceRequest
 class Registry:
     def __init__(self, entries=None):
         defaults = [
+            Entry(
+                "bgp-sessions",
+                "BGP model sessions",
+                stage=2,
+                request_model=BgpRequest,
+                enabled=True,
+                question_id="bgp-sessions",
+                requires_dataplane=True,
+                to_sdk=lambda request: request.model_dump(mode="json"),
+            ),
             Entry(
                 "topology",
                 "Topology relations",

@@ -583,6 +583,23 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/networks/{network_id}/snapshots/{snapshot_id}/analyses/bgp-sessions": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Bgp Sessions */
+    post: operations["bgp_sessions_api_v1_networks__network_id__snapshots__snapshot_id__analyses_bgp_sessions_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/admin/deletions/{job_id}/reconcile": {
     parameters: {
       query?: never;
@@ -681,6 +698,33 @@ export interface components {
       sdk_version: string;
       /** Schema Version */
       schema_version: string;
+    };
+    /** BgpOptions */
+    BgpOptions: {
+      /**
+       * Mode
+       * @default status
+       * @enum {string}
+       */
+      mode: "status" | "compatibility";
+      /** Nodes */
+      nodes?:
+        | (
+            | components["schemas"]["LiteralSelector"]
+            | components["schemas"]["ExpressionSelector"]
+          )
+        | null;
+      /** Remote Nodes */
+      remote_nodes?:
+        | (
+            | components["schemas"]["LiteralSelector"]
+            | components["schemas"]["ExpressionSelector"]
+          )
+        | null;
+    };
+    /** BgpRequest */
+    BgpRequest: {
+      options?: components["schemas"]["BgpOptions"];
     };
     /** Capability */
     Capability: {
@@ -3512,6 +3556,53 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": components["schemas"]["TopologyRequest"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      202: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["JobDTO"];
+        };
+      };
+      /** @description Unprocessable Entity */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+    };
+  };
+  bgp_sessions_api_v1_networks__network_id__snapshots__snapshot_id__analyses_bgp_sessions_post: {
+    parameters: {
+      query?: never;
+      header?: {
+        "idempotency-key"?: string | null;
+      };
+      path: {
+        network_id: string;
+        snapshot_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["BgpRequest"];
       };
     };
     responses: {
