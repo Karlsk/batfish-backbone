@@ -534,6 +534,23 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/leader/overview": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Overview */
+    get: operations["overview_api_v1_leader_overview_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/capabilities": {
     parameters: {
       query?: never;
@@ -1877,6 +1894,32 @@ export interface components {
       /** Total */
       total: number;
     };
+    /** JobSource */
+    JobSource: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * Snapshot Id
+       * Format: uuid
+       */
+      snapshot_id: string;
+      /** Status */
+      status: string;
+      /** Phase */
+      phase: string;
+      /** Result Id */
+      result_id: string | null;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /** Finished At */
+      finished_at: string | null;
+    };
     JsonValue: unknown;
     /** LiteralSelector */
     LiteralSelector: {
@@ -1955,6 +1998,43 @@ export interface components {
        */
       created_at: string;
     };
+    /** NetworkOverview */
+    NetworkOverview: {
+      /**
+       * Network Id
+       * Format: uuid
+       */
+      network_id: string;
+      /** Display Name */
+      display_name: string;
+      /** Sync State */
+      sync_state: string;
+      /**
+       * Readiness
+       * @enum {string}
+       */
+      readiness: "pending" | "ready" | "warning";
+      /**
+       * Check State
+       * @enum {string}
+       */
+      check_state:
+        | "not_checked"
+        | "queued"
+        | "running"
+        | "succeeded"
+        | "failed"
+        | "cancelled"
+        | "interrupted"
+        | "result_unavailable"
+        | "result_available";
+      /** Concern Count */
+      concern_count: number;
+      latest_snapshot: components["schemas"]["SnapshotSource"] | null;
+      latest_ready_snapshot: components["schemas"]["SnapshotSource"] | null;
+      latest_job: components["schemas"]["JobSource"] | null;
+      latest_result: components["schemas"]["ResultSource"] | null;
+    };
     /** NetworkPage */
     NetworkPage: {
       /** Items */
@@ -2025,6 +2105,33 @@ export interface components {
     /** NodesRequest */
     NodesRequest: {
       options?: components["schemas"]["NodeOptions"];
+    };
+    /** OverviewCounts */
+    OverviewCounts: {
+      /** Network States */
+      network_states: {
+        [key: string]: number;
+      };
+      /** Snapshot States */
+      snapshot_states: {
+        [key: string]: number;
+      };
+      /** Analysis Job States */
+      analysis_job_states: {
+        [key: string]: number;
+      };
+    };
+    /** OverviewPage */
+    OverviewPage: {
+      /** Items */
+      items: components["schemas"]["NetworkOverview"][];
+      /** Offset */
+      offset: number;
+      /** Limit */
+      limit: number;
+      /** Total */
+      total: number;
+      counts: components["schemas"]["OverviewCounts"];
     };
     /** PasswordRequest */
     PasswordRequest: {
@@ -2169,6 +2276,35 @@ export interface components {
       truncated: boolean;
       /** Truncation Reason */
       truncation_reason?: string | null;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+    };
+    /** ResultSource */
+    ResultSource: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * Snapshot Id
+       * Format: uuid
+       */
+      snapshot_id: string;
+      /**
+       * Coverage
+       * @enum {string}
+       */
+      coverage: "complete" | "limited" | "unknown";
+      /** Truncated */
+      truncated: boolean;
+      /** Truncation Reason */
+      truncation_reason: string | null;
+      /** Warning Count */
+      warning_count: number;
       /**
        * Created At
        * Format: date-time
@@ -2405,6 +2541,34 @@ export interface components {
       offset: number;
       /** Limit */
       limit: number;
+    };
+    /** SnapshotSource */
+    SnapshotSource: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /** Display Name */
+      display_name: string;
+      /** Status */
+      status: string;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /** Node Count */
+      node_count?: number | null;
+      /** Issue Count */
+      issue_count?: number | null;
+      /** Coverage */
+      coverage?: string | null;
+      /**
+       * Model Limit Count
+       * @default 0
+       */
+      model_limit_count: number;
     };
     /** SourceLine */
     SourceLine: {
@@ -4274,6 +4438,47 @@ export interface operations {
         content: {
           "application/json": Blob;
           "text/csv": Blob;
+        };
+      };
+      /** @description Unprocessable Entity */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+    };
+  };
+  overview_api_v1_leader_overview_get: {
+    parameters: {
+      query?: {
+        offset?: number;
+        limit?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["OverviewPage"];
         };
       };
       /** @description Unprocessable Entity */

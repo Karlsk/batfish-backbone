@@ -1,6 +1,6 @@
 # LDR-04 跨网络总览读模型
 
-- 状态：待开发；阶段：领导端；依赖：[LDR-03](ldr-03-business-concerns-ui.md)；预计 2.0 人天。
+- 状态：已完成；阶段：领导端；依赖：[LDR-03](ldr-03-business-concerns-ui.md)；预计 2.0 人天。
 - 共享约束：[领导端设计](../../leader-design.md)、[架构](../../architecture.md)、[API 契约](../../api-contracts.md)。
 
 ## 需求与接口
@@ -21,3 +21,5 @@ leader api 只校验分页和可信 actor；leader service 汇总 network、snap
 ## 非目标与完成记录
 
 不运行新分析、不给业务健康评分。记录性能采样口径、命令和限制，LDR-05 仅消费通过的读模型。
+
+2026-09-28 已完成。`web/backend/app/modules/leader/` 增加 API、service 与 DTO；networks、snapshots、jobs、results、business_concerns 各自 service/repository 提供有界只读批量投影，总览不跨模块直读 repository。最新就绪快照和旧结果隔离、失败/中断、有限覆盖/截断、双用户权限、分页总数及 SQL 查询规模在真实 PostgreSQL 验证；OpenAPI 类型已生成。全量后端 374、双拓扑冒烟 13、前端单测 96、已有领导端浏览器 5 均通过，Ruff、构建、格式通过。真实 HTTP 两身份返回相同事实；性能样本与限制见[本篇证据](../../evidence/ldr-04-verification.md)。LDR-05 可继续。

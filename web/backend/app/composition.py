@@ -31,6 +31,8 @@ from app.modules.health.schemas import DependencyStatus
 from app.modules.health.service import HealthService
 from app.modules.jobs.api import create_router as create_jobs_router
 from app.modules.jobs.service import JobsService
+from app.modules.leader.api import create_router as create_leader_router
+from app.modules.leader.service import LeaderService
 from app.modules.lifecycle.api import create_router as create_lifecycle_router
 from app.modules.lifecycle.service import ResourceLifecycleService
 from app.modules.networks.api import create_router as create_networks_router
@@ -190,6 +192,9 @@ def create_app(
         results = ResultsService(db, auth, settings)
         app.state.results_service = results
         app.include_router(create_results_router(results, read_actor=read_actor), prefix="/api/v1")
+        leader = LeaderService(auth, networks, snapshots, jobs, results, business_concerns)
+        app.state.leader_service = leader
+        app.include_router(create_leader_router(leader, read_actor=read_actor), prefix="/api/v1")
         analysis = AnalysisService(
             auth, snapshots, jobs, results, AnalysisController(db, settings), Registry()
         )

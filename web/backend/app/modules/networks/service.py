@@ -34,6 +34,11 @@ class NetworksService:
             rows, total = NetworksRepository(transaction).list(offset=offset, limit=limit)
             return NetworkPage(items=tuple(rows), offset=offset, limit=limit, total=total)
 
+    def state_counts(self, actor: Actor) -> dict[str, int]:
+        self._auth.revalidate_actor(actor)
+        with self._database.transaction() as transaction:
+            return NetworksRepository(transaction).state_counts()
+
     def get(self, actor: Actor, network_id: UUID) -> NetworkDTO:
         self._auth.revalidate_actor(actor)
         with self._database.transaction() as transaction:

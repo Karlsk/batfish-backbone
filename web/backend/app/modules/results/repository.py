@@ -38,6 +38,22 @@ class ResultsRepository:
             {name: getattr(result, name) for name in ResultEnvelope.model_fields}
         )
 
+    def latest_for_snapshots(self, snapshot_ids):
+        if not snapshot_ids:
+            return {}
+        rows = self._transaction.scalars(
+            select(Result)
+            .where(Result.snapshot_id.in_(snapshot_ids))
+            .distinct(Result.snapshot_id)
+            .order_by(Result.snapshot_id, Result.created_at.desc(), Result.id.desc())
+        )
+        return {
+            row.snapshot_id: ResultEnvelope.model_validate(
+                {name: getattr(row, name) for name in ResultEnvelope.model_fields}
+            )
+            for row in rows
+        }
+
     def storage_key(self, result_id: UUID) -> str | None:
         result = self._transaction.get(Result, result_id)
         return result.storage_key if result else None

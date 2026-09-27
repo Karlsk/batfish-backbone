@@ -281,3 +281,9 @@ POST `/admin/deletions/{job_id}/reconcile` 接受 `{note: 10..1000字符检查�
 `GET/POST /api/v1/business-concerns` 与 `GET/PATCH /api/v1/business-concerns/{id}` 使用共享团队身份；GET 需登录，POST/PATCH 还需管理员、允许的 Origin 和当前会话 CSRF。列表可按 `network_id` 过滤，`offset` 默认 0、`limit` 默认 50/最大 200；默认不列出归档项，`include_archived=true` 可读取。单项 `GET ?version=N` 返回当时不可变版本，归档不影响历史读取。无网络或记录为 404，普通成员写入为 403，版本冲突为 409。
 
 创建体最少为 `network_id`、`name`、`priority`（`high/medium/low`）及 1～10 条 `flows`；`description` 可选。每条流量要求 `start_location` 与单个规范目的 IPv4；`source_ip`、`protocol`、`destination_port` 可选，端口 0～65535 且必须与 TCP/UDP 协议共同指定。此映射不含快照 ID，也不代表自动推断业务依赖。PATCH 要求 `expected_version` 与至少一个修改字段；网络归属、创建者和版本不能从请求覆盖。`description=null` 明确清除说明，其他必要字段不可置空。创建返回 201/版本 1，每次成功修改（含归档）版本加一并保留历史内容、修改人和时间；写入与脱敏审计在同一事务。迁移 `0011` 保存当前记录与历史版本，后续检查才绑定就绪快照。
+
+## LDR-04 跨网络总览
+
+`GET /api/v1/leader/overview?offset=0&limit=20` 面向所有已完成首次改密的登录成员。`limit` 最大 200，`total` 是服务端全部未删除网络数，与当前页大小无关。`counts.network_states` 统计全部未删除网络的当前同步状态；`counts.snapshot_states` 统计全部未删除快照记录的持久状态；`counts.analysis_job_states` 统计历史 analysis 任务的终态/运行态。这三组口径不同，不相加为健康分。
+
+每个网络卡返回最新未删除快照及最新就绪快照，按 `created_at DESC, id DESC` 稳定选择。`readiness=pending` 表示没有就绪快照，`warning` 表示就绪快照带解析警告或另有更新但未就绪的快照；`ready` 仅表示当前最新快照已完成初始化且无解析警告，不表示转发正确。`check_state=not_checked` 不制造结果；最近 analysis 任务仅从该卡的最新就绪快照中选取，失败/中断不算成功。`latest_result` 也只来自同一就绪快照，独立给出 `coverage`、`truncated`、`truncation_reason`、警告数与创建时间；它可能早于最近的失败任务，客户端必须分别标注时间与来源。`result_unavailable` 表示任务记录成功但无可读结果元数据。接口只查询已存 PostgreSQL 事实，不执行 SDK 或触发任务。

@@ -48,6 +48,14 @@ class NetworksRepository:
         )
         return [_dto(row) for row in rows], total
 
+    def state_counts(self) -> dict[str, int]:
+        rows = self._transaction.execute(
+            select(Network.sync_state, func.count())
+            .where(Network.deleted_at.is_(None))
+            .group_by(Network.sync_state)
+        )
+        return {state: count for state, count in rows}
+
     def mark_ready(self, network_id: UUID) -> None:
         network = self._transaction.get(Network, network_id, with_for_update=True)
         network.sync_state, network.sync_error = "ready", None

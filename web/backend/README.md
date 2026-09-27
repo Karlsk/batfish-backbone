@@ -167,3 +167,7 @@ ADV-05 增加 `POST /api/v1/networks/{network_id}/snapshots/{snapshot_id}/analys
 ## 领导端业务关注项（LDR-02）
 
 迁移 `0011` 增加网络级业务关注项当前表与不可变版本表。`GET/POST /api/v1/business-concerns`、`GET/PATCH /api/v1/business-concerns/{id}` 提供共享读取、管理员维护、归档及历史版本读取。请求只接受有类型的名称、重要程度和 1～10 条显式关键流量；修改须提供 `expected_version`，冲突返回 409。API 不调用 SDK；业务模块通过 NetworksService 核对网络，版本写入和审计同事务。完整字段见 [API 契约](../docs/api-contracts.md#ldr-02-业务关注项)。
+
+## 领导端跨网络总览（LDR-04）
+
+`GET /api/v1/leader/overview?offset=0&limit=20` 对已登录成员提供最多 200 项的分页网络卡与服务端全量总数。卡片区分最新快照和最新就绪快照，分析任务和结果只绑定后一来源；无结果返回“未检查”，结果保留覆盖与截断警告。汇总计数明确区分当前网络、未删除快照记录和历史分析任务，均不代表业务健康分。leader service 仅调用各来源 service 的批量只读投影，不直接调用 SDK；详见 [API 契约](../docs/api-contracts.md#ldr-04-跨网络总览)。

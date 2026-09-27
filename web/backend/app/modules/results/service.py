@@ -280,6 +280,13 @@ class ResultsService:
             raise ServiceError(ErrorCode.NOT_FOUND)
         return result
 
+    def latest_for_snapshots(self, actor, snapshot_ids):
+        self._auth.revalidate_actor(actor)
+        if len(snapshot_ids) > 200:
+            raise ServiceError(ErrorCode.VALIDATION_ERROR)
+        with self._database.transaction() as tx:
+            return ResultsRepository(tx).latest_for_snapshots(snapshot_ids)
+
     def _payload(self, actor, result_id, kind):
         result = self.get(actor, result_id)
         if result.kind != kind:

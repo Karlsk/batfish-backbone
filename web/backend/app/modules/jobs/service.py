@@ -157,6 +157,35 @@ class JobsService:
                 raise ServiceError(ErrorCode.NOT_FOUND)
             return self._present(job)
 
+    def get_many(self, actor: Actor, job_ids: tuple[UUID, ...]) -> dict[UUID, JobDTO]:
+        self._actor(actor)
+        if len(job_ids) > 400:
+            raise ServiceError(ErrorCode.VALIDATION_ERROR)
+        with self._database.transaction() as transaction:
+            return {
+                identifier: self._present(job)
+                for identifier, job in JobsRepository(transaction).get_many(job_ids).items()
+            }
+
+    def latest_analysis_for_snapshots(
+        self, actor: Actor, snapshot_ids: tuple[UUID, ...]
+    ) -> dict[UUID, JobDTO]:
+        self._actor(actor)
+        if len(snapshot_ids) > 200:
+            raise ServiceError(ErrorCode.VALIDATION_ERROR)
+        with self._database.transaction() as transaction:
+            return {
+                identifier: self._present(job)
+                for identifier, job in JobsRepository(transaction)
+                .latest_analysis_for_snapshots(snapshot_ids)
+                .items()
+            }
+
+    def analysis_status_counts(self, actor: Actor) -> dict[str, int]:
+        self._actor(actor)
+        with self._database.transaction() as transaction:
+            return JobsRepository(transaction).analysis_status_counts()
+
     def cancel(self, actor, job_id: UUID) -> JobDTO:
         actor = self._actor(actor)
         with self._database.transaction() as transaction:

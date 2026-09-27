@@ -84,6 +84,32 @@ class SnapshotsRepository:
         )
         return tuple(self.dto(row) for row in rows), total
 
+    def latest_for_networks(self, network_ids):
+        if not network_ids:
+            return {}, {}
+        base = select(Snapshot).where(
+            Snapshot.network_id.in_(network_ids), Snapshot.deleted_at.is_(None)
+        )
+        ordering = (Snapshot.network_id, Snapshot.created_at.desc(), Snapshot.id.desc())
+        latest = self.tx.scalars(base.distinct(Snapshot.network_id).order_by(*ordering)).all()
+        ready = self.tx.scalars(
+            base.where(Snapshot.status.in_(("ready", "ready_with_warnings")))
+            .distinct(Snapshot.network_id)
+            .order_by(*ordering)
+        ).all()
+        return (
+            {row.network_id: self.dto(row) for row in latest},
+            {row.network_id: self.dto(row) for row in ready},
+        )
+
+    def status_counts(self):
+        rows = self.tx.execute(
+            select(Snapshot.status, func.count())
+            .where(Snapshot.deleted_at.is_(None))
+            .group_by(Snapshot.status)
+        )
+        return {status: count for status, count in rows}
+
     def has_live(self, network_id):
         return (
             self.tx.scalar(

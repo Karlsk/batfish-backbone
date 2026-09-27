@@ -81,6 +81,29 @@ class JobsRepository:
             query = query.with_for_update()
         return self.dto(self._transaction.scalar(query))
 
+    def get_many(self, job_ids):
+        if not job_ids:
+            return {}
+        rows = self._transaction.scalars(select(Job).where(Job.id.in_(job_ids)))
+        return {row.id: self.dto(row) for row in rows}
+
+    def latest_analysis_for_snapshots(self, snapshot_ids):
+        if not snapshot_ids:
+            return {}
+        rows = self._transaction.scalars(
+            select(Job)
+            .where(Job.snapshot_id.in_(snapshot_ids), Job.kind == "analysis")
+            .distinct(Job.snapshot_id)
+            .order_by(Job.snapshot_id, Job.created_at.desc(), Job.id.desc())
+        )
+        return {row.snapshot_id: self.dto(row) for row in rows}
+
+    def analysis_status_counts(self):
+        rows = self._transaction.execute(
+            select(Job.status, func.count()).where(Job.kind == "analysis").group_by(Job.status)
+        )
+        return {status: count for status, count in rows}
+
     def lock_queue(self):
         self._transaction.execute(text("SELECT pg_advisory_xact_lock(4281082026)"))
 

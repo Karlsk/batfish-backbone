@@ -25,6 +25,13 @@ class BusinessConcernsService:
             raise ServiceError(ErrorCode.FORBIDDEN)
         return actor
 
+    def active_counts(self, actor: Actor, network_ids: tuple[UUID, ...]) -> dict[UUID, int]:
+        self._actor(actor)
+        if len(network_ids) > 200:
+            raise ServiceError(ErrorCode.VALIDATION_ERROR)
+        with self._database.transaction() as transaction:
+            return BusinessConcernsRepository(transaction).active_counts(network_ids)
+
     def list(
         self,
         actor: Actor,

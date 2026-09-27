@@ -46,7 +46,7 @@ class SnapshotsService:
             raise ServiceError(ErrorCode.NOT_FOUND)
         return row
 
-    def _present(self, actor, row):
+    def _present(self, actor, row, jobs_by_id=None):
         status = row.status
         quality = thaw(row.quality_summary)
         if row.diagnostics:
@@ -56,7 +56,13 @@ class SnapshotsService:
             if status in {"ready", "ready_with_warnings"}:
                 status = quality_status
         if status not in {"deleted", "deleting"} and row.initialization_job_id:
-            job = self._jobs.get(actor, row.initialization_job_id)
+            job = (
+                jobs_by_id.get(row.initialization_job_id)
+                if jobs_by_id is not None
+                else self._jobs.get(actor, row.initialization_job_id)
+            )
+            if job is None:
+                raise ServiceError(ErrorCode.NOT_FOUND)
             if job.status in {"failed", "cancelled", "interrupted"}:
                 status = "failed"
             elif job.status == "queued":
@@ -93,6 +99,27 @@ class SnapshotsService:
             offset=offset,
             limit=limit,
         )
+
+    def latest_for_networks(self, actor: Actor, network_ids: tuple[UUID, ...]):
+        self._auth.revalidate_actor(actor)
+        if len(network_ids) > 200:
+            raise ServiceError(ErrorCode.VALIDATION_ERROR)
+        with self._database.transaction() as tx:
+            latest, ready = SnapshotsRepository(tx).latest_for_networks(network_ids)
+        selected = (*latest.values(), *ready.values())
+        job_ids = tuple(
+            {row.initialization_job_id for row in selected if row.initialization_job_id is not None}
+        )
+        jobs = self._jobs.get_many(actor, job_ids)
+        return (
+            {identifier: self._present(actor, row, jobs) for identifier, row in latest.items()},
+            {identifier: self._present(actor, row, jobs) for identifier, row in ready.items()},
+        )
+
+    def status_counts(self, actor: Actor) -> dict[str, int]:
+        self._auth.revalidate_actor(actor)
+        with self._database.transaction() as tx:
+            return SnapshotsRepository(tx).status_counts()
 
     @staticmethod
     def _context(network, snapshot):

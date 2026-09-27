@@ -101,6 +101,19 @@ class BusinessConcernsRepository:
         )
         return [_dto(row) for row in rows], total or 0
 
+    def active_counts(self, network_ids: tuple[UUID, ...]) -> dict[UUID, int]:
+        if not network_ids:
+            return {}
+        rows = self._transaction.execute(
+            select(BusinessConcern.network_id, func.count())
+            .where(
+                BusinessConcern.network_id.in_(network_ids),
+                BusinessConcern.archived.is_(False),
+            )
+            .group_by(BusinessConcern.network_id)
+        )
+        return {network_id: count for network_id, count in rows}
+
     def update(
         self,
         identifier: UUID,
