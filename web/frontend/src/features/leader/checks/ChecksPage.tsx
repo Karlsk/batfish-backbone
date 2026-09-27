@@ -35,32 +35,51 @@ import {
   type MvpDraft,
   type MvpTemplateId,
 } from "./model";
+import {
+  describeAdvanced,
+  prepareAdvancedCheck,
+  type AdvancedDraft,
+  type AdvancedTemplateId,
+} from "./advanced";
+import { AdvancedEvidence, ExpertCapabilities } from "./AdvancedEvidence";
 
 type Concern = components["schemas"]["ConcernDTO"];
+type GuidedTemplateId = MvpTemplateId | AdvancedTemplateId;
+type GuidedDraft = MvpDraft & AdvancedDraft;
+const advancedIds: AdvancedTemplateId[] = ["topology", "bgp", "acl"];
+const isAdvanced = (id: string): id is AdvancedTemplateId =>
+  advancedIds.includes(id as AdvancedTemplateId);
 
-const ids: MvpTemplateId[] = [
+const ids: GuidedTemplateId[] = [
   "configuration-quality",
   "devices",
   "interfaces",
   "routes",
   "lpm-routes",
   "traceroute",
+  ...advancedIds,
 ];
-const labels: Record<MvpTemplateId, string> = {
+const labels: Record<GuidedTemplateId, string> = {
   "configuration-quality": "配置质量",
   devices: "设备清单",
   interfaces: "接口清单",
   routes: "路由检查",
   "lpm-routes": "最长前缀匹配",
   traceroute: "虚拟连通性",
+  topology: "网络拓扑",
+  bgp: "BGP 会话",
+  acl: "ACL 流量检查",
 };
-const descriptions: Record<MvpTemplateId, string> = {
+const descriptions: Record<GuidedTemplateId, string> = {
   "configuration-quality": "先看配置是否解析，以及模型已知限制。",
   devices: "查看快照里识别出的设备。",
   interfaces: "查看已建模的接口状态与地址。",
   routes: "按一个明确网段检查路由记录。",
   "lpm-routes": "检查一个目的地址命中的最长前缀。",
   traceroute: "从一个起点推演到一个目的地的单向路径。",
+  topology: "展示配置模型推导的设备关系。",
+  bgp: "查看固定快照中的模型会话或配置兼容性。",
+  acl: "检查明确流量在指定 ACL 中的局部动作。",
 };
 const short = (value: string) => value.slice(0, 8);
 const when = (value: string) =>
@@ -82,10 +101,10 @@ function CheckWorkspace() {
   const [snapshotId, setSnapshotId] = useState<string | null>(
     snapshot?.id ?? null,
   );
-  const [templateId, setTemplateId] = useState<MvpTemplateId>(
+  const [templateId, setTemplateId] = useState<GuidedTemplateId>(
     "configuration-quality",
   );
-  const [draft, setDraft] = useState<MvpDraft>({});
+  const [draft, setDraft] = useState<GuidedDraft>({});
   const [concernId, setConcernId] = useState<string | null>(null);
   const [flowIndex, setFlowIndex] = useState(0);
   const [busy, setBusy] = useState(false);
@@ -154,6 +173,17 @@ function CheckWorkspace() {
         : false,
   });
   const template = templates.data?.items.find((item) => item.id === templateId);
+  const advancedCount = (
+    templateId === "acl"
+      ? [draft.nodes, draft.protocol, draft.destination_port]
+      : templateId === "topology" || templateId === "bgp"
+        ? [draft.nodes, draft.remote_nodes]
+        : templateId === "traceroute"
+          ? [draft.source_ip, draft.max_traces]
+          : [draft.nodes, draft.vrfs]
+  ).filter(
+    (value) => value !== undefined && value !== null && value !== "",
+  ).length;
 
   const prefill = (concern: Concern, index: number) => {
     const flow = concern.flows[index];
@@ -180,7 +210,9 @@ function CheckWorkspace() {
     }
     let prepared;
     try {
-      prepared = prepareMvpCheck(templateId, draft);
+      prepared = isAdvanced(templateId)
+        ? prepareAdvancedCheck(templateId, draft)
+        : prepareMvpCheck(templateId, draft);
     } catch (error) {
       setFormError(error instanceof Error ? error.message : "请检查输入范围");
       return;
@@ -352,26 +384,29 @@ function CheckWorkspace() {
         role="group"
         aria-label="检查问题"
       >
-        {ids.map((id) => (
-          <button
-            key={id}
-            type="button"
-            className={
-              templateId === id
-                ? "leader-check-template selected"
-                : "leader-check-template"
-            }
-            aria-pressed={templateId === id}
-            onClick={() => {
-              setTemplateId(id);
-              setFormError(null);
-              setConcernId(null);
-            }}
-          >
-            <span>{labels[id]}</span>
-            <small>{descriptions[id]}</small>
-          </button>
-        ))}
+        {ids
+          .filter((id) => templates.data?.items.some((item) => item.id === id))
+          .map((id) => (
+            <button
+              key={id}
+              type="button"
+              className={
+                templateId === id
+                  ? "leader-check-template selected"
+                  : "leader-check-template"
+              }
+              aria-pressed={templateId === id}
+              onClick={() => {
+                setTemplateId(id);
+                setDraft({});
+                setFormError(null);
+                setConcernId(null);
+              }}
+            >
+              <span>{labels[id]}</span>
+              <small>{descriptions[id]}</small>
+            </button>
+          ))}
       </div>
       <Card
         className="leader-checks-panel"
@@ -495,6 +530,81 @@ function CheckWorkspace() {
             )}
           </>
         )}
+        {templateId === "topology" && (
+          <label className="leader-checks-field">
+            关系类型
+            <Select
+              aria-label="关系类型"
+              value={draft.view ?? "layer3"}
+              virtual={false}
+              options={[
+                { value: "layer3", label: "三层推导关系" },
+                { value: "bgp", label: "BGP 关系" },
+                { value: "ospf", label: "OSPF 关系" },
+                { value: "isis", label: "ISIS 关系" },
+              ]}
+              onChange={(value) => setDraft({ ...draft, view: value })}
+            />
+          </label>
+        )}
+        {templateId === "bgp" && (
+          <label className="leader-checks-field">
+            想看什么会话信息
+            <Select
+              aria-label="BGP 分析模式"
+              value={draft.mode ?? "status"}
+              virtual={false}
+              options={[
+                { value: "status", label: "模型会话状态" },
+                { value: "compatibility", label: "配置兼容性" },
+              ]}
+              onChange={(value) => setDraft({ ...draft, mode: value })}
+            />
+          </label>
+        )}
+        {templateId === "acl" && (
+          <>
+            <Alert
+              type="info"
+              title="这里只判断指定 ACL 对明确流量的局部动作，不证明端到端连通。"
+            />
+            <div className="leader-checks-fields">
+              <label className="leader-checks-field">
+                流量源地址
+                <Input
+                  aria-label="流量源地址"
+                  value={draft.source_ip ?? ""}
+                  onChange={(event) =>
+                    setDraft({ ...draft, source_ip: event.target.value })
+                  }
+                  placeholder="例如 10.64.0.1"
+                />
+              </label>
+              <label className="leader-checks-field">
+                流量目的地址
+                <Input
+                  aria-label="流量目的地址"
+                  value={draft.destination_ip ?? ""}
+                  onChange={(event) =>
+                    setDraft({ ...draft, destination_ip: event.target.value })
+                  }
+                  placeholder="例如 10.64.0.4"
+                />
+              </label>
+              <label className="leader-checks-field">
+                要检查的 ACL 名称
+                <Input
+                  aria-label="要检查的 ACL 名称"
+                  value={draft.filters ?? ""}
+                  onChange={(event) =>
+                    setDraft({ ...draft, filters: event.target.value })
+                  }
+                  placeholder="例如 ACL-IN；多个用逗号分隔"
+                />
+              </label>
+            </div>
+          </>
+        )}
         {templateId !== "configuration-quality" && (
           <Collapse
             className="leader-checks-advanced"
@@ -506,25 +616,23 @@ function CheckWorkspace() {
                   <span>
                     高级条件{" "}
                     <Tag>
-                      {[
-                        draft.nodes,
-                        draft.vrfs,
-                        draft.source_ip,
-                        draft.max_traces,
-                      ].filter(
-                        (value) =>
-                          value !== undefined && value !== null && value !== "",
-                      ).length
-                        ? `已生效 ${[draft.nodes, draft.vrfs, draft.source_ip, draft.max_traces].filter((value) => value !== undefined && value !== null && value !== "").length} 项`
+                      {advancedCount
+                        ? `已生效 ${advancedCount} 项`
                         : "使用默认值"}
                     </Tag>
                   </span>
                 ),
                 children: (
                   <div className="leader-checks-fields">
-                    {["devices", "interfaces", "routes", "lpm-routes"].includes(
-                      templateId,
-                    ) && (
+                    {[
+                      "devices",
+                      "interfaces",
+                      "routes",
+                      "lpm-routes",
+                      "topology",
+                      "bgp",
+                      "acl",
+                    ].includes(templateId) && (
                       <label className="leader-checks-field">
                         只看这些设备（逗号分隔）
                         <Input
@@ -536,6 +644,56 @@ function CheckWorkspace() {
                           placeholder="留空为全部设备"
                         />
                       </label>
+                    )}
+                    {(templateId === "topology" || templateId === "bgp") && (
+                      <label className="leader-checks-field">
+                        对端设备（逗号分隔）
+                        <Input
+                          aria-label="对端设备"
+                          value={draft.remote_nodes ?? ""}
+                          onChange={(event) =>
+                            setDraft({
+                              ...draft,
+                              remote_nodes: event.target.value,
+                            })
+                          }
+                          placeholder="留空为全部对端"
+                        />
+                      </label>
+                    )}
+                    {templateId === "acl" && (
+                      <>
+                        <label className="leader-checks-field">
+                          流量协议
+                          <Select
+                            aria-label="ACL 流量协议"
+                            value={draft.protocol ?? "icmp"}
+                            virtual={false}
+                            options={["icmp", "tcp", "udp"].map((value) => ({
+                              value,
+                              label: value.toUpperCase(),
+                            }))}
+                            onChange={(value) =>
+                              setDraft({ ...draft, protocol: value })
+                            }
+                          />
+                        </label>
+                        {(draft.protocol === "tcp" ||
+                          draft.protocol === "udp") && (
+                          <label className="leader-checks-field">
+                            目标端口
+                            <InputNumber
+                              aria-label="ACL 目标端口"
+                              min={0}
+                              max={65535}
+                              value={draft.destination_port ?? null}
+                              onChange={(value) =>
+                                setDraft({ ...draft, destination_port: value })
+                              }
+                            />
+                          </label>
+                        )}
+                      </>
                     )}
                     {["routes", "lpm-routes"].includes(templateId) && (
                       <label className="leader-checks-field">
@@ -649,6 +807,10 @@ function CheckWorkspace() {
           <p>仅显示最近 {runs.data.items.length} 条，请选择网络缩小范围。</p>
         )}
       </Card>
+      <ExpertCapabilities />
+      <Link to="/expert" onClick={() => chooseEntry("technical")}>
+        进入技术工作台使用已登记的专家查询 <ArrowRightOutlined />
+      </Link>
     </section>
   );
 }
@@ -697,6 +859,32 @@ function CheckRunDetail({ runId }: { runId: string }) {
       ),
     enabled: !!session && !!resultId,
   });
+  const advancedRows = useQuery({
+    queryKey: resourceKey(
+      session?.user_id ?? null,
+      {
+        networkId: run?.network_id ?? null,
+        snapshotId: run?.snapshot_id ?? null,
+      },
+      "leader-advanced-rows",
+      {},
+      resultId ?? null,
+    ),
+    queryFn: ({ signal }) =>
+      unwrap(
+        api.GET("/api/v1/results/{result_id}/rows", {
+          signal,
+          params: {
+            path: { result_id: resultId! },
+            query: { offset: 0, limit: 200 },
+          },
+        }),
+      ),
+    enabled:
+      !!session &&
+      !!resultId &&
+      (run?.template_id === "bgp" || run?.template_id === "acl"),
+  });
   if (runQuery.isPending) return <LoadingState />;
   if (runQuery.isError)
     return (
@@ -711,7 +899,20 @@ function CheckRunDetail({ runId }: { runId: string }) {
       ? resultQuery.data
       : null;
   const sourceMismatch = !!resultQuery.data && !result;
-  const view = describeRun(run, result ?? null);
+  const view =
+    result && isAdvanced(run.template_id)
+      ? describeAdvanced(
+          run.template_id,
+          result,
+          advancedRows.data && run.template_id !== "topology"
+            ? {
+                rows: advancedRows.data.rows,
+                total: advancedRows.data.total,
+                truncated: advancedRows.data.truncated,
+              }
+            : undefined,
+        )
+      : describeRun(run, result ?? null);
   const cancelJob = run.jobs.find((item) => item.status === "queued");
   const scope = run.effective_parameters.request;
   const values =
@@ -818,6 +1019,27 @@ function CheckRunDetail({ runId }: { runId: string }) {
               {String(values.destination_ip ?? "未记录")}
             </p>
           )}
+          {run.template_id === "topology" && (
+            <p>关系类型：{String(values.view ?? "layer3")}</p>
+          )}
+          {run.template_id === "bgp" && (
+            <p>
+              分析模式：
+              {String(
+                (values.options &&
+                typeof values.options === "object" &&
+                !Array.isArray(values.options)
+                  ? (values.options as Record<string, unknown>).mode
+                  : null) ?? "status",
+              )}
+            </p>
+          )}
+          {run.template_id === "acl" && (
+            <p>
+              流量 {String(values.source_ip ?? "未记录")} →{" "}
+              {String(values.destination_ip ?? "未记录")}；仅判断明确 ACL 范围。
+            </p>
+          )}
           {run.frozen_concern && (
             <p>
               业务关注项：{String(run.frozen_concern.name ?? "未命名")} · 第{" "}
@@ -860,7 +1082,20 @@ function CheckRunDetail({ runId }: { runId: string }) {
           )}
         </Card>
       </div>
-      <Card title="04 / 查看技术详情" className="leader-checks-panel">
+      {result && isAdvanced(run.template_id) && (
+        <AdvancedEvidence
+          template={run.template_id}
+          result={result}
+          rows={advancedRows.data}
+          pending={advancedRows.isPending}
+          error={advancedRows.error}
+          retry={() => void advancedRows.refetch()}
+        />
+      )}
+      <Card
+        title={`${isAdvanced(run.template_id) && result ? "05" : "04"} / 查看技术详情`}
+        className="leader-checks-panel"
+      >
         <Space wrap>
           {run.template_id === "configuration-quality" && (
             <Link
@@ -894,7 +1129,13 @@ function CheckRunDetail({ runId }: { runId: string }) {
               to={
                 run.template_id === "traceroute"
                   ? "/traceroute"
-                  : `/analysis/${run.template_id === "devices" ? "nodes" : run.template_id}`
+                  : run.template_id === "topology"
+                    ? "/topology"
+                    : run.template_id === "bgp"
+                      ? "/bgp"
+                      : run.template_id === "acl"
+                        ? "/acl"
+                        : `/analysis/${run.template_id === "devices" ? "nodes" : run.template_id}`
               }
               onClick={() => chooseEntry("technical")}
             >

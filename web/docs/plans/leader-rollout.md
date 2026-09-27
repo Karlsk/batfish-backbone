@@ -12,8 +12,8 @@
 | LDR-04 | completed | `49192328d3` | 总览读模型、分页/质量/来源：374 后端、13 冒烟、96 前端单测、5 浏览器 | [证据](../evidence/ldr-04-verification.md) | `9f3f479cae` |
 | LDR-05 | completed | `9f3f479cae` | 领导总览/单网络下钻与最近比较：374 后端、13 冒烟、98 前端单测、8 浏览器 | [证据](../evidence/ldr-05-verification.md) | `e78f263e46` |
 | LDR-06 | completed | `e78f263e46` | 13 模板、持久幂等运行、真实 worker、架构规则：385 后端、13 冒烟、98 前端单测、9 浏览器 | [证据](../evidence/ldr-06-verification.md) | `aa0cbcd0e7` |
-| LDR-07 | completed | `aa0cbcd0e7` | 六项 MVP 自主检查、关注项预填与证据恢复：102 前端单测、13 累计浏览器、13 冒烟 | [证据](../evidence/ldr-07-verification.md) | 本篇提交 |
-| LDR-08 | pending | — | ADV 拓扑/BGP/ACL/专家结论 | 待执行 | — |
+| LDR-07 | completed | `aa0cbcd0e7` | 六项 MVP 自主检查、关注项预填与证据恢复：102 前端单测、13 累计浏览器、13 冒烟 | [证据](../evidence/ldr-07-verification.md) | `277e9f8e97` |
+| LDR-08 | completed | `277e9f8e97` | ADV 拓扑/BGP/ACL/专家结论，108 前端单测、17 累计浏览器 | [证据](../evidence/ldr-08-verification.md) | 本篇提交 |
 | LDR-09 | pending | — | 固定双快照/故障派生 | 待执行 | — |
 | LDR-10 | pending | — | 汇报冻结/版本/权限 | 待执行 | — |
 | LDR-11 | pending | — | 双主题/双用户会议页与打印 | 待执行 | — |

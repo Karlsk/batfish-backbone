@@ -1657,6 +1657,46 @@ input:focus-visible {
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
+.leader-graph-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 18px 0;
+}
+.leader-graph-controls .ant-select:first-child {
+  min-width: min(100%, 280px);
+}
+.leader-graph-controls .ant-select:last-child {
+  min-width: 110px;
+}
+.leader-graph-nodes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+.leader-advanced-rows,
+.leader-capabilities {
+  display: grid;
+  gap: 8px;
+  margin-top: 16px;
+}
+.leader-advanced-row,
+.leader-capabilities > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  padding: 12px 15px;
+  border: 1px solid var(--app-divider);
+  border-radius: 10px;
+  background: var(--app-input);
+}
+.leader-capabilities > div span {
+  color: var(--app-muted);
+  margin-left: auto;
+}
 @media (max-width: 960px) {
   .leader-topbar {
     flex-wrap: wrap;
