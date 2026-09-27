@@ -49,6 +49,7 @@ import { AdminOnly } from "../features/users/Access";
 import { ContextPicker } from "../features/networks/ContextPicker";
 import { LoadingState } from "../components/States";
 import { LeaderOverview, LeaderShell } from "../features/leader/LeaderShell";
+import { ConcernsPage } from "../features/leader/concerns/ConcernsPage";
 const TracePage = lazy(() =>
   import("../features/traceroute/TraceForm").then((m) => ({
     default: m.TracePage,
@@ -354,6 +355,7 @@ function WorkbenchRoutes() {
             <LeaderShell>
               <Routes>
                 <Route path="/leader/overview" element={<LeaderOverview />} />
+                <Route path="/leader/concerns" element={<ConcernsPage />} />
                 <Route
                   path="/leader"
                   element={<Navigate to="/leader/overview" replace />}

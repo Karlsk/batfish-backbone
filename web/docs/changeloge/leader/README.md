@@ -1,12 +1,12 @@
 # 领导端规格：LDR-01～12
 
-状态：LDR-01～02 已完成，LDR-03～12 待开发。前置为 [ADV-18](../advance/adv-18-phase-three-acceptance.md) 全部通过。公共契约见[领导端设计](../../leader-design.md)，仍遵守 [web/AGENTS.md](../../../AGENTS.md)。每份目标不超过 2 人天；按编号串行。已完成篇的实现与真实验证证据必须随本篇记录，再推进下一篇。
+状态：LDR-01～03 已完成，LDR-04～12 待开发。前置为 [ADV-18](../advance/adv-18-phase-three-acceptance.md) 全部通过。公共契约见[领导端设计](../../leader-design.md)，仍遵守 [web/AGENTS.md](../../../AGENTS.md)。每份目标不超过 2 人天；按编号串行。已完成篇的实现与真实验证证据必须随本篇记录，再推进下一篇。
 
 | Spec | 依赖 | 人天 | 状态 |
 | --- | --- | ---: | --- |
 | [LDR-01 双入口与壳层](ldr-01-dual-entry.md) | ADV-18 | 1.5 | 已完成 |
 | [LDR-02 业务关注项接口](ldr-02-business-concerns-api.md) | LDR-01 | 2.0 | 已完成 |
-| [LDR-03 业务关注项页面](ldr-03-business-concerns-ui.md) | LDR-02 | 1.5 | 待开发 |
+| [LDR-03 业务关注项页面](ldr-03-business-concerns-ui.md) | LDR-02 | 1.5 | 已完成 |
 | [LDR-04 跨网络总览接口](ldr-04-overview-api.md) | LDR-03 | 2.0 | 待开发 |
 | [LDR-05 日常总览页面](ldr-05-overview-ui.md) | LDR-04 | 2.0 | 待开发 |
 | [LDR-06 检查模板与运行记录](ldr-06-check-runs-api.md) | LDR-05 | 2.0 | 待开发 |

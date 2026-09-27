@@ -2,7 +2,13 @@ import { defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [react()],
-  server: { proxy: { "/api": { target: "http://127.0.0.1:18000" } } },
+  server: {
+    proxy: {
+      "/api": {
+        target: process.env.BFW_API_TARGET ?? "http://127.0.0.1:18000",
+      },
+    },
+  },
   test: {
     environment: "jsdom",
     maxWorkers: 2,

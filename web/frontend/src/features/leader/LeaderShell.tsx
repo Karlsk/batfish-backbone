@@ -27,8 +27,21 @@ export function LeaderShell({ children }: PropsWithChildren) {
           </span>
         </Link>
         <nav className="leader-navigation" aria-label="领导视图导航">
-          <Link to="/leader/overview" aria-current="page">
+          <Link
+            to="/leader/overview"
+            aria-current={
+              location.pathname === "/leader/overview" ? "page" : undefined
+            }
+          >
             总览
+          </Link>
+          <Link
+            to="/leader/concerns"
+            aria-current={
+              location.pathname === "/leader/concerns" ? "page" : undefined
+            }
+          >
+            业务关注项
           </Link>
         </nav>
         <Space className="leader-controls" wrap>

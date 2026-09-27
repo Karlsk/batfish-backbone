@@ -1,6 +1,6 @@
 # LDR-03 业务关注项管理页面
 
-- 状态：待开发；阶段：领导端；依赖：[LDR-02](ldr-02-business-concerns-api.md)；预计 1.5 人天。
+- 状态：已完成；阶段：领导端；依赖：[LDR-02](ldr-02-business-concerns-api.md)；预计 1.5 人天。
 - 共享约束：[领导端设计](../../leader-design.md)、[前端规范](../../frontend.md)。
 
 ## 需求与接口
@@ -21,3 +21,5 @@
 ## 非目标与完成记录
 
 不运行分析或生成汇报。记录文件、命令、结果与限制，LDR-04 依赖此页及后端契约。
+
+2026-09-28 已完成。`web/frontend/src/features/leader/concerns/` 增加按网络隔离的列表、最少必填项表单、高级流量条件、提交范围预览、版本详情与归档。`App.tsx`/`LeaderShell.tsx` 接入新路由和导航；`style.css` 提供深浅主题与窄屏布局；`vite.config.ts` 允许隔离环境覆盖 API 代理地址。Vitest 96、真实双用户浏览器目标 2、LDR-01 入口累计浏览器 3、API 类型检查、类型检查、构建和格式检查通过。隔离 PostgreSQL 升级 `0011`，当前 API 与真实 Batfish lab 同时运行；详见[本篇证据](../../evidence/ldr-03-verification.md)。本篇不生成检查结论或汇报，LDR-04 可继续。
