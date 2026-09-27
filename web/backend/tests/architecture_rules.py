@@ -20,6 +20,11 @@ def business_module(name: str) -> tuple[str, str] | None:
     layer = {"controllers": "controller", "repositories": "repository"}.get(layer, layer)
     if parts[2:3] == ["leader"]:
         layer = {
+            "briefings_api": "api",
+            "briefings_service": "service",
+            "briefings_repository": "repository",
+            "briefings_models": "models",
+            "briefings_schemas": "schemas",
             "checks_api": "api",
             "checks_service": "service",
             "checks_repository": "repository",

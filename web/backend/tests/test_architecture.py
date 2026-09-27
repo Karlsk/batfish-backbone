@@ -69,6 +69,11 @@ def test_import_boundaries_reject_violations(path, source):
         ("app/modules/a/service.py", "from ..b import service as b_service"),
         ("app/modules/a/service.py", "from . import controller, repository"),
         ("app/modules/leader/checks_api.py", "from .checks_service import CheckRunsService"),
+        ("app/modules/leader/briefings_api.py", "from .briefings_service import BriefingsService"),
+        (
+            "app/modules/leader/briefings_service.py",
+            "from app.modules.results.service import ResultsService",
+        ),
         (
             "app/modules/leader/checks_service.py",
             "from app.modules.analysis.service import AnalysisService",

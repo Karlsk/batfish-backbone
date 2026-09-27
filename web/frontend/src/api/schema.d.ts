@@ -841,6 +841,59 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/leader/briefings": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List Briefings */
+    get: operations["list_briefings_api_v1_leader_briefings_get"];
+    put?: never;
+    /** Create Briefing */
+    post: operations["create_briefing_api_v1_leader_briefings_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/leader/briefings/{briefing_id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Briefing */
+    get: operations["get_briefing_api_v1_leader_briefings__briefing_id__get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /** Revise Briefing */
+    patch: operations["revise_briefing_api_v1_leader_briefings__briefing_id__patch"];
+    trace?: never;
+  };
+  "/api/v1/leader/briefings/{briefing_id}/archive": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Archive Briefing */
+    post: operations["archive_briefing_api_v1_leader_briefings__briefing_id__archive_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/networks/{network_id}/snapshots/{snapshot_id}/fault-scenarios": {
     parameters: {
       query?: never;
@@ -1070,6 +1123,131 @@ export interface components {
     /** BgpRequest */
     BgpRequest: {
       options?: components["schemas"]["BgpOptions"];
+    };
+    /** Briefing */
+    Briefing: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * Report Id
+       * Format: uuid
+       */
+      report_id: string;
+      /** Version */
+      version: number;
+      /** Title */
+      title: string;
+      /** Notes */
+      notes: string | null;
+      /**
+       * Network Id
+       * Format: uuid
+       */
+      network_id: string;
+      /** Network Name */
+      network_name: string;
+      /**
+       * Snapshot Id
+       * Format: uuid
+       */
+      snapshot_id: string;
+      /** Snapshot Name */
+      snapshot_name: string;
+      /** Snapshot Quality */
+      snapshot_quality: {
+        [key: string]: components["schemas"]["JsonValue"];
+      };
+      /** Comparison Id */
+      comparison_id: string | null;
+      /** Frozen Comparison */
+      frozen_comparison: {
+        [key: string]: components["schemas"]["JsonValue"];
+      } | null;
+      /** Concern Id */
+      concern_id: string | null;
+      /** Concern Version */
+      concern_version: number | null;
+      /** Frozen Concern */
+      frozen_concern: {
+        [key: string]: components["schemas"]["JsonValue"];
+      } | null;
+      /** Sections */
+      sections: components["schemas"]["BriefingSection"][];
+      /** Warnings */
+      warnings: string[];
+      /**
+       * Created By
+       * Format: uuid
+       */
+      created_by: string;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /** Archived */
+      archived: boolean;
+      /** Source Available */
+      source_available: boolean;
+    };
+    /** BriefingPage */
+    BriefingPage: {
+      /** Items */
+      items: components["schemas"]["Briefing"][];
+      /** Offset */
+      offset: number;
+      /** Limit */
+      limit: number;
+      /** Total */
+      total: number;
+    };
+    /** BriefingSection */
+    BriefingSection: {
+      /**
+       * Result Id
+       * Format: uuid
+       */
+      result_id: string;
+      /**
+       * Kind
+       * @enum {string}
+       */
+      kind: "table" | "traces" | "graph" | "diff";
+      /** Schema Version */
+      schema_version: string;
+      /** Effective Parameters */
+      effective_parameters: {
+        [key: string]: components["schemas"]["JsonValue"];
+      };
+      /** Summary */
+      summary: {
+        [key: string]: components["schemas"]["JsonValue"];
+      };
+      /** Warnings */
+      warnings: string[];
+      /**
+       * Coverage
+       * @enum {string}
+       */
+      coverage: "complete" | "limited" | "unknown";
+      /** Truncated */
+      truncated: boolean;
+      /** Truncation Reason */
+      truncation_reason: string | null;
+      /** Engine Version */
+      engine_version: string;
+      /** Sdk Version */
+      sdk_version: string;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /** Evidence Available */
+      evidence_available: boolean;
     };
     /** Capability */
     Capability: {
@@ -1439,6 +1617,31 @@ export interface components {
     /** ConfigDiffRequest */
     ConfigDiffRequest: {
       options?: components["schemas"]["ConfigDiffOptions"];
+    };
+    /** CreateBriefingRequest */
+    CreateBriefingRequest: {
+      /** Title */
+      title: string;
+      /**
+       * Network Id
+       * Format: uuid
+       */
+      network_id: string;
+      /**
+       * Snapshot Id
+       * Format: uuid
+       */
+      snapshot_id: string;
+      /** Result Ids */
+      result_ids: string[];
+      /** Comparison Id */
+      comparison_id?: string | null;
+      /** Concern Id */
+      concern_id?: string | null;
+      /** Concern Version */
+      concern_version?: number | null;
+      /** Notes */
+      notes?: string | null;
     };
     /** CreateCheckRunRequest */
     CreateCheckRunRequest: {
@@ -2607,6 +2810,15 @@ export interface components {
        * Format: date-time
        */
       created_at: string;
+    };
+    /** ReviseBriefingRequest */
+    ReviseBriefingRequest: {
+      /** Expected Version */
+      expected_version: number;
+      /** Title */
+      title?: string | null;
+      /** Notes */
+      notes?: string | null;
     };
     /** RoutesRequest */
     RoutesRequest: {
@@ -5582,6 +5794,219 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["CheckRun"];
+        };
+      };
+      /** @description Unprocessable Entity */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+    };
+  };
+  list_briefings_api_v1_leader_briefings_get: {
+    parameters: {
+      query?: {
+        network_id?: string | null;
+        include_archived?: boolean;
+        offset?: number;
+        limit?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["BriefingPage"];
+        };
+      };
+      /** @description Unprocessable Entity */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+    };
+  };
+  create_briefing_api_v1_leader_briefings_post: {
+    parameters: {
+      query?: never;
+      header: {
+        "idempotency-key": string;
+      };
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateBriefingRequest"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Briefing"];
+        };
+      };
+      /** @description Unprocessable Entity */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+    };
+  };
+  get_briefing_api_v1_leader_briefings__briefing_id__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        briefing_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Briefing"];
+        };
+      };
+      /** @description Unprocessable Entity */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+    };
+  };
+  revise_briefing_api_v1_leader_briefings__briefing_id__patch: {
+    parameters: {
+      query?: never;
+      header: {
+        "idempotency-key": string;
+      };
+      path: {
+        briefing_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["ReviseBriefingRequest"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Briefing"];
+        };
+      };
+      /** @description Unprocessable Entity */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+    };
+  };
+  archive_briefing_api_v1_leader_briefings__briefing_id__archive_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        briefing_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Briefing"];
         };
       };
       /** @description Unprocessable Entity */

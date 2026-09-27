@@ -80,6 +80,13 @@ class FileStore:
                 raise OSError("Storage entry is not a regular file")
             return source.read()
 
+    def exists(self, key: str) -> bool:
+        try:
+            info = os.stat(validate_key(key), dir_fd=self._directory, follow_symlinks=False)
+        except FileNotFoundError:
+            return False
+        return stat.S_ISREG(info.st_mode)
+
     def delete(self, key: str) -> None:
         key = validate_key(key)
         info = os.stat(key, dir_fd=self._directory, follow_symlinks=False)

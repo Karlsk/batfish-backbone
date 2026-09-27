@@ -280,6 +280,18 @@ class ResultsService:
             raise ServiceError(ErrorCode.NOT_FOUND)
         return result
 
+    def evidence_available(self, actor, result_id) -> bool:
+        self._auth.revalidate_actor(actor)
+        with self._database.transaction() as tx:
+            key = ResultsRepository(tx).storage_key(result_id)
+        if key is None:
+            return False
+        try:
+            with FileStore(self._root) as store:
+                return store.exists(key)
+        except OSError:
+            return False
+
     def latest_for_snapshots(self, actor, snapshot_ids):
         self._auth.revalidate_actor(actor)
         if len(snapshot_ids) > 200:

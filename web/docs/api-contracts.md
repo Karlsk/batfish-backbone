@@ -297,3 +297,11 @@ POST `/admin/deletions/{job_id}/reconcile` 接受 `{note: 10..1000字符检查�
 `POST /api/v1/leader/check-runs` 要求 `Idempotency-Key`，请求最少包含 `template_id`、`network_id`、`snapshot_id`；按模板增加 `scope`、`options`，可选成对的 `concern_id`/`concern_version`。网络与快照须相符且快照可分析；比较模板要求 `snapshot_id` 为候选快照，运行冻结基线→候选方向；故障模板生成派生快照并记录 ID。配置质量直接固定已有解析质量，其余模板提交已有 analysis/changes/fault service 的持久任务，由独立 worker 执行。相同用户、相同键与请求复用原运行和子任务；键相同请求不同返回 409。未知模板、非法范围、未知高级字段在提交前拒绝。
 
 `GET /api/v1/leader/check-runs?network_id=&offset=0&limit=20` 与 `GET /api/v1/leader/check-runs/{id}` 对已登录成员共享可读，列表上限 100。运行含模板版本、快照质量、引擎/SDK 版本、冻结的关注项版本及有效参数、子 `job_ids`/`result_ids`、故障派生快照、状态与错误。`jobs` 逐项给出阶段、引擎 `idle/busy/unknown`、结果与错误码；`unknown` 不自动重放。`result_unavailable` 表示任务记录成功但结果引用缺失；失败/中断不能写成空结论。后续关注项修改或新结果不会改变本运行保存的输入与来源。
+
+## LDR-10 固定汇报与版本
+
+`POST /api/v1/leader/briefings` 要求 `Idempotency-Key`，最少提供 `title`、`network_id`、`snapshot_id` 与 1～20 个唯一 `result_ids`；可选 `comparison_id`、成对的 `concern_id`/`concern_version` 和 `notes`。结果必须已发布、证据文件可读，全部属于请求网络和快照。差异结果若带参考快照，必须指定候选/基线相符的固定比较。服务端冻结结果摘要、有效参数、警告、覆盖/截断、引擎/SDK/schema 版本、快照质量与映射内容；`notes` 明确为人工备注，不能改系统事实。原始配置和结果 payload 不写入汇报。相同用户、相同键与请求返回同一版本，不同请求返回 409。
+
+`GET /api/v1/leader/briefings?network_id=&include_archived=false&offset=0&limit=20` 返回每份汇报的最新修订，`GET /api/v1/leader/briefings/{id}` 按不可变修订 ID 读取指定版本。成员可共享读取和创建。`PATCH /{id}` 要求 `Idempotency-Key`、`expected_version` 与标题或人工备注修改，锁定最新版本并生成新修订 ID；旧 ID 始终读取旧标题、备注与事实。`POST /{id}/archive` 仅管理员可用，归档只影响列表与当前状态，不删除历史版本。创建、修订和归档写入审计。
+
+读接口动态返回 `source_available` 和每节 `evidence_available`。网络、快照、比较或结果元数据/文件失效时，冻结事实与原 ID 仍可读取，前端应禁用失效证据深链。该标志不是健康结论。迁移 `0013` 的固定汇报不对可删除来源建立外键，来源删除不会级联抹去汇报。

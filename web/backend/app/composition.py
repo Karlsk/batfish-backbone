@@ -32,6 +32,8 @@ from app.modules.health.service import HealthService
 from app.modules.jobs.api import create_router as create_jobs_router
 from app.modules.jobs.service import JobsService
 from app.modules.leader.api import create_router as create_leader_router
+from app.modules.leader.briefings_api import create_router as create_leader_briefings_router
+from app.modules.leader.briefings_service import BriefingsService
 from app.modules.leader.checks_api import create_router as create_leader_checks_router
 from app.modules.leader.checks_service import CheckRunsService
 from app.modules.leader.service import LeaderService
@@ -61,6 +63,7 @@ def database_metadata():
     from app.modules.changes import models as changes_models  # noqa: F401
     from app.modules.execution import models as execution_models  # noqa: F401
     from app.modules.jobs import models as jobs_models  # noqa: F401
+    from app.modules.leader import briefings_models as leader_briefings_models  # noqa: F401
     from app.modules.leader import checks_models as leader_checks_models  # noqa: F401
     from app.modules.networks import models as networks_models  # noqa: F401
     from app.modules.results import models as results_models  # noqa: F401
@@ -238,6 +241,16 @@ def create_app(
         app.include_router(
             create_leader_checks_router(
                 leader_checks, read_actor=read_actor, write_actor=write_actor
+            ),
+            prefix="/api/v1",
+        )
+        leader_briefings = BriefingsService(
+            db, auth, networks, snapshots, changes, business_concerns, results
+        )
+        app.state.leader_briefings_service = leader_briefings
+        app.include_router(
+            create_leader_briefings_router(
+                leader_briefings, read_actor=read_actor, write_actor=write_actor
             ),
             prefix="/api/v1",
         )
