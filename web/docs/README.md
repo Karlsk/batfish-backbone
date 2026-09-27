@@ -1,6 +1,6 @@
 # Batfish Web 文档入口
 
-日期：2026-09-27。状态：MVP-01～25、ADV-01～18 均已完成，三阶段验收通过。第一阶段交付认证、上传/初始化、诊断、设备/接口、路由/LPM、虚拟 traceroute、任务、导出、资源删除及前端；第二阶段交付拓扑、BGP、ACL、专家查询；第三阶段交付双快照比较、配置/路由/可达性差异、变更对比工作台、故障派生快照及前端向导。详见 [首版验收报告](mvp-acceptance.md)、[第二阶段报告](advance-phase2-acceptance.md)与[第三阶段报告](advance-phase3-acceptance.md)。
+日期：2026-09-27。状态：MVP-01～25、ADV-01～18 均已完成，三阶段验收通过；领导端 LDR-01～12 已定稿待实施。第一阶段交付认证、上传/初始化、诊断、设备/接口、路由/LPM、虚拟 traceroute、任务、导出、资源删除及前端；第二阶段交付拓扑、BGP、ACL、专家查询；第三阶段交付双快照比较、配置/路由/可达性差异、变更对比工作台、故障派生快照及前端向导。详见 [首版验收报告](mvp-acceptance.md)、[第二阶段报告](advance-phase2-acceptance.md)与[第三阶段报告](advance-phase3-acceptance.md)。
 
 ## 已确认的需求
 
@@ -28,6 +28,7 @@
 10. [SDK 兼容性实测报告](sdk-compatibility.md)：MVP-01 版本、契约、测试证据和复现步骤。
 11. [本机功能测试环境](test-lab.md)：真实服务启动、r1/r2 与 Cisco 四设备配置快照、冒烟和累计回归入口。
 12. [技术工作台双主题设计](plans/2026-09-26-technical-workbench-design.md)：已完成现有前端深浅主题升级；[实施计划](plans/2026-09-26-technical-workbench-implementation.md)与[验收记录](evidence/technical-workbench-theme-2026-09-26.md)。本次双主题范围已完成；用户后续已授权进入 ADV，领导端另行安排。
+13. [领导端设计](leader-design.md)：双入口、业务关注项、可信结论、引导检查与固定汇报；[LDR 规格](changeloge/leader/README.md)按篇实施。
 
 ## 目录与实施方式
 
@@ -45,7 +46,8 @@ web/docs/
 └── changeloge/
     ├── README.md
     ├── mvp/       # 阶段 1，MVP 编号
-    └── advance/   # 阶段 2、3，ADV 编号
+    ├── advance/   # 阶段 2、3，ADV 编号
+    └── leader/    # 领导端，LDR 编号
 ```
 
 spec 是后续实施的需求、设计和验收单元，不是完成日志。所有 spec 初始状态为“待开发”；开发时先读共享契约与依赖 spec，再按本项范围实现。验收后在该 spec 中补充实际改动、验证命令/结果与剩余限制，并更新索引状态。不要因为文档已存在就跳过前置依赖或宣称功能可用。

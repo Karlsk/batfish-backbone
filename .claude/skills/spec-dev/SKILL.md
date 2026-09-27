@@ -1,6 +1,6 @@
 ---
 name: spec-dev
-description: Use when implementing or resuming a Batfish Web MVP/ADV spec in this repository, including requests such as spec-dev MVP-01 or a path under web/docs/changeloge. Not for unrelated Java engine changes.
+description: Use when implementing or resuming a Batfish Web MVP, ADV, or LDR spec in this repository, including requests such as spec-dev MVP-01, LDR-01, or a path under web/docs/changeloge. Not for unrelated Java engine changes.
 ---
 
 # Batfish 按 spec 开发
@@ -9,15 +9,15 @@ description: Use when implementing or resuming a Batfish Web MVP/ADV spec in thi
 
 ## 1. 定位输入和约束
 
-- 接受 `MVP-01`、`mvp-01`、`ADV-01` 或本仓库具体 spec 路径；参数来自用户消息（支持该机制的客户端也可从 `$ARGUMENTS` 读取）。
+- 接受 `MVP-01`、`mvp-01`、`ADV-01`、`LDR-01` 或本仓库具体 spec 路径；参数来自用户消息（支持该机制的客户端也可从 `$ARGUMENTS` 读取）。
 - 从当前目录向上找到包含 `web/docs/changeloge/` 的仓库根目录；后续项目路径均相对此根目录。不要相对 skill 安装路径猜测项目目录。
-- 编号忽略大小写，按完整 ID 加连字符匹配唯一文件：`mvp-01-*.md` 或 `adv-01-*.md`。先列实际文件再读取，不猜英文后缀；完整路径须解析到本仓库对应目录。
+- 编号忽略大小写，按完整 ID 加连字符匹配唯一文件：`mvp-01-*.md`、`adv-01-*.md` 或 `ldr-01-*.md`，分别对应 `mvp/`、`advance/`、`leader/`。先列实际文件再读取，不猜英文后缀；完整路径须解析到本仓库对应目录。
 - 缺编号/路径、匹配为零或多个时，展示候选并询问；README、共享设计文档不是可执行 spec。
 - 必读 `web/AGENTS.md`、目标 spec 全文、所在阶段 README、目标引用的共享契约相关章节，以及直接依赖的完成记录与交付物。更具体目录规范同样适用。
 
 ## 2. 开工判断
 
-- 检查 git 现状、目标实现和前置交付物。依赖须有实现与通过证据；不能仅凭状态标签放行。缺失时报告具体前置 ID 和缺项，不顺带实现整条依赖链。
+- 检查 git 现状、目标实现和前置交付物。依赖须有实现与通过证据；不能仅凭状态标签放行。缺失时报告具体前置 ID 和缺项，不顺带实现整条依赖链。LDR 依赖已通过的 MVP-25、ADV-18，并按 `web/docs/changeloge/leader/README.md` 的顺序推进。
 - 按实际交付内容判断后端、前端、混合或验收任务，不用 Hify 文件名规则。MVP-16 是前端骨架，MVP-22/23 含前后端，MVP-25 是真实闭环验收。
 - 待开发项从首个未完成步骤开始；开发中项接续现状；待验证项优先补缺失验证，未通过项先复核失败证据、修复并复验；已完成项先说明现有证据，用户明确要求修复/复验时执行该增量，不重复造一遍。
 - 已确认范围内列出简短实施与验证清单后继续，不设置固定“任务列表审批”停点。只将实质需求冲突、破坏公共契约或缺失的用户决策提问；继续不依赖答案的工作。
