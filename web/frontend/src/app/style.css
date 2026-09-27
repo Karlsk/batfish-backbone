@@ -166,6 +166,7 @@ input:focus-visible {
   margin-top: 24px;
 }
 .comparison-create,
+.fault-card,
 .comparison-list,
 .comparison-direction,
 .comparison-tabs,
@@ -173,6 +174,7 @@ input:focus-visible {
   margin-bottom: 22px;
 }
 .comparison-create label,
+.fault-card label,
 .comparison-tabs label {
   display: flex;
   flex-direction: column;
@@ -187,6 +189,44 @@ input:focus-visible {
 .comparison-direction {
   border-color: var(--app-accent);
   box-shadow: var(--app-shadow);
+}
+.fault-card .ant-steps {
+  margin-bottom: 20px;
+}
+.fault-baseline,
+.fault-name {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 340px;
+  margin: 18px 0;
+}
+.fault-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: end;
+  margin-top: 18px;
+}
+.fault-fields label {
+  min-width: 185px;
+  flex: 1;
+}
+.fault-fields .ant-select {
+  width: 100%;
+}
+.fault-targets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 18px;
+}
+.fault-preview {
+  border-color: var(--app-accent);
+  box-shadow: var(--app-shadow);
+}
+.fault-preview .ant-alert {
+  margin: 16px 0;
 }
 .change-sides {
   display: grid;

@@ -46,10 +46,10 @@ const comparison = (
     coverage: "complete",
     coverage_notes: [],
   }) as unknown as components["schemas"]["ComparisonDTO"];
-function shell(node: React.ReactNode) {
+function shell(node: React.ReactNode, path = "/") {
   return render(
     <ConfigProvider button={{ autoInsertSpace: false }}>
-      <MemoryRouter>
+      <MemoryRouter initialEntries={[path]}>
         <QueryClientProvider
           client={
             new QueryClient({ defaultOptions: { queries: { retry: false } } })
@@ -61,6 +61,33 @@ function shell(node: React.ReactNode) {
     </ConfigProvider>,
   );
 }
+
+it("prefills fault comparison direction without creating or analyzing automatically", async () => {
+  mocks.get.mockResolvedValue({
+    data: { items: [], offset: 0, limit: 20, total: 0 },
+    response: new Response("{}"),
+  });
+  mocks.post.mockResolvedValue({
+    data: comparison("fault-comparison"),
+    response: new Response("{}"),
+  });
+  shell(<ChangesPage />, "/changes?baseline=baseline&candidate=candidate");
+  expect(await screen.findByText(/已带入故障方案的原始基线/)).toBeTruthy();
+  expect(mocks.post).not.toHaveBeenCalled();
+  await userEvent.click(screen.getByRole("button", { name: "创建比较" }));
+  await waitFor(() => expect(mocks.post).toHaveBeenCalledTimes(1));
+  expect(mocks.post.mock.calls[0][1].body).toMatchObject({
+    baseline_snapshot_id: "baseline",
+    candidate_snapshot_id: "candidate",
+  });
+  expect(await screen.findByText("基线：基线")).toBeTruthy();
+  expect(screen.getByText("候选：候选")).toBeTruthy();
+  await userEvent.click(screen.getByRole("tab", { name: "可达性变化" }));
+  expect(screen.getByRole("button", { name: "分析可达性变化" })).toHaveProperty(
+    "disabled",
+    true,
+  );
+});
 
 it("exchanging two snapshots creates a new immutable direction", async () => {
   mocks.get.mockResolvedValue({

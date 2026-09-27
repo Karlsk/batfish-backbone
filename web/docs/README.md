@@ -1,6 +1,6 @@
 # Batfish Web 文档入口
 
-日期：2026-09-27。状态：MVP-01～25 已完成，第一阶段真实服务、两套配置、双用户浏览器与部署恢复验收通过。已交付认证、上传/初始化、诊断、设备/接口、路由/LPM、虚拟 traceroute、任务、导出、资源删除及前端；ADV-01～10 已完成（拓扑、BGP、ACL、专家查询及第二阶段验收），ADV-11～16 已实现双快照比较、配置/路由/可达性差异、变更对比工作台与故障派生快照，ADV-17～18 待开发。详见 [首版验收报告](mvp-acceptance.md)。
+日期：2026-09-27。状态：MVP-01～25 已完成，第一阶段真实服务、两套配置、双用户浏览器与部署恢复验收通过。已交付认证、上传/初始化、诊断、设备/接口、路由/LPM、虚拟 traceroute、任务、导出、资源删除及前端；ADV-01～10 已完成（拓扑、BGP、ACL、专家查询及第二阶段验收），ADV-11～17 已实现双快照比较、配置/路由/可达性差异、变更对比工作台与故障派生快照及前端向导，ADV-18 待验收。详见 [首版验收报告](mvp-acceptance.md)。
 
 ## 已确认的需求
 
@@ -63,3 +63,4 @@ MVP-01～25 已完成真实引擎兼容性、后端与前端工作台、导出�
 最新进阶交付：[ADV-01拓扑接口验收](evidence/adv-01-verification.md)、[ADV-02可交互拓扑验收](evidence/adv-02-verification.md)、[ADV-03 BGP接口验收](evidence/adv-03-verification.md)、[ADV-04 BGP页面验收](evidence/adv-04-verification.md)、[ADV-05 ACL接口验收](evidence/adv-05-verification.md)、[ADV-06 ACL页面验收](evidence/adv-06-verification.md)、[ADV-07 ACL搜索接口验收](evidence/adv-07-verification.md)、[ADV-08 ACL高级诊断验收](evidence/adv-08-verification.md)、[ADV-09专家查询验收](evidence/adv-09-verification.md)、[ADV-10第二阶段验收](advance-phase2-acceptance.md)、[ADV-11比较上下文验收](evidence/adv-11-verification.md)、[ADV-12配置差异验收](evidence/adv-12-verification.md)、[ADV-13路由差异验收](evidence/adv-13-verification.md)、[ADV-14差异可达性验收](evidence/adv-14-verification.md)、[ADV-15变更对比工作台验收](evidence/adv-15-verification.md)。
 
 最新完成的故障方案后端验收见 [ADV-16 证据](evidence/adv-16-verification.md)。
+故障模拟前端向导与比较交接见 [ADV-17 证据](evidence/adv-17-verification.md)。

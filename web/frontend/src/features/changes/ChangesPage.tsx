@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Alert,
   Button,
@@ -12,7 +12,7 @@ import {
   Typography,
 } from "antd";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { api, ApiError, unwrap } from "../../api/client";
 import type { components } from "../../api/schema";
 import { resourceKey, useResourceContext } from "../../app/context";
@@ -480,6 +480,8 @@ function ComparisonAnalysis({
 }
 
 function NetworkChanges({ networkId }: { networkId: string }) {
+  const [search] = useSearchParams();
+  const handoff = useRef("");
   const session = useSession();
   const client = useQueryClient();
   const snapshots = useSnapshots(networkId);
@@ -497,6 +499,27 @@ function NetworkChanges({ networkId }: { networkId: string }) {
   const [creating, setCreating] = useState(false);
   const [createError, setCreateError] = useState<unknown>();
   const [createLocked, setCreateLocked] = useState(false);
+  const incomingBaseline = search.get("baseline");
+  const incomingCandidate = search.get("candidate");
+  useEffect(() => {
+    if (
+      !incomingBaseline ||
+      !incomingCandidate ||
+      incomingBaseline === incomingCandidate
+    )
+      return;
+    const key = `${networkId}:${incomingBaseline}:${incomingCandidate}`;
+    if (handoff.current === key) return;
+    if (
+      !selectable.some((item) => item.id === incomingBaseline) ||
+      !selectable.some((item) => item.id === incomingCandidate)
+    )
+      return;
+    handoff.current = key;
+    setBaselineId(incomingBaseline);
+    setCandidateId(incomingCandidate);
+    setSelected(null);
+  }, [incomingBaseline, incomingCandidate, networkId, selectable]);
   const comparisons = useQuery({
     queryKey: resourceKey(
       session?.user_id ?? null,
@@ -571,6 +594,12 @@ function NetworkChanges({ networkId }: { networkId: string }) {
         </div>
       </div>
       <Card title="创建比较" className="comparison-create">
+        {handoff.current && (
+          <Alert
+            type="info"
+            title="已带入故障方案的原始基线和派生快照；请确认方向，再创建比较并选择分析范围。"
+          />
+        )}
         <Space wrap align="end">
           <label>
             基线快照

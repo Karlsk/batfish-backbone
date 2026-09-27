@@ -80,6 +80,11 @@ const ChangesPage = lazy(() =>
     default: m.ChangesPage,
   })),
 );
+const FaultsPage = lazy(() =>
+  import("../features/faults/FaultsPage").then((m) => ({
+    default: m.FaultsPage,
+  })),
+);
 const AnalysisPage = lazy(() =>
   import("../features/inventory/Analysis").then((m) => ({
     default: m.AnalysisPage,
@@ -247,6 +252,11 @@ export function Shell({ children }: PropsWithChildren) {
               label: <Link to="/changes">变更对比</Link>,
             },
             {
+              key: "/faults",
+              icon: <BranchesOutlined />,
+              label: <Link to="/faults">故障模拟</Link>,
+            },
+            {
               key: "/jobs",
               icon: <ClockCircleOutlined />,
               label: <Link to="/jobs">任务中心</Link>,
@@ -369,6 +379,7 @@ function WorkbenchRoutes() {
                 <Route path="/acl" element={<FilterTestPage />} />
                 <Route path="/expert" element={<ExpertPage />} />
                 <Route path="/changes" element={<ChangesPage />} />
+                <Route path="/faults" element={<FaultsPage />} />
                 <Route path="/traceroute" element={<TracePage />} />
                 <Route path="/analysis/:operation" element={<AnalysisPage />} />
                 <Route path="/analysis" element={<AnalysisPage />} />
