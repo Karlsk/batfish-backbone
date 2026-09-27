@@ -192,7 +192,9 @@ def create_app(
         results = ResultsService(db, auth, settings)
         app.state.results_service = results
         app.include_router(create_results_router(results, read_actor=read_actor), prefix="/api/v1")
-        leader = LeaderService(auth, networks, snapshots, jobs, results, business_concerns)
+        changes = ChangesService(db, auth, networks, snapshots, jobs)
+        app.state.changes_service = changes
+        leader = LeaderService(auth, networks, snapshots, jobs, results, business_concerns, changes)
         app.state.leader_service = leader
         app.include_router(create_leader_router(leader, read_actor=read_actor), prefix="/api/v1")
         analysis = AnalysisService(
@@ -203,8 +205,6 @@ def create_app(
             create_analysis_router(analysis, read_actor=read_actor, write_actor=write_actor),
             prefix="/api/v1",
         )
-        changes = ChangesService(db, auth, networks, snapshots, jobs)
-        app.state.changes_service = changes
         fault_scenarios = FaultScenariosService(
             auth, networks, snapshots, jobs, analysis, FaultScenarioController(db, settings)
         )

@@ -45,6 +45,7 @@ def test_empty_overview_and_stable_paging(overview_app):
     assert empty.status_code == 200
     assert empty.json()["total"] == 0
     assert empty.json()["items"] == []
+    assert empty.json()["recent_comparisons"] == []
     assert empty.json()["counts"] == {
         "network_states": {},
         "snapshot_states": {},
@@ -60,6 +61,11 @@ def test_empty_overview_and_stable_paging(overview_app):
     assert body["items"][0]["network_id"] in {str(identifier) for identifier in ids}
     assert body["items"][0]["readiness"] == "pending"
     assert body["items"][0]["check_state"] == "not_checked"
+    full = client.get("/api/v1/leader/overview", params={"limit": 3}).json()
+    selected = full["items"][0]
+    detail = client.get(f"/api/v1/leader/networks/{selected['network_id']}")
+    assert detail.status_code == 200 and detail.json() == selected
+    assert client.get(f"/api/v1/leader/networks/{uuid4()}").status_code == 404
     assert client.get("/api/v1/leader/overview", params={"limit": 201}).status_code == 422
 
     def query_count(limit):
@@ -122,6 +128,20 @@ def test_newest_unready_does_not_erase_ready_source_or_reuse_old_result(overview
             ),
             {"id": uuid4(), "network": network_id, "user": user.user_id, "now": now},
         )
+        comparison_id = uuid4()
+        transaction.execute(
+            text(
+                "INSERT INTO comparisons(id,network_id,baseline_snapshot_id,candidate_snapshot_id,display_name,baseline_content_hash,candidate_content_hash,baseline_engine_version,candidate_engine_version,baseline_sdk_version,candidate_sdk_version,engine_version,sdk_version,coverage,created_by,created_at) VALUES (:id,:network,:baseline,:candidate,'配置变更','aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa','aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa','test','test','test','test','test','test','limited',:user,:now)"
+            ),
+            {
+                "id": comparison_id,
+                "network": network_id,
+                "baseline": old_id,
+                "candidate": ready_id,
+                "user": user.user_id,
+                "now": now,
+            },
+        )
         transaction.add(
             Result(
                 id=uuid4(),
@@ -150,6 +170,12 @@ def test_newest_unready_does_not_erase_ready_source_or_reuse_old_result(overview
             )
         )
     card = client.get("/api/v1/leader/overview").json()["items"][0]
+    recent = client.get("/api/v1/leader/overview").json()["recent_comparisons"]
+    assert len(recent) == 1
+    assert recent[0]["id"] == str(comparison_id)
+    assert recent[0]["network_id"] == str(network_id)
+    assert recent[0]["baseline_snapshot_id"] == str(old_id)
+    assert recent[0]["candidate_snapshot_id"] == str(ready_id)
     assert card["latest_snapshot"]["id"] == str(queued_id)
     assert card["latest_ready_snapshot"]["id"] == str(tied_id)
     assert card["readiness"] == "warning"

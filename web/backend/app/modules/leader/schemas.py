@@ -66,9 +66,21 @@ class OverviewCounts(Contract):
     analysis_job_states: dict[str, int]
 
 
+class RecentComparison(Contract):
+    id: UUID
+    network_id: UUID
+    network_display_name: str
+    display_name: str
+    baseline_snapshot_id: UUID
+    candidate_snapshot_id: UUID
+    coverage: Literal["complete", "limited"]
+    created_at: AwareDatetime
+
+
 class OverviewPage(Contract):
     items: tuple[NetworkOverview, ...]
     offset: int
     limit: int
     total: int
     counts: OverviewCounts
+    recent_comparisons: tuple[RecentComparison, ...]

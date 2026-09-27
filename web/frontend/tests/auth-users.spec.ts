@@ -22,6 +22,16 @@ test("real administrator and member lifecycle with session revocation", async ({
   await dialog.getByRole("button", { name: "保存", exact: true }).click();
   await expect(dialog).toBeHidden();
   const row = page.getByRole("row").filter({ hasText: username });
+  for (
+    let pageNumber = 0;
+    pageNumber < 20 && !(await row.count());
+    pageNumber++
+  ) {
+    const next = page.locator(".ant-pagination-next");
+    if (await next.isDisabled()) break;
+    await next.click();
+    await expect(page.locator(".ant-spin-spinning")).toHaveCount(0);
+  }
   await expect(row).toBeVisible();
   await page.screenshot({ path: testInfo.outputPath("users.png") });
   await row.getByRole("button", { name: "详情" }).click();
@@ -68,8 +78,14 @@ test("real administrator and member lifecycle with session revocation", async ({
     ).toHaveCount(0);
     await member.getByRole("link", { name: "领导视图" }).click();
     await expect(
-      member.getByRole("heading", { name: "尚未检查" }),
+      member.getByRole("heading", { name: "网络总览" }),
     ).toBeVisible();
+    await member
+      .locator(".leader-overview-card .leader-card-link")
+      .first()
+      .click();
+    await expect(member).toHaveURL(/\/leader\/networks\/[0-9a-f-]+$/);
+    await expect(member.getByText("当前快照", { exact: true })).toBeVisible();
     await member.getByRole("link", { name: "技术工作台" }).click();
     await expect(
       member.getByRole("heading", { name: "网络分析，从一份配置开始" }),

@@ -38,6 +38,15 @@ class ChangesRepository:
         )
         return tuple(self.dto(row) for row in rows), total
 
+    def recent(self, limit):
+        rows = self.tx.scalars(
+            select(Comparison)
+            .where(Comparison.deleted_at.is_(None))
+            .order_by(Comparison.created_at.desc(), Comparison.id.desc())
+            .limit(limit)
+        )
+        return tuple(self.dto(comparison) for comparison in rows)
+
     def add(self, *, identifier, actor, network_id, baseline, candidate, name, coverage, notes):
         row = Comparison(
             id=identifier,

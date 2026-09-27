@@ -9,9 +9,9 @@ test("a chosen leader entry survives refresh while login defaults stay technical
   await loginAdmin(page);
   await page.getByRole("link", { name: "领导视图" }).click();
   await expect(page).toHaveURL(/\/leader\/overview$/);
-  await expect(page.getByRole("heading", { name: "尚未检查" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "网络总览" })).toBeVisible();
   await page.reload();
-  await expect(page.getByRole("heading", { name: "尚未检查" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "网络总览" })).toBeVisible();
   await page.goto("/");
   await expect(page).toHaveURL(/\/leader\/overview$/);
   await page.getByRole("link", { name: "技术工作台" }).click();

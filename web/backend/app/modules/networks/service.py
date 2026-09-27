@@ -47,6 +47,13 @@ class NetworksService:
                 raise ServiceError(ErrorCode.NOT_FOUND)
             return network
 
+    def active_names(self, actor: Actor, network_ids: tuple[UUID, ...]) -> dict[UUID, str]:
+        self._auth.revalidate_actor(actor)
+        if len(network_ids) > 200:
+            raise ServiceError(ErrorCode.VALIDATION_ERROR)
+        with self._database.transaction() as transaction:
+            return NetworksRepository(transaction).active_names(network_ids)
+
     def require_ready(self, actor: Actor, network_id: UUID) -> NetworkDTO:
         network = self.get(actor, network_id)
         if network.sync_state != "ready":

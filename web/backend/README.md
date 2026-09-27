@@ -170,4 +170,4 @@ ADV-05 增加 `POST /api/v1/networks/{network_id}/snapshots/{snapshot_id}/analys
 
 ## 领导端跨网络总览（LDR-04）
 
-`GET /api/v1/leader/overview?offset=0&limit=20` 对已登录成员提供最多 200 项的分页网络卡与服务端全量总数。卡片区分最新快照和最新就绪快照，分析任务和结果只绑定后一来源；无结果返回“未检查”，结果保留覆盖与截断警告。汇总计数明确区分当前网络、未删除快照记录和历史分析任务，均不代表业务健康分。leader service 仅调用各来源 service 的批量只读投影，不直接调用 SDK；详见 [API 契约](../docs/api-contracts.md#ldr-04-跨网络总览)。
+`GET /api/v1/leader/overview?offset=0&limit=20` 对已登录成员提供最多 200 项的分页网络卡与服务端全量总数、最多五条最近比较；`GET /api/v1/leader/networks/{network_id}` 供领导端直达单网络详情，复用同一卡片计算。卡片区分最新快照和最新就绪快照，分析任务和结果只绑定后一来源；无结果返回“未检查”，结果保留覆盖与截断警告。汇总计数明确区分当前网络、未删除快照记录和历史分析任务，均不代表业务健康分。leader service 仅调用各来源 service 的批量只读投影，不直接调用 SDK；详见 [API 契约](../docs/api-contracts.md#ldr-04-跨网络总览)。

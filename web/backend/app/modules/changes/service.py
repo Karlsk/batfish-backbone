@@ -119,6 +119,17 @@ class ChangesService:
             items, total = ChangesRepository(tx).list(network_id, offset, limit)
         return ComparisonPage(items=items, offset=offset, limit=limit, total=total)
 
+    def recent(self, actor: Actor, *, limit=5):
+        self._auth.revalidate_actor(actor)
+        if not 1 <= limit <= 20:
+            raise ServiceError(ErrorCode.VALIDATION_ERROR)
+        with self._database.transaction() as tx:
+            comparisons = ChangesRepository(tx).recent(limit)
+        names = self._networks.active_names(actor, tuple(item.network_id for item in comparisons))
+        return tuple(
+            (item, names[item.network_id]) for item in comparisons if item.network_id in names
+        )
+
     def get(self, actor: Actor, comparison_id: UUID):
         actor = self._auth.revalidate_actor(actor)
         with self._database.transaction() as tx:

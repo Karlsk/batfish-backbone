@@ -551,6 +551,23 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/leader/networks/{network_id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Network Detail */
+    get: operations["network_detail_api_v1_leader_networks__network_id__get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/capabilities": {
     parameters: {
       query?: never;
@@ -2132,6 +2149,8 @@ export interface components {
       /** Total */
       total: number;
       counts: components["schemas"]["OverviewCounts"];
+      /** Recent Comparisons */
+      recent_comparisons: components["schemas"]["RecentComparison"][];
     };
     /** PasswordRequest */
     PasswordRequest: {
@@ -2205,6 +2224,43 @@ export interface components {
        * @default true
        */
       ignore_composites: boolean;
+    };
+    /** RecentComparison */
+    RecentComparison: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * Network Id
+       * Format: uuid
+       */
+      network_id: string;
+      /** Network Display Name */
+      network_display_name: string;
+      /** Display Name */
+      display_name: string;
+      /**
+       * Baseline Snapshot Id
+       * Format: uuid
+       */
+      baseline_snapshot_id: string;
+      /**
+       * Candidate Snapshot Id
+       * Format: uuid
+       */
+      candidate_snapshot_id: string;
+      /**
+       * Coverage
+       * @enum {string}
+       */
+      coverage: "complete" | "limited";
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
     };
     /** ReconcileDeletion */
     ReconcileDeletion: {
@@ -4479,6 +4535,46 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["OverviewPage"];
+        };
+      };
+      /** @description Unprocessable Entity */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+    };
+  };
+  network_detail_api_v1_leader_networks__network_id__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        network_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["NetworkOverview"];
         };
       };
       /** @description Unprocessable Entity */

@@ -284,6 +284,8 @@ POST `/admin/deletions/{job_id}/reconcile` 接受 `{note: 10..1000字符检查�
 
 ## LDR-04 跨网络总览
 
-`GET /api/v1/leader/overview?offset=0&limit=20` 面向所有已完成首次改密的登录成员。`limit` 最大 200，`total` 是服务端全部未删除网络数，与当前页大小无关。`counts.network_states` 统计全部未删除网络的当前同步状态；`counts.snapshot_states` 统计全部未删除快照记录的持久状态；`counts.analysis_job_states` 统计历史 analysis 任务的终态/运行态。这三组口径不同，不相加为健康分。
+`GET /api/v1/leader/overview?offset=0&limit=20` 面向所有已完成首次改密的登录成员。`limit` 最大 200，`total` 是服务端全部未删除网络数，与当前页大小无关。`GET /api/v1/leader/networks/{network_id}` 返回同一结构的单网络卡，供直达详情与刷新使用；未知或已删除网络返回 404。`counts.network_states` 统计全部未删除网络的当前同步状态；`counts.snapshot_states` 统计全部未删除快照记录的持久状态；`counts.analysis_job_states` 统计历史 analysis 任务的终态/运行态。这三组口径不同，不相加为健康分。
 
 每个网络卡返回最新未删除快照及最新就绪快照，按 `created_at DESC, id DESC` 稳定选择。`readiness=pending` 表示没有就绪快照，`warning` 表示就绪快照带解析警告或另有更新但未就绪的快照；`ready` 仅表示当前最新快照已完成初始化且无解析警告，不表示转发正确。`check_state=not_checked` 不制造结果；最近 analysis 任务仅从该卡的最新就绪快照中选取，失败/中断不算成功。`latest_result` 也只来自同一就绪快照，独立给出 `coverage`、`truncated`、`truncation_reason`、警告数与创建时间；它可能早于最近的失败任务，客户端必须分别标注时间与来源。`result_unavailable` 表示任务记录成功但无可读结果元数据。接口只查询已存 PostgreSQL 事实，不执行 SDK 或触发任务。
+
+`recent_comparisons` 最多五条，按比较记录的创建时间及 ID 倒序，排除已删除的比较和所属网络。每条保留比较 ID、所属网络 ID/名称、固定的基线与候选快照 ID、覆盖情况及创建时间；它表示已建立的比较记录，不等于差异分析成功或业务影响结论。

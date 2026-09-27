@@ -35,6 +35,16 @@ class NetworksRepository:
         )
         return _dto(network) if network else None
 
+    def active_names(self, network_ids: tuple[UUID, ...]) -> dict[UUID, str]:
+        if not network_ids:
+            return {}
+        rows = self._transaction.execute(
+            select(Network.id, Network.display_name).where(
+                Network.id.in_(network_ids), Network.deleted_at.is_(None)
+            )
+        )
+        return {identifier: name for identifier, name in rows}
+
     def list(self, *, offset: int, limit: int) -> tuple[list[NetworkDTO], int]:
         rows = self._transaction.scalars(
             select(Network)
