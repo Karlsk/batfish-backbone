@@ -42,6 +42,16 @@ export function LeaderShell({ children }: PropsWithChildren) {
           >
             业务关注项
           </Link>
+          <Link
+            to="/leader/checks"
+            aria-current={
+              location.pathname.startsWith("/leader/checks")
+                ? "page"
+                : undefined
+            }
+          >
+            自主检查
+          </Link>
         </nav>
         <Space className="leader-controls" wrap>
           <ThemeControl />

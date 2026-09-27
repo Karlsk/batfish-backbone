@@ -15,6 +15,7 @@ test("admin manages versioned concerns without leaking them across networks", as
   const network = page.getByLabel("所属网络");
   await network.click();
   const options = page.getByRole("option");
+  await expect.poll(() => options.count()).toBeGreaterThan(1);
   const names = await options.allTextContents();
   expect(names.length).toBeGreaterThan(1);
   await options.first().click();

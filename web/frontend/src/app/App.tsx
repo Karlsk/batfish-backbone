@@ -50,6 +50,7 @@ import { ContextPicker } from "../features/networks/ContextPicker";
 import { LoadingState } from "../components/States";
 import { LeaderShell } from "../features/leader/LeaderShell";
 import { ConcernsPage } from "../features/leader/concerns/ConcernsPage";
+import { LeaderChecksPage } from "../features/leader/checks/ChecksPage";
 import {
   LeaderOverviewPage,
   LeaderNetworkPage,
@@ -367,6 +368,11 @@ function WorkbenchRoutes() {
                   element={<LeaderNetworkPage />}
                 />
                 <Route path="/leader/concerns" element={<ConcernsPage />} />
+                <Route path="/leader/checks" element={<LeaderChecksPage />} />
+                <Route
+                  path="/leader/checks/:runId"
+                  element={<LeaderChecksPage />}
+                />
                 <Route
                   path="/leader"
                   element={<Navigate to="/leader/overview" replace />}
