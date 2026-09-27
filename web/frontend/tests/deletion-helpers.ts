@@ -5,8 +5,9 @@ async function loadNetwork(page: Page, name: string) {
     page.getByRole("heading", { name: "网络与快照", exact: true }),
   ).toBeVisible();
   await expect(page.locator(".ant-spin-spinning")).toHaveCount(0);
-  const more = page.getByRole("button", { name: "加载更多网络", exact: true });
-  while (!(await row.count()) && (await more.isVisible())) {
+  const more = page.getByRole("button", { name: /加载更多网络/ });
+  while (!(await row.count()) && (await more.count())) {
+    await expect(more).toBeEnabled();
     const count = await page.getByRole("row").count();
     await more.click();
     await expect

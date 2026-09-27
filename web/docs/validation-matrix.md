@@ -1,6 +1,6 @@
 # MVP 累计验收矩阵
 
-下表记录MVP复验基线提交b59995435c；最新ADV-17及MVP累计回归见[ADV-17验收](evidence/adv-17-verification.md)（后端368、冒烟13、前端92、浏览器25通过）。
+下表记录MVP复验基线提交b59995435c；最新ADV-18及MVP累计回归见[ADV-18验收](evidence/adv-18-verification.md)（后端369、冒烟13、前端92、浏览器26通过）。
 
 每轮运行 MVP-01～当前篇的必需检查；同一完整测试命令可以覆盖多行，但计数不重复累加。新增能力在所属篇实现时补充行为和实际命令，future 不等于通过。
 
@@ -59,3 +59,4 @@
 | ADV-15 | 固定双快照方向与交换草稿、配置按文件读详情、路由新增/消失、限定 Flow 双侧路径、覆盖/截断/版本冲突/空结果、历史结果与快照状态读偏斜回归 | changes.test.tsx、changes.spec.ts、test_snapshots.py及MVP+ADV-01～15全部累计门槛 | [本轮全通过](evidence/adv-15-verification.md)：后端358、冒烟13、前端87、浏览器24、部署3×2、双用户1×2 |
 | ADV-16 | 节点/接口精确校验、不可变派生、来源和初始化质量、幂等与引擎忙、SDK未确认/失败、基线引用删除保护与竞态 | test_fault_scenarios.py、迁移/分层、独立真实HTTP worker及MVP+ADV-01～16全部累计门槛 | [本轮全通过](evidence/adv-16-verification.md)：后端368、冒烟13、前端87、浏览器24、部署3×2、双用户1×2 |
 | ADV-17 | 就绪基线和真实候选、节点/接口去重、模型派生预览、双击幂等、失败/未知状态诊断、快照质量门槛、固定比较方向及手动分析范围 | faults.test.tsx、changes.test.tsx、faults.spec.ts及MVP+ADV-01～17全部累计门槛 | [本轮全通过](evidence/adv-17-verification.md)：后端368、冒烟13、前端92、浏览器25、部署3×2、双用户1×2 |
+| ADV-18 | 固定 Cisco 双快照配置行/路由增删/差异可达性直接 SDK 对照；原始基线不变、失败派生不可比较；浏览器交接、前两阶段累计、HTTPS 恢复和双用户 | test_advance_phase3.py、advance-phase3.spec.ts及MVP+ADV-01～18全部累计门槛 | [第三阶段全通过](evidence/adv-18-verification.md)：后端369、冒烟13、前端92、浏览器26、部署3×2、双用户1×2 |

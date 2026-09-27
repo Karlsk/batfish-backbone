@@ -176,6 +176,9 @@ export function Shell({ children }: PropsWithChildren) {
   const { network, snapshot } = useResourceContext();
   const location = useLocation();
   const session = useSession();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
   return (
     <Layout className="workbench">
       <Layout.Sider width={224} className="sidebar">

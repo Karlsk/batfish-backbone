@@ -61,7 +61,7 @@ MVP-01～25 及双主题升级已通过全部当前门禁，详见[复验报告]
 
 已知未提交ADV-01属于本任务，核验后纳入本批；保留`.pnpm-store/`、`.superpowers/`无关内容。现有ADV-01源码指纹与上轮一致，先补齐批次部署恢复及累计检查后提交，不重复实现。
 
-当前篇：ADV-17；下一动作：本篇门槛全部通过，提交后推进ADV-18第三阶段整体验收。阻碍：无。
+当前篇：ADV-18；下一动作：第三阶段累计门槛全部通过，本篇提交后结束 ADV-01～18 批次。阻碍：无。
 
 | spec | stage | base_commit | implementation_fingerprint | required_checks | evidence | commit |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -81,5 +81,5 @@ MVP-01～25 及双主题升级已通过全部当前门禁，详见[复验报告]
 | ADV-14 | committed | 72ca4b2491 | 21640faa2768e268c6c7451315dcd7face0af9f28b7a3dd8413c7c53e37ec084 | MVP全部＋ADV-01～14 | [全部通过](../evidence/adv-14-verification.md) | 23e19dfe79 |
 | ADV-15 | committed | 23e19dfe79 | d9e8d61b23d555ad1ccdf64154a589fe9906e018af6d91e40a754f6c41d8ff97 | MVP全部＋ADV-01～15 | [全部通过](../evidence/adv-15-verification.md) | 0e202fa9d1 |
 | ADV-16 | committed | 0e202fa9d1 | 88654652bbe5e1fbbf77bd70560b688d5d5bdfffbd499639c4da7ff00802b69e | MVP全部＋ADV-01～16 | [全部通过](../evidence/adv-16-verification.md) | 118fcdfda8 |
-| ADV-17 | validated | 118fcdfda8 | 7eb58b4539809b094e1ba7949e6835ee19e532ccf876c829e83d5646353db225 | MVP全部＋ADV-01～17 | [全部通过](../evidence/adv-17-verification.md) | 提交后关联 |
-| ADV-18 | pending | — | 待本轮归档 | MVP全部＋ADV-01～18 | 待执行 | — |
+| ADV-17 | committed | 118fcdfda8 | 7eb58b4539809b094e1ba7949e6835ee19e532ccf876c829e83d5646353db225 | MVP全部＋ADV-01～17 | [全部通过](../evidence/adv-17-verification.md) | 70a5225a16 |
+| ADV-18 | validated | 70a5225a16 | c8e2d001008326e7cb06012ad389a8378adbf9ffd3b73e5b5e71acebfd0f14fa | MVP全部＋ADV-01～18 | [全部通过](../evidence/adv-18-verification.md) | 提交后关联 |
