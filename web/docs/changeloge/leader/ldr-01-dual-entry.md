@@ -1,6 +1,6 @@
 # LDR-01 双入口与领导端壳层
 
-- 状态：待开发；阶段：领导端；依赖：[ADV-18](../advance/adv-18-phase-three-acceptance.md)；预计 1.5 人天。
+- 状态：已完成；阶段：领导端；依赖：[ADV-18](../advance/adv-18-phase-three-acceptance.md)；预计 1.5 人天。
 - 共享约束：[领导端设计](../../leader-design.md)、[前端规范](../../frontend.md)、[API 契约](../../api-contracts.md)。
 
 ## 需求与接口
@@ -22,3 +22,5 @@
 ## 非目标与完成记录
 
 不在本篇创建汇总 API、业务关注项或检查模板。完成后记录实际改动、测试数、环境版本与限制，更新阶段索引；未通过时保持待验证/未通过。
+
+2026-09-28 已完成。新增 `web/frontend/src/app/entry.ts`、`ServiceStatus.tsx` 与 `features/leader/LeaderShell.tsx`，调整应用路由、登录落点和样式；新增入口单测及真实浏览器回归，扩展双用户用例。管理员与成员双向切换、主动偏好、损坏/禁用存储回退、深浅主题、390～1440 像素布局，以及真实双设备快照的上下文保持均通过。前端 94 项单测、29 项浏览器、后端 369 项及真实 API/worker 冒烟 13 项通过；API 类型、构建与格式通过。环境为固定 Batfish revision `7d0deeeac4a09973b3876327f6aef721ee12f955`、Pybatfish `2026.9.17.3748`、Python `3.12.12`、迁移 `0010`。详情见[本篇证据](../../evidence/ldr-01-verification.md)。本篇总览只显示诚实空状态，汇总 API 留给 LDR-04/05。

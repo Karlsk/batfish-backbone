@@ -66,6 +66,14 @@ test("real administrator and member lifecycle with session revocation", async ({
     await expect(
       member.getByRole("link", { name: "用户管理", exact: true }),
     ).toHaveCount(0);
+    await member.getByRole("link", { name: "领导视图" }).click();
+    await expect(
+      member.getByRole("heading", { name: "尚未检查" }),
+    ).toBeVisible();
+    await member.getByRole("link", { name: "技术工作台" }).click();
+    await expect(
+      member.getByRole("heading", { name: "网络分析，从一份配置开始" }),
+    ).toBeVisible();
     await member.getByRole("link", { name: "网络与快照", exact: true }).click();
     await expect(
       member.getByRole("heading", { name: "网络与快照", exact: true }),
@@ -104,8 +112,19 @@ test("real administrator and member lifecycle with session revocation", async ({
       member.getByRole("heading", { name: "登录工作台" }),
     ).toBeVisible();
     expect(
-      await member.evaluate(() => localStorage.length + sessionStorage.length),
-    ).toBe(0);
+      await member.evaluate(() => {
+        const keys = Object.keys(localStorage);
+        return {
+          keys,
+          entry: localStorage.getItem("batfish-entry-preference"),
+          transient: sessionStorage.length,
+        };
+      }),
+    ).toEqual({
+      keys: ["batfish-entry-preference"],
+      entry: "technical",
+      transient: 0,
+    });
   } finally {
     await memberContext.close();
   }

@@ -2,7 +2,13 @@ import { ThemeControl } from "../../app/theme";
 import { useEffect, useState, type PropsWithChildren } from "react";
 import { Alert, Button, Card, Form, Input, Typography } from "antd";
 import { useQueryClient } from "@tanstack/react-query";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
+import { preferredEntryPath } from "../../app/entry";
 import { api, unwrap, ApiError } from "../../api/client";
 import {
   getSession,
@@ -74,6 +80,7 @@ export function LoginPage() {
   const [form] = Form.useForm();
   const [params] = useSearchParams();
   const navigate = useNavigate();
+  const location = useLocation();
   return (
     <div className="auth-screen">
       <div className="auth-appearance">
@@ -111,7 +118,14 @@ export function LoginPage() {
               );
               form.resetFields();
               setSession(session);
-              navigate("/", { replace: true });
+              navigate(
+                location.pathname.startsWith("/leader/")
+                  ? location.pathname
+                  : location.pathname === "/"
+                    ? preferredEntryPath()
+                    : location.pathname,
+                { replace: true },
+              );
             } catch (e) {
               setError(e);
             } finally {

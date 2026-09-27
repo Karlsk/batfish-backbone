@@ -12,12 +12,12 @@ import {
   Card,
   Space,
   Tag,
-  Badge,
-  Select,
   Steps,
   Button,
 } from "antd";
 import { ThemeProvider, ThemeControl } from "./theme";
+import { ServiceStatus } from "./ServiceStatus";
+import { chooseEntry, preferredEntryPath } from "./entry";
 import {
   ApartmentOutlined,
   DashboardOutlined,
@@ -26,11 +26,7 @@ import {
   ClockCircleOutlined,
   QuestionCircleOutlined,
 } from "@ant-design/icons";
-import {
-  QueryClient,
-  QueryClientProvider,
-  useQuery,
-} from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   createBrowserRouter,
   RouterProvider,
@@ -38,10 +34,10 @@ import {
   Route,
   Link,
   useLocation,
+  Navigate,
 } from "react-router-dom";
-import { ContextProvider, useResourceContext, resourceKey } from "./context";
+import { ContextProvider, useResourceContext } from "./context";
 import { onIdentityChange, useSession } from "./session";
-import { api, unwrap } from "../api/client";
 import { EmptyState } from "../components/States";
 import {
   SessionBootstrap,
@@ -52,6 +48,7 @@ import {
 import { AdminOnly } from "../features/users/Access";
 import { ContextPicker } from "../features/networks/ContextPicker";
 import { LoadingState } from "../components/States";
+import { LeaderOverview, LeaderShell } from "../features/leader/LeaderShell";
 const TracePage = lazy(() =>
   import("../features/traceroute/TraceForm").then((m) => ({
     default: m.TracePage,
@@ -143,37 +140,7 @@ export function Providers({ children }: PropsWithChildren) {
     </ThemeProvider>
   );
 }
-function ServiceStatus() {
-  const health = useQuery({
-    queryKey: resourceKey(
-      null,
-      { networkId: null, snapshotId: null },
-      "health",
-    ),
-    queryFn: () => unwrap(api.GET("/api/v1/health/ready")),
-    refetchInterval: 30000,
-  });
-  return (
-    <Badge
-      status={
-        health.isSuccess
-          ? "success"
-          : health.isPending
-            ? "processing"
-            : "warning"
-      }
-      text={
-        health.isSuccess
-          ? "服务就绪"
-          : health.isPending
-            ? "正在连接"
-            : "服务未就绪"
-      }
-    />
-  );
-}
 export function Shell({ children }: PropsWithChildren) {
-  const { network, snapshot } = useResourceContext();
   const location = useLocation();
   const session = useSession();
   useEffect(() => {
@@ -278,6 +245,13 @@ export function Shell({ children }: PropsWithChildren) {
           <Space className="account-controls">
             <ThemeControl />
             <ServiceStatus />
+            <Link
+              to="/leader/overview"
+              className="account-link"
+              onClick={() => chooseEntry("leader")}
+            >
+              领导视图
+            </Link>
             {session && (
               <>
                 <Link
@@ -370,57 +344,87 @@ function Overview() {
   );
 }
 function WorkbenchRoutes() {
+  const location = useLocation();
+  const leaderRoute = location.pathname.startsWith("/leader");
   return (
     <Providers>
       <SessionBootstrap>
         <AuthGuard>
-          <Shell>
-            <Suspense fallback={<LoadingState />}>
+          {leaderRoute ? (
+            <LeaderShell>
               <Routes>
-                <Route path="/topology" element={<TopologyPage />} />
-                <Route path="/bgp" element={<BgpPage />} />
-                <Route path="/acl" element={<FilterTestPage />} />
-                <Route path="/expert" element={<ExpertPage />} />
-                <Route path="/changes" element={<ChangesPage />} />
-                <Route path="/faults" element={<FaultsPage />} />
-                <Route path="/traceroute" element={<TracePage />} />
-                <Route path="/analysis/:operation" element={<AnalysisPage />} />
-                <Route path="/analysis" element={<AnalysisPage />} />
-                <Route path="/results/:resultId" element={<ResultsPage />} />
+                <Route path="/leader/overview" element={<LeaderOverview />} />
                 <Route
-                  path="/users"
-                  element={
-                    <AdminOnly>
-                      <UsersPage />
-                    </AdminOnly>
-                  }
+                  path="/leader"
+                  element={<Navigate to="/leader/overview" replace />}
                 />
-                <Route path="/networks" element={<NetworksPage />} />
-                <Route path="/snapshots" element={<SnapshotsPage />} />
-                <Route path="/jobs" element={<JobsPage />} />
-                <Route
-                  path="/networks/:networkId/snapshots/:snapshotId/diagnostics"
-                  element={<DiagnosticsPage />}
-                />
-                <Route path="/jobs/:jobId" element={<JobDetail />} />
-                <Route path="/password" element={<PasswordPage />} />
-                <Route path="/" element={<Overview />} />
                 <Route
                   path="*"
-                  element={
-                    <EmptyState
-                      title="页面暂未开放"
-                      action={
-                        <Link to="/">
-                          <Button>返回概览</Button>
-                        </Link>
-                      }
-                    />
-                  }
+                  element={<Navigate to="/leader/overview" replace />}
                 />
               </Routes>
-            </Suspense>
-          </Shell>
+            </LeaderShell>
+          ) : (
+            <Shell>
+              <Suspense fallback={<LoadingState />}>
+                <Routes>
+                  <Route path="/topology" element={<TopologyPage />} />
+                  <Route path="/bgp" element={<BgpPage />} />
+                  <Route path="/acl" element={<FilterTestPage />} />
+                  <Route path="/expert" element={<ExpertPage />} />
+                  <Route path="/changes" element={<ChangesPage />} />
+                  <Route path="/faults" element={<FaultsPage />} />
+                  <Route path="/traceroute" element={<TracePage />} />
+                  <Route
+                    path="/analysis/:operation"
+                    element={<AnalysisPage />}
+                  />
+                  <Route path="/analysis" element={<AnalysisPage />} />
+                  <Route path="/results/:resultId" element={<ResultsPage />} />
+                  <Route
+                    path="/users"
+                    element={
+                      <AdminOnly>
+                        <UsersPage />
+                      </AdminOnly>
+                    }
+                  />
+                  <Route path="/networks" element={<NetworksPage />} />
+                  <Route path="/snapshots" element={<SnapshotsPage />} />
+                  <Route path="/jobs" element={<JobsPage />} />
+                  <Route
+                    path="/networks/:networkId/snapshots/:snapshotId/diagnostics"
+                    element={<DiagnosticsPage />}
+                  />
+                  <Route path="/jobs/:jobId" element={<JobDetail />} />
+                  <Route path="/password" element={<PasswordPage />} />
+                  <Route
+                    path="/"
+                    element={
+                      preferredEntryPath() === "/leader/overview" ? (
+                        <Navigate to="/leader/overview" replace />
+                      ) : (
+                        <Overview />
+                      )
+                    }
+                  />
+                  <Route
+                    path="*"
+                    element={
+                      <EmptyState
+                        title="页面暂未开放"
+                        action={
+                          <Link to="/">
+                            <Button>返回概览</Button>
+                          </Link>
+                        }
+                      />
+                    }
+                  />
+                </Routes>
+              </Suspense>
+            </Shell>
+          )}
         </AuthGuard>
       </SessionBootstrap>
     </Providers>
