@@ -1599,7 +1599,7 @@ input:focus-visible {
   padding-top: 18px;
   border-top: 1px solid var(--app-divider);
 }
-.leader-checks-actions span {
+.leader-checks-actions > span {
   color: var(--app-muted);
 }
 .leader-checks-history {
@@ -1696,6 +1696,26 @@ input:focus-visible {
 .leader-capabilities > div span {
   color: var(--app-muted);
   margin-left: auto;
+}
+.leader-change-side {
+  display: grid;
+  gap: 10px;
+  padding: 22px;
+  border: 1px solid var(--app-divider);
+  border-radius: 15px;
+  background: var(--app-input);
+  overflow-wrap: anywhere;
+}
+.leader-change-side.candidate {
+  border-color: var(--app-accent);
+  background: var(--app-accentBg);
+}
+.leader-change-side span,
+.leader-change-side small {
+  color: var(--app-muted);
+}
+.leader-change-side strong {
+  font-size: 22px;
 }
 @media (max-width: 960px) {
   .leader-topbar {

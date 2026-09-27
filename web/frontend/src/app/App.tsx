@@ -52,6 +52,10 @@ import { LeaderShell } from "../features/leader/LeaderShell";
 import { ConcernsPage } from "../features/leader/concerns/ConcernsPage";
 import { LeaderChecksPage } from "../features/leader/checks/ChecksPage";
 import {
+  LeaderChangesPage,
+  LeaderFaultPage,
+} from "../features/leader/changes/ChangesPage";
+import {
   LeaderOverviewPage,
   LeaderNetworkPage,
 } from "../features/leader/overview/OverviewPage";
@@ -373,6 +377,12 @@ function WorkbenchRoutes() {
                   path="/leader/checks/:runId"
                   element={<LeaderChecksPage />}
                 />
+                <Route path="/leader/changes" element={<LeaderChangesPage />} />
+                <Route
+                  path="/leader/changes/:comparisonId"
+                  element={<LeaderChangesPage />}
+                />
+                <Route path="/leader/faults" element={<LeaderFaultPage />} />
                 <Route
                   path="/leader"
                   element={<Navigate to="/leader/overview" replace />}

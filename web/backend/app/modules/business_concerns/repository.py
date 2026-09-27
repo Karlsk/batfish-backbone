@@ -92,7 +92,7 @@ class BusinessConcernsRepository:
         rows = self._transaction.scalars(
             select(BusinessConcern)
             .where(*conditions)
-            .order_by(BusinessConcern.created_at, BusinessConcern.id)
+            .order_by(BusinessConcern.created_at.desc(), BusinessConcern.id.desc())
             .offset(offset)
             .limit(limit)
         )

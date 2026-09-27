@@ -42,6 +42,13 @@ import {
   type AdvancedTemplateId,
 } from "./advanced";
 import { AdvancedEvidence, ExpertCapabilities } from "./AdvancedEvidence";
+import {
+  changeConclusion,
+  canCompareDerived,
+  relevantConcern,
+  type ChangeTemplateId,
+} from "../changes/model";
+import { ChangeEvidence } from "../changes/ChangeEvidence";
 
 type Concern = components["schemas"]["ConcernDTO"];
 type GuidedTemplateId = MvpTemplateId | AdvancedTemplateId;
@@ -49,6 +56,8 @@ type GuidedDraft = MvpDraft & AdvancedDraft;
 const advancedIds: AdvancedTemplateId[] = ["topology", "bgp", "acl"];
 const isAdvanced = (id: string): id is AdvancedTemplateId =>
   advancedIds.includes(id as AdvancedTemplateId);
+const isChange = (id: string): id is ChangeTemplateId =>
+  ["change-config", "change-routes", "change-reachability"].includes(id);
 
 const ids: GuidedTemplateId[] = [
   "configuration-quality",
@@ -69,6 +78,11 @@ const labels: Record<GuidedTemplateId, string> = {
   topology: "网络拓扑",
   bgp: "BGP 会话",
   acl: "ACL 流量检查",
+};
+const changeLabels: Record<ChangeTemplateId, string> = {
+  "change-config": "配置文件变化",
+  "change-routes": "路由变化",
+  "change-reachability": "可达性变化",
 };
 const descriptions: Record<GuidedTemplateId, string> = {
   "configuration-quality": "先看配置是否解析，以及模型已知限制。",
@@ -789,8 +803,11 @@ function CheckWorkspace() {
             {runs.data.items.map((item) => (
               <Link key={item.id} to={`/leader/checks/${item.id}`}>
                 <strong>
-                  {labels[item.template_id as MvpTemplateId] ??
-                    item.template_id}
+                  {labels[item.template_id as GuidedTemplateId] ??
+                    changeLabels[item.template_id as ChangeTemplateId] ??
+                    (item.template_id === "fault"
+                      ? "故障派生快照"
+                      : item.template_id)}
                 </strong>
                 <span>
                   {runStatusLabels[item.status]} · {when(item.created_at)} ·
@@ -883,7 +900,36 @@ function CheckRunDetail({ runId }: { runId: string }) {
     enabled:
       !!session &&
       !!resultId &&
-      (run?.template_id === "bgp" || run?.template_id === "acl"),
+      ["bgp", "acl", "change-routes", "change-reachability"].includes(
+        run?.template_id ?? "",
+      ),
+  });
+  const derived = useQuery({
+    queryKey: resourceKey(
+      session?.user_id ?? null,
+      {
+        networkId: run?.network_id ?? null,
+        snapshotId: run?.derived_snapshot_id ?? null,
+      },
+      "leader-derived-snapshot",
+    ),
+    queryFn: ({ signal }) =>
+      unwrap(
+        api.GET("/api/v1/networks/{network_id}/snapshots/{snapshot_id}", {
+          signal,
+          params: {
+            path: {
+              network_id: run!.network_id,
+              snapshot_id: run!.derived_snapshot_id!,
+            },
+          },
+        }),
+      ),
+    enabled: !!session && !!run?.derived_snapshot_id,
+    refetchInterval: (query) =>
+      ["queued", "initializing"].includes(query.state.data?.status ?? "")
+        ? 2500
+        : false,
   });
   if (runQuery.isPending) return <LoadingState />;
   if (runQuery.isError)
@@ -899,26 +945,67 @@ function CheckRunDetail({ runId }: { runId: string }) {
       ? resultQuery.data
       : null;
   const sourceMismatch = !!resultQuery.data && !result;
+  const faultReady =
+    run.template_id === "fault" &&
+    canCompareDerived(run.status, derived.data?.status);
   const view =
-    result && isAdvanced(run.template_id)
-      ? describeAdvanced(
-          run.template_id,
-          result,
-          advancedRows.data && run.template_id !== "topology"
-            ? {
-                rows: advancedRows.data.rows,
-                total: advancedRows.data.total,
-                truncated: advancedRows.data.truncated,
-              }
-            : undefined,
-        )
-      : describeRun(run, result ?? null);
+    run.template_id === "fault" && run.status === "succeeded"
+      ? {
+          headline: faultReady
+            ? "派生快照已就绪"
+            : "派生任务结束，快照尚未就绪",
+          facts: faultReady ? [`新快照：${derived.data!.display_name}`] : [],
+          warnings: [
+            "只在 Batfish 配置模型中停用指定对象；原始基线未被修改，也不代表现场故障。",
+            ...(derived.data?.status === "ready_with_warnings"
+              ? ["派生快照带解析警告；比较前请查看诊断。"]
+              : []),
+          ],
+        }
+      : result && isChange(run.template_id)
+        ? changeConclusion(run.template_id, result, advancedRows.data?.rows)
+        : result && isAdvanced(run.template_id)
+          ? describeAdvanced(
+              run.template_id,
+              result,
+              advancedRows.data && run.template_id !== "topology"
+                ? {
+                    rows: advancedRows.data.rows,
+                    total: advancedRows.data.total,
+                    truncated: advancedRows.data.truncated,
+                  }
+                : undefined,
+            )
+          : describeRun(run, result ?? null);
   const cancelJob = run.jobs.find((item) => item.status === "queued");
   const scope = run.effective_parameters.request;
   const values =
     scope && typeof scope === "object" && !Array.isArray(scope)
       ? (scope as Record<string, unknown>)
       : {};
+  const requestOptions =
+    values.options &&
+    typeof values.options === "object" &&
+    !Array.isArray(values.options)
+      ? (values.options as Record<string, unknown>)
+      : {};
+  const frozenConcernMatches =
+    run.template_id === "change-reachability" &&
+    !!run.frozen_concern &&
+    relevantConcern(
+      run.frozen_concern as unknown as Concern,
+      String(values.start_location ?? ""),
+      String(values.destination_ips ?? ""),
+      Array.isArray(requestOptions.ip_protocols)
+        ? String(requestOptions.ip_protocols[0])
+        : undefined,
+      Array.isArray(requestOptions.destination_ports)
+        ? Number(requestOptions.destination_ports[0])
+        : null,
+      typeof requestOptions.source_ips === "string"
+        ? requestOptions.source_ips
+        : undefined,
+    );
   const cancel = async () => {
     if (!cancelJob || cancelBusy) return;
     setCancelBusy(true);
@@ -947,7 +1034,9 @@ function CheckRunDetail({ runId }: { runId: string }) {
         <div>
           <span className="leader-kicker">CHECK RECORD / 固定检查</span>
           <Typography.Title level={1}>
-            {labels[run.template_id as MvpTemplateId] ?? "检查记录"}
+            {labels[run.template_id as GuidedTemplateId] ??
+              changeLabels[run.template_id as ChangeTemplateId] ??
+              (run.template_id === "fault" ? "故障派生快照" : "检查记录")}
           </Typography.Title>
           <p>
             运行编号 {run.id} · {when(run.created_at)}
@@ -1040,11 +1129,61 @@ function CheckRunDetail({ runId }: { runId: string }) {
               {String(values.destination_ip ?? "未记录")}；仅判断明确 ACL 范围。
             </p>
           )}
-          {run.frozen_concern && (
+          {isChange(run.template_id) && (
+            <>
+              <p>
+                固定比较{" "}
+                {String(run.effective_parameters.comparison_id ?? "未记录")}：
+                基线{" "}
+                {short(
+                  String(
+                    run.effective_parameters.baseline_snapshot_id ?? "未知",
+                  ),
+                )}{" "}
+                → 候选 {short(run.snapshot_id)}
+              </p>
+              {run.template_id === "change-routes" && (
+                <p>
+                  明确网段：
+                  {String(
+                    values.options &&
+                      typeof values.options === "object" &&
+                      !Array.isArray(values.options)
+                      ? ((values.options as Record<string, unknown>).network ??
+                          "未记录")
+                      : "未记录",
+                  )}
+                </p>
+              )}
+              {run.template_id === "change-reachability" && (
+                <p>
+                  流量范围：{String(values.start_location ?? "未记录")} →{" "}
+                  {String(values.destination_ips ?? "未记录")}
+                </p>
+              )}
+            </>
+          )}
+          {run.template_id === "fault" && (
             <p>
-              业务关注项：{String(run.frozen_concern.name ?? "未命名")} · 第{" "}
-              {run.concern_version} 版
+              原始基线 {short(run.snapshot_id)} → 派生快照{" "}
+              {run.derived_snapshot_id
+                ? short(run.derived_snapshot_id)
+                : "尚未创建"}
+              ；仅停用显式选中的设备或接口。
             </p>
+          )}
+          {run.frozen_concern &&
+            (!isChange(run.template_id) || frozenConcernMatches) && (
+              <p>
+                业务关注项：{String(run.frozen_concern.name ?? "未命名")} · 第{" "}
+                {run.concern_version} 版
+              </p>
+            )}
+          {frozenConcernMatches && (
+            <Alert
+              type="info"
+              title="本次流量与冻结的业务关注项映射一致；变化样本不能直接推断业务中断。"
+            />
           )}
           <p className="leader-checks-note">
             这里只说明显式检查范围，不能推断范围外的业务是否受影响。
@@ -1072,6 +1211,17 @@ function CheckRunDetail({ runId }: { runId: string }) {
           {run.template_id === "configuration-quality" && (
             <p>解析事实来自创建检查时选定的快照。</p>
           )}
+          {run.template_id === "fault" && derived.data && (
+            <p>
+              派生快照状态：{derived.data.status} · {derived.data.display_name}
+            </p>
+          )}
+          {run.template_id === "fault" && derived.isError && (
+            <ErrorState
+              error={derived.error}
+              retry={() => void derived.refetch()}
+            />
+          )}
           {cancelJob && run.created_by === session?.user_id && (
             <Button loading={cancelBusy} onClick={() => void cancel()}>
               取消排队任务
@@ -1092,8 +1242,42 @@ function CheckRunDetail({ runId }: { runId: string }) {
           retry={() => void advancedRows.refetch()}
         />
       )}
+      {result && isChange(run.template_id) && (
+        <ChangeEvidence
+          template={run.template_id}
+          result={result}
+          rows={advancedRows.data}
+          rowError={advancedRows.error}
+          rowPending={advancedRows.isPending}
+          retryRows={() => void advancedRows.refetch()}
+        />
+      )}
+      {run.template_id === "fault" && (
+        <Card title="04 / 派生快照" className="leader-checks-panel">
+          <p>
+            原始基线 {run.snapshot_id} 保持不变；派生{" "}
+            {run.derived_snapshot_id ?? "尚未登记"}。
+          </p>
+          {faultReady ? (
+            <Link
+              to={`/leader/changes?network=${run.network_id}&baseline=${run.snapshot_id}&candidate=${run.derived_snapshot_id}`}
+            >
+              使用原始基线与派生快照创建固定比较 <ArrowRightOutlined />
+            </Link>
+          ) : (
+            <Alert
+              type={derived.data?.status === "failed" ? "error" : "warning"}
+              title={
+                derived.data?.status === "failed"
+                  ? "派生初始化失败，不能进入比较。"
+                  : "派生快照未就绪；完成前不开放比较入口。"
+              }
+            />
+          )}
+        </Card>
+      )}
       <Card
-        title={`${isAdvanced(run.template_id) && result ? "05" : "04"} / 查看技术详情`}
+        title={`${(isAdvanced(run.template_id) || isChange(run.template_id) || run.template_id === "fault") && (result || run.template_id === "fault") ? "05" : "04"} / 查看技术详情`}
         className="leader-checks-panel"
       >
         <Space wrap>
@@ -1129,13 +1313,17 @@ function CheckRunDetail({ runId }: { runId: string }) {
               to={
                 run.template_id === "traceroute"
                   ? "/traceroute"
-                  : run.template_id === "topology"
-                    ? "/topology"
-                    : run.template_id === "bgp"
-                      ? "/bgp"
-                      : run.template_id === "acl"
-                        ? "/acl"
-                        : `/analysis/${run.template_id === "devices" ? "nodes" : run.template_id}`
+                  : isChange(run.template_id)
+                    ? `/changes?baseline=${String(run.effective_parameters.baseline_snapshot_id ?? "")}&candidate=${run.snapshot_id}`
+                    : run.template_id === "fault"
+                      ? "/faults"
+                      : run.template_id === "topology"
+                        ? "/topology"
+                        : run.template_id === "bgp"
+                          ? "/bgp"
+                          : run.template_id === "acl"
+                            ? "/acl"
+                            : `/analysis/${run.template_id === "devices" ? "nodes" : run.template_id}`
               }
               onClick={() => chooseEntry("technical")}
             >

@@ -52,6 +52,17 @@ export function LeaderShell({ children }: PropsWithChildren) {
           >
             自主检查
           </Link>
+          <Link
+            to="/leader/changes"
+            aria-current={
+              location.pathname.startsWith("/leader/changes") ||
+              location.pathname.startsWith("/leader/faults")
+                ? "page"
+                : undefined
+            }
+          >
+            变更与故障
+          </Link>
         </nav>
         <Space className="leader-controls" wrap>
           <ThemeControl />
