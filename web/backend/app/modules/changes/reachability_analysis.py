@@ -41,6 +41,10 @@ class ReachabilityDiffService:
         self._auth, self._changes, self._snapshots = auth, changes, snapshots
         self._jobs, self._results, self._analysis = jobs, results, analysis
 
+    def validate_request(self, actor, request):
+        self._auth.revalidate_actor(actor)
+        return ReachabilityDiffRequest.model_validate(request)
+
     def submit(
         self,
         actor,

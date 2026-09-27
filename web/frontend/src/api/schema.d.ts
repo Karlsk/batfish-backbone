@@ -789,6 +789,58 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/leader/check-templates": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Templates */
+    get: operations["templates_api_v1_leader_check_templates_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/leader/check-runs": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List Runs */
+    get: operations["list_runs_api_v1_leader_check_runs_get"];
+    put?: never;
+    /** Create Run */
+    post: operations["create_run_api_v1_leader_check_runs_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/leader/check-runs/{run_id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Run */
+    get: operations["get_run_api_v1_leader_check_runs__run_id__get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/networks/{network_id}/snapshots/{snapshot_id}/fault-scenarios": {
     parameters: {
       query?: never;
@@ -1055,6 +1107,168 @@ export interface components {
       /** Schema Version */
       schema_version: string;
     };
+    /** CheckRun */
+    CheckRun: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /** Template Id */
+      template_id: string;
+      /** Template Version */
+      template_version: string;
+      /**
+       * Network Id
+       * Format: uuid
+       */
+      network_id: string;
+      /**
+       * Snapshot Id
+       * Format: uuid
+       */
+      snapshot_id: string;
+      /** Concern Id */
+      concern_id: string | null;
+      /** Concern Version */
+      concern_version: number | null;
+      /** Frozen Concern */
+      frozen_concern: {
+        [key: string]: components["schemas"]["JsonValue"];
+      } | null;
+      /** Snapshot Quality */
+      snapshot_quality: {
+        [key: string]: components["schemas"]["JsonValue"];
+      };
+      /** Engine Version */
+      engine_version: string;
+      /** Sdk Version */
+      sdk_version: string;
+      /** Effective Parameters */
+      effective_parameters: {
+        [key: string]: components["schemas"]["JsonValue"];
+      };
+      /** Job Ids */
+      job_ids: string[];
+      /** Jobs */
+      jobs: components["schemas"]["CheckRunJob"][];
+      /** Result Ids */
+      result_ids: string[];
+      /** Derived Snapshot Id */
+      derived_snapshot_id: string | null;
+      /**
+       * Status
+       * @enum {string}
+       */
+      status:
+        | "submitting"
+        | "queued"
+        | "running"
+        | "succeeded"
+        | "failed"
+        | "cancelled"
+        | "interrupted"
+        | "result_unavailable";
+      error: components["schemas"]["ErrorDetail"] | null;
+      /** Error Code */
+      error_code: string | null;
+      /**
+       * Created By
+       * Format: uuid
+       */
+      created_by: string;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /**
+       * Updated At
+       * Format: date-time
+       */
+      updated_at: string;
+    };
+    /** CheckRunJob */
+    CheckRunJob: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * Status
+       * @enum {string}
+       */
+      status:
+        | "queued"
+        | "running"
+        | "succeeded"
+        | "failed"
+        | "cancelled"
+        | "interrupted";
+      /** Phase */
+      phase: string;
+      /**
+       * Engine State
+       * @enum {string}
+       */
+      engine_state: "idle" | "busy" | "unknown";
+      /** Result Id */
+      result_id: string | null;
+      /** Error Code */
+      error_code: string | null;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /** Finished At */
+      finished_at: string | null;
+    };
+    /** CheckRunPage */
+    CheckRunPage: {
+      /** Items */
+      items: components["schemas"]["CheckRun"][];
+      /** Offset */
+      offset: number;
+      /** Limit */
+      limit: number;
+      /** Total */
+      total: number;
+    };
+    /** CheckTemplate */
+    CheckTemplate: {
+      /** Id */
+      id: string;
+      /** Version */
+      version: string;
+      /** Title */
+      title: string;
+      /**
+       * Category
+       * @enum {string}
+       */
+      category: "mvp" | "advance";
+      /** Capability */
+      capability: string | null;
+      /** Required Scope */
+      required_scope: string[];
+      /** Scope Schema */
+      scope_schema: {
+        [key: string]: components["schemas"]["JsonValue"];
+      };
+      /** Options Schema */
+      options_schema: {
+        [key: string]: components["schemas"]["JsonValue"];
+      };
+      /** Model Note */
+      model_note: string;
+    };
+    /** CheckTemplatePage */
+    CheckTemplatePage: {
+      /** Items */
+      items: components["schemas"]["CheckTemplate"][];
+    };
     /** Column */
     Column: {
       /** Key */
@@ -1225,6 +1439,33 @@ export interface components {
     /** ConfigDiffRequest */
     ConfigDiffRequest: {
       options?: components["schemas"]["ConfigDiffOptions"];
+    };
+    /** CreateCheckRunRequest */
+    CreateCheckRunRequest: {
+      /** Template Id */
+      template_id: string;
+      /**
+       * Network Id
+       * Format: uuid
+       */
+      network_id: string;
+      /**
+       * Snapshot Id
+       * Format: uuid
+       */
+      snapshot_id: string;
+      /** Scope */
+      scope?: {
+        [key: string]: components["schemas"]["JsonValue"];
+      };
+      /** Options */
+      options?: {
+        [key: string]: components["schemas"]["JsonValue"];
+      };
+      /** Concern Id */
+      concern_id?: string | null;
+      /** Concern Version */
+      concern_version?: number | null;
     };
     /** CreateComparisonRequest */
     CreateComparisonRequest: {
@@ -5177,6 +5418,170 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["JobDTO"];
+        };
+      };
+      /** @description Unprocessable Entity */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+    };
+  };
+  templates_api_v1_leader_check_templates_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["CheckTemplatePage"];
+        };
+      };
+      /** @description Unprocessable Entity */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+    };
+  };
+  list_runs_api_v1_leader_check_runs_get: {
+    parameters: {
+      query?: {
+        network_id?: string | null;
+        offset?: number;
+        limit?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["CheckRunPage"];
+        };
+      };
+      /** @description Unprocessable Entity */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+    };
+  };
+  create_run_api_v1_leader_check_runs_post: {
+    parameters: {
+      query?: never;
+      header: {
+        "idempotency-key": string;
+      };
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateCheckRunRequest"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["CheckRun"];
+        };
+      };
+      /** @description Unprocessable Entity */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+    };
+  };
+  get_run_api_v1_leader_check_runs__run_id__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        run_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["CheckRun"];
         };
       };
       /** @description Unprocessable Entity */

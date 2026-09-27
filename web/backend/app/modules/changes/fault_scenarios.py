@@ -29,6 +29,10 @@ class FaultScenariosService:
         self._auth, self._networks, self._snapshots = auth, networks, snapshots
         self._jobs, self._analysis, self._controller = jobs, analysis, controller
 
+    def validate_request(self, actor, request):
+        self._auth.revalidate_actor(actor)
+        return FaultScenarioRequest.model_validate(request)
+
     def create(
         self,
         actor,

@@ -289,3 +289,11 @@ POST `/admin/deletions/{job_id}/reconcile` 接受 `{note: 10..1000字符检查�
 每个网络卡返回最新未删除快照及最新就绪快照，按 `created_at DESC, id DESC` 稳定选择。`readiness=pending` 表示没有就绪快照，`warning` 表示就绪快照带解析警告或另有更新但未就绪的快照；`ready` 仅表示当前最新快照已完成初始化且无解析警告，不表示转发正确。`check_state=not_checked` 不制造结果；最近 analysis 任务仅从该卡的最新就绪快照中选取，失败/中断不算成功。`latest_result` 也只来自同一就绪快照，独立给出 `coverage`、`truncated`、`truncation_reason`、警告数与创建时间；它可能早于最近的失败任务，客户端必须分别标注时间与来源。`result_unavailable` 表示任务记录成功但无可读结果元数据。接口只查询已存 PostgreSQL 事实，不执行 SDK 或触发任务。
 
 `recent_comparisons` 最多五条，按比较记录的创建时间及 ID 倒序，排除已删除的比较和所属网络。每条保留比较 ID、所属网络 ID/名称、固定的基线与候选快照 ID、覆盖情况及创建时间；它表示已建立的比较记录，不等于差异分析成功或业务影响结论。
+
+## LDR-06 检查模板与运行记录
+
+`GET /api/v1/leader/check-templates` 返回固定登记的 13 种模板及版本、分类、所用能力、必要范围、范围/高级选项 JSON Schema 和模型限制：配置质量、设备、接口、路由、LPM、单向连通性、拓扑、BGP、ACL、配置/路由/可达性变更、故障。模板只允许登记的 SDK 能力与有类型白名单选项；范围中的网络前缀、目标地址和比较方向不可被高级选项覆盖。
+
+`POST /api/v1/leader/check-runs` 要求 `Idempotency-Key`，请求最少包含 `template_id`、`network_id`、`snapshot_id`；按模板增加 `scope`、`options`，可选成对的 `concern_id`/`concern_version`。网络与快照须相符且快照可分析；比较模板要求 `snapshot_id` 为候选快照，运行冻结基线→候选方向；故障模板生成派生快照并记录 ID。配置质量直接固定已有解析质量，其余模板提交已有 analysis/changes/fault service 的持久任务，由独立 worker 执行。相同用户、相同键与请求复用原运行和子任务；键相同请求不同返回 409。未知模板、非法范围、未知高级字段在提交前拒绝。
+
+`GET /api/v1/leader/check-runs?network_id=&offset=0&limit=20` 与 `GET /api/v1/leader/check-runs/{id}` 对已登录成员共享可读，列表上限 100。运行含模板版本、快照质量、引擎/SDK 版本、冻结的关注项版本及有效参数、子 `job_ids`/`result_ids`、故障派生快照、状态与错误。`jobs` 逐项给出阶段、引擎 `idle/busy/unknown`、结果与错误码；`unknown` 不自动重放。`result_unavailable` 表示任务记录成功但结果引用缺失；失败/中断不能写成空结论。后续关注项修改或新结果不会改变本运行保存的输入与来源。

@@ -32,6 +32,8 @@ from app.modules.health.service import HealthService
 from app.modules.jobs.api import create_router as create_jobs_router
 from app.modules.jobs.service import JobsService
 from app.modules.leader.api import create_router as create_leader_router
+from app.modules.leader.checks_api import create_router as create_leader_checks_router
+from app.modules.leader.checks_service import CheckRunsService
 from app.modules.leader.service import LeaderService
 from app.modules.lifecycle.api import create_router as create_lifecycle_router
 from app.modules.lifecycle.service import ResourceLifecycleService
@@ -59,6 +61,7 @@ def database_metadata():
     from app.modules.changes import models as changes_models  # noqa: F401
     from app.modules.execution import models as execution_models  # noqa: F401
     from app.modules.jobs import models as jobs_models  # noqa: F401
+    from app.modules.leader import checks_models as leader_checks_models  # noqa: F401
     from app.modules.networks import models as networks_models  # noqa: F401
     from app.modules.results import models as results_models  # noqa: F401
     from app.modules.snapshots import models as snapshots_models  # noqa: F401
@@ -217,6 +220,27 @@ def create_app(
             auth, changes, snapshots, jobs, results, analysis
         )
         app.state.reachability_diff_service = reachability_diff
+        leader_checks = CheckRunsService(
+            db,
+            auth,
+            networks,
+            snapshots,
+            business_concerns,
+            analysis,
+            changes,
+            config_diff,
+            route_diff,
+            reachability_diff,
+            fault_scenarios,
+            jobs,
+        )
+        app.state.leader_checks_service = leader_checks
+        app.include_router(
+            create_leader_checks_router(
+                leader_checks, read_actor=read_actor, write_actor=write_actor
+            ),
+            prefix="/api/v1",
+        )
         app.include_router(
             create_changes_router(
                 changes,

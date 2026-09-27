@@ -45,6 +45,7 @@ def test_migration_from_empty(database):
         "comparisons",
         "business_concerns",
         "business_concern_versions",
+        "check_runs",
     }
     with database.engine.connect() as conn:
         context = MigrationContext.configure(conn)

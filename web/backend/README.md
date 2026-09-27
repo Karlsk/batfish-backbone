@@ -171,3 +171,7 @@ ADV-05 增加 `POST /api/v1/networks/{network_id}/snapshots/{snapshot_id}/analys
 ## 领导端跨网络总览（LDR-04）
 
 `GET /api/v1/leader/overview?offset=0&limit=20` 对已登录成员提供最多 200 项的分页网络卡与服务端全量总数、最多五条最近比较；`GET /api/v1/leader/networks/{network_id}` 供领导端直达单网络详情，复用同一卡片计算。卡片区分最新快照和最新就绪快照，分析任务和结果只绑定后一来源；无结果返回“未检查”，结果保留覆盖与截断警告。汇总计数明确区分当前网络、未删除快照记录和历史分析任务，均不代表业务健康分。leader service 仅调用各来源 service 的批量只读投影，不直接调用 SDK；详见 [API 契约](../docs/api-contracts.md#ldr-04-跨网络总览)。
+
+## 领导端检查任务（LDR-06）
+
+迁移 `0012` 保存领导端检查运行及幂等键。`GET /api/v1/leader/check-templates` 提供 13 个登记模板；`POST /api/v1/leader/check-runs` 要求 `Idempotency-Key` 和就绪快照，按模板校验最少范围与可选高级参数。同键同请求返回同一运行，异请求返回 409。配置质量直接固定解析事实，其余模板复用分析、变更和故障 service 的既有持久任务及独立 worker。列表和详情对团队成员共享可读，保留模板/关注项版本、有效范围、子任务阶段、引擎未知状态、错误与来源 ID；不自行重放中断任务。完整接口见 [LDR-06 契约](../docs/api-contracts.md#ldr-06-检查模板与运行记录)。

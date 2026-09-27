@@ -46,6 +46,10 @@ class ConfigDiffService:
         self._auth, self._changes = auth, changes
         self._snapshots, self._jobs, self._results = snapshots, jobs, results
 
+    def validate_request(self, actor, request):
+        self._auth.revalidate_actor(actor)
+        return ConfigDiffRequest.model_validate(request)
+
     def submit(
         self,
         actor,

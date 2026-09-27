@@ -61,6 +61,10 @@ class AnalysisService:
         self._auth.revalidate_actor(actor)
         return self._registry.capabilities()
 
+    def validate_request(self, actor, operation, request):
+        self._auth.revalidate_actor(actor)
+        return self._registry.validate(operation, request)
+
     def run_routes_diff(self, context, request):
         """Validate shared routes parameters and use the frozen two-snapshot SDK context."""
         if context.reference_snapshot_id is None or context.engine_reference_snapshot is None:

@@ -12,6 +12,10 @@ from tests.architecture_rules import check_sources
         ("app/modules/a/service.py", "from pybatfish.client.session import Session as S"),
         ("app/modules/a/service.py", "from app.infrastructure.sdk import factory"),
         ("app/modules/a/service.py", "from app.modules.b.repository import Repository"),
+        (
+            "app/modules/leader/checks_templates.py",
+            "from app.modules.analysis.schemas.bgp import BgpOptions",
+        ),
         ("app/modules/a/service.py", "from ..b import controller as adapter"),
         ("app/modules/a/service.py", "from app.modules import b"),
         ("app/modules/a/api.py", "from .controller import run"),
@@ -64,6 +68,11 @@ def test_import_boundaries_reject_violations(path, source):
         ("app/modules/a/service.py", "from app.modules.b.service import Service"),
         ("app/modules/a/service.py", "from ..b import service as b_service"),
         ("app/modules/a/service.py", "from . import controller, repository"),
+        ("app/modules/leader/checks_api.py", "from .checks_service import CheckRunsService"),
+        (
+            "app/modules/leader/checks_service.py",
+            "from app.modules.analysis.service import AnalysisService",
+        ),
         ("app/modules/a/controllers/routing.py", "from pybatfish.client.session import Session"),
         (
             "app/modules/a/controller.py",
