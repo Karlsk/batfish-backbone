@@ -1,6 +1,6 @@
 # LDR-02 业务关注项接口与版本
 
-- 状态：待开发；阶段：领导端；依赖：[LDR-01](ldr-01-dual-entry.md)；预计 2.0 人天。
+- 状态：已完成；阶段：领导端；依赖：[LDR-01](ldr-01-dual-entry.md)；预计 2.0 人天。
 - 共享约束：[领导端设计](../../leader-design.md)、[架构](../../architecture.md)、[API 契约](../../api-contracts.md)。
 
 ## 需求与接口
@@ -22,3 +22,5 @@
 ## 非目标与完成记录
 
 不自动推断业务依赖或设备影响，不接入外部 CMDB。记录版本、迁移与实测结果；后续 LDR-03 依赖本篇接口通过。
+
+2026-09-28 已完成。新增 `web/backend/app/modules/business_concerns/` 的严格 DTO、api/service/repository/ORM；`composition.py` 装配路由与模型；`0011_business_concerns.py` 增加当前和历史表，更新持久化迁移测试、OpenAPI 前端类型、API/后端文档。管理员写入、普通成员共享读取、版本冲突、并发唯一胜出、归档历史和非法流量拒绝在独立 PostgreSQL 上通过；临时真实 HTTP API 复核双用户会话与 CSRF。全量后端 372、真实冒烟 13、前端单测 94、LDR-01 浏览器回归 3 均通过，Ruff/类型/构建/格式/锁文件通过。环境固定 Batfish revision `7d0deeeac4a09973b3876327f6aef721ee12f955`、Pybatfish `2026.9.17.3748`、Python `3.12.12`，迁移 `0011`；详见[本篇证据](../../evidence/ldr-02-verification.md)。本篇没有分析或前端管理页，LDR-03 可继续。

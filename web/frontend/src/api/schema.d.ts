@@ -241,6 +241,42 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/business-concerns": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List Concerns */
+    get: operations["list_concerns_api_v1_business_concerns_get"];
+    put?: never;
+    /** Create Concern */
+    post: operations["create_concern_api_v1_business_concerns_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/business-concerns/{concern_id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Concern */
+    get: operations["get_concern_api_v1_business_concerns__concern_id__get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /** Update Concern */
+    patch: operations["update_concern_api_v1_business_concerns__concern_id__patch"];
+    trace?: never;
+  };
   "/api/v1/upload-limits": {
     parameters: {
       query?: never;
@@ -1063,6 +1099,93 @@ export interface components {
       /** Total */
       total: number;
     };
+    /** ConcernDTO */
+    ConcernDTO: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * Network Id
+       * Format: uuid
+       */
+      network_id: string;
+      /** Name */
+      name: string;
+      /** Description */
+      description: string | null;
+      /**
+       * Priority
+       * @enum {string}
+       */
+      priority: "high" | "medium" | "low";
+      /** Flows */
+      flows: components["schemas"]["ConcernFlow"][];
+      /** Version */
+      version: number;
+      /** Archived */
+      archived: boolean;
+      /**
+       * Created By
+       * Format: uuid
+       */
+      created_by: string;
+      /**
+       * Updated By
+       * Format: uuid
+       */
+      updated_by: string;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /**
+       * Updated At
+       * Format: date-time
+       */
+      updated_at: string;
+    };
+    /** ConcernFlow */
+    ConcernFlow: {
+      /** Start Location */
+      start_location: string;
+      /**
+       * Destination Ip
+       * Format: ipv4
+       */
+      destination_ip: string;
+      /** Source Ip */
+      source_ip?: string | null;
+      /** Protocol */
+      protocol?:
+        | (
+            | "icmp"
+            | "tcp"
+            | "udp"
+            | "gre"
+            | "esp"
+            | "ah"
+            | "ospf"
+            | "sctp"
+            | "ipinip"
+          )
+        | null;
+      /** Destination Port */
+      destination_port?: number | null;
+    };
+    /** ConcernPage */
+    ConcernPage: {
+      /** Items */
+      items: components["schemas"]["ConcernDTO"][];
+      /** Offset */
+      offset: number;
+      /** Limit */
+      limit: number;
+      /** Total */
+      total: number;
+    };
     /** ConfigDiffOptions */
     ConfigDiffOptions: Record<string, never>;
     /** ConfigDiffRequest */
@@ -1083,6 +1206,25 @@ export interface components {
       candidate_snapshot_id: string;
       /** Display Name */
       display_name?: string | null;
+    };
+    /** CreateConcernRequest */
+    CreateConcernRequest: {
+      /**
+       * Network Id
+       * Format: uuid
+       */
+      network_id: string;
+      /** Name */
+      name: string;
+      /** Description */
+      description?: string | null;
+      /**
+       * Priority
+       * @enum {string}
+       */
+      priority: "high" | "medium" | "low";
+      /** Flows */
+      flows: components["schemas"]["ConcernFlow"][];
     };
     /** CreateNetworkRequest */
     CreateNetworkRequest: {
@@ -1896,6 +2038,21 @@ export interface components {
        * Format: password
        */
       new_password: string;
+    };
+    /** PatchConcernRequest */
+    PatchConcernRequest: {
+      /** Expected Version */
+      expected_version: number;
+      /** Name */
+      name?: string | null;
+      /** Description */
+      description?: string | null;
+      /** Priority */
+      priority?: ("high" | "medium" | "low") | null;
+      /** Flows */
+      flows?: components["schemas"]["ConcernFlow"][] | null;
+      /** Archived */
+      archived?: boolean | null;
     };
     /** ReachabilityDiffOptions */
     ReachabilityDiffOptions: {
@@ -3209,6 +3366,177 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["JobDTO"];
+        };
+      };
+      /** @description Unprocessable Entity */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+    };
+  };
+  list_concerns_api_v1_business_concerns_get: {
+    parameters: {
+      query?: {
+        network_id?: string | null;
+        include_archived?: boolean;
+        offset?: number;
+        limit?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ConcernPage"];
+        };
+      };
+      /** @description Unprocessable Entity */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+    };
+  };
+  create_concern_api_v1_business_concerns_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateConcernRequest"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ConcernDTO"];
+        };
+      };
+      /** @description Unprocessable Entity */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+    };
+  };
+  get_concern_api_v1_business_concerns__concern_id__get: {
+    parameters: {
+      query?: {
+        version?: number | null;
+      };
+      header?: never;
+      path: {
+        concern_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ConcernDTO"];
+        };
+      };
+      /** @description Unprocessable Entity */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorEnvelope"];
+        };
+      };
+    };
+  };
+  update_concern_api_v1_business_concerns__concern_id__patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        concern_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["PatchConcernRequest"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ConcernDTO"];
         };
       };
       /** @description Unprocessable Entity */

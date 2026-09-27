@@ -1,6 +1,6 @@
 # 分阶段研发规格索引
 
-日期：2026-09-28。MVP-01～25、ADV-01～18 已完成，三阶段验收通过；领导端 LDR-01 已完成，LDR-02～12 待实施。以下为分阶段 RDP spec；“RDP”沿用用户称呼，不额外假定某种公司模板。每份规格包含需求、设计/接口、改动位置、实施步骤、测试与验收、非目标和完成记录。
+日期：2026-09-28。MVP-01～25、ADV-01～18 已完成，三阶段验收通过；领导端 LDR-01～02 已完成，LDR-03～12 待实施。以下为分阶段 RDP spec；“RDP”沿用用户称呼，不额外假定某种公司模板。每份规格包含需求、设计/接口、改动位置、实施步骤、测试与验收、非目标和完成记录。
 
 ## 阶段门槛与顺序
 
@@ -71,7 +71,7 @@ MVP 只包含阶段1，不能因为 advance spec 已写好就提前实现其功�
 | [ADV-17 故障方案向导与影响分析](advance/adv-17-fault-simulation-ui.md) | ADV-16 | 1.5 | 已完成 |
 | [ADV-18 第三阶段整体验收](advance/adv-18-phase-three-acceptance.md) | ADV-17 | 1.5 | 已完成 |
 | [LDR-01 双入口与壳层](leader/ldr-01-dual-entry.md) | ADV-18 | 1.5 | 已完成 |
-| [LDR-02 业务关注项接口](leader/ldr-02-business-concerns-api.md) | LDR-01 | 2.0 | 待开发 |
+| [LDR-02 业务关注项接口](leader/ldr-02-business-concerns-api.md) | LDR-01 | 2.0 | 已完成 |
 | [LDR-03 业务关注项页面](leader/ldr-03-business-concerns-ui.md) | LDR-02 | 1.5 | 待开发 |
 | [LDR-04 跨网络总览接口](leader/ldr-04-overview-api.md) | LDR-03 | 2.0 | 待开发 |
 | [LDR-05 日常总览页面](leader/ldr-05-overview-ui.md) | LDR-04 | 2.0 | 待开发 |

@@ -163,3 +163,7 @@ analysis handler支持执行和发布两个阶段；结果元数据、缓存和�
 已登记的 `POST /api/v1/networks/{network_id}/snapshots/{snapshot_id}/analyses/bgp-sessions` 接受 `{}`（默认模型状态）或 `{"options":{"mode":"compatibility"}}`。可选 `options.nodes/remote_nodes` 为现有字面/表达式节点选择器；不接受任意 SDK 方法、状态或类型参数。结果沿用任务轮询和 `/results/{id}/rows`，完整保留 SDK 原始列与状态，并标注这是配置模型推演。Huawei/H3C 输入额外提示 IPv6 BGP 会话未建模；空表及模型 `ESTABLISHED` 均不证明现场会话情况。
 
 ADV-05 增加 `POST /api/v1/networks/{network_id}/snapshots/{snapshot_id}/analyses/test-filters`（必需源/目标 IPv4、过滤器选择器，可选节点和有类型协议/端口）与同作用域 `resolve-filters`（可选节点/过滤器表达式）。前者仅评估局部 ACL，保留 SDK 原始动作、命中行、Flow 与 Trace，并额外提供隐式拒绝和实际可用的来源引用；找不到过滤器绝不当作放行。Huawei/H3C ACL 转换未验证，测试接口返回409及字段解释；辅助列表仍带模型覆盖标记。两者都返回任务，结果沿用现有分页 API，不向浏览器公开 SDK 会话。
+
+## 领导端业务关注项（LDR-02）
+
+迁移 `0011` 增加网络级业务关注项当前表与不可变版本表。`GET/POST /api/v1/business-concerns`、`GET/PATCH /api/v1/business-concerns/{id}` 提供共享读取、管理员维护、归档及历史版本读取。请求只接受有类型的名称、重要程度和 1～10 条显式关键流量；修改须提供 `expected_version`，冲突返回 409。API 不调用 SDK；业务模块通过 NetworksService 核对网络，版本写入和审计同事务。完整字段见 [API 契约](../docs/api-contracts.md#ldr-02-业务关注项)。

@@ -13,6 +13,8 @@ from app.modules.analysis.registry import Registry
 from app.modules.analysis.service import AnalysisService
 from app.modules.auth.api import create_router as create_auth_router
 from app.modules.auth.service import AuthService
+from app.modules.business_concerns.api import create_router as create_business_concerns_router
+from app.modules.business_concerns.service import BusinessConcernsService
 from app.modules.changes.analysis import ConfigDiffService
 from app.modules.changes.api import create_router as create_changes_router
 from app.modules.changes.controller import FaultScenarioController
@@ -51,6 +53,7 @@ def database_metadata():
     from app.infrastructure.engine import EngineSlot  # noqa: F401
     from app.modules.audit import models as audit_models  # noqa: F401
     from app.modules.auth import models as auth_models  # noqa: F401
+    from app.modules.business_concerns import models as business_concerns_models  # noqa: F401
     from app.modules.changes import models as changes_models  # noqa: F401
     from app.modules.execution import models as execution_models  # noqa: F401
     from app.modules.jobs import models as jobs_models  # noqa: F401
@@ -160,6 +163,14 @@ def create_app(
         app.state.networks_service = networks
         app.include_router(
             create_networks_router(networks, read_actor=read_actor, write_actor=write_actor),
+            prefix="/api/v1",
+        )
+        business_concerns = BusinessConcernsService(db, auth, networks)
+        app.state.business_concerns_service = business_concerns
+        app.include_router(
+            create_business_concerns_router(
+                business_concerns, read_actor=read_actor, write_actor=write_actor
+            ),
             prefix="/api/v1",
         )
         uploads = UploadsService(db, auth, networks, settings)

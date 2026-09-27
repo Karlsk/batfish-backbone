@@ -275,3 +275,9 @@ DELETE `/networks/{network_id}` 或 `/networks/{network_id}/snapshots/{snapshot_
 删除不可取消或重试；远端按服务端保存名称通过公开SDK删除并确认不存在后才写deleted。数据库写回失败保留deleting和源文件，原结果始终可读/导出，来源UUID映射保留墓碑。已删网络常规GET为404；网络尚在时已删快照GET返回deleted，列表不显示、源文件404、历史初始化重试409。输入文件只在提交删除标记后且无其他未删快照manifest引用时清理，重试快照共用输入不会被提前清除。
 
 POST `/admin/deletions/{job_id}/reconcile` 接受 `{note: 10..1000字符检查说明}`，仅管理员且原任务failed/interrupted。按当前deletion_job_id核对远端：存在则恢复原状态，不存在则补记deleted，无法确认保持deleting/引擎unknown；旧删除任务不能覆盖后续删除。检查不会重试删除。引擎unknown先按运行手册停旧worker、确认引擎空闲、完成全局引擎对账，再执行资源对账；历史interrupted记录保留。删除与资源对账写审计，说明保存到audit_events.note。对账返回 `{resource_id,state}`，原失败/中断任务保持历史状态。
+
+## LDR-02 业务关注项
+
+`GET/POST /api/v1/business-concerns` 与 `GET/PATCH /api/v1/business-concerns/{id}` 使用共享团队身份；GET 需登录，POST/PATCH 还需管理员、允许的 Origin 和当前会话 CSRF。列表可按 `network_id` 过滤，`offset` 默认 0、`limit` 默认 50/最大 200；默认不列出归档项，`include_archived=true` 可读取。单项 `GET ?version=N` 返回当时不可变版本，归档不影响历史读取。无网络或记录为 404，普通成员写入为 403，版本冲突为 409。
+
+创建体最少为 `network_id`、`name`、`priority`（`high/medium/low`）及 1～10 条 `flows`；`description` 可选。每条流量要求 `start_location` 与单个规范目的 IPv4；`source_ip`、`protocol`、`destination_port` 可选，端口 0～65535 且必须与 TCP/UDP 协议共同指定。此映射不含快照 ID，也不代表自动推断业务依赖。PATCH 要求 `expected_version` 与至少一个修改字段；网络归属、创建者和版本不能从请求覆盖。`description=null` 明确清除说明，其他必要字段不可置空。创建返回 201/版本 1，每次成功修改（含归档）版本加一并保留历史内容、修改人和时间；写入与脱敏审计在同一事务。迁移 `0011` 保存当前记录与历史版本，后续检查才绑定就绪快照。
