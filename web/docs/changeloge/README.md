@@ -1,13 +1,15 @@
 # 分阶段研发规格索引
 
-日期：2026-09-28。MVP-01～25、ADV-01～18 和领导端 LDR-01～12 已完成，四阶段验收通过。以下为分阶段 RDP spec；“RDP”沿用用户称呼，不额外假定某种公司模板。每份规格包含需求、设计/接口、改动位置、实施步骤、测试与验收、非目标和完成记录。
+日期：2026-09-28。MVP-01～25、ADV-01～18 和领导端 LDR-01～12 已完成，四阶段验收通过。新增 CMDB-01～11 与 SIM-01～17 为待开发规划，既有验收不等于新功能可用。以下为分阶段 RDP spec；“RDP”沿用用户称呼，不额外假定某种公司模板。
 
 ## 阶段门槛与顺序
 
 1. [首版规格](mvp/README.md)：先完成 MVP-01 兼容性验证，按依赖推进，MVP-25 真实验收通过后进入第二阶段。
 2. [进阶规格](advance/README.md)：ADV-01～10 是第二阶段，ADV-11～18 是第三阶段；第三阶段以 ADV-10 验收通过为前提。
 3. [领导端规格](leader/README.md)：LDR-01～12 建立双入口、业务关注项、引导检查和固定汇报；以前三阶段验收完成为前提。
-4. 编号提供默认串行顺序；并行并非本次要求。若将来并行，必须先满足依赖、冻结接口并明确文件所有权，不靠编号相邻判断可同时开发。
+4. [采集一期](cmdb/README.md)：CMDB-01～11 建立版本化设备/链路、统一 ZIP、分段推送、物理拓扑和配置历史；以 LDR-12 为前置。
+5. [推演二期](simulation/README.md)：SIM-01～17 建立多设备候选和 Underlay/业务/隔离检查；以 CMDB-11 为阶段门槛。
+6. 编号提供默认串行顺序；并行并非本次要求。若将来并行，必须先满足依赖、冻结接口并明确文件所有权，不靠编号相邻判断可同时开发。
 
 MVP 只包含阶段1，不能因为 advance spec 已写好就提前实现其功能。目录名固定为用户指定的 changeloge。
 
@@ -19,9 +21,12 @@ MVP 只包含阶段1，不能因为 advance spec 已写好就提前实现其功�
 | 阶段2 日常排障增强 | 10 | 14.5 |
 | 阶段3 变更验证 | 8 | 13.0 |
 | 领导端 | 12 | 22.5 |
-| 总计 | 55 | 90.0 |
+| 已完成合计 | 55 | 90.0 |
+| CMDB 采集一期（待开发） | 11 | 30.0 |
+| SIM 推演二期（待开发） | 17 | 47.0 |
+| 全部规划合计 | 83 | 167.0 |
 
-单份 1～2 人天，1 人天=8小时；包括该增量实现、必要测试、文档与自检，不是完整项目两天完成，也不是日历工期保证。估算假定真实引擎和开发环境可用、开发者熟悉对应技术。公共实现复用、串行 SDK 及已有 SDK 能力是估算前提；遇到版本不兼容、要改 Java 引擎或超预算，先新增小型修订/验证 spec，不挤占验收。
+旧批次单份 1～2 人天；新批次单份 2～3 人天。1 人天=8小时，包括该增量实现、必要测试、文档与自检，不是日历工期保证。估算假定真实引擎和开发环境可用、开发者熟悉对应技术。公共实现复用、串行 SDK 及已有 SDK 能力是估算前提；遇到版本不兼容、要改 Java 引擎或超预算，先拆分修订 spec，不挤占验收。
 
 ## 完整清单
 
@@ -82,6 +87,34 @@ MVP 只包含阶段1，不能因为 advance spec 已写好就提前实现其功�
 | [LDR-10 固定汇报接口](leader/ldr-10-briefings-api.md) | LDR-09 | 2.0 | 已完成 |
 | [LDR-11 汇报与会议页面](leader/ldr-11-briefings-ui.md) | LDR-10 | 2.0 | 已完成 |
 | [LDR-12 领导端整体验收](leader/ldr-12-acceptance.md) | LDR-11 | 1.5 | 已完成 |
+| [CMDB-01 稳定身份与资产版本模型](cmdb/cmdb-01-identity-revisions.md) | LDR-12 | 3.0 | 待开发 |
+| [CMDB-02 快照级资产与历史只读 API](cmdb/cmdb-02-read-api.md) | CMDB-01 | 2.5 | 待开发 |
+| [CMDB-03 人工设备、链路与配置草稿 CRUD](cmdb/cmdb-03-manual-drafts.md) | CMDB-02 | 3.0 | 待开发 |
+| [CMDB-04 统一 ZIP、node.json 与物理链路校验](cmdb/cmdb-04-bundle-contract.md) | CMDB-01 | 2.5 | 待开发 |
+| [CMDB-05 分段推送与采集会话](cmdb/cmdb-05-chunked-push.md) | CMDB-04 | 3.0 | 待开发 |
+| [CMDB-06 原子组装、初始化与最新快照晋升](cmdb/cmdb-06-publish-snapshot.md) | CMDB-03、05 | 3.0 | 待开发 |
+| [CMDB-07 配置派生信息与模块索引](cmdb/cmdb-07-config-enrichment.md) | CMDB-06 | 2.5 | 待开发 |
+| [CMDB-08 物理拓扑与模型叠层 API](cmdb/cmdb-08-topology-api.md) | CMDB-07 | 2.5 | 待开发 |
+| [CMDB-09 快照物理拓扑中心](cmdb/cmdb-09-topology-ui.md) | CMDB-08 | 3.0 | 待开发 |
+| [CMDB-10 设备配置、模块与历史页面](cmdb/cmdb-10-config-history-ui.md) | CMDB-09 | 3.0 | 待开发 |
+| [CMDB-11 第一期真实环境累计验收](cmdb/cmdb-11-acceptance.md) | CMDB-10 | 2.0 | 待开发 |
+| [SIM-01 业务关注项升级为版本化意图](simulation/sim-01-intent-v2.md) | CMDB-11 | 3.0 | 待开发 |
+| [SIM-02 多设备拟变更草稿与审计](simulation/sim-02-change-drafts.md) | SIM-01 | 2.5 | 待开发 |
+| [SIM-03 完整候选配置与前后差异](simulation/sim-03-full-config.md) | SIM-02 | 2.5 | 待开发 |
+| [SIM-04 配置脚本输入、受限转换与预览](simulation/sim-04-command-scripts.md) | SIM-03 | 3.0 | 待开发 |
+| [SIM-05 多设备候选快照与固定比较](simulation/sim-05-candidate-snapshot.md) | SIM-04 | 3.0 | 待开发 |
+| [SIM-06 拓扑多设备变更交互](simulation/sim-06-change-ui.md) | SIM-05 | 3.0 | 待开发 |
+| [SIM-07 Underlay 协议邻接差异与真实观测分列](simulation/sim-07-session-diff.md) | SIM-05 | 2.5 | 待开发 |
+| [SIM-08 物理互联链路两端配置规则](simulation/sim-08-link-pair-rules.md) | SIM-07 | 3.0 | 待开发 |
+| [SIM-09 转发环路见证](simulation/sim-09-loops.md) | SIM-05 | 2.5 | 待开发 |
+| [SIM-10 有界黑洞与不可达见证](simulation/sim-10-scoped-blackholes.md) | SIM-09 | 3.0 | 待开发 |
+| [SIM-11 设备接口 IP 冲突](simulation/sim-11-ip-conflicts.md) | SIM-08 | 2.0 | 待开发 |
+| [SIM-12 业务连通性变化](simulation/sim-12-business-reachability.md) | SIM-01、05 | 3.0 | 待开发 |
+| [SIM-13 代表流路径变化与路径策略](simulation/sim-13-path-policy.md) | SIM-12 | 3.0 | 待开发 |
+| [SIM-14 网段隔离一致性](simulation/sim-14-isolation.md) | SIM-12 | 2.5 | 待开发 |
+| [SIM-15 幂等检查编排与固定版本结论](simulation/sim-15-run-summary.md) | SIM-08、10、11、13、14 | 3.0 | 待开发 |
+| [SIM-16 变更推演结果页面](simulation/sim-16-results-ui.md) | SIM-06、15 | 3.0 | 待开发 |
+| [SIM-17 第二期真实环境累计验收](simulation/sim-17-acceptance.md) | SIM-16 | 2.5 | 待开发 |
 
 ## 每次开发的阅读与交付规则
 
