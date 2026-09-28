@@ -8,7 +8,7 @@ async function findCard(page: Page, name: string) {
     const card = page
       .locator(".leader-overview-card")
       .filter({ hasText: name });
-    if (await card.count()) return card;
+    if (await card.count()) return card.first();
     const more = page.getByRole("button", { name: "加载更多网络" });
     if (!(await more.count())) break;
     await more.click();

@@ -56,6 +56,10 @@ import {
   LeaderFaultPage,
 } from "../features/leader/changes/ChangesPage";
 import {
+  LeaderBriefingsPage,
+  LeaderPresentationPage,
+} from "../features/leader/briefings/BriefingsPage";
+import {
   LeaderOverviewPage,
   LeaderNetworkPage,
 } from "../features/leader/overview/OverviewPage";
@@ -356,11 +360,21 @@ function Overview() {
 function WorkbenchRoutes() {
   const location = useLocation();
   const leaderRoute = location.pathname.startsWith("/leader");
+  const presentationRoute = /^\/leader\/briefings\/[^/]+\/present\/?$/.test(
+    location.pathname,
+  );
   return (
     <Providers>
       <SessionBootstrap>
         <AuthGuard>
-          {leaderRoute ? (
+          {presentationRoute ? (
+            <Routes>
+              <Route
+                path="/leader/briefings/:briefingId/present"
+                element={<LeaderPresentationPage />}
+              />
+            </Routes>
+          ) : leaderRoute ? (
             <LeaderShell>
               <Routes>
                 <Route
@@ -383,6 +397,14 @@ function WorkbenchRoutes() {
                   element={<LeaderChangesPage />}
                 />
                 <Route path="/leader/faults" element={<LeaderFaultPage />} />
+                <Route
+                  path="/leader/briefings"
+                  element={<LeaderBriefingsPage />}
+                />
+                <Route
+                  path="/leader/briefings/:briefingId"
+                  element={<LeaderBriefingsPage />}
+                />
                 <Route
                   path="/leader"
                   element={<Navigate to="/leader/overview" replace />}

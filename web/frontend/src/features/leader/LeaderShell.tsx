@@ -63,6 +63,16 @@ export function LeaderShell({ children }: PropsWithChildren) {
           >
             变更与故障
           </Link>
+          <Link
+            to="/leader/briefings"
+            aria-current={
+              location.pathname.startsWith("/leader/briefings")
+                ? "page"
+                : undefined
+            }
+          >
+            固定汇报
+          </Link>
         </nav>
         <Space className="leader-controls" wrap>
           <ThemeControl />
