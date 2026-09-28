@@ -94,10 +94,7 @@ def validate(state):
     client = Client(state)
     wait(
         lambda: (
-            client.http.get(
-                state["origin"] + "/api/v1/health/ready", timeout=5
-            ).status_code
-            == 200
+            client.http.get(state["origin"] + "/api/v1/health/ready", timeout=5).status_code == 200
         )
     )
     credentials = {
@@ -145,9 +142,7 @@ def validate(state):
         base = f"/networks/{network}/snapshots/{created['snapshot_id']}"
         snapshot = client.request("GET", base)
         assert snapshot["status"] in ["ready", "ready_with_warnings"]
-        analysis = client.request(
-            "POST", base + "/analyses/nodes", expected=202, json={}
-        )
+        analysis = client.request("POST", base + "/analyses/nodes", expected=202, json={})
         result_job = client.job(analysis["id"])
         assert result_job["status"] == "succeeded"
         result = client.request("GET", f"/results/{result_job['result_id']}/export")
@@ -161,14 +156,71 @@ def validate(state):
                 "elapsed_seconds": time.monotonic() - started,
             }
         )
+    cisco = samples[1]
+    concern = client.request(
+        "POST",
+        "/business-concerns",
+        expected=201,
+        json={
+            "network_id": cisco["network"],
+            "name": "Deployment critical flow",
+            "priority": "high",
+            "flows": [
+                {
+                    "start_location": "c1",
+                    "destination_ip": "10.64.0.4",
+                    "protocol": "icmp",
+                }
+            ],
+        },
+    )
+    check = client.request(
+        "POST",
+        "/leader/check-runs",
+        expected=201,
+        headers={"Idempotency-Key": secrets.token_hex(16)},
+        json={
+            "network_id": cisco["network"],
+            "snapshot_id": cisco["snapshot_id"],
+            "template_id": "devices",
+        },
+    )
+    completed = wait(
+        lambda: (
+            value
+            if (value := client.request("GET", f"/leader/check-runs/{check['id']}"))["status"]
+            in {"succeeded", "failed", "interrupted"}
+            else None
+        )
+    )
+    assert completed["status"] == "succeeded" and len(completed["result_ids"]) == 1
+    briefing = client.request(
+        "POST",
+        "/leader/briefings",
+        expected=201,
+        headers={"Idempotency-Key": secrets.token_hex(16)},
+        json={
+            "title": "Deployment fixed briefing",
+            "network_id": cisco["network"],
+            "snapshot_id": cisco["snapshot_id"],
+            "result_ids": completed["result_ids"],
+            "concern_id": concern["id"],
+            "concern_version": 1,
+        },
+    )
+    updated = client.request(
+        "PATCH",
+        f"/business-concerns/{concern['id']}",
+        json={"expected_version": 1, "name": "Deployment critical flow v2"},
+    )
+    assert updated["version"] == 2
+    assert briefing["concern_version"] == 1
+    assert briefing["frozen_concern"]["name"] == concern["name"]
     before = client.request("GET", f"/jobs/{samples[0]['job_id']}")
     compose(state, "restart", "api")
     wait(
         lambda: (
-            client.http.get(
-                state["origin"] + "/api/v1/health/live", timeout=5
-            ).status_code
-            == 200
+            client.http.get(state["origin"] + "/api/v1/health/live", timeout=5).status_code == 200
         )
     )
     assert client.request("GET", f"/jobs/{before['id']}") == before
@@ -268,10 +320,7 @@ def validate(state):
     compose(state, "start", "worker")
     wait(
         lambda: (
-            client.http.get(
-                state["origin"] + "/api/v1/health/ready", timeout=5
-            ).status_code
-            == 200
+            client.http.get(state["origin"] + "/api/v1/health/ready", timeout=5).status_code == 200
         )
     )
     job = client.request("POST", base + "/analyses/routes", expected=202, json={})
@@ -297,21 +346,16 @@ def validate(state):
     recovered.login(credentials)
     wait(
         lambda: (
-            recovered.http.get(
-                restored["origin"] + "/api/v1/health/ready", timeout=5
-            ).status_code
+            recovered.http.get(restored["origin"] + "/api/v1/health/ready", timeout=5).status_code
             == 200
         )
     )
     for sample in samples:
+        assert recovered.request("GET", f"/jobs/{sample['job_id']}")["status"] == "succeeded"
         assert (
-            recovered.request("GET", f"/jobs/{sample['job_id']}")["status"]
-            == "succeeded"
-        )
-        assert (
-            recovered.request("GET", f"/results/{sample['result_id']}/export")[
-                "metadata"
-            ]["context"]["snapshot_id"]
+            recovered.request("GET", f"/results/{sample['result_id']}/export")["metadata"][
+                "context"
+            ]["snapshot_id"]
             == sample["snapshot_id"]
         )
         job = recovered.request(
@@ -321,11 +365,25 @@ def validate(state):
             json={},
         )
         assert recovered.job(job["id"])["status"] == "succeeded"
+    restored_briefing = recovered.request("GET", f"/leader/briefings/{briefing['id']}")
+    assert restored_briefing["sections"] == briefing["sections"]
+    assert restored_briefing["frozen_concern"] == briefing["frozen_concern"]
+    assert restored_briefing["concern_version"] == 1
+    assert restored_briefing["source_available"]
+    assert restored_briefing["sections"][0]["evidence_available"]
     report = {
         "status": "passed",
         "state": state,
         "restored": restored,
         "samples": samples,
+        "leader": {
+            "concern_id": concern["id"],
+            "concern_version_at_report": 1,
+            "current_concern_version": updated["version"],
+            "check_run_id": check["id"],
+            "briefing_id": briefing["id"],
+            "restored_source_available": restored_briefing["source_available"],
+        },
         "image_ids": image_identity(state),
         "checks": [
             "HTTPS and Secure cookies",
@@ -338,6 +396,7 @@ def validate(state):
             "read-only application images",
             "offline DB/app/engine backup",
             "new project restore and queries",
+            "leader mapping and fixed report survive new-volume restore",
         ],
     }
     (run / "verification.json").write_text(json.dumps(report, indent=2) + "\n")

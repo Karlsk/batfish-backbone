@@ -19,12 +19,12 @@ async function selectReadyFixture(page: Page, fixture: string) {
       item.latest_ready_snapshot?.display_name === fixture,
   );
   expect(card).toBeTruthy();
-  await page.getByLabel("检查网络").click();
-  const networkOption = page
-    .locator('.ant-select-dropdown:visible [role="option"]')
-    .filter({ hasText: card.network_id.slice(0, 8) });
-  await expect(networkOption).toBeVisible();
-  await networkOption.click();
+  await page.getByLabel("检查网络").fill(card.network_id.slice(0, 8));
+  await expect(
+    page.locator('.ant-select-dropdown:visible [role="option"]'),
+  ).toHaveCount(1);
+  await page.getByLabel("检查网络").press("Enter");
+  await expect(page.getByLabel("配置快照")).toBeEnabled();
   await page.getByLabel("配置快照").click();
   await page
     .locator('.ant-select-dropdown:visible [role="option"]')

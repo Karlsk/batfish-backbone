@@ -178,3 +178,69 @@ test("production first paint applies preference before any app bundle", async ({
     "rgb(10, 17, 30)",
   );
 });
+
+test("restored HTTPS leader briefing keeps its original concern version and printable facts", async ({
+  page,
+}, info) => {
+  const evidence = process.env.BFW_DEPLOYMENT_EVIDENCE;
+  if (!evidence) throw new Error("BFW_DEPLOYMENT_EVIDENCE is required");
+  const report = JSON.parse(readFileSync(evidence, "utf8"));
+  expect(report.status).toBe("passed");
+  expect(report.leader.current_concern_version).toBe(2);
+  const credentials = JSON.parse(
+    readFileSync(`${report.state.state_dir}/auth.json`, "utf8"),
+  );
+  await login(page, credentials.username, credentials.password);
+  await expect(
+    page.getByRole("heading", { name: "网络分析，从一份配置开始" }),
+  ).toBeVisible();
+  await page.goto(`/leader/briefings/${report.leader.briefing_id}`);
+  await expect(
+    page.getByRole("heading", { name: "Deployment fixed briefing" }),
+  ).toBeVisible();
+  await expect(
+    page.getByText("业务关注项：Deployment critical flow · 第 1 版"),
+  ).toBeVisible();
+  await expect(page.getByText("模型边界")).toBeVisible();
+  await expect(
+    page.locator(".leader-briefing-section a[href^='/results/']"),
+  ).toBeVisible();
+  const apiResponse = await page.request.get(
+    `/api/v1/leader/briefings/${report.leader.briefing_id}`,
+  );
+  expect(apiResponse.ok()).toBe(true);
+  const fixed = await apiResponse.json();
+  expect(fixed.frozen_concern.name).toBe("Deployment critical flow");
+  expect(fixed.concern_version).toBe(1);
+  expect(fixed.source_available).toBe(true);
+  const concernResponse = await page.request.get(
+    `/api/v1/business-concerns/${report.leader.concern_id}`,
+  );
+  expect(concernResponse.ok()).toBe(true);
+  expect((await concernResponse.json()).version).toBe(2);
+  await page.getByRole("link", { name: /打开会议视图/ }).click();
+  await expect(page.locator(".leader-presentation h1")).toHaveText(
+    "Deployment fixed briefing",
+  );
+  await expect(
+    page.getByText("第 1 版", { exact: false }).first(),
+  ).toBeVisible();
+  const mode = info.project.use.colorScheme === "dark" ? "dark" : "light";
+  await expect(page.locator("html")).toHaveAttribute("data-theme", mode);
+  await page.screenshot({
+    path: info.outputPath(`restored-leader-${mode}.png`),
+    fullPage: true,
+    animations: "disabled",
+  });
+  await page.emulateMedia({ media: "print", reducedMotion: "reduce" });
+  await expect(page.locator(".leader-presentation-controls")).toHaveCSS(
+    "display",
+    "none",
+  );
+  await expect(page.getByText("模型边界")).toBeVisible();
+  await page.pdf({
+    path: info.outputPath(`restored-leader-${mode}.pdf`),
+    format: "A4",
+    printBackground: true,
+  });
+});

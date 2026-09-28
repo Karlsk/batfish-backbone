@@ -31,16 +31,26 @@ pytestmark = pytest.mark.integration
 ROOT = Path(__file__).resolve().parents[4]
 FIXTURE = Path(__file__).resolve().parents[1] / "fixtures" / "small_network"
 REQUIRED = {
-    "nodeProperties", "interfaceProperties", "routes", "lpmRoutes", "traceroute",
-    "fileParseStatus", "parseWarning", "initIssues", "viConversionWarning",
+    "nodeProperties",
+    "interfaceProperties",
+    "routes",
+    "lpmRoutes",
+    "traceroute",
+    "fileParseStatus",
+    "parseWarning",
+    "initIssues",
+    "viConversionWarning",
 }
 
 
 @pytest.fixture(scope="module")
 def baseline(tmp_path_factory):
     required = (
-        "BATFISH_TEST_HOST", "BATFISH_TEST_PORT", "BATFISH_TEST_PREFIX",
-        "BATFISH_TEST_MANIFEST", "BATFISH_TEST_EVIDENCE",
+        "BATFISH_TEST_HOST",
+        "BATFISH_TEST_PORT",
+        "BATFISH_TEST_PREFIX",
+        "BATFISH_TEST_MANIFEST",
+        "BATFISH_TEST_EVIDENCE",
     )
     missing = [key for key in required if not os.environ.get(key)]
     if missing or os.environ.get("BATFISH_TEST_ISOLATED") != "1":
@@ -71,8 +81,11 @@ def baseline(tmp_path_factory):
         "answers": {},
     }
     context = {
-        "host": host, "port": port, "prefix": prefix + "-" + uuid4().hex[:12],
-        "evidence": evidence, "temp": tmp_path_factory.mktemp("sdk-baseline"),
+        "host": host,
+        "port": port,
+        "prefix": prefix + "-" + uuid4().hex[:12],
+        "evidence": evidence,
+        "temp": tmp_path_factory.mktemp("sdk-baseline"),
     }
     try:
         context["a"] = Session(host=host, port=port, timeout=10)
@@ -94,9 +107,13 @@ def answer(context, session, question_id, snapshot, **params):
     # The raw dictionary preserves nested JSON; the DataFrame holds SDK objects.
     json.dumps(result.dict(), allow_nan=False)
     sequence = len(context["evidence"]["answers"]) + 1
-    context["evidence"]["answers"][f"{sequence:03}/{session.network}/{effective_snapshot}/{question_id}"] = {
-        "network": session.network, "snapshot": effective_snapshot,
-        "question": question_id, "explicit_snapshot": snapshot is not None,
+    context["evidence"]["answers"][
+        f"{sequence:03}/{session.network}/{effective_snapshot}/{question_id}"
+    ] = {
+        "network": session.network,
+        "snapshot": effective_snapshot,
+        "question": question_id,
+        "explicit_snapshot": snapshot is not None,
         "seconds": round(time.monotonic() - started, 4),
         "parameters": json.loads(question.json())["instance"].get("variables", {}),
         "column_schema": result["answerElements"][0]["metadata"]["columnMetadata"],
@@ -126,8 +143,14 @@ def snapshots(baseline):
         assert session.init_snapshot(str(source), name=snapshot, overwrite=False) == snapshot
         assert snapshot in session.list_snapshots()
         assert session.get_snapshot() == snapshot
-        identities.append({"display_label": "baseline", "network": network, "snapshot": snapshot,
-                           "init_seconds": round(time.monotonic() - started, 4)})
+        identities.append(
+            {
+                "display_label": "baseline",
+                "network": network,
+                "snapshot": snapshot,
+                "init_seconds": round(time.monotonic() - started, 4),
+            }
+        )
     baseline["evidence"]["observations"]["identities"] = identities
     return baseline
 
@@ -137,8 +160,11 @@ def test_versions_templates_and_public_methods(baseline):
     versions = session.get_component_versions()
     assert versions.get("Batfish") and "api_version" in versions
     loaded = {q["name"] for q in session.q.list()}
-    local = {p.stem: p for area in ("stable", "experimental")
-             for p in (ROOT / "questions" / area).glob("*.json")}
+    local = {
+        p.stem: p
+        for area in ("stable", "experimental")
+        for p in (ROOT / "questions" / area).glob("*.json")
+    }
     assert REQUIRED <= loaded
     assert set(local) == loaded, "Runtime templates must match this engine checkout"
     templates = {}
@@ -150,30 +176,47 @@ def test_versions_templates_and_public_methods(baseline):
         for variable in local_template["instance"].get("variables", {}).values():
             variable["type"] = variable["type"].strip()
             description = variable["description"].strip()
-            variable["description"] = description if description.endswith(".") else description + "."
+            variable["description"] = (
+                description if description.endswith(".") else description + "."
+            )
         assert remote == local_template, name
-        templates[name] = {"source": path.parent.name,
-                           "variables": remote["instance"].get("variables", {})}
+        templates[name] = {
+            "source": path.parent.name,
+            "variables": remote["instance"].get("variables", {}),
+        }
     baseline["evidence"].update({"engine_versions": versions, "templates": templates})
     baseline["evidence"]["public_session_signatures"] = {
-        name: str(inspect.signature(method)) for name, method in inspect.getmembers(Session)
+        name: str(inspect.signature(method))
+        for name, method in inspect.getmembers(Session)
         if not name.startswith("_") and callable(method)
     }
 
 
 def test_minimal_questions_match_expected(snapshots):
     session = snapshots["a"]
-    nodes = answer(snapshots, session, "nodeProperties", "snapshot-a", properties="Configuration_Format")
+    nodes = answer(
+        snapshots, session, "nodeProperties", "snapshot-a", properties="Configuration_Format"
+    )
     assert set(nodes.Node) == {"r1", "r2"}
     assert set(nodes.Configuration_Format) == {"HUAWEI_VRP", "H3C_COMWARE"}
-    interfaces = answer(snapshots, session, "interfaceProperties", "snapshot-a", properties="Primary_Address")
-    assert {"10.0.0.1/32", "10.0.0.2/32", "192.0.2.1/30", "192.0.2.2/30"} <= set(interfaces.Primary_Address)
+    interfaces = answer(
+        snapshots, session, "interfaceProperties", "snapshot-a", properties="Primary_Address"
+    )
+    assert {"10.0.0.1/32", "10.0.0.2/32", "192.0.2.1/30", "192.0.2.2/30"} <= set(
+        interfaces.Primary_Address
+    )
     routes = answer(snapshots, session, "routes", "snapshot-a", nodes="r1", network="10.0.0.2/32")
     assert len(routes) == 1 and set(routes.Protocol) == {"static"}
     lpm = answer(snapshots, session, "lpmRoutes", "snapshot-a", nodes="r1", ip="10.0.0.2")
     assert len(lpm) == 1 and set(lpm.Network) == {"10.0.0.2/32"}
-    traces = answer(snapshots, session, "traceroute", "snapshot-a", startLocation="r1",
-                    headers=HeaderConstraints(srcIps="10.0.0.1", dstIps="10.0.0.2", ipProtocols=["ICMP"]))
+    traces = answer(
+        snapshots,
+        session,
+        "traceroute",
+        "snapshot-a",
+        startLocation="r1",
+        headers=HeaderConstraints(srcIps="10.0.0.1", dstIps="10.0.0.2", ipProtocols=["ICMP"]),
+    )
     assert len(traces) == 1
     assert traces.iloc[0].TraceCount == 1
     trace = traces.iloc[0].Traces[0]
@@ -194,10 +237,19 @@ def test_session_context_isolation(snapshots):
     ):
         assert session.get_snapshot() == snapshot
         # Omitting the override exercises each Session's own mutable context.
-        frame = answer(snapshots, session, "interfaceProperties", None, nodes="r2", properties="Primary_Address")
+        frame = answer(
+            snapshots,
+            session,
+            "interfaceProperties",
+            None,
+            nodes="r2",
+            properties="Primary_Address",
+        )
         assert address in set(frame.Primary_Address)
         assert absent not in set(frame.Primary_Address)
-    snapshots["evidence"]["observations"]["session_isolation"] = "A/B/A/B: addresses stay in their network/snapshot"
+    snapshots["evidence"]["observations"]["session_isolation"] = (
+        "A/B/A/B: addresses stay in their network/snapshot"
+    )
 
 
 def test_initialization_diagnostics_and_no_overwrite(snapshots, caplog):
@@ -221,8 +273,10 @@ def test_initialization_diagnostics_and_no_overwrite(snapshots, caplog):
     warning_status = answer(snapshots, session, "fileParseStatus", "warning")
     assert "PARTIALLY_UNRECOGNIZED" in set(warning_status.Status)
     snapshots["evidence"]["observations"]["initialization"] = {
-        "return_type": "str", "warning_snapshot_return": "warning",
-        "duplicate_overwrite_false": "ValueError", "warning_logged": bool(caplog.records),
+        "return_type": "str",
+        "warning_snapshot_return": "warning",
+        "duplicate_overwrite_false": "ValueError",
+        "warning_logged": bool(caplog.records),
         "snapshot_metadata": session.list_snapshots(verbose=True),
     }
 
@@ -237,14 +291,17 @@ def test_unsupported_or_missing_question(snapshots):
     with pytest.raises((HTTPError, BatfishException)) as error:
         session.q.nodeProperties().answer(snapshot="mvp01-missing-snapshot")
     snapshots["evidence"]["observations"]["unsupported"] = {
-        "missing_question": "AttributeError", "unknown_option": "QuestionValidationException",
+        "missing_question": "AttributeError",
+        "unknown_option": "QuestionValidationException",
         "missing_snapshot": type(error.value).__name__,
     }
 
 
 def test_public_work_handle_and_answer_recovery(snapshots):
     session = snapshots["a"]
-    question = session.q.nodeProperties(properties="Configuration_Format", question_name="mvp01-background")
+    question = session.q.nodeProperties(
+        properties="Configuration_Format", question_name="mvp01-background"
+    )
     started = time.monotonic()
     work_id = question.answer(snapshot="snapshot-a", background=True)
     UUID(work_id)
@@ -256,16 +313,26 @@ def test_public_work_handle_and_answer_recovery(snapshots):
     while time.monotonic() < deadline:
         status = restored.get_work_status(work_id)
         observed.append(status["workstatus"])
-        if status["workstatus"] in {"TERMINATEDNORMALLY", "TERMINATEDABNORMALLY", "ASSIGNMENTERROR", "REQUEUEFAILURE"}:
+        if status["workstatus"] in {
+            "TERMINATEDNORMALLY",
+            "TERMINATEDABNORMALLY",
+            "ASSIGNMENTERROR",
+            "REQUEUEFAILURE",
+        }:
             break
         time.sleep(0.1)
     assert observed[-1] == "TERMINATEDNORMALLY", observed
     recovered = restored.get_answer(question.get_name(), "snapshot-a")
     assert set(recovered.frame().Node) == {"r1", "r2"}
-    assert restored.get_snapshot_input_object_text("configs/r1.cfg", snapshot="snapshot-a") == (FIXTURE / "configs" / "r1.cfg").read_text()
+    assert (
+        restored.get_snapshot_input_object_text("configs/r1.cfg", snapshot="snapshot-a")
+        == (FIXTURE / "configs" / "r1.cfg").read_text()
+    )
     snapshots["evidence"]["observations"]["background"] = {
-        "work_id_type": type(work_id).__name__, "submission_seconds": round(submitted_seconds, 4),
-        "observed_statuses": observed, "recovered_question": question.get_name(),
+        "work_id_type": type(work_id).__name__,
+        "submission_seconds": round(submitted_seconds, 4),
+        "observed_statuses": observed,
+        "recovered_question": question.get_name(),
         "incomplete_works": restored.list_incomplete_works(),
     }
 
@@ -296,7 +363,9 @@ def test_request_timeout_is_not_a_total_work_budget(baseline, caplog):
     thread = Thread(target=server.serve_forever, daemon=True)
     thread.start()
     try:
-        session = Session(host="127.0.0.1", port=server.server_port, load_questions=False, timeout=0.03)
+        session = Session(
+            host="127.0.0.1", port=server.server_port, load_questions=False, timeout=0.03
+        )
         started = time.monotonic()
         assert session.get_component_versions() == {"Batfish": "delayed"}
         elapsed = time.monotonic() - started
@@ -306,9 +375,12 @@ def test_request_timeout_is_not_a_total_work_budget(baseline, caplog):
         assert finished.wait(2), "Server request should continue after the client timeout"
         assert Session(load_questions=False).timeout == 30
         baseline["evidence"]["observations"]["timeout"] = {
-            "sdk_default_seconds": 30, "configured_transport_seconds": 0.03,
-            "read_timeout_retried": True, "http_requests": len(requests_received),
-            "total_seconds": round(elapsed, 4), "server_request_continued": True,
+            "sdk_default_seconds": 30,
+            "configured_transport_seconds": 0.03,
+            "read_timeout_retried": True,
+            "http_requests": len(requests_received),
+            "total_seconds": round(elapsed, 4),
+            "server_request_continued": True,
             "scope": "controlled local HTTP only; not an engine work cancellation test",
         }
     finally:

@@ -1,6 +1,6 @@
 # 领导端规格：LDR-01～12
 
-状态：LDR-01～11 已完成，LDR-12 待开发。前置为 [ADV-18](../advance/adv-18-phase-three-acceptance.md) 全部通过。公共契约见[领导端设计](../../leader-design.md)，仍遵守 [web/AGENTS.md](../../../AGENTS.md)。每份目标不超过 2 人天；按编号串行。已完成篇的实现与真实验证证据必须随本篇记录，再推进下一篇。
+状态：LDR-01～12 已完成并通过[整体验收](../../leader-acceptance.md)。前置为 [ADV-18](../advance/adv-18-phase-three-acceptance.md) 全部通过。公共契约见[领导端设计](../../leader-design.md)，仍遵守 [web/AGENTS.md](../../../AGENTS.md)。每份目标不超过 2 人天；按编号串行。已完成篇的实现与真实验证证据必须随本篇记录，再推进下一篇。
 
 | Spec | 依赖 | 人天 | 状态 |
 | --- | --- | ---: | --- |
@@ -15,6 +15,6 @@
 | [LDR-09 变更与故障领导视图](ldr-09-change-fault-ui.md) | LDR-08 | 2.0 | 已完成 |
 | [LDR-10 固定汇报接口](ldr-10-briefings-api.md) | LDR-09 | 2.0 | 已完成 |
 | [LDR-11 汇报与会议页面](ldr-11-briefings-ui.md) | LDR-10 | 2.0 | 已完成 |
-| [LDR-12 领导端整体验收](ldr-12-acceptance.md) | LDR-11 | 1.5 | 待开发 |
+| [LDR-12 领导端整体验收](ldr-12-acceptance.md) | LDR-11 | 1.5 | 已完成 |
 
 预计合计 22.5 人天，含各篇实现、必要测试与文档，不是日历工期或容量承诺。

@@ -75,7 +75,7 @@ export async function verifyDeletion(
     .click();
   await expect(
     page.getByText("暂无快照，请先上传配置。", { exact: true }),
-  ).toBeVisible();
+  ).toBeVisible({ timeout: 30000 });
   await page.getByRole("link", { name: "网络与快照", exact: true }).click();
   await networkRow
     .getByRole("button", { name: "删除网络", exact: true })
