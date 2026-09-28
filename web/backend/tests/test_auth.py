@@ -130,6 +130,70 @@ def test_initial_password_restriction(auth_app):
     assert app.state.auth_service.require_actor(client.cookies["batfish_session"]).role == "admin"
 
 
+def test_fresh_database_accepts_default_admin_only_until_forced_change(database):
+    migrate(database)
+    app = create_app(Settings(auth_allowed_origins=(ORIGIN,)), database=database)
+    with TestClient(app, base_url=ORIGIN) as client:
+        first = login(client, password="admin")
+        assert first.status_code == 200
+        assert first.json()["must_change_password"] is True
+        assert client.get("/api/v1/users").status_code == 403
+        assert (
+            client.post(
+                "/api/v1/auth/password",
+                json={"current_password": "admin", "new_password": "too-short"},
+                headers=write_headers(first.json()),
+            ).status_code
+            == 422
+        )
+        changed = client.post(
+            "/api/v1/auth/password",
+            json={"current_password": "admin", "new_password": NEW_PASSWORD},
+            headers=write_headers(first.json()),
+        )
+        assert changed.status_code == 204
+        assert login(client, password="admin").status_code == 401
+        second = login(client, password=NEW_PASSWORD)
+        assert second.status_code == 200
+        assert second.json()["must_change_password"] is False
+        assert client.get("/api/v1/users").status_code == 200
+    with database.transaction() as transaction:
+        assert transaction.execute(text("SELECT count(*) FROM users")).scalar_one() == 1
+        assert (
+            transaction.execute(text("SELECT password_hash FROM users"))
+            .scalar_one()
+            .startswith("$argon2id$")
+        )
+
+
+def test_default_admin_does_not_replace_an_existing_account(database):
+    migrate(database)
+    UsersService(database).bootstrap_admin("owner", PASSWORD)
+    app = create_app(Settings(auth_allowed_origins=(ORIGIN,)), database=database)
+    with TestClient(app, base_url=ORIGIN) as client:
+        assert login(client, password="admin").status_code == 401
+        assert login(client, username="owner", password=PASSWORD).status_code == 200
+    with database.transaction() as transaction:
+        assert transaction.execute(text("SELECT count(*) FROM users")).scalar_one() == 1
+
+
+def test_concurrent_default_admin_logins_create_one_account(database):
+    from concurrent.futures import ThreadPoolExecutor
+
+    migrate(database)
+    app = create_app(Settings(auth_allowed_origins=(ORIGIN,)), database=database)
+
+    def default_login(_):
+        with TestClient(app, base_url=ORIGIN) as client:
+            return login(client, password="admin").status_code
+
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        assert list(pool.map(default_login, range(2))) == [200, 200]
+    with database.transaction() as transaction:
+        assert transaction.execute(text("SELECT count(*) FROM users")).scalar_one() == 1
+        assert transaction.execute(text("SELECT count(*) FROM audit_events")).scalar_one() == 1
+
+
 def test_no_user_enumeration(auth_app):
     client, _, _, _ = auth_app
     known = login(client, password="wrong password").json()["error"]

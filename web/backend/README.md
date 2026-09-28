@@ -80,7 +80,9 @@ ORM 归各业务模块，composition 统一注册 metadata。repository 返回�
 
 ## 管理员初始化与认证
 
-在迁移完成且数据库环境已注入后执行 `uv run --locked python -m app.bootstrap_admin`，交互输入用户名及至少 12、最多 128 字符的临时密码。密码通过 getpass 隐藏，不放入命令行参数；自动化可注入 `BOOTSTRAP_USERNAME` / `BOOTSTRAP_PASSWORD` 受保护环境变量。命令仅在不存在管理员时成功，数据库锁防止并发重复初始化，并记录脱敏审计。
+全新部署迁移完成后，空用户数据库在第一次使用 `admin/admin` 登录时自动创建管理员，并强制立即修改密码。`admin` 是唯一允许短于 12 字符的内置临时密码；新密码及其他账号的密码仍须为 12～128 字符。已有用户的数据库不会创建或重置默认账号，改密后 `admin/admin` 不再有效。自动初始化使用数据库事务锁防止并发重复创建，并记录脱敏审计。
+
+如需在第一次默认登录前自定义管理员，可先执行 `uv run --locked python -m app.bootstrap_admin`，交互输入用户名及至少 12、最多 128 字符的临时密码。密码通过 getpass 隐藏，不放入命令行参数；自动化可注入 `BOOTSTRAP_USERNAME` / `BOOTSTRAP_PASSWORD` 受保护环境变量。命令仅在不存在管理员时成功。
 
 认证路径均在 `/api/v1/auth`：`POST /login`、`GET /me`、`POST /password`、`POST /logout`。登录体为 username/password，响应包含 user_id、username、role、must_change_password 和 csrf_token。Cookie `batfish_session` 为 HttpOnly、SameSite=Lax、Path=/，默认 Secure、8 小时绝对过期；数据库只存 token 的 SHA256。密码使用 Argon2id。不存在、停用或密码错误均返回相同 401；达到失败阈值后返回 429，窗口结束后恢复。
 

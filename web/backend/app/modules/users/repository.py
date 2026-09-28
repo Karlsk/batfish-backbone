@@ -49,6 +49,9 @@ class UsersRepository:
             query = query.where(User.enabled.is_(True))
         return self._transaction.scalar(query)
 
+    def has_users(self) -> bool:
+        return self._transaction.scalar(select(User.id).limit(1)) is not None
+
     def change_password(
         self, user_id: UUID, password_hash: str, *, temporary: bool = False
     ) -> None:

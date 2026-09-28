@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from app.contracts.dto import Actor
 from app.contracts.errors import ErrorCode, ServiceError
 from app.infrastructure.database import Database
-from app.infrastructure.passwords import hash_password, verify_password
+from app.infrastructure.passwords import hash_default_admin_password, hash_password, verify_password
 from app.modules.audit.service import AuditService
 from app.modules.users.repository import UsersRepository
 from app.modules.users.schemas import (
@@ -204,3 +204,23 @@ class UsersService:
                 request_id=uuid4(),
             )
             return _identity(user)
+
+    def bootstrap_default_admin(self, username: str, password: str) -> None:
+        if username != "admin" or password != "admin":
+            return
+        with self._database.transaction() as transaction:
+            repository = UsersRepository(transaction)
+            repository.lock_administration()
+            if repository.has_users():
+                return
+            user = repository.add(
+                username="admin", password_hash=hash_default_admin_password(), role="admin"
+            )
+            AuditService().record(
+                transaction=transaction,
+                actor_id=user.id,
+                action="admin.bootstrap",
+                resource_id=user.id,
+                outcome="succeeded",
+                request_id=uuid4(),
+            )

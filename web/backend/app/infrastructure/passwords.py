@@ -12,6 +12,11 @@ def hash_password(password: str) -> str:
     return _hasher.hash(password)
 
 
+def hash_default_admin_password() -> str:
+    """The one built-in short temporary password; normal passwords keep their policy."""
+    return _hasher.hash("admin")
+
+
 def verify_password(password_hash: str | None, password: str) -> bool:
     try:
         matched = _hasher.verify(password_hash or _dummy_hash, password)

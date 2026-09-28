@@ -36,7 +36,7 @@ SDK 映射：start_location→startLocation；destination_ip/source_ip/protocols
 
 采用服务端可撤销会话，浏览器 Cookie 存随机 token，数据库只存 token 哈希。生产 Cookie 使用 HttpOnly、Secure、SameSite=Lax、Path=/，默认 8 小时绝对有效期。写请求要求受信 Origin 和会话绑定 CSRF token；登录也检查 Origin。前端不把长期凭证存 localStorage。登录失败统一返回，不泄露账号是否存在；失败限流可配置。
 
-密码使用 Argon2id；默认至少 12 字符、最多 128 字符，允许密码短语；管理员创建/重置时传入临时密码，用户首次登录必须修改。必须改密的会话仅允许 me/password/logout。用户停用、重置密码或自己改密后撤销既有会话。禁止停用/降级最后一个有效管理员。
+密码使用 Argon2id；全新空库首次 `admin/admin` 登录自动创建默认管理员，该内置临时密码是唯一短密码例外。新密码与其他账号密码为 12～128 字符，允许密码短语；管理员创建/重置时传入临时密码，用户首次登录必须修改。必须改密的会话仅允许 me/password/logout。用户停用、重置密码或自己改密后撤销既有会话。禁止停用/降级最后一个有效管理员；已有用户数据库不受默认凭据影响。
 
 MVP-04 实现细节：Cookie 名为 `batfish_session`，CSRF 头为 `X-CSRF-Token`；登录/me 响应字段为 user_id、username、role、must_change_password、csrf_token，设 no-store。精确 Origin 白名单由环境配置，默认空；缺 Origin（含脚本调用）一律拒绝登录/写请求。本机 HTTP 测试显式关闭 Secure。失败默认按用户名及实际连接地址组合计数，1 分钟内最多 5 次失败，随后返回 429 RATE_LIMITED；成功不清除窗口内失败计数，防止用成功请求绕过限流。PostgreSQL 事务锁保证多实例一致。内部用户与会话 session_version 用于全设备撤销，不进入 API 响应。
 

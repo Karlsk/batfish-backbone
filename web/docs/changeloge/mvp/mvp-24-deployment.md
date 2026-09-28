@@ -52,7 +52,7 @@
 
 ## 完成记录
 
-2026-09-26完成Compose同域HTTPS部署：固定digest的Python/Node/Nginx/Postgres/Java基础镜像，固定SDK/前端锁，当前分支JAR+模板摘要。API/worker分进程非root、只读代码，数据库/SDK不发布端口；私有state注入配置/证书，无默认管理员密码。交付backend/frontend Dockerfile、deploy/compose.yaml、proxy.conf、engine健康与volume_archive、scripts/deploy.py和verify_deployment.py、web/README.md。
+2026-09-26完成Compose同域HTTPS部署：固定digest的Python/Node/Nginx/Postgres/Java基础镜像，固定SDK/前端锁，当前分支JAR+模板摘要。API/worker分进程非root、只读代码，数据库/SDK不发布端口；私有state注入配置/证书，当时无默认管理员密码。交付backend/frontend Dockerfile、deploy/compose.yaml、proxy.conf、engine健康与volume_archive、scripts/deploy.py和verify_deployment.py、web/README.md。默认凭据规则已在 2026-09-28 [后续修订](../../evidence/default-admin-bootstrap-2026-09-28.md)。
 
 真实部署发现MVP-07/10上传允许附带README而SDK目录重建拒绝的缺陷，修复为复用safe_path规范验证，保留哈希/UUID边界，新增合法附带输入和越界拒绝回归。恢复修正tar data_filter丢目录模式/属主问题，启动前恢复UID10001与目录0700/文件0600。
 

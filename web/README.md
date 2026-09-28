@@ -12,10 +12,9 @@
 web/backend/.venv/bin/python web/scripts/deploy.py prepare --state web/.runtime/team-local
 web/backend/.venv/bin/python web/scripts/deploy.py build --state web/.runtime/team-local
 web/backend/.venv/bin/python web/scripts/deploy.py start --state web/.runtime/team-local
-web/backend/.venv/bin/python web/scripts/deploy.py bootstrap --state web/.runtime/team-local
 ```
 
-打开 `https://localhost:18443`。prepare产生仅供本机测试的30天自签证书，浏览器需信任该证书；首次管理员密码由终端隐藏输入，首次登录强制改密。没有默认管理员密码；重复bootstrap会拒绝。管理员创建普通成员后，成员可上传两套样例配置：`web/backend/tests/fixtures/small_network/configs`与`cisco_four/configs`。文件上传后需显式提交初始化，任务完成后选择快照开展分析。
+打开 `https://localhost:18443`。prepare产生仅供本机测试的30天自签证书，浏览器需信任该证书。全新空库用 `admin/admin` 首次登录会自动创建管理员，并立即要求修改为至少 12 字符的新密码；改密后需重新登录，旧密码不再有效。已有账号的数据库不会重置密码。若要自行指定初始管理员，在首次默认登录前运行 `web/backend/.venv/bin/python web/scripts/deploy.py bootstrap --state web/.runtime/team-local`，由终端隐藏输入临时密码。管理员创建普通成员后，成员可上传两套样例配置：`web/backend/tests/fixtures/small_network/configs`与`cisco_four/configs`。文件上传后需显式提交初始化，任务完成后选择快照开展分析。
 
 compose项目名随机生成且以bfw-开头；所有管理动作通过指定state定位本实例，不控制其他容器。API与worker分进程，应用代码只读；数据库、应用文件、引擎数据分别使用命名卷。只发布回环HTTPS端口；数据库5432、引擎9996、API8000不映射宿主机。worker不在崩溃后自动重启/重放，需检查未知占用并人工恢复。容器健康与`/api/v1/health/ready`用于观察依赖；ready检查失败不等于引擎停止。
 

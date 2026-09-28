@@ -29,6 +29,7 @@ class AuthService:
         self, username: str, password: str, *, origin: str | None, client_address: str
     ) -> tuple[SessionInfo, str]:
         self.require_origin(origin)
+        self._users.bootstrap_default_admin(username, password)
         keys = [_digest("login-pair:" + client_address + "\0" + username)]
         now = datetime.now(UTC)
         with self._database.transaction() as transaction:
