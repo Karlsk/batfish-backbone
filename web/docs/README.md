@@ -29,6 +29,7 @@
 11. [本机功能测试环境](test-lab.md)：真实服务启动、r1/r2 与 Cisco 四设备配置快照、冒烟和累计回归入口。
 12. [技术工作台双主题设计](plans/2026-09-26-technical-workbench-design.md)：已完成现有前端深浅主题升级；[实施计划](plans/2026-09-26-technical-workbench-implementation.md)与[验收记录](evidence/technical-workbench-theme-2026-09-26.md)。本次双主题范围已完成；用户后续已授权进入 ADV，领导端另行安排。
 13. [领导端设计](leader-design.md)：双入口、业务关注项、可信结论、引导检查与固定汇报；[LDR 规格](changeloge/leader/README.md)及[验收报告](leader-acceptance.md)。
+14. [手动测试指南与上传物料](manual-testing.md)：全新环境启动、专业/专家/领导视图逐步验收及可直接上传的配置 ZIP。
 
 ## 目录与实施方式
 
@@ -68,3 +69,4 @@ MVP-01～25 已完成真实引擎兼容性、后端与前端工作台、导出�
 故障模拟前端向导与比较交接见 [ADV-17 证据](evidence/adv-17-verification.md)。
 第三阶段固定双快照、SDK 对照及累计回归见 [ADV-18 证据](evidence/adv-18-verification.md)。
 领导端完整交付、合成拓扑累计回归和 HTTPS 恢复见 [LDR-12 验收报告](leader-acceptance.md)与[机器证据](evidence/ldr-12-verification.json)。
+全新部署默认 `admin/admin` 与首次强制改密的后续认证修订见[验证记录](evidence/default-admin-bootstrap-2026-09-28.md)。
