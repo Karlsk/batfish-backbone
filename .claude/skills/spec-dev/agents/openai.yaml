@@ -1,4 +1,4 @@
 interface:
   display_name: "Batfish Spec Dev"
-  short_description: "Implement Batfish Web specs with verified acceptance"
+  short_description: "Implement Batfish Web MVP, ADV, LDR, CMDB or SIM specs"
   default_prompt: "使用 $spec-dev 执行 MVP-01，先检查项目规范和前置条件，再完成本篇实现、验证与证据回写。"

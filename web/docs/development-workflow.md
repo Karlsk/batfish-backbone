@@ -1,6 +1,6 @@
 # 按 spec 推进 Batfish Web
 
-采用项目专用 `spec-dev` 作为单篇开发入口，`mvp-runner` 管理连续 MVP 批次；Superpowers 提供按需计划、测试、调试和验证方法，`grill-me` 用于未决方案的交互澄清。已有 25 份 MVP 和 18 份 ADV spec 是需求与验收依据；本流程不初始化 Spec-Kit，不复制一套平行需求文件。
+采用项目专用 `spec-dev` 作为单篇开发入口，`mvp-runner` 管理连续批次（无参数仍只处理 MVP；新 CMDB/SIM 必须显式给范围）；Superpowers 提供按需计划、测试、调试和验证方法，`grill-me` 用于未决方案的交互澄清。MVP/ADV/LDR 已完成，新 CMDB/SIM 是待开发的需求与验收依据；本流程不初始化 Spec-Kit，不复制一套平行需求文件。
 
 ## 项目级安装布局
 
@@ -38,7 +38,7 @@ Claude Code 可输入 `/spec-dev MVP-01`。也支持完整 spec 路径，例如�
 $spec-dev web/docs/changeloge/mvp/mvp-16-frontend-foundation.md
 ```
 
-这些是发给智能体的指令，不是 shell 命令。MVP-16 示例仅展示路径格式；依赖未满足时会指出缺失项，不会越过前序验收。每篇完成后再调用下一篇；所有篇目和依赖见 [MVP 索引](changeloge/mvp/README.md) 与 [ADV 索引](changeloge/advance/README.md)。
+这些是发给智能体的指令，不是 shell 命令。MVP-16 示例仅展示路径格式；依赖未满足时会指出缺失项，不会越过前序验收。每篇完成后再调用下一篇；所有篇目和依赖见 [研发规格总索引](changeloge/README.md)。
 
 需要探讨新方案时：
 
@@ -60,7 +60,7 @@ Claude Code 对应 `/grill-me`。上游 `grill-me` 只负责调用 `grilling`；
 
 MVP-01 是第一步：验证当前分支引擎与候选 Pybatfish 的真实兼容性。它使用临时环境，不要求先创建 MVP-02 后端骨架。MVP-25 缺真实引擎或双用户浏览器证据时，保持待验证/未通过，不能进入 ADV-01。
 
-## 连续执行 MVP
+## 连续执行 MVP 或显式新批次
 
 项目级 [mvp-runner](../../.claude/skills/mvp-runner/SKILL.md) 复用 `spec-dev`，不改写每篇需求。启动方式：
 
@@ -75,9 +75,18 @@ $mvp-runner MVP-03..MVP-10
 $mvp-runner resume
 ```
 
-这些是给智能体的指令，不是终端可执行命令。启动连续流程即采用已约定的“实现 → 审查 → 当前及此前全部 MVP 累计验收 → 回写 → commit → 下一篇”，不逐篇等待确认。单独执行 `$spec-dev MVP-xx` 仍默认停在本篇且不自动提交。
+CMDB/SIM 不会因默认 MVP 运行而自动开始。确认[共享设计](cmdb-simulation-design.md)和两期 spec 后，可显式使用：
 
-runner 运行时维护 `web/docs/plans/mvp-rollout.md` 和 `web/docs/validation-matrix.md`；恢复提示存于忽略提交的 `web/.runtime/mvp-runner/checkpoint.json`。创建 skill 时不提前生成假进度。恢复时交叉核对 Git、实现、验收与 checkpoint，不仅凭同名 commit 或状态标签跳过工作。
+```text
+$mvp-runner CMDB-01..CMDB-11
+$mvp-runner CMDB-01..SIM-17
+```
+
+单篇可用 `$spec-dev CMDB-01` 或 `$spec-dev SIM-01`。跨期范围在 CMDB-11 门槛未通过时停止，不跳入 SIM；新批次进度与 checkpoint 与旧 MVP 分开保存。
+
+这些是给智能体的指令，不是终端可执行命令。启动连续流程即采用“实现 → 审查 → 当前及此前范围累计验收 → 回写 → commit → 下一篇”，不逐篇等待确认。单独执行 `$spec-dev <ID>` 仍默认停在本篇且不自动提交。
+
+runner 运行时维护 MVP 的 `web/docs/plans/mvp-rollout.md` 或新批次的 `web/docs/plans/cmdb-simulation-rollout.md`，共用 `web/docs/validation-matrix.md`；恢复提示分别存于忽略提交的 `web/.runtime/mvp-runner/checkpoint.json` 和 `cmdb-simulation-checkpoint.json`。仅规划时不生成假进度。恢复时交叉核对 Git、实现、验收与 checkpoint，不仅凭同名 commit 或状态标签跳过工作。
 
 每篇都使用 [真实服务与两套配置环境](test-lab.md)，无须真实路由器或现场结果对照。后端、PostgreSQL、SDK、已有前端及浏览器/部署检查按矩阵累计；`lab.py verify` 当前只覆盖后端。必需检查被跳过、环境缺失或运行服务仍是旧代码都不允许提交。API/worker 更新后应刷新实际服务；当前 lab 数据库重建会清空临时数据，需重新迁移和初始化。
 
@@ -85,7 +94,7 @@ runner 运行时维护 `web/docs/plans/mvp-rollout.md` 和 `web/docs/validation-
 
 截止篇验收并提交后停止；默认 MVP-25 必须包含真实服务、双用户页面闭环和两套配置证据。不会自动进入 ADV、推送、合并或发布到共享/生产环境。技能本身不提供后台定时唤醒；执行中断后从记录恢复。
 
-**当前安装只生成并验证 skill，没有启动连续批次，也没有提交此前测试环境的改动。** 技能验证范围与场景见 [验证记录](evidence/mvp-runner-skill-validation.md)。
+**本次 CMDB/SIM 规划与技能扩展不启动连续批次。** 原 MVP 技能安装验证范围与场景见 [历史验证记录](evidence/mvp-runner-skill-validation.md)。
 
 ## 上游来源与更新
 
