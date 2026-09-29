@@ -45,7 +45,9 @@ test("leader sees registered ADV checks and a focused saved topology", async ({
   await expect(page.getByLabel("配置模型关系图")).toBeVisible();
   await page.getByLabel("聚焦设备").click();
   await page.getByRole("option", { name: "c1" }).click();
-  await expect(page.getByText(/c1.*跳/)).toBeVisible();
+  await expect(
+    page.locator('p[aria-live="polite"]').filter({ hasText: "c1 的 1 跳邻域" }),
+  ).toBeVisible();
   await page.screenshot({
     path: testInfo.outputPath("leader-topology.png"),
     fullPage: true,

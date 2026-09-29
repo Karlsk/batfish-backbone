@@ -19,13 +19,23 @@ test("Cisco concern and fixed report remain scoped after mapping changes and an 
   const networkPage = await (
     await page.request.get("/api/v1/networks?limit=200")
   ).json();
+  const overviewResponse = await page.request.get(
+    "/api/v1/leader/overview?limit=200",
+  );
+  expect(overviewResponse.ok()).toBe(true);
+  const overview = await overviewResponse.json();
+  const fixtureNetworkId = (snapshotName: string) =>
+    overview.items.find(
+      (item: {
+        network_id: string;
+        latest_ready_snapshot?: { display_name: string };
+      }) => item.latest_ready_snapshot?.display_name === snapshotName,
+    )?.network_id;
   const cisco = networkPage.items.find(
-    (item: { display_name: string }) =>
-      item.display_name === "LDR12 cisco_four",
+    (item: { id: string }) => item.id === fixtureNetworkId("cisco_four"),
   );
   const small = networkPage.items.find(
-    (item: { display_name: string }) =>
-      item.display_name === "LDR12 small_network",
+    (item: { id: string }) => item.id === fixtureNetworkId("small_network"),
   );
   expect(cisco).toBeTruthy();
   expect(small).toBeTruthy();
